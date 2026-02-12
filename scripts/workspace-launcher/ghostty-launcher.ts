@@ -62,7 +62,7 @@ function generateGhosttyCommand(pillar: Pillar, options: LaunchOptions = {}): st
     "Ghostty.app",
     "--args",
     `--theme="${theme}"`,
-    `--window-title="${pillar.emoji} ${pillar.shortCode} - ${pillar.name}"`,
+    `--title="${pillar.emoji} ${pillar.shortCode} - ${pillar.name}"`,
     "-e",
     "$SHELL",
     "-c",

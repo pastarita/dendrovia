@@ -1,154 +1,316 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- ARCHITECTUS DETAILED - Maximum architectural ornament -->
+  <!-- ARCHITECTUS DETAILED: 64x64px+, 8-12 colors, 40-80 paths
+       Ref: PILLAR_THEMATIC_SCHEMA.md - "Light made manifest through computational geometry"
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "The Rendering Lens System"
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - Maximum symbolic richness, architectural portrait
+       Ref: ARCHITECTUS_iterations.md - Full palette, sacred geometry, impossible perspectives
+       Structure: Compound lens cross-section projecting SDF truth onto screen plane
+       Read back-to-front = follows rendering pipeline depth order -->
 
-  <!-- Background technical grid (subtle) -->
-  <g stroke="#5a8dd8" stroke-width="0.2" opacity="0.15">
+  <!-- ============================================================
+       LAYER 0: BACKGROUND COORDINATE GRID (Blueprint space)
+       Ref: THEMATIC_SCHEMA iconography - "Blueprint grids (3D coordinate space)"
+       ============================================================ -->
+  <g stroke="#5a8dd8" stroke-width="0.25" opacity="0.12">
+    <!-- Horizontal gridlines -->
+    <line x1="0" y1="10" x2="100" y2="10"/>
     <line x1="0" y1="20" x2="100" y2="20"/>
+    <line x1="0" y1="30" x2="100" y2="30"/>
     <line x1="0" y1="40" x2="100" y2="40"/>
+    <line x1="0" y1="50" x2="100" y2="50"/>
     <line x1="0" y1="60" x2="100" y2="60"/>
+    <line x1="0" y1="70" x2="100" y2="70"/>
     <line x1="0" y1="80" x2="100" y2="80"/>
+    <line x1="0" y1="90" x2="100" y2="90"/>
+    <!-- Vertical gridlines -->
+    <line x1="10" y1="0" x2="10" y2="100"/>
     <line x1="20" y1="0" x2="20" y2="100"/>
+    <line x1="30" y1="0" x2="30" y2="100"/>
     <line x1="40" y1="0" x2="40" y2="100"/>
+    <line x1="50" y1="0" x2="50" y2="100"/>
     <line x1="60" y1="0" x2="60" y2="100"/>
+    <line x1="70" y1="0" x2="70" y2="100"/>
     <line x1="80" y1="0" x2="80" y2="100"/>
+    <line x1="90" y1="0" x2="90" y2="100"/>
   </g>
 
-  <!-- Deep shadow side of column -->
-  <rect x="37" y="23" width="10" height="70" fill="#1e3a5f"/>
-  <rect x="42" y="23" width="5" height="70" fill="#374151" opacity="0.7"/>
+  <!-- ============================================================
+       LAYER 1: LENS RINGS (Compound optical system)
+       Ref: INSIGNIA_STRUCTURAL - "3 lens elements (Model, View, Projection)"
+       These represent the transformation pipeline: World -> View -> Screen
+       ============================================================ -->
+  <!-- Lens 1: Model Matrix (world space boundary) -->
+  <circle cx="50" cy="46" r="44" fill="none" stroke="#1e3a5f" stroke-width="0.8" opacity="0.2"/>
+  <circle cx="50" cy="46" r="43" fill="none" stroke="#5a8dd8" stroke-width="0.3" opacity="0.15"/>
+  <!-- Lens 2: View Matrix (camera transform) -->
+  <circle cx="50" cy="46" r="34" fill="none" stroke="#5a8dd8" stroke-width="0.7" opacity="0.18"/>
+  <circle cx="50" cy="46" r="33" fill="none" stroke="#8ab4f8" stroke-width="0.3" opacity="0.12"/>
+  <!-- Lens 3: Projection Matrix (screen mapping) -->
+  <circle cx="50" cy="46" r="24" fill="none" stroke="#8ab4f8" stroke-width="0.6" opacity="0.15"/>
+  <circle cx="50" cy="46" r="23" fill="none" stroke="#c8e0ff" stroke-width="0.3" opacity="0.1"/>
 
-  <!-- Main column body (gradient effect via layers) -->
-  <rect x="40" y="20" width="20" height="73" fill="#5a8dd8"/>
-  <rect x="42" y="20" width="16" height="73" fill="#6fa0e8" opacity="0.5"/>
-  <rect x="44" y="20" width="12" height="73" fill="#8ab4f8" opacity="0.3"/>
-
-  <!-- Fluting grooves (11 vertical lines) -->
-  <g stroke="#8ab4f8" stroke-width="1" opacity="0.7">
-    <line x1="41" y1="20" x2="41" y2="93"/>
-    <line x1="43" y1="20" x2="43" y2="93"/>
-    <line x1="45" y1="20" x2="45" y2="93"/>
-    <line x1="47" y1="20" x2="47" y2="93"/>
-    <line x1="49" y1="20" x2="49" y2="93"/>
-    <line x1="51" y1="20" x2="51" y2="93"/>
-    <line x1="53" y1="20" x2="53" y2="93"/>
-    <line x1="55" y1="20" x2="55" y2="93"/>
-    <line x1="57" y1="20" x2="57" y2="93"/>
-    <line x1="59" y1="20" x2="59" y2="93"/>
+  <!-- ============================================================
+       LAYER 2: COORDINATE MARKERS (Corner ornaments)
+       Ref: THEMATIC_SCHEMA iconography - "Tiny grid coordinates"
+       ============================================================ -->
+  <!-- Top-left origin marker -->
+  <g stroke="#c8e0ff" stroke-width="0.6" opacity="0.35">
+    <line x1="5" y1="5" x2="12" y2="5"/>
+    <line x1="5" y1="5" x2="5" y2="12"/>
+  </g>
+  <!-- Top-right marker -->
+  <g stroke="#c8e0ff" stroke-width="0.6" opacity="0.35">
+    <line x1="95" y1="5" x2="88" y2="5"/>
+    <line x1="95" y1="5" x2="95" y2="12"/>
+  </g>
+  <!-- Bottom-left marker -->
+  <g stroke="#c8e0ff" stroke-width="0.6" opacity="0.25">
+    <line x1="5" y1="95" x2="12" y2="95"/>
+    <line x1="5" y1="95" x2="5" y2="88"/>
+  </g>
+  <!-- Bottom-right marker -->
+  <g stroke="#c8e0ff" stroke-width="0.6" opacity="0.25">
+    <line x1="95" y1="95" x2="88" y2="95"/>
+    <line x1="95" y1="95" x2="95" y2="88"/>
   </g>
 
-  <!-- Fluting shadow accents -->
-  <g stroke="#1e3a5f" stroke-width="0.5" opacity="0.4">
-    <line x1="42" y1="20" x2="42" y2="93"/>
-    <line x1="46" y1="20" x2="46" y2="93"/>
-    <line x1="50" y1="20" x2="50" y2="93"/>
-    <line x1="54" y1="20" x2="54" y2="93"/>
-    <line x1="58" y1="20" x2="58" y2="93"/>
-  </g>
+  <!-- ============================================================
+       LAYER 3: OCTAHEDRON (Far SDF primitive - back of lens system)
+       Ref: THEMATIC_SCHEMA - "Platonic solids = pure mathematical forms"
+       Represents SDF primitives floating in world space
+       ============================================================ -->
+  <!-- Diamond/octahedron near top-left (impossible perspective) -->
+  <polygon points="18,24 13,28 18,32 23,28" fill="#6fa0e8" opacity="0.55"/>
+  <polygon points="18,21 13,28 23,28" fill="#8ab4f8" opacity="0.4"/>
+  <polygon points="18,32 13,28 23,28" fill="#5a8dd8" opacity="0.45"/>
+  <line x1="18" y1="21" x2="13" y2="28" stroke="#c8e0ff" stroke-width="0.5" opacity="0.5"/>
+  <line x1="18" y1="21" x2="23" y2="28" stroke="#c8e0ff" stroke-width="0.5" opacity="0.5"/>
 
-  <!-- Capital (multi-tiered ornament) -->
-  <rect x="33" y="15" width="34" height="5" fill="#6fa0e8"/>
-  <rect x="34" y="16" width="32" height="3" fill="#8ab4f8" opacity="0.6"/>
-
-  <!-- Geometric grid pattern -->
-  <g fill="#e8f4ff" opacity="0.3">
-    <rect x="36" y="16.5" width="2" height="2"/>
-    <rect x="40" y="16.5" width="2" height="2"/>
-    <rect x="44" y="16.5" width="2" height="2"/>
-    <rect x="48" y="16.5" width="2" height="2"/>
-    <rect x="52" y="16.5" width="2" height="2"/>
-    <rect x="56" y="16.5" width="2" height="2"/>
-    <rect x="60" y="16.5" width="2" height="2"/>
-  </g>
-
-  <!-- Crown triangular pattern -->
-  <polygon points="50,8 40,15 60,15" fill="#8ab4f8"/>
-  <polygon points="50,9 42,15 58,15" fill="#c8e0ff" opacity="0.5"/>
-  <line x1="45" y1="12" x2="55" y2="12" stroke="#e8f4ff" stroke-width="1"/>
-
-  <!-- Capital corner ornaments -->
-  <circle cx="35" cy="17.5" r="1.5" fill="#e8f4ff"/>
-  <circle cx="65" cy="17.5" r="1.5" fill="#e8f4ff"/>
-
-  <!-- Warm accent detail -->
-  <rect x="49" y="10" width="2" height="1" fill="#f8c98a" opacity="0.6"/>
-
-  <!-- Large cube (golden ratio intersection) -->
-  <g transform="rotate(45 50 55)">
-    <rect x="44" y="49" width="12" height="12" fill="#6fa0e8" opacity="0.85"/>
-    <rect x="45" y="50" width="10" height="10" fill="#8ab4f8" opacity="0.4"/>
-    <line x1="44" y1="49" x2="56" y2="61" stroke="#1e3a5f" stroke-width="0.5"/>
-    <line x1="56" y1="49" x2="44" y2="61" stroke="#1e3a5f" stroke-width="0.5"/>
-    <line x1="44" y1="49" x2="56" y2="49" stroke="#e8f4ff" stroke-width="1" opacity="0.7"/>
-    <line x1="44" y1="49" x2="44" y2="61" stroke="#e8f4ff" stroke-width="1" opacity="0.5"/>
-  </g>
-
-  <!-- Pyramid (adjacent to cube) -->
-  <polygon points="72,60 68,68 76,68" fill="#5a8dd8" opacity="0.8"/>
-  <polygon points="72,60 69,68 75,68" fill="#8ab4f8" opacity="0.4"/>
-  <line x1="72" y1="60" x2="68" y2="68" stroke="#e8f4ff" stroke-width="0.8" opacity="0.6"/>
-
-  <!-- Octahedron (near capital) -->
-  <polygon points="25,25 20,28 25,31 30,28" fill="#6fa0e8" opacity="0.7"/>
-  <polygon points="25,22 20,28 30,28" fill="#8ab4f8" opacity="0.5"/>
-  <polygon points="25,31 20,28 30,28" fill="#5a8dd8" opacity="0.6"/>
-
-  <!-- Raymarched light beams (7 at varying angles) -->
+  <!-- ============================================================
+       LAYER 4: RAYMARCHED LIGHT BEAMS (7 rays at varying angles)
+       Ref: INSIGNIA_STRUCTURAL - "7 light beams = render rays"
+       Ref: THEMATIC_SCHEMA - "Light rays = raymarching paths (sight itself)"
+       Warm gold = organic/analogue tension with cool digital blue
+       ============================================================ -->
   <g stroke-linecap="round">
-    <line x1="80" y1="5" x2="30" y2="85" stroke="#e8f4ff" stroke-width="2" opacity="0.8"/>
-    <line x1="85" y1="10" x2="35" y2="90" stroke="#c8e0ff" stroke-width="1.8" opacity="0.6"/>
-    <line x1="75" y1="8" x2="40" y2="75" stroke="#e8f4ff" stroke-width="1.5" opacity="0.5"/>
-    <line x1="88" y1="15" x2="45" y2="88" stroke="#c8e0ff" stroke-width="1.2" opacity="0.4"/>
-    <line x1="70" y1="12" x2="50" y2="70" stroke="#e8f4ff" stroke-width="1" opacity="0.35"/>
-    <line x1="82" y1="20" x2="55" y2="92" stroke="#c8e0ff" stroke-width="1.5" opacity="0.45"/>
-    <line x1="77" y1="6" x2="25" y2="80" stroke="#e8f4ff" stroke-width="1.8" opacity="0.55"/>
+    <!-- Primary beam (brightest, widest) -->
+    <line x1="82" y1="4" x2="26" y2="84" stroke="#f8c98a" stroke-width="2.5" opacity="0.55"/>
+    <!-- Secondary beams (graduated falloff) -->
+    <line x1="86" y1="10" x2="32" y2="90" stroke="#f8c98a" stroke-width="2" opacity="0.4"/>
+    <line x1="78" y1="7" x2="30" y2="74" stroke="#f8c98a" stroke-width="1.8" opacity="0.35"/>
+    <line x1="90" y1="16" x2="40" y2="88" stroke="#f8c98a" stroke-width="1.5" opacity="0.3"/>
+    <line x1="74" y1="11" x2="44" y2="68" stroke="#e8f4ff" stroke-width="1.2" opacity="0.25"/>
+    <!-- Faint far rays (depth/atmosphere) -->
+    <line x1="88" y1="22" x2="50" y2="92" stroke="#c8e0ff" stroke-width="1" opacity="0.2"/>
+    <line x1="70" y1="5" x2="20" y2="76" stroke="#e8f4ff" stroke-width="1.5" opacity="0.2"/>
   </g>
 
-  <!-- Light beam intersection highlights -->
-  <circle cx="50" cy="55" r="2" fill="#e8f4ff" opacity="0.8"/>
-  <circle cx="42" cy="75" r="1.5" fill="#e8f4ff" opacity="0.6"/>
-  <circle cx="38" cy="82" r="1" fill="#c8e0ff" opacity="0.5"/>
+  <!-- ============================================================
+       LAYER 5: COLUMN ARCHITECTURE (The focal object being rendered)
+       Ref: INSIGNIA_STRUCTURAL - "Classical column positioned AT the focal plane"
+       Ref: THEMATIC_SCHEMA - "Strong verticals (columns, structure)"
+       ============================================================ -->
 
-  <!-- Base structure (dendritic foundation) -->
-  <circle cx="50" cy="93" r="8" fill="#1e3a5f"/>
-  <circle cx="50" cy="93" r="6.5" fill="#374151" opacity="0.7"/>
-  <circle cx="50" cy="93" r="5" fill="#5a8dd8"/>
+  <!-- Deep shadow side (unrendered face, computational void) -->
+  <rect x="35" y="18" width="8" height="66" fill="#1e3a5f" opacity="0.75"/>
+  <!-- Mid-shadow transition -->
+  <rect x="39" y="18" width="4" height="66" fill="#374151" opacity="0.5"/>
 
-  <!-- Dendritic Y-fork branching -->
-  <line x1="50" y1="93" x2="45" y2="98" stroke="#6fa0e8" stroke-width="2"/>
-  <line x1="50" y1="93" x2="55" y2="98" stroke="#6fa0e8" stroke-width="2"/>
+  <!-- Main column body (rendered geometry) -->
+  <rect x="40" y="16" width="22" height="70" fill="#5a8dd8"/>
+  <!-- Mid-tone face (partial manifestation) -->
+  <rect x="43" y="16" width="17" height="70" fill="#6fa0e8" opacity="0.45"/>
+  <!-- Highlight face (fully rendered, closest to light) -->
+  <rect x="47" y="16" width="13" height="70" fill="#8ab4f8" opacity="0.25"/>
+
+  <!-- === FLUTING: 9 grooves (high fidelity LOD) === -->
+  <!-- Ref: THEMATIC_SCHEMA - "Fluting grooves = rendering detail levels, 9-11 for high fidelity" -->
+  <g stroke="#8ab4f8" stroke-width="0.8" opacity="0.6">
+    <line x1="42" y1="18" x2="42" y2="84"/>
+    <line x1="44.5" y1="18" x2="44.5" y2="84"/>
+    <line x1="47" y1="18" x2="47" y2="84"/>
+    <line x1="49.5" y1="18" x2="49.5" y2="84"/>
+    <line x1="52" y1="18" x2="52" y2="84"/>
+    <line x1="54.5" y1="18" x2="54.5" y2="84"/>
+    <line x1="57" y1="18" x2="57" y2="84"/>
+    <line x1="59" y1="18" x2="59" y2="84"/>
+    <line x1="61" y1="18" x2="61" y2="84"/>
+  </g>
+  <!-- Fluting shadow depth (alternating dark grooves) -->
+  <g stroke="#1e3a5f" stroke-width="0.4" opacity="0.35">
+    <line x1="43" y1="18" x2="43" y2="84"/>
+    <line x1="48" y1="18" x2="48" y2="84"/>
+    <line x1="53" y1="18" x2="53" y2="84"/>
+    <line x1="58" y1="18" x2="58" y2="84"/>
+  </g>
+  <!-- Bright highlight edge (polished stone catch-light) -->
+  <line x1="60.5" y1="18" x2="60.5" y2="84" stroke="#e8f4ff" stroke-width="0.7" opacity="0.55"/>
+  <line x1="61.5" y1="18" x2="61.5" y2="84" stroke="#e8f4ff" stroke-width="0.35" opacity="0.3"/>
+
+  <!-- ============================================================
+       LAYER 6: CAPITAL (Multi-tiered architectural crown)
+       Ref: THEMATIC_SCHEMA - "Capital ornament = architectural refinement + computational precision"
+       ============================================================ -->
+
+  <!-- Tier 1: Abacus base (wide platform) -->
+  <rect x="30" y="12" width="40" height="5" fill="#6fa0e8"/>
+  <rect x="31" y="13" width="38" height="3" fill="#8ab4f8" opacity="0.5"/>
+
+  <!-- Tier 2: Blueprint grid pattern within abacus -->
+  <!-- Ref: THEMATIC_SCHEMA symbols - "Blueprint grids (3D coordinate space)" -->
+  <g fill="#e8f4ff" opacity="0.3">
+    <rect x="33" y="13.5" width="2" height="2"/>
+    <rect x="37" y="13.5" width="2" height="2"/>
+    <rect x="41" y="13.5" width="2" height="2"/>
+    <rect x="45" y="13.5" width="2" height="2"/>
+    <rect x="49" y="13.5" width="2" height="2"/>
+    <rect x="53" y="13.5" width="2" height="2"/>
+    <rect x="57" y="13.5" width="2" height="2"/>
+    <rect x="61" y="13.5" width="2" height="2"/>
+    <rect x="65" y="13.5" width="2" height="2"/>
+  </g>
+
+  <!-- Tier 3: Crown triangle (Y-fork structural emphasis) -->
+  <polygon points="50,4 37,12 63,12" fill="#8ab4f8"/>
+  <polygon points="50,5.5 40,12 60,12" fill="#c8e0ff" opacity="0.45"/>
+  <!-- Crown horizontal detail line -->
+  <line x1="42" y1="9" x2="58" y2="9" stroke="#e8f4ff" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Capital corner ornaments (circular, SDF node character) -->
+  <circle cx="32" cy="14.5" r="1.8" fill="#c8e0ff" opacity="0.6"/>
+  <circle cx="68" cy="14.5" r="1.8" fill="#c8e0ff" opacity="0.6"/>
+
+  <!-- Keystone accent: warm gold (organic tension at apex) -->
+  <!-- Ref: THEMATIC_SCHEMA - complement #f8c98a (warmth vs cool logic) -->
+  <rect x="48" y="6.5" width="4" height="2" rx="0.5" fill="#f8c98a" opacity="0.65"/>
+
+  <!-- ============================================================
+       LAYER 7: PLATONIC SOLIDS (SDF primitives in world space)
+       Ref: THEMATIC_SCHEMA - "Cube, pyramid, octahedron = SDF building blocks"
+       Ref: INSIGNIA_STRUCTURAL - "Show primitive SDF types"
+       ============================================================ -->
+
+  <!-- Large cube (rotated 45deg, intersecting column at golden ratio point) -->
+  <!-- Golden ratio: 50 * 0.618 ~ 31 from top, so around y=47 -->
+  <g transform="rotate(45, 50, 50)">
+    <rect x="43" y="43" width="14" height="14" fill="#6fa0e8" opacity="0.65"/>
+    <rect x="44" y="44" width="12" height="12" fill="#8ab4f8" opacity="0.3"/>
+    <!-- Cross-diagonal (shows cube interior, SDF debug) -->
+    <line x1="43" y1="43" x2="57" y2="57" stroke="#1e3a5f" stroke-width="0.4" opacity="0.4"/>
+    <line x1="57" y1="43" x2="43" y2="57" stroke="#1e3a5f" stroke-width="0.4" opacity="0.4"/>
+    <!-- Highlight edges (light-facing) -->
+    <line x1="43" y1="43" x2="57" y2="43" stroke="#e8f4ff" stroke-width="0.8" opacity="0.6"/>
+    <line x1="43" y1="43" x2="43" y2="57" stroke="#e8f4ff" stroke-width="0.8" opacity="0.45"/>
+  </g>
+
+  <!-- Pyramid (adjacent, right side) -->
+  <polygon points="76,55 71,65 81,65" fill="#5a8dd8" opacity="0.7"/>
+  <polygon points="76,56 72.5,65 79.5,65" fill="#8ab4f8" opacity="0.35"/>
+  <line x1="76" y1="55" x2="71" y2="65" stroke="#c8e0ff" stroke-width="0.6" opacity="0.5"/>
+  <line x1="76" y1="55" x2="81" y2="65" stroke="#e8f4ff" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- ============================================================
+       LAYER 8: LIGHT BEAM CONVERGENCE HIGHLIGHTS
+       Ref: INSIGNIA_STRUCTURAL - "Converge at focal plane (pixel positions)"
+       These glow dots show where render rays sample the SDF surface
+       ============================================================ -->
+  <circle cx="50" cy="50" r="2.5" fill="#f8c98a" opacity="0.6"/>
+  <circle cx="50" cy="50" r="1.2" fill="#e8f4ff" opacity="0.8"/>
+  <circle cx="40" cy="72" r="1.5" fill="#e8f4ff" opacity="0.45"/>
+  <circle cx="34" cy="80" r="1" fill="#c8e0ff" opacity="0.35"/>
+
+  <!-- ============================================================
+       LAYER 9: BASE STRUCTURE (Dendritic foundation)
+       Ref: PILLAR_THEMATIC_SCHEMA - "Structural columns bifurcate following SDF union"
+       Ref: INSIGNIA_STRUCTURAL - "Dendritic base showing SDF branching operations"
+       ============================================================ -->
+
+  <!-- Foundation platform -->
+  <rect x="30" y="86" width="40" height="3" fill="#1e3a5f"/>
+  <rect x="31" y="86.5" width="38" height="2" fill="#374151" opacity="0.6"/>
+  <!-- Light accent on foundation top edge -->
+  <line x1="31" y1="86" x2="69" y2="86" stroke="#5a8dd8" stroke-width="0.6" opacity="0.5"/>
+
+  <!-- Main foundation node (concentric rings) -->
+  <circle cx="50" cy="89" r="5" fill="#1e3a5f"/>
+  <circle cx="50" cy="89" r="3.8" fill="#374151" opacity="0.6"/>
+  <circle cx="50" cy="89" r="2.8" fill="#5a8dd8"/>
+  <circle cx="50" cy="89" r="1.2" fill="#8ab4f8" opacity="0.7"/>
+
+  <!-- Dendritic Y-fork branching (primary split) -->
+  <line x1="50" y1="89" x2="40" y2="97" stroke="#6fa0e8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="50" y1="89" x2="60" y2="97" stroke="#6fa0e8" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Secondary sub-branching (Murray's Law: smaller child radii) -->
+  <line x1="40" y1="97" x2="35" y2="99.5" stroke="#8ab4f8" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="40" y1="97" x2="43" y2="99.5" stroke="#8ab4f8" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="60" y1="97" x2="57" y2="99.5" stroke="#8ab4f8" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="60" y1="97" x2="65" y2="99.5" stroke="#8ab4f8" stroke-width="1.2" stroke-linecap="round"/>
 
   <!-- Branch endpoint nodes -->
-  <circle cx="45" cy="98" r="2" fill="#8ab4f8"/>
-  <circle cx="55" cy="98" r="2" fill="#8ab4f8"/>
+  <circle cx="40" cy="97" r="2" fill="#8ab4f8"/>
+  <circle cx="60" cy="97" r="2" fill="#8ab4f8"/>
+  <circle cx="35" cy="99.5" r="1" fill="#c8e0ff" opacity="0.7"/>
+  <circle cx="43" cy="99.5" r="1" fill="#c8e0ff" opacity="0.7"/>
+  <circle cx="57" cy="99.5" r="1" fill="#c8e0ff" opacity="0.7"/>
+  <circle cx="65" cy="99.5" r="1" fill="#c8e0ff" opacity="0.7"/>
 
-  <!-- Foundation grid pattern -->
-  <g stroke="#8ab4f8" stroke-width="0.3" opacity="0.4">
-    <line x1="45" y1="91" x2="55" y2="91"/>
-    <line x1="45" y1="93" x2="55" y2="93"/>
-    <line x1="45" y1="95" x2="55" y2="95"/>
+  <!-- Foundation measurement grid pattern -->
+  <g stroke="#8ab4f8" stroke-width="0.3" opacity="0.3">
+    <line x1="44" y1="87.5" x2="56" y2="87.5"/>
+    <line x1="44" y1="89" x2="56" y2="89"/>
+    <line x1="44" y1="90.5" x2="56" y2="90.5"/>
   </g>
 
-  <!-- LOD indicators -->
-  <g fill="#e8f4ff" opacity="0.5">
-    <rect x="62" y="30" width="1" height="2"/>
-    <rect x="64" y="30" width="1" height="2"/>
-    <rect x="62" y="50" width="1" height="2"/>
-    <rect x="64" y="50" width="1" height="2"/>
+  <!-- ============================================================
+       LAYER 10: LOD INDICATORS (Technical ornament)
+       Ref: ARCHITECTUS_iterations.md - "LOD level indicators (micro text-like marks)"
+       ============================================================ -->
+  <!-- Right-side LOD level marks -->
+  <g fill="#c8e0ff" opacity="0.4">
+    <rect x="66" y="26" width="1.5" height="2"/>
+    <rect x="68.5" y="26" width="1.5" height="2"/>
+    <rect x="71" y="26" width="0.8" height="2"/>
+  </g>
+  <g fill="#c8e0ff" opacity="0.3">
+    <rect x="66" y="46" width="1.5" height="2"/>
+    <rect x="68.5" y="46" width="1.5" height="2"/>
+  </g>
+  <g fill="#c8e0ff" opacity="0.2">
+    <rect x="66" y="66" width="1.5" height="2"/>
   </g>
 
-  <!-- Coordinate markers -->
-  <g stroke="#c8e0ff" stroke-width="0.5" opacity="0.4">
-    <line x1="10" y1="10" x2="15" y2="10"/>
-    <line x1="10" y1="10" x2="10" y2="15"/>
-    <line x1="90" y1="10" x2="85" y2="10"/>
-    <line x1="90" y1="10" x2="90" y2="15"/>
+  <!-- Left-side render statistics ornament (abstract bar graph) -->
+  <!-- Ref: ARCHITECTUS_iterations.md - "Render statistics ornament" -->
+  <g fill="#8ab4f8" opacity="0.2">
+    <rect x="8" y="52" width="1" height="3"/>
+    <rect x="10" y="50" width="1" height="5"/>
+    <rect x="12" y="48" width="1" height="7"/>
+    <rect x="14" y="51" width="1" height="4"/>
   </g>
 
-  <!-- Golden ratio marker -->
-  <circle cx="50" cy="55" r="1" fill="#f8c98a" opacity="0.6"/>
+  <!-- ============================================================
+       LAYER 11: SACRED GEOMETRY ACCENT (Golden ratio marker)
+       Ref: THEMATIC_SCHEMA geometry - "Golden ratio proportions"
+       The golden spiral center: warmth amid cool precision
+       ============================================================ -->
+  <circle cx="50" cy="47" r="1.5" fill="#f8c98a" opacity="0.5"/>
 
-  <!-- Final highlight accents on column -->
-  <line x1="57" y1="22" x2="57" y2="90" stroke="#e8f4ff" stroke-width="0.8" opacity="0.6"/>
-  <line x1="58.5" y1="22" x2="58.5" y2="90" stroke="#e8f4ff" stroke-width="0.4" opacity="0.3"/>
+  <!-- ============================================================
+       LAYER 12: GIMBAL FRAME HINTS (Border ornament)
+       Ref: INSIGNIA_STRUCTURAL - "Gimbal structure = Ant on Manifold camera"
+       Small arc segments at cardinal points suggesting gyroscopic mounting
+       ============================================================ -->
+  <path d="M 50 1 A 49 49 0 0 1 64 3" fill="none" stroke="#5a8dd8" stroke-width="0.6" opacity="0.2"/>
+  <path d="M 99 46 A 49 49 0 0 1 97 60" fill="none" stroke="#5a8dd8" stroke-width="0.6" opacity="0.2"/>
+  <path d="M 50 99 A 49 49 0 0 1 36 97" fill="none" stroke="#5a8dd8" stroke-width="0.6" opacity="0.15"/>
+  <path d="M 1 46 A 49 49 0 0 1 3 32" fill="none" stroke="#5a8dd8" stroke-width="0.6" opacity="0.15"/>
+
+  <!-- ============================================================
+       LAYER 13: PERFORMANCE INDICATOR (60fps marker)
+       Ref: INSIGNIA_STRUCTURAL - "60fps lock indicator (green light)"
+       "Render the Truth without Fog" = performance commitment
+       ============================================================ -->
+  <circle cx="92" cy="92" r="2" fill="#5dbaff" opacity="0.5"/>
+  <circle cx="92" cy="92" r="1" fill="#e8f4ff" opacity="0.7"/>
 </svg>

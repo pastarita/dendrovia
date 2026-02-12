@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- LUDUS SIMPLE - The Mechanics -->
-  <g id="ludus-simple">
-    <!-- Background branch (subtle Y-fork) -->
-    <path d="M50,70 L50,50 L45,45 M50,50 L55,45" stroke="#5fa876" stroke-width="2" opacity="0.3" fill="none"/>
+  <!-- LUDUS SIMPLE: "The Mechanics" - Minimal game controller with Y-fork -->
+  <!-- Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - "friendly_rounded corners" -->
+  <!-- Ref: LUDUS_iterations.md - 16x16px clarity, 2-3 colors, 4-8 paths -->
+  <!-- Target: 16x16px optimized, instant recognition -->
 
-    <!-- Controller body -->
-    <rect x="30" y="44" width="40" height="24" rx="4" fill="#81c995"/>
+  <!-- Path 1: Y-fork skill branch (dendritic Dendrovian motif, background) -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA.md - "Y-fork branches show player build choices" -->
+  <path d="M50,75 L50,55 M50,55 L40,42 M50,55 L60,42"
+        stroke="#5fa876" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.35"/>
 
-    <!-- D-pad (cross shape) -->
-    <rect x="37" y="54" width="10" height="3" fill="#5fa876"/>
-    <rect x="40" y="51" width="3" height="10" fill="#5fa876"/>
+  <!-- Path 2-3: Y-fork skill nodes (active glow) -->
+  <circle cx="40" cy="42" r="3" fill="#5fa876" opacity="0.4"/>
+  <circle cx="60" cy="42" r="3" fill="#5fa876" opacity="0.4"/>
 
-    <!-- Action Buttons (2 stacked) -->
-    <circle cx="59" cy="52" r="4" fill="#b8e6c9"/>
-    <circle cx="59" cy="60" r="4" fill="#b8e6c9"/>
-  </g>
+  <!-- Path 4: Controller body (rounded rect, primary green) -->
+  <!-- Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - "game controllers with ergonomic grips" -->
+  <rect x="25" y="48" width="50" height="28" rx="6" fill="#81c995"/>
+
+  <!-- Path 5: D-pad cross (strategic forest green) -->
+  <path d="M34,62 L48,62 M41,55 L41,69" stroke="#5fa876" stroke-width="5"
+        stroke-linecap="round"/>
+
+  <!-- Path 6: Action button top-right -->
+  <circle cx="63" cy="56" r="5" fill="#b8e6c9"/>
+
+  <!-- Path 7: Action button bottom-right -->
+  <circle cx="63" cy="68" r="5" fill="#b8e6c9"/>
 </svg>

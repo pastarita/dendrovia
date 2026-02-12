@@ -1,139 +1,406 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- CHRONOS DETAILED - Maximum archaeological richness -->
+  <!-- CHRONOS DETAILED: 64x64px+, 8-12 colors, 40-80 paths
+       Ref: PILLAR_THEMATIC_SCHEMA.md - "Time crystallized into navigable space"
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "The Temporal Compression Engine"
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - Maximum symbolic richness, architectural portrait
+       Ref: CHRONOS_iterations_v2.md - Full 4-layer thematic vision:
+         L1 (Narrative): Scroll on excavation table, candlelight, bioluminescent rings
+         L2 (Atmosphere): Warm/cold temperature gradient, hushed reverence
+         L3 (Symbolism): 12 strata, Y-fork, 8 rings, dendritic branches, archaeological tools
+         L4 (Composition): Spiral armature, golden ratio, 60-30-10 color rule
+       Read top-to-bottom = follows data flow through CHRONOS pipeline (chaos -> strata -> order) -->
+
   <defs>
-    <!-- Complex gradient for scroll depth -->
-    <radialGradient id="scrollDepth" cx="50%" cy="50%">
+    <!-- ============================================================
+         GRADIENT DEFINITIONS
+         ============================================================ -->
+
+    <!-- Scroll depth gradient: multi-stop parchment aging (surface light -> compressed base) -->
+    <!-- Ref: THEMATIC_SCHEMA palette - highlight #f5ead6 -> primary #d4a574 -> secondary #8b7355 -->
+    <radialGradient id="cd-depth" cx="45%" cy="45%" r="55%">
       <stop offset="0%" stop-color="#f5ead6"/>
-      <stop offset="30%" stop-color="#e8d7c3"/>
-      <stop offset="60%" stop-color="#d4a574"/>
+      <stop offset="25%" stop-color="#e8d7c3"/>
+      <stop offset="50%" stop-color="#d4a574"/>
+      <stop offset="80%" stop-color="#a6896b"/>
       <stop offset="100%" stop-color="#8b7355"/>
     </radialGradient>
 
-    <!-- Sediment texture pattern -->
-    <pattern id="sediment" width="2" height="2" patternUnits="userSpaceOnUse">
-      <circle cx="1" cy="1" r="0.3" fill="#a6896b" opacity="0.4"/>
+    <!-- Candlelight gradient: warm amber illumination from upper-left -->
+    <!-- Ref: CHRONOS_iterations_v2.md L2 - "Single candle flame (2700K warm amber), positioned left" -->
+    <radialGradient id="cd-candle" cx="15%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#dda15e" stop-opacity="0.3"/>
+      <stop offset="40%" stop-color="#d4a574" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#4a3822" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Temporal ring bioluminescent glow: cold subsurface emission -->
+    <!-- Ref: CHRONOS_iterations_v2.md L2 - "6500K cold blue, subsurface scattering, soft glow" -->
+    <radialGradient id="cd-glow" cx="46%" cy="48%" r="30%">
+      <stop offset="0%" stop-color="#7fa9f5" stop-opacity="0.45"/>
+      <stop offset="50%" stop-color="#7fa9f5" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#7fa9f5" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Scroll curl depth: rolled parchment interior shadow -->
+    <linearGradient id="cd-curl" x1="0" y1="0" x2="1" y2="0.3">
+      <stop offset="0%" stop-color="#4a3822"/>
+      <stop offset="40%" stop-color="#6b5d4f"/>
+      <stop offset="70%" stop-color="#8b7355"/>
+      <stop offset="100%" stop-color="#c49060"/>
+    </linearGradient>
+
+    <!-- Branch fossil gradient: organic matter compressed into stone -->
+    <linearGradient id="cd-fossil" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#4a3822"/>
+      <stop offset="100%" stop-color="#6b5d4f"/>
+    </linearGradient>
+
+    <!-- ============================================================
+         PATTERN DEFINITIONS
+         ============================================================ -->
+
+    <!-- Parchment fiber texture: vertical organic fibers (aged_parchment quality) -->
+    <!-- Ref: CHRONOS_iterations_v2.md L2 - "micro-variation: smooth in preserved areas, fibrous where deteriorated" -->
+    <pattern id="cd-fiber" width="1.5" height="10" patternUnits="userSpaceOnUse">
+      <line x1="0.4" y1="0" x2="0.4" y2="10" stroke="#c49060" stroke-width="0.25" opacity="0.25"/>
+      <line x1="1.1" y1="2" x2="1.1" y2="8" stroke="#a6896b" stroke-width="0.15" opacity="0.15"/>
     </pattern>
 
-    <!-- Fiber texture pattern -->
-    <pattern id="fiber" width="1" height="8" patternUnits="userSpaceOnUse">
-      <line x1="0" y1="0" x2="0" y2="8" stroke="#c49060" stroke-width="0.3" opacity="0.3"/>
+    <!-- Sediment grain texture: compressed geological particles -->
+    <!-- Ref: CHRONOS_iterations_v2.md L2 - "compressed sediment grain" -->
+    <pattern id="cd-sediment" width="3" height="3" patternUnits="userSpaceOnUse">
+      <circle cx="0.8" cy="0.8" r="0.2" fill="#8b7355" opacity="0.3"/>
+      <circle cx="2.2" cy="2" r="0.15" fill="#a6896b" opacity="0.2"/>
     </pattern>
   </defs>
 
-  <!-- Deep shadow base -->
-  <path fill="#4a3822" opacity="0.4" d="M20,10 Q15,50 20,90 L75,90 Q82,50 75,10 Z"/>
+  <!-- ============================================================
+       LAYER 0: BACKGROUND (Excavation table, ambient darkness)
+       Ref: CHRONOS_iterations_v2.md L4 - "Layer 0: Table surface, ambient darkness"
+       ============================================================ -->
+  <!-- Deep archaeological void -->
+  <rect x="0" y="0" width="100" height="100" fill="#1a1514" opacity="0.08"/>
 
-  <!-- Main scroll body with gradient -->
-  <path fill="url(#scrollDepth)" opacity="0.95" d="M22,12 Q17,50 22,88 L72,88 Q79,50 72,12 Z"/>
+  <!-- ============================================================
+       LAYER 1: SHADOW & DEPTH (Scroll casts shadow on table)
+       Ref: CHRONOS_iterations_v2.md L2 - "Strong directional shadows (45 deg angle)"
+       ============================================================ -->
+  <path fill="#4a3822" opacity="0.35"
+        d="M18,8 Q10,50 18,92 L77,92 Q86,50 77,8 Z"/>
 
-  <!-- Fiber texture overlay -->
-  <rect x="22" y="12" width="50" height="76" fill="url(#fiber)" opacity="0.5"/>
+  <!-- ============================================================
+       LAYER 2: SCROLL BODY (Main parchment surface)
+       Ref: SYMBOL_DRIVEN - "Scroll form dominates (60% of canvas height)"
+       Ref: CHRONOS_iterations_v2.md L1 - "partially unfurled across worn excavation table"
+       ============================================================ -->
+  <path fill="url(#cd-depth)"
+        d="M16,6 Q8,50 16,94 L74,94 Q84,50 74,6 Z"/>
 
-  <!-- Top scroll curl (detailed) -->
-  <path fill="#8b7355" opacity="0.8" d="M22,12 Q12,10 8,15 Q10,20 15,18 Q18,16 22,17 Z"/>
-  <path fill="#d4a574" opacity="0.9" d="M22,17 Q15,18 12,22 Q14,24 18,22 Q20,20 22,20 Z"/>
+  <!-- Fiber texture overlay (visible at 64px+) -->
+  <path fill="url(#cd-fiber)" opacity="0.4"
+        d="M16,6 Q8,50 16,94 L74,94 Q84,50 74,6 Z"/>
 
-  <!-- Bottom scroll curl -->
-  <path fill="#8b7355" opacity="0.8" d="M22,88 Q12,90 8,85 Q10,80 15,82 Q18,84 22,83 Z"/>
+  <!-- Candlelight warm wash (atmospheric temperature) -->
+  <path fill="url(#cd-candle)"
+        d="M16,6 Q8,50 16,94 L74,94 Q84,50 74,6 Z"/>
 
-  <!-- Stratification layers (12 layers with varying colors/patterns) -->
+  <!-- ============================================================
+       LAYER 3: SCROLL CURLS (Detailed rolled parchment ends)
+       Ref: CHRONOS_iterations_v2.md L1 - "Scroll curl at top showing rolled parchment"
+       ============================================================ -->
+
+  <!-- Top-left curl: outermost shadow layer -->
+  <path fill="#4a3822" opacity="0.7"
+        d="M16,6 Q4,3 2,10 Q3,18 8,16 Q12,12 16,12 Z"/>
+  <!-- Top-left curl: mid-tone (visible parchment interior) -->
+  <path fill="#8b7355" opacity="0.8"
+        d="M16,12 Q8,14 5,18 Q7,22 11,20 Q13,17 16,17 Z"/>
+  <!-- Top-left curl: highlight (light catching rolled edge) -->
+  <path fill="#d4a574" opacity="0.65"
+        d="M16,17 Q10,20 8,24 Q10,26 13,24 Q14,21 16,21 Z"/>
+
+  <!-- Bottom-right curl: shadow -->
+  <path fill="#4a3822" opacity="0.6"
+        d="M74,94 Q86,96 88,90 Q87,84 82,86 Q78,89 74,88 Z"/>
+  <!-- Bottom-right curl: mid -->
+  <path fill="#8b7355" opacity="0.7"
+        d="M74,88 Q82,86 84,82 Q82,80 79,82 Q77,85 74,84 Z"/>
+
+  <!-- ============================================================
+       LAYER 4: TWELVE STRATIFICATION BANDS (Geological code epochs)
+       Ref: CHRONOS_iterations_v2.md L3 - "Twelve Stratification Bands"
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "12 strata bands, progressive compression"
+       Oldest strata = bottom, more compressed. Newest = top, lighter.
+       Central zone (around Y-fork) is excavated = lighter circle
+       ============================================================ -->
   <g id="strata">
-    <rect x="24" y="16" width="46" height="5" fill="#d9c3a5" opacity="0.7"/>
-    <rect x="24" y="21" width="46" height="4" fill="#c49060" opacity="0.6"/>
-    <rect x="25" y="25" width="44" height="6" fill="#a6896b" opacity="0.8"/>
-    <rect x="25" y="31" width="44" height="3" fill="#8b7355" opacity="0.7"/>
-    <rect x="26" y="34" width="42" height="5" fill="#d4a574" opacity="0.6"/>
-    <rect x="26" y="39" width="42" height="4" fill="#c49060" opacity="0.7"/>
-    <!-- Central excavated area -->
-    <circle cx="47" cy="50" r="20" fill="#e8d7c3" opacity="0.5"/>
-    <rect x="27" y="61" width="40" height="4" fill="#c49060" opacity="0.7"/>
-    <rect x="27" y="65" width="40" height="5" fill="#a6896b" opacity="0.8"/>
-    <rect x="26" y="70" width="42" height="3" fill="#8b7355" opacity="0.7"/>
-    <rect x="25" y="73" width="44" height="6" fill="#d4a574" opacity="0.6"/>
-    <rect x="24" y="79" width="46" height="5" fill="#d9c3a5" opacity="0.7"/>
+    <!-- Stratum 1-3: Surface (recent commits, light, less compressed) -->
+    <rect x="19" y="10" width="54" height="4" fill="#e8d7c3" opacity="0.5" rx="0.5"/>
+    <rect x="19" y="15" width="54" height="5" fill="#d9c3a5" opacity="0.45" rx="0.5"/>
+    <rect x="20" y="21" width="52" height="4" fill="#c49060" opacity="0.4" rx="0.5"/>
+    <!-- Stratum 4-6: Mid-history (refactor era, medium density) -->
+    <rect x="20" y="26" width="52" height="5" fill="#a6896b" opacity="0.5" rx="0.5"/>
+    <rect x="21" y="32" width="50" height="3" fill="#8b7355" opacity="0.45" rx="0.5"/>
+    <rect x="21" y="36" width="50" height="4" fill="#d4a574" opacity="0.35" rx="0.5"/>
+    <!-- Central excavated zone: strata interrupted by temporal rings -->
+    <circle cx="46" cy="50" r="22" fill="#e8d7c3" opacity="0.2"/>
+    <!-- Stratum 7-9: Deep history (founding era, increasing compression) -->
+    <rect x="21" y="63" width="50" height="4" fill="#d4a574" opacity="0.35" rx="0.5"/>
+    <rect x="21" y="68" width="50" height="3" fill="#8b7355" opacity="0.45" rx="0.5"/>
+    <rect x="20" y="72" width="52" height="5" fill="#a6896b" opacity="0.5" rx="0.5"/>
+    <!-- Stratum 10-12: Foundational (oldest commits, most compressed, darkest) -->
+    <rect x="20" y="78" width="52" height="4" fill="#c49060" opacity="0.5" rx="0.5"/>
+    <rect x="19" y="83" width="54" height="4" fill="#8b7355" opacity="0.55" rx="0.5"/>
+    <rect x="19" y="88" width="54" height="3" fill="#6b5d4f" opacity="0.5" rx="0.5"/>
   </g>
 
-  <!-- Concentric temporal rings (8 rings, irregular spacing) -->
-  <g id="temporalRings" opacity="0.8">
-    <circle cx="47" cy="50" r="24" fill="none" stroke="#6b5d4f" stroke-width="0.8" opacity="0.4"/>
-    <circle cx="47" cy="50" r="21" fill="none" stroke="#8b7355" stroke-width="1" opacity="0.5"/>
-    <circle cx="47" cy="50" r="18" fill="none" stroke="#a6896b" stroke-width="1.2" opacity="0.6"/>
-    <circle cx="47" cy="50" r="15" fill="none" stroke="#c49060" stroke-width="1" opacity="0.7"/>
-    <circle cx="47" cy="50" r="12" fill="none" stroke="#d4a574" stroke-width="1.5" opacity="0.8"/>
-    <circle cx="47" cy="50" r="9" fill="none" stroke="#dda15e" stroke-width="1.2" opacity="0.85"/>
-    <circle cx="47" cy="50" r="6" fill="none" stroke="#e8d7c3" stroke-width="1" opacity="0.9"/>
-    <circle cx="47" cy="50" r="3" fill="none" stroke="#f5ead6" stroke-width="0.8"/>
+  <!-- Sediment grain texture (visible at high zoom) -->
+  <rect x="16" y="6" width="60" height="88" fill="url(#cd-sediment)" opacity="0.3"/>
+
+  <!-- ============================================================
+       LAYER 5: TEMPORAL RING GLOW (Bioluminescent subsurface field)
+       Ref: CHRONOS_iterations_v2.md L1 - "rings emanate FROM the parchment"
+       Ref: CHRONOS_iterations_v2.md L3 - "Active memory - past that still glows"
+       ============================================================ -->
+  <circle cx="46" cy="50" r="26" fill="url(#cd-glow)"/>
+
+  <!-- ============================================================
+       LAYER 6: EIGHT TEMPORAL RINGS (Concentric commit-ring dating)
+       Ref: CHRONOS_iterations_v2.md L3 - "Eight Temporal Rings"
+       "2^8 = 256 (byte depth), octave (harmonic cycle), ring buffer (circular time)"
+       Ring opacity increases toward center (attention gradient)
+       ============================================================ -->
+  <g id="temporalRings">
+    <circle cx="46" cy="50" r="26" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.18"/>
+    <circle cx="46" cy="50" r="23" fill="none" stroke="#7fa9f5" stroke-width="0.6" opacity="0.22"/>
+    <circle cx="46" cy="50" r="20" fill="none" stroke="#7fa9f5" stroke-width="0.7" opacity="0.28"/>
+    <circle cx="46" cy="50" r="17" fill="none" stroke="#7fa9f5" stroke-width="0.8" opacity="0.35"/>
+    <circle cx="46" cy="50" r="14" fill="none" stroke="#7fa9f5" stroke-width="1.0" opacity="0.42"/>
+    <circle cx="46" cy="50" r="11" fill="none" stroke="#7fa9f5" stroke-width="1.2" opacity="0.5"/>
+    <circle cx="46" cy="50" r="8" fill="none" stroke="#7fa9f5" stroke-width="1.4" opacity="0.58"/>
+    <circle cx="46" cy="50" r="5" fill="none" stroke="#7fa9f5" stroke-width="1.6" opacity="0.65"/>
   </g>
 
-  <!-- Complex dendritic branch structure -->
-  <g id="branchStructure" stroke="#4a3822" stroke-width="2" fill="none" stroke-linecap="round">
-    <path d="M47,75 L47,50"/>
-    <path d="M47,50 L42,40"/>
-    <path d="M47,50 L52,40"/>
-    <path d="M42,40 L38,32"/>
-    <path d="M42,40 L44,32"/>
-    <path d="M52,40 L50,32"/>
-    <path d="M52,40 L56,32"/>
+  <!-- Ring intensification at branch intersections -->
+  <!-- Ref: CHRONOS_iterations_v2.md L1 - "Where rings intersect branches, blue glow intensifies" -->
+  <circle cx="38" cy="40" r="3" fill="#7fa9f5" opacity="0.12"/>
+  <circle cx="54" cy="40" r="3" fill="#7fa9f5" opacity="0.12"/>
+  <circle cx="46" cy="50" r="4" fill="#7fa9f5" opacity="0.15"/>
+
+  <!-- ============================================================
+       LAYER 7: DENDRITIC BRANCH STRUCTURE (Complex fossil tree)
+       Ref: CHRONOS_iterations_v2.md L3 - "Dendritic Branch Structure"
+       "Git: Merge patterns, branch topology. Neural: Synaptic connections.
+        Botanical: Tree root/branch fractals (self-similar scaling)"
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Y-Fork = Parser Junction"
+       ============================================================ -->
+  <g id="branchStructure" fill="none" stroke-linecap="round">
+    <!-- Main trunk (MAIN branch: thickest, ascending from bottom stratum) -->
+    <line x1="46" y1="76" x2="46" y2="50" stroke="url(#cd-fossil)" stroke-width="3"/>
+
+    <!-- PRIMARY Y-FORK (The moment of divergence) -->
+    <!-- Ref: CHRONOS_iterations_v2.md L3 - "Central Y-Fork: every fork is a decision" -->
+    <line x1="46" y1="50" x2="36" y2="40" stroke="#4a3822" stroke-width="2.5"/>
+    <line x1="46" y1="50" x2="56" y2="40" stroke="#4a3822" stroke-width="2.5"/>
+
+    <!-- Secondary branching (Murray's Law: r_children^3 = r_parent^3) -->
+    <!-- Ref: SYMBOL_DRIVEN - "Murray's Law governs proportion" -->
+    <!-- Left sub-branches -->
+    <line x1="36" y1="40" x2="30" y2="32" stroke="#6b5d4f" stroke-width="1.8"/>
+    <line x1="36" y1="40" x2="40" y2="32" stroke="#6b5d4f" stroke-width="1.8"/>
+    <!-- Right sub-branches -->
+    <line x1="56" y1="40" x2="52" y2="32" stroke="#6b5d4f" stroke-width="1.8"/>
+    <line x1="56" y1="40" x2="62" y2="32" stroke="#6b5d4f" stroke-width="1.8"/>
+
+    <!-- Tertiary branching (finest resolution, leaf commits) -->
+    <line x1="30" y1="32" x2="27" y2="26" stroke="#8b7355" stroke-width="1.0"/>
+    <line x1="30" y1="32" x2="33" y2="26" stroke="#8b7355" stroke-width="1.0"/>
+    <line x1="40" y1="32" x2="38" y2="26" stroke="#8b7355" stroke-width="1.0"/>
+    <line x1="52" y1="32" x2="50" y2="26" stroke="#8b7355" stroke-width="1.0"/>
+    <line x1="62" y1="32" x2="60" y2="26" stroke="#8b7355" stroke-width="1.0"/>
+    <line x1="62" y1="32" x2="65" y2="26" stroke="#8b7355" stroke-width="1.0"/>
   </g>
 
-  <!-- Fossil imprint nodes at commits -->
+  <!-- ============================================================
+       LAYER 8: COMMIT FOSSIL NODES (Concentric age-ringed imprints)
+       Ref: PILLAR_THEMATIC_SCHEMA dendrovianMotifs - "Circular fossil imprints with concentric age rings"
+       Ref: CHRONOS_iterations_v2.md L3 - "commit nodes as fossils pressed into stone"
+       ============================================================ -->
   <g id="commitNodes">
-    <circle cx="47" cy="50" r="4" fill="#d4a574" stroke="#4a3822" stroke-width="1.5"/>
-    <circle cx="47" cy="50" r="2.5" fill="none" stroke="#8b7355" stroke-width="0.5"/>
+    <!-- ROOT NODE (HEAD pointer = excavation focus, largest) -->
+    <!-- Ref: CHRONOS_iterations_v2.md L3 - "HEAD pointer as excavation focus" -->
+    <circle cx="46" cy="76" r="4" fill="#dda15e" stroke="#4a3822" stroke-width="1.5"/>
+    <circle cx="46" cy="76" r="2.5" fill="none" stroke="#c49060" stroke-width="0.5"/>
+    <circle cx="46" cy="76" r="1.5" fill="#f5ead6" opacity="0.7"/>
 
-    <circle cx="42" cy="40" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
-    <circle cx="42" cy="40" r="2" fill="none" stroke="#8b7355" stroke-width="0.5"/>
+    <!-- JUNCTION NODE (Y-fork center = sacred center) -->
+    <!-- Ref: CHRONOS_iterations_v2.md L4 - "Y-fork junction = sacred center (all paths converge)" -->
+    <circle cx="46" cy="50" r="4.5" fill="#d4a574" stroke="#4a3822" stroke-width="1.5"/>
+    <circle cx="46" cy="50" r="3" fill="none" stroke="#c49060" stroke-width="0.5"/>
+    <circle cx="46" cy="50" r="1.8" fill="#e8d7c3" opacity="0.6"/>
 
-    <circle cx="52" cy="40" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
-    <circle cx="52" cy="40" r="2" fill="none" stroke="#8b7355" stroke-width="0.5"/>
+    <!-- PRIMARY BRANCH NODES (2 major forks) -->
+    <circle cx="36" cy="40" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
+    <circle cx="36" cy="40" r="2" fill="none" stroke="#d4a574" stroke-width="0.5"/>
+    <circle cx="56" cy="40" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
+    <circle cx="56" cy="40" r="2" fill="none" stroke="#d4a574" stroke-width="0.5"/>
 
-    <circle cx="38" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
-    <circle cx="44" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
-    <circle cx="50" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
-    <circle cx="56" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <!-- SECONDARY BRANCH NODES -->
+    <circle cx="30" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <circle cx="30" cy="32" r="1.5" fill="none" stroke="#c49060" stroke-width="0.4"/>
+    <circle cx="40" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <circle cx="52" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <circle cx="62" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <circle cx="62" cy="32" r="1.5" fill="none" stroke="#c49060" stroke-width="0.4"/>
 
-    <circle cx="47" cy="75" r="3.5" fill="#dda15e" stroke="#4a3822" stroke-width="1.2"/>
+    <!-- LEAF COMMIT NODES (with git blame blue glow = active traces) -->
+    <!-- Ref: CHRONOS_iterations_v2.md L3 - "git blame highlights, still-flickering consciousness" -->
+    <circle cx="27" cy="26" r="2" fill="#8b7355" stroke="#4a3822" stroke-width="0.8"/>
+    <circle cx="27" cy="26" r="1" fill="#7fa9f5" opacity="0.45"/>
+    <circle cx="33" cy="26" r="2" fill="#8b7355" stroke="#4a3822" stroke-width="0.8"/>
+    <circle cx="38" cy="26" r="2" fill="#8b7355" stroke="#4a3822" stroke-width="0.8"/>
+    <circle cx="38" cy="26" r="1" fill="#7fa9f5" opacity="0.35"/>
+    <circle cx="50" cy="26" r="2" fill="#8b7355" stroke="#4a3822" stroke-width="0.8"/>
+    <circle cx="60" cy="26" r="2" fill="#8b7355" stroke="#4a3822" stroke-width="0.8"/>
+    <circle cx="65" cy="26" r="2" fill="#8b7355" stroke="#4a3822" stroke-width="0.8"/>
+    <circle cx="65" cy="26" r="1" fill="#7fa9f5" opacity="0.4"/>
   </g>
 
-  <!-- Archaeological grid overlay -->
-  <g id="archaeoGrid" stroke="#4a3822" stroke-width="0.5" opacity="0.3">
-    <line x1="35" y1="45" x2="35" y2="55"/>
-    <line x1="41" y1="45" x2="41" y2="55"/>
-    <line x1="53" y1="45" x2="53" y2="55"/>
-    <line x1="59" y1="45" x2="59" y2="55"/>
-    <line x1="35" y1="45" x2="59" y2="45"/>
-    <line x1="35" y1="50" x2="59" y2="50"/>
-    <line x1="35" y1="55" x2="59" y2="55"/>
+  <!-- ============================================================
+       LAYER 9: ARCHAEOLOGICAL GRID OVERLAY
+       Ref: SYMBOL_DRIVEN - "Archaeological grid lines suggesting excavation methodology"
+       Ref: CHRONOS_iterations_v2.md L3 - "Magnifying Lens, precision calipers, soft brush"
+       ============================================================ -->
+  <g id="archaeoGrid" stroke="#4a3822" stroke-width="0.4" opacity="0.2">
+    <!-- 4x4 excavation grid around central zone -->
+    <line x1="34" y1="42" x2="58" y2="42"/>
+    <line x1="34" y1="48" x2="58" y2="48"/>
+    <line x1="34" y1="54" x2="58" y2="54"/>
+    <line x1="34" y1="58" x2="58" y2="58"/>
+    <line x1="34" y1="42" x2="34" y2="58"/>
+    <line x1="40" y1="42" x2="40" y2="58"/>
+    <line x1="46" y1="42" x2="46" y2="58"/>
+    <line x1="52" y1="42" x2="52" y2="58"/>
+    <line x1="58" y1="42" x2="58" y2="58"/>
   </g>
 
-  <!-- Measurement markers -->
-  <g id="measurements" fill="#4a3822" font-size="2.5" opacity="0.6">
-    <text x="73" y="25">0m</text>
-    <text x="73" y="50">-2m</text>
-    <text x="73" y="75">-4m</text>
+  <!-- ============================================================
+       LAYER 10: ARCHAEOLOGICAL TOOLS (Peripheral context)
+       Ref: CHRONOS_iterations_v2.md L3 - "Tools of understanding - parsing requires instruments"
+       Ref: CHRONOS_iterations_v2.md L4 - "10% periphery: archaeological tools, context"
+       ============================================================ -->
+
+  <!-- Magnifying lens (bottom-left: zoomed inspection) -->
+  <!-- Ref: CHRONOS_iterations_v2.md L3 - "Magnifying Lens: Zoom (file inspection)" -->
+  <g id="lens" opacity="0.35">
+    <circle cx="8" cy="88" r="4" fill="none" stroke="#8b7355" stroke-width="1"/>
+    <circle cx="8" cy="88" r="2.5" fill="#e8d7c3" opacity="0.3"/>
+    <line x1="11" y1="91" x2="14" y2="94" stroke="#8b7355" stroke-width="1.2" stroke-linecap="round"/>
   </g>
 
-  <!-- Micro-text labels (branch names) -->
-  <g id="labels" fill="#4a3822" font-size="3" opacity="0.7">
-    <text x="37" y="30">DEV</text>
-    <text x="51" y="30">FEAT</text>
-    <text x="44" y="77">MAIN</text>
+  <!-- Calipers (bottom-right: complexity measurement) -->
+  <!-- Ref: CHRONOS_iterations_v2.md L3 - "Calipers: Metrics (cyclomatic complexity)" -->
+  <g id="calipers" opacity="0.3">
+    <line x1="86" y1="82" x2="86" y2="94" stroke="#8b7355" stroke-width="0.8"/>
+    <line x1="84" y1="84" x2="86" y2="82" stroke="#8b7355" stroke-width="0.8"/>
+    <line x1="88" y1="84" x2="86" y2="82" stroke="#8b7355" stroke-width="0.8"/>
+    <line x1="84" y1="84" x2="84" y2="90" stroke="#a6896b" stroke-width="0.6"/>
+    <line x1="88" y1="84" x2="88" y2="90" stroke="#a6896b" stroke-width="0.6"/>
   </g>
 
-  <!-- Small tool icons (trowel) -->
-  <g id="tools" opacity="0.4">
-    <path d="M8,88 L10,86 L12,88 L10,90 Z" fill="#4a3822"/>
-    <rect x="9.5" y="82" width="1" height="4" fill="#8b7355"/>
+  <!-- Soft brush (top-right: abstraction removal) -->
+  <!-- Ref: CHRONOS_iterations_v2.md L3 - "Soft Brush: Abstraction removal" -->
+  <g id="brush" opacity="0.25">
+    <rect x="86" y="8" width="1.2" height="8" fill="#8b7355" rx="0.3"/>
+    <path d="M85,16 Q86.6,18 88.2,16" fill="#c49060" stroke="#8b7355" stroke-width="0.3"/>
   </g>
 
-  <!-- Weathered edge details (crackle) -->
-  <g id="weathering" stroke="#8b7355" stroke-width="0.3" opacity="0.3">
-    <path d="M25,18 L27,20"/>
-    <path d="M30,15 L32,17"/>
-    <path d="M68,85 L70,83"/>
+  <!-- ============================================================
+       LAYER 11: MEASUREMENT MARKERS (Archaeological depth scale)
+       Ref: CHRONOS_iterations_v2.md L3 - "timestamp markings like dates on artifacts"
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "measurement indicators"
+       ============================================================ -->
+  <g id="measurements" opacity="0.4">
+    <!-- Depth scale (right edge) -->
+    <line x1="78" y1="15" x2="80" y2="15" stroke="#4a3822" stroke-width="0.5"/>
+    <line x1="78" y1="30" x2="80" y2="30" stroke="#4a3822" stroke-width="0.5"/>
+    <line x1="78" y1="50" x2="80" y2="50" stroke="#4a3822" stroke-width="0.5"/>
+    <line x1="78" y1="70" x2="80" y2="70" stroke="#4a3822" stroke-width="0.5"/>
+    <line x1="78" y1="85" x2="80" y2="85" stroke="#4a3822" stroke-width="0.5"/>
+    <!-- Vertical ruler line -->
+    <line x1="79" y1="15" x2="79" y2="85" stroke="#4a3822" stroke-width="0.3"/>
+    <!-- Micro-text depth labels -->
+    <text x="81" y="16.5" fill="#4a3822" font-size="2.5" font-family="monospace">S1</text>
+    <text x="81" y="31.5" fill="#4a3822" font-size="2.5" font-family="monospace">S4</text>
+    <text x="81" y="51.5" fill="#4a3822" font-size="2.5" font-family="monospace">S6</text>
+    <text x="81" y="71.5" fill="#4a3822" font-size="2.5" font-family="monospace">S9</text>
+    <text x="81" y="86.5" fill="#4a3822" font-size="2.5" font-family="monospace">S12</text>
   </g>
 
-  <!-- Highlight accent on scroll edge -->
-  <path stroke="#f5ead6" stroke-width="1.5" fill="none" opacity="0.6" d="M24,14 Q18,50 24,86"/>
+  <!-- ============================================================
+       LAYER 12: MICRO-TEXT LABELS (Branch names as archaeological marks)
+       Ref: CHRONOS_iterations_v2.md L3 - "author signatures as archaeological marks"
+       Ref: PILLAR_THEMATIC_SCHEMA iconography details - "micro-text representing file names"
+       ============================================================ -->
+  <g id="branchLabels" fill="#4a3822" font-size="2.8" font-family="monospace" opacity="0.55">
+    <text x="24" y="25">DEV</text>
+    <text x="58" y="25">FEAT</text>
+    <text x="43" y="80">MAIN</text>
+  </g>
+
+  <!-- ============================================================
+       LAYER 13: WEATHERED EDGE DETAILS (Organic deterioration)
+       Ref: CHRONOS_iterations_v2.md L1 - "edges are deteriorated, organic irregularity"
+       Ref: CHRONOS_iterations_v2.md L3 - "Edge Deterioration: Code rot, data loss"
+       Left edge: more intact. Right edge: severe degradation.
+       ============================================================ -->
+  <g id="weathering" stroke="#8b7355" fill="none" stroke-width="0.3" opacity="0.35">
+    <!-- Right edge deterioration (severe, torn) -->
+    <path d="M73,10 L75,12 L72,14"/>
+    <path d="M74,18 L76,20 L73,22"/>
+    <path d="M75,28 L77,26 L74,24"/>
+    <!-- Left edge: minor weathering (more intact) -->
+    <path d="M17,20 L15,22"/>
+    <path d="M16,40 L14,42"/>
+    <!-- Bottom edge: oxidized ink stain marks -->
+    <path d="M30,92 L32,94 L28,93" stroke="#6b5d4f" stroke-width="0.4" opacity="0.25"/>
+    <path d="M55,92 L58,94 L56,93" stroke="#6b5d4f" stroke-width="0.4" opacity="0.2"/>
+  </g>
+
+  <!-- ============================================================
+       LAYER 14: DUST MOTES (Suspended time particles in light beam)
+       Ref: CHRONOS_iterations_v2.md L1 - "dust motes suspended in still air, each glowing"
+       Ref: CHRONOS_iterations_v2.md L3 - "Time made visible - moments caught in beam"
+       ============================================================ -->
+  <g id="dustMotes">
+    <circle cx="22" cy="18" r="0.6" fill="#dda15e" opacity="0.4"/>
+    <circle cx="28" cy="24" r="0.4" fill="#e8d7c3" opacity="0.3"/>
+    <circle cx="14" cy="32" r="0.5" fill="#dda15e" opacity="0.35"/>
+    <circle cx="32" cy="14" r="0.3" fill="#f5ead6" opacity="0.3"/>
+    <circle cx="20" cy="44" r="0.5" fill="#e8d7c3" opacity="0.25"/>
+    <circle cx="10" cy="22" r="0.4" fill="#dda15e" opacity="0.3"/>
+    <circle cx="26" cy="38" r="0.3" fill="#f5ead6" opacity="0.25"/>
+  </g>
+
+  <!-- ============================================================
+       LAYER 15: SCROLL HIGHLIGHT EDGE (Light catching surface)
+       Ref: THEMATIC_SCHEMA palette - highlight #f5ead6
+       Ref: CHRONOS_iterations_v2.md L2 - "Candlelight creates strong directional shadows"
+       ============================================================ -->
+  <path stroke="#f5ead6" stroke-width="1.5" fill="none" opacity="0.5"
+        d="M18,8 Q10,50 18,92"/>
+  <path stroke="#e8d7c3" stroke-width="0.8" fill="none" opacity="0.3"
+        d="M20,10 Q13,50 20,90"/>
+
+  <!-- ============================================================
+       LAYER 16: GLASS CASE REFLECTION (Implied preservation)
+       Ref: CHRONOS_iterations_v2.md L3 - "Glass Case: Repository backup, archival integrity"
+       Subtle corner highlights suggesting glass over the scroll
+       ============================================================ -->
+  <g id="glassReflection" opacity="0.15">
+    <line x1="6" y1="3" x2="14" y2="3" stroke="#f5ead6" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="6" y1="3" x2="6" y2="11" stroke="#f5ead6" stroke-width="0.8" stroke-linecap="round"/>
+    <line x1="94" y1="97" x2="86" y2="97" stroke="#e8d7c3" stroke-width="0.6" stroke-linecap="round"/>
+    <line x1="94" y1="97" x2="94" y2="89" stroke="#e8d7c3" stroke-width="0.6" stroke-linecap="round"/>
+  </g>
 </svg>

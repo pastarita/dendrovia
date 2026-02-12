@@ -1,38 +1,100 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <!-- ARCHITECTUS EMOJI: Column + Light Rays + Cube -->
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- ARCHITECTUS EMOJI-GRADE: "Light made manifest through computational geometry"
+       Ref: PILLAR_THEMATIC_SCHEMA.md - The Rendering Lens System
+       Ref: EMOJI_GRADE_PROMPTS.md - Column + Light Rays + Cube
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - Optical lens pipeline (SDF -> transformation -> screen)
+       Target: 16-32px emoji-style, gradient-rich, Apple-quality polish -->
 
   <defs>
-    <linearGradient id="column" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#8ab4f8"/>
+    <!-- Column body gradient: polished stone illusion (SYMBOL_DRIVEN - polished_stone texture) -->
+    <linearGradient id="ae-col" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1e3a5f"/>
+      <stop offset="25%" stop-color="#5a8dd8"/>
+      <stop offset="60%" stop-color="#8ab4f8"/>
+      <stop offset="85%" stop-color="#c8e0ff"/>
+      <stop offset="100%" stop-color="#6fa0e8"/>
+    </linearGradient>
+    <!-- Capital gradient: architectural refinement -->
+    <linearGradient id="ae-cap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c8e0ff"/>
       <stop offset="100%" stop-color="#5a8dd8"/>
     </linearGradient>
+    <!-- Light beam glow: raymarching illumination path -->
+    <linearGradient id="ae-ray" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8c98a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#e8f4ff" stop-opacity="0.1"/>
+    </linearGradient>
+    <!-- Base foundation gradient: deep void ascending -->
+    <linearGradient id="ae-base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5a8dd8"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+    <!-- Radial glow for lens focal point -->
+    <radialGradient id="ae-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f8c98a" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#f8c98a" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- 3 Light beams (diagonal golden rays) -->
-  <line x1="26" y1="6" x2="10" y2="28" stroke="#f8c98a" stroke-width="2" opacity="0.6"/>
-  <line x1="28" y1="10" x2="14" y2="28" stroke="#f8c98a" stroke-width="1.5" opacity="0.5"/>
-  <line x1="24" y1="8" x2="16" y2="24" stroke="#f8c98a" stroke-width="1.5" opacity="0.4"/>
+  <!-- === BACK LAYER: Computational void (SDF space) === -->
+  <!-- Ref: INSIGNIA_STRUCTURAL - "Back = abstract mathematical space" -->
+  <circle cx="50" cy="44" r="38" fill="#1e3a5f" opacity="0.25"/>
 
-  <!-- Classical column (fluted) -->
-  <rect x="12" y="10" width="8" height="16" fill="url(#column)"/>
+  <!-- === LIGHT BEAMS: Raymarching paths (sight made visible) === -->
+  <!-- Ref: THEMATIC_SCHEMA - "7 light beams = render rays" -->
+  <!-- Golden warmth = organic tension with cool computational blue -->
+  <line x1="82" y1="8" x2="28" y2="78" stroke="#f8c98a" stroke-width="3.5" opacity="0.55" stroke-linecap="round"/>
+  <line x1="78" y1="4" x2="22" y2="72" stroke="#f8c98a" stroke-width="2.5" opacity="0.4" stroke-linecap="round"/>
+  <line x1="86" y1="14" x2="36" y2="84" stroke="#f8c98a" stroke-width="2" opacity="0.3" stroke-linecap="round"/>
 
-  <!-- Fluting grooves -->
-  <line x1="13.5" y1="10" x2="13.5" y2="26" stroke="#5a8dd8" stroke-width="0.5"/>
-  <line x1="15" y1="10" x2="15" y2="26" stroke="#5a8dd8" stroke-width="0.5"/>
-  <line x1="16.5" y1="10" x2="16.5" y2="26" stroke="#5a8dd8" stroke-width="0.5"/>
-  <line x1="18" y1="10" x2="18" y2="26" stroke="#5a8dd8" stroke-width="0.5"/>
-  <line x1="19.5" y1="10" x2="19.5" y2="26" stroke="#5a8dd8" stroke-width="0.5"/>
+  <!-- === COLUMN: Classical structure (The rendered object at focal plane) === -->
+  <!-- Ref: INSIGNIA_STRUCTURAL - "Column positioned AT the focal plane" -->
+  <!-- Shadow side for 3D depth -->
+  <rect x="37" y="22" width="7" height="58" rx="1" fill="#1e3a5f" opacity="0.7"/>
+  <!-- Main column body with polished stone gradient -->
+  <rect x="40" y="20" width="20" height="60" rx="1.5" fill="url(#ae-col)"/>
 
-  <!-- Capital (crown) -->
-  <rect x="10" y="8" width="12" height="2" fill="#6fa0e8"/>
+  <!-- Fluting: 5 grooves = rendering detail levels (LOD) -->
+  <!-- Ref: THEMATIC_SCHEMA - "Column fluting = rendering detail levels" -->
+  <line x1="44" y1="22" x2="44" y2="78" stroke="#c8e0ff" stroke-width="1.2" opacity="0.5"/>
+  <line x1="48" y1="22" x2="48" y2="78" stroke="#c8e0ff" stroke-width="1.2" opacity="0.4"/>
+  <line x1="52" y1="22" x2="52" y2="78" stroke="#c8e0ff" stroke-width="1.2" opacity="0.35"/>
+  <line x1="56" y1="22" x2="56" y2="78" stroke="#c8e0ff" stroke-width="1.2" opacity="0.3"/>
+  <!-- Highlight edge (light catching polished stone) -->
+  <line x1="58" y1="22" x2="58" y2="78" stroke="#e8f4ff" stroke-width="0.8" opacity="0.6"/>
 
-  <!-- Base -->
-  <rect x="10" y="26" width="12" height="2" fill="#6fa0e8"/>
+  <!-- === CAPITAL: Architectural crown with geometric pattern === -->
+  <!-- Ref: SYMBOL_DRIVEN - "Column capitals, blueprint grids" -->
+  <!-- Abacus (wide base of capital) -->
+  <rect x="33" y="16" width="34" height="5" rx="1" fill="url(#ae-cap)"/>
+  <!-- Triangular crown (Y-fork structural emphasis) -->
+  <polygon points="50,8 38,16 62,16" fill="#8ab4f8"/>
+  <polygon points="50,10 41,16 59,16" fill="#c8e0ff" opacity="0.5"/>
+  <!-- Keystone warm accent: organic tension in geometric order -->
+  <rect x="48" y="11" width="4" height="2" rx="0.5" fill="#f8c98a" opacity="0.7"/>
 
-  <!-- Floating cube (platonic solid) -->
-  <g transform="translate(6, 14) rotate(25)">
-    <rect x="-2.5" y="-2.5" width="5" height="5" fill="none" stroke="#8ab4f8" stroke-width="1.5"/>
-    <line x1="-2" y1="-2" x2="2" y2="2" stroke="#8ab4f8" stroke-width="1"/>
+  <!-- === BASE: Architectural foundation with Y-fork === -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - "Dendrovian branching at base" -->
+  <rect x="34" y="80" width="32" height="4" rx="1" fill="url(#ae-base)"/>
+  <!-- Y-fork: Dendritic branching (SDF union operations) -->
+  <line x1="50" y1="84" x2="42" y2="93" stroke="#6fa0e8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="50" y1="84" x2="58" y2="93" stroke="#6fa0e8" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Branch endpoint nodes -->
+  <circle cx="42" cy="93" r="3" fill="#8ab4f8"/>
+  <circle cx="58" cy="93" r="3" fill="#8ab4f8"/>
+  <circle cx="42" cy="93" r="1.5" fill="#c8e0ff" opacity="0.7"/>
+  <circle cx="58" cy="93" r="1.5" fill="#c8e0ff" opacity="0.7"/>
+
+  <!-- === FLOATING PLATONIC SOLID: Pure mathematical form === -->
+  <!-- Ref: THEMATIC_SCHEMA - "Platonic solids = pure mathematical forms made manifest" -->
+  <g transform="translate(22,36) rotate(-15)">
+    <!-- Cube wireframe (SDF primitive) -->
+    <rect x="-5" y="-5" width="10" height="10" fill="#6fa0e8" opacity="0.6" rx="0.5"/>
+    <rect x="-5" y="-5" width="10" height="10" fill="none" stroke="#c8e0ff" stroke-width="1.2"/>
+    <line x1="-5" y1="-5" x2="5" y2="5" stroke="#8ab4f8" stroke-width="0.7" opacity="0.5"/>
   </g>
+
+  <!-- === FOCAL GLOW: Where rays converge at the column === -->
+  <!-- Ref: INSIGNIA_STRUCTURAL - "Converge at focal plane" -->
+  <circle cx="50" cy="50" r="8" fill="url(#ae-glow)"/>
 </svg>

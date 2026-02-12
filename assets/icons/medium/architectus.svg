@@ -1,36 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- ARCHITECTUS MEDIUM - The Renderer with classical column detail -->
+  <!-- ARCHITECTUS MEDIUM: 32x32px optimized, 4-6 colors, 15-25 paths
+       Ref: PILLAR_THEMATIC_SCHEMA.md - "Light made manifest through computational geometry"
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - The Rendering Lens System
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - Balanced between simplicity and richness
+       Structure: Column with fluting, 3 light beams, platonic cube, Y-fork base, lens rings -->
 
-  <!-- Column shadow side -->
-  <rect x="38" y="28" width="8" height="60" fill="#1e3a5f"/>
+  <!-- === LENS RINGS: Optical pipeline backdrop === -->
+  <!-- Ref: INSIGNIA_STRUCTURAL - "3 lens elements (Model, View, Projection matrices)" -->
+  <circle cx="50" cy="46" r="40" fill="none" stroke="#5a8dd8" stroke-width="0.8" opacity="0.2"/>
+  <circle cx="50" cy="46" r="32" fill="none" stroke="#8ab4f8" stroke-width="0.6" opacity="0.15"/>
+  <circle cx="50" cy="46" r="24" fill="none" stroke="#c8e0ff" stroke-width="0.5" opacity="0.12"/>
 
-  <!-- Column main body -->
-  <rect x="42" y="25" width="16" height="65" fill="#5a8dd8"/>
+  <!-- === COLUMN SHADOW: Dimensional depth === -->
+  <!-- #1e3a5f = computational void / unrendered space -->
+  <rect x="36" y="22" width="8" height="58" fill="#1e3a5f" opacity="0.6"/>
 
-  <!-- Fluting lines (5 vertical grooves) -->
-  <g stroke="#8ab4f8" stroke-width="1.5" opacity="0.6">
-    <line x1="44" y1="25" x2="44" y2="88"/>
-    <line x1="47" y1="25" x2="47" y2="88"/>
-    <line x1="50" y1="25" x2="50" y2="88"/>
-    <line x1="53" y1="25" x2="53" y2="88"/>
-    <line x1="56" y1="25" x2="56" y2="88"/>
+  <!-- === COLUMN BODY: The rendered object at focal plane === -->
+  <!-- #5a8dd8 = deep structure blue (blueprint depth) -->
+  <rect x="40" y="20" width="20" height="62" fill="#5a8dd8"/>
+  <!-- Lighter inner face: 3D stone illusion -->
+  <rect x="44" y="20" width="14" height="62" fill="#6fa0e8" opacity="0.4"/>
+
+  <!-- === FLUTING: 5 grooves = LOD rendering levels === -->
+  <!-- Ref: THEMATIC_SCHEMA iconography - "column fluting (rendering detail levels)" -->
+  <g stroke="#8ab4f8" stroke-width="1.2" opacity="0.55">
+    <line x1="43" y1="22" x2="43" y2="80"/>
+    <line x1="47" y1="22" x2="47" y2="80"/>
+    <line x1="50" y1="22" x2="50" y2="80"/>
+    <line x1="53" y1="22" x2="53" y2="80"/>
+    <line x1="57" y1="22" x2="57" y2="80"/>
+  </g>
+  <!-- Highlight edge on column (polished stone catch-light) -->
+  <line x1="58" y1="22" x2="58" y2="80" stroke="#e8f4ff" stroke-width="0.7" opacity="0.5"/>
+
+  <!-- === CAPITAL: Geometric crown (architectural refinement) === -->
+  <!-- Ref: THEMATIC_SCHEMA - "Capital ornament = architectural refinement" -->
+  <rect x="33" y="16" width="34" height="5" fill="#6fa0e8"/>
+  <rect x="34" y="17" width="32" height="3" fill="#8ab4f8" opacity="0.5"/>
+  <!-- Crown triangle with Y-fork emphasis -->
+  <polygon points="50,8 39,16 61,16" fill="#8ab4f8"/>
+  <polygon points="50,10 42,16 58,16" fill="#c8e0ff" opacity="0.45"/>
+  <!-- Keystone: warm organic accent (complement tension) -->
+  <rect x="48" y="11.5" width="4" height="2" rx="0.5" fill="#f8c98a" opacity="0.6"/>
+
+  <!-- === LIGHT BEAMS: Raymarching paths === -->
+  <!-- Ref: INSIGNIA_STRUCTURAL - "7 light beams = render rays, refract through lenses" -->
+  <!-- Golden warm rays descending from upper-right (illumination source) -->
+  <line x1="80" y1="6" x2="28" y2="82" stroke="#f8c98a" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+  <line x1="84" y1="12" x2="36" y2="88" stroke="#f8c98a" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
+  <line x1="74" y1="10" x2="38" y2="72" stroke="#f8c98a" stroke-width="1.5" opacity="0.25" stroke-linecap="round"/>
+
+  <!-- === PLATONIC CUBE: SDF primitive (floating, impossible geometry) === -->
+  <!-- Ref: THEMATIC_SCHEMA - "Platonic solid intersections at branch points" -->
+  <g transform="rotate(45, 24, 40)">
+    <rect x="18" y="34" width="12" height="12" fill="#6fa0e8" opacity="0.7"/>
+    <rect x="18" y="34" width="12" height="12" fill="none" stroke="#c8e0ff" stroke-width="1"/>
   </g>
 
-  <!-- Capital ornament (geometric pattern) -->
-  <rect x="35" y="20" width="30" height="5" fill="#6fa0e8"/>
-  <polygon points="50,15 42,20 58,20" fill="#8ab4f8"/>
-  <rect x="48" y="18" width="4" height="2" fill="#e8f4ff"/>
-
-  <!-- Raymarched light beams (3 at varying angles) -->
-  <line x1="75" y1="10" x2="35" y2="80" stroke="#c8e0ff" stroke-width="1.5" opacity="0.7"/>
-  <line x1="80" y1="15" x2="40" y2="90" stroke="#e8f4ff" stroke-width="1.5" opacity="0.5"/>
-  <line x1="70" y1="20" x2="45" y2="75" stroke="#c8e0ff" stroke-width="1.2" opacity="0.4"/>
-
-  <!-- Intersecting platonic cube (SDF union) -->
-  <rect x="44" y="50" width="10" height="10" fill="#6fa0e8" transform="rotate(45 49 55)" opacity="0.8"/>
-
-  <!-- Base connection node -->
-  <circle cx="50" cy="90" r="6" fill="#1e3a5f"/>
-  <circle cx="50" cy="90" r="4" fill="#5a8dd8"/>
+  <!-- === BASE: Foundation with Y-fork branching === -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA dendrovianMotifs - "SDF union operations" -->
+  <rect x="34" y="82" width="32" height="4" fill="#1e3a5f"/>
+  <rect x="35" y="82" width="30" height="2.5" fill="#5a8dd8" opacity="0.6"/>
+  <!-- Dendritic Y-fork -->
+  <line x1="50" y1="86" x2="42" y2="95" stroke="#6fa0e8" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="50" y1="86" x2="58" y2="95" stroke="#6fa0e8" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Branch endpoints -->
+  <circle cx="42" cy="95" r="2.5" fill="#8ab4f8"/>
+  <circle cx="58" cy="95" r="2.5" fill="#8ab4f8"/>
 </svg>

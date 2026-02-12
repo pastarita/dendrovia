@@ -1,175 +1,360 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- OPERATUS DETAILED - Maximum infrastructure orchestration -->
+  <!-- OPERATUS DETAILED: "The Infrastructure" - Full Orchestration Vault -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA.md - "Systems beneath systems, invisible foundations" -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Multi-level pipeline network with foundation strata" -->
+  <!-- Ref: OPERATUS_iterations.md - 64x64px+, 8-12 colors, 40-80 paths, maximum richness -->
+  <!-- Functional Role: Game State -> Serialization -> Storage -> Network -> Persistence -->
+  <!-- Architecture: Orchestration (top) -> Distribution (middle) -> Persistence (bottom) -->
+
   <defs>
-    <!-- Main gear radial gradient -->
-    <radialGradient id="mainGearGrad" cx="0.3" cy="0.3">
-      <stop offset="0%" stop-color="#d1d5db"/>
-      <stop offset="50%" stop-color="#9ca3af"/>
+    <!-- Main gear radial gradient: polished brushed metal -->
+    <radialGradient id="od-gear1" cx="0.35" cy="0.3">
+      <stop offset="0%" stop-color="#e5e7eb"/>
+      <stop offset="40%" stop-color="#9ca3af"/>
       <stop offset="100%" stop-color="#6b7280"/>
     </radialGradient>
-
-    <!-- Secondary gear gradient -->
-    <radialGradient id="secGearGrad" cx="0.3" cy="0.3">
-      <stop offset="0%" stop-color="#838b95"/>
+    <!-- Secondary gear gradient: darker iron -->
+    <radialGradient id="od-gear2" cx="0.35" cy="0.3">
+      <stop offset="0%" stop-color="#9ca3af"/>
       <stop offset="50%" stop-color="#6b7280"/>
-      <stop offset="100%" stop-color="#374151"/>
+      <stop offset="100%" stop-color="#4b5563"/>
     </radialGradient>
-
-    <!-- Pipe gradient -->
-    <linearGradient id="pipeGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#e5e7eb"/>
-      <stop offset="50%" stop-color="#838b95"/>
-      <stop offset="100%" stop-color="#374151"/>
+    <!-- Small gear gradient -->
+    <radialGradient id="od-gear3" cx="0.3" cy="0.3">
+      <stop offset="0%" stop-color="#838b95"/>
+      <stop offset="100%" stop-color="#4b5563"/>
+    </radialGradient>
+    <!-- Pipe gradient: chrome with 3D cylinder effect -->
+    <linearGradient id="od-pipe" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d1d5db"/>
+      <stop offset="35%" stop-color="#9ca3af"/>
+      <stop offset="100%" stop-color="#6b7280"/>
     </linearGradient>
-
+    <!-- Horizontal pipe gradient (left to right flow) -->
+    <linearGradient id="od-hpipe" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6b7280"/>
+      <stop offset="50%" stop-color="#9ca3af"/>
+      <stop offset="100%" stop-color="#6b7280"/>
+    </linearGradient>
+    <!-- Foundation shadow -->
+    <linearGradient id="od-fshadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#374151" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#374151" stop-opacity="0"/>
+    </linearGradient>
+    <!-- Active status glow -->
+    <radialGradient id="od-active" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="60%" stop-color="#60a5fa" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#60a5fa" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Strain warning glow -->
+    <radialGradient id="od-strain" cx="0.5" cy="0.5" r="0.55">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
     <!-- Hexagonal efficiency pattern -->
-    <pattern id="hexPattern" patternUnits="userSpaceOnUse" width="8" height="8">
-      <polygon points="4,2 6,3 6,5 4,6 2,5 2,3" fill="none" stroke="#838b95" stroke-width="0.3" opacity="0.2"/>
+    <pattern id="od-hex" patternUnits="userSpaceOnUse" width="6" height="6.93">
+      <polygon points="3,0.5 5.5,1.75 5.5,4.25 3,5.5 0.5,4.25 0.5,1.75"
+               fill="none" stroke="#838b95" stroke-width="0.3" opacity="0.2"/>
+    </pattern>
+    <!-- Brushed metal texture -->
+    <pattern id="od-brush" patternUnits="userSpaceOnUse" width="1.5" height="40">
+      <line x1="0.75" y1="0" x2="0.75" y2="40" stroke="#d1d5db" stroke-width="0.2" opacity="0.15"/>
     </pattern>
   </defs>
 
-  <!-- Foundation (4 strata - bottom to top) -->
-  <g id="foundation">
-    <!-- Shadow beneath all -->
-    <ellipse cx="50" cy="88" rx="45" ry="3" fill="#374151" opacity="0.4"/>
+  <!-- ===== LAYER 1: FOUNDATION STRATA (4 labeled persistence layers) ===== -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Four Foundation Strata (Bottom)" -->
+  <!-- Read top-to-bottom = follows data persistence flow -->
 
-    <!-- Bottom stratum -->
-    <rect x="15" y="78" width="70" height="6" fill="#374151" rx="1"/>
-    <text x="17" y="82" font-size="3" fill="#838b95" opacity="0.6">OPFS</text>
+  <!-- Shadow beneath entire foundation -->
+  <ellipse cx="50" cy="95" rx="42" ry="2.5" fill="url(#od-fshadow)"/>
 
-    <!-- Second stratum -->
-    <rect x="20" y="72" width="60" height="6" fill="#6b7280" rx="1"/>
-    <rect x="20" y="72" width="30" height="1" fill="#af9c9c" opacity="0.3"/>
-    <text x="22" y="76" font-size="3" fill="#9ca3af" opacity="0.6">CACHE</text>
-
-    <!-- Third stratum -->
-    <rect x="25" y="66" width="50" height="6" fill="#6b7280" rx="1"/>
-    <text x="27" y="70" font-size="3" fill="#9ca3af" opacity="0.6">STATE</text>
-
-    <!-- Top stratum -->
-    <rect x="30" y="60" width="40" height="6" fill="#838b95" rx="1"/>
-    <text x="32" y="64" font-size="3" fill="#d1d5db" opacity="0.6">ASSETS</text>
-
-    <!-- Vertical support pillars -->
-    <rect x="28" y="60" width="3" height="24" fill="#6b7280" opacity="0.7"/>
-    <rect x="69" y="60" width="3" height="24" fill="#6b7280" opacity="0.7"/>
+  <!-- Stratum 4 (deepest): OPFS - Origin Private FS, cold storage -->
+  <rect x="10" y="87" width="80" height="5.5" rx="1.5" fill="#374151"/>
+  <!-- Dense sediment texture (permanent, compressed) -->
+  <g opacity="0.12">
+    <line x1="14" y1="89" x2="86" y2="89" stroke="#4b5563" stroke-width="0.5"/>
+    <line x1="12" y1="90.5" x2="88" y2="90.5" stroke="#4b5563" stroke-width="0.4"/>
+    <line x1="15" y1="91.5" x2="85" y2="91.5" stroke="#4b5563" stroke-width="0.3"/>
   </g>
+  <text x="75" y="91" font-size="3" fill="#6b7280" font-family="sans-serif" opacity="0.65" font-weight="bold">OPFS</text>
 
-  <!-- Pipeline network (multi-level) -->
-  <g id="pipelines">
-    <!-- Main horizontal distribution -->
-    <rect x="5" y="42" width="40" height="7" fill="url(#pipeGrad)" rx="3.5"/>
-    <rect x="55" y="42" width="40" height="7" fill="url(#pipeGrad)" rx="3.5"/>
-
-    <!-- Dendritic branches -->
-    <rect x="43" y="25" width="6" height="20" fill="url(#pipeGrad)" rx="3"/>
-    <rect x="43" y="45" width="6" height="15" fill="url(#pipeGrad)" rx="3"/>
-    <rect x="20" y="30" width="6" height="15" fill="url(#pipeGrad)" rx="3"/>
-    <rect x="74" y="30" width="6" height="15" fill="url(#pipeGrad)" rx="3"/>
-
-    <!-- Connection flanges -->
-    <rect x="41" y="43" width="10" height="3" fill="#6b7280" opacity="0.8"/>
-    <rect x="41" y="47" width="10" height="3" fill="#6b7280" opacity="0.8"/>
-
-    <!-- Flow indicators -->
-    <path d="M15,45.5 L18,44 L18,47 Z" fill="#60a5fa" opacity="0.8"/>
-    <path d="M85,45.5 L82,44 L82,47 Z" fill="#60a5fa" opacity="0.8"/>
-
-    <!-- Bolt fasteners (hex heads) -->
-    <g transform="translate(43, 43)">
-      <polygon points="0,-1.5 1.3,-0.75 1.3,0.75 0,1.5 -1.3,0.75 -1.3,-0.75" fill="#374151"/>
-      <circle cx="0" cy="0" r="0.8" fill="#838b95"/>
-    </g>
-    <g transform="translate(43, 49)">
-      <polygon points="0,-1.5 1.3,-0.75 1.3,0.75 0,1.5 -1.3,0.75 -1.3,-0.75" fill="#374151"/>
-      <circle cx="0" cy="0" r="0.8" fill="#838b95"/>
-    </g>
-
-    <!-- Capacity markers -->
-    <circle cx="10" cy="38" r="3" fill="#374151" opacity="0.8"/>
-    <text x="10" y="39" font-size="2.5" fill="#60a5fa" text-anchor="middle">78</text>
-    <circle cx="90" cy="38" r="3" fill="#374151" opacity="0.8"/>
-    <text x="90" y="39" font-size="2.5" fill="#f59e0b" text-anchor="middle">92</text>
-  </g>
-
-  <!-- Gear cluster (4 gears) -->
-  <g id="gears">
-    <!-- Small precision gear (upper-left) -->
-    <g>
-      <circle cx="28" cy="28" r="7.5" fill="url(#secGearGrad)"/>
-      <circle cx="28" cy="28" r="10" fill="none" stroke="#6b7280" stroke-width="2" stroke-dasharray="4 2"/>
-      <circle cx="28" cy="28" r="7.5" fill="url(#hexPattern)"/>
-      <circle cx="28" cy="28" r="3" fill="#374151"/>
-      <circle cx="28" cy="28" r="2.5" fill="none" stroke="#d1d5db" stroke-width="0.5"/>
-      <path d="M25,25 Q26,24 28,24 Q30,24 31,25" fill="none" stroke="#e5e7eb" stroke-width="0.8" opacity="0.7"/>
-    </g>
-
-    <!-- Left medium gear -->
-    <g>
-      <circle cx="25" cy="48" r="12.5" fill="url(#secGearGrad)"/>
-      <circle cx="25" cy="48" r="15.5" fill="none" stroke="#6b7280" stroke-width="2.5" stroke-dasharray="5 3"/>
-      <circle cx="25" cy="48" r="12.5" fill="url(#hexPattern)"/>
-      <rect x="24.5" y="38" width="1" height="20" fill="#374151" opacity="0.2"/>
-      <circle cx="25" cy="48" r="4" fill="#374151"/>
-      <circle cx="25" cy="48" r="3.5" fill="none" stroke="#d1d5db" stroke-width="0.7"/>
-      <path d="M20,43 Q22,41 25,41 Q28,41 30,43" fill="none" stroke="#e5e7eb" stroke-width="1" opacity="0.8"/>
-    </g>
-
-    <!-- Right medium gear -->
-    <g>
-      <circle cx="75" cy="48" r="12.5" fill="url(#secGearGrad)"/>
-      <circle cx="75" cy="48" r="15.5" fill="none" stroke="#6b7280" stroke-width="2.5" stroke-dasharray="5 3"/>
-      <circle cx="75" cy="48" r="12.5" fill="url(#hexPattern)"/>
-      <rect x="74.5" y="38" width="1" height="20" fill="#374151" opacity="0.2"/>
-      <circle cx="75" cy="48" r="4" fill="#374151"/>
-      <circle cx="75" cy="48" r="3.5" fill="none" stroke="#d1d5db" stroke-width="0.7"/>
-      <path d="M70,43 Q72,41 75,41 Q78,41 80,43" fill="none" stroke="#e5e7eb" stroke-width="1" opacity="0.8"/>
-    </g>
-
-    <!-- Central primary gear (main orchestrator) -->
-    <g>
-      <circle cx="50" cy="45" r="20" fill="url(#mainGearGrad)"/>
-      <circle cx="50" cy="45" r="24" fill="none" stroke="#9ca3af" stroke-width="3.5" stroke-dasharray="7 4"/>
-      <circle cx="50" cy="45" r="20" fill="url(#hexPattern)"/>
-
-      <!-- Timing marks (12 around edge) -->
-      <circle cx="50" cy="23" r="0.8" fill="#374151"/>
-      <circle cx="62" cy="27" r="0.8" fill="#374151"/>
-      <circle cx="70" cy="35" r="0.8" fill="#374151"/>
-
-      <!-- Bearing housing -->
-      <circle cx="50" cy="45" r="6" fill="#374151"/>
-      <circle cx="50" cy="45" r="5.5" fill="none" stroke="#6b7280" stroke-width="0.8"/>
-      <circle cx="50" cy="45" r="4.5" fill="none" stroke="#d1d5db" stroke-width="1"/>
-
-      <!-- Specular highlight -->
-      <path d="M40,35 Q42,32 50,32 Q58,32 60,35" fill="none" stroke="#e5e7eb" stroke-width="2" opacity="0.9"/>
-
-      <!-- Efficiency hex in center -->
-      <polygon points="50,42 52,43 52,47 50,48 48,47 48,43" fill="none" stroke="#838b95" stroke-width="0.5" opacity="0.5"/>
-    </g>
-  </g>
-
-  <!-- Status indicators -->
-  <g id="indicators">
-    <!-- Active operational -->
-    <circle cx="12" cy="12" r="5" fill="#60a5fa" opacity="0.3"/>
-    <circle cx="12" cy="12" r="3.5" fill="#60a5fa"/>
-    <circle cx="12" cy="12" r="2" fill="#d1d5db"/>
-    <text x="12" y="24" font-size="3" fill="#838b95" text-anchor="middle">ACTIVE</text>
-
-    <!-- System strain warning -->
-    <circle cx="88" cy="12" r="5" fill="#f59e0b" opacity="0.3"/>
-    <circle cx="88" cy="12" r="3.5" fill="#f59e0b"/>
-    <circle cx="88" cy="12" r="2" fill="#ffe0b2"/>
-    <text x="88" y="24" font-size="3" fill="#838b95" text-anchor="middle">STRAIN</text>
-  </g>
-
-  <!-- Ambient occlusion (subtle shadows at interlocks) -->
+  <!-- Stratum 3: CACHE - IndexedDB, hot data -->
+  <rect x="14" y="81.5" width="72" height="5.5" rx="1.5" fill="#4b5563"/>
+  <!-- Hexagonal mesh texture (indexed, accessible) -->
   <g opacity="0.15">
-    <ellipse cx="50" cy="45" rx="3" ry="20" fill="#374151"/>
-    <ellipse cx="25" cy="48" rx="2" ry="12" fill="#374151"/>
-    <ellipse cx="75" cy="48" rx="2" ry="12" fill="#374151"/>
+    <polygon points="26,83 28,82 30,83 30,85 28,86 26,85" fill="none" stroke="#9ca3af" stroke-width="0.35"/>
+    <polygon points="30,83 32,82 34,83 34,85 32,86 30,85" fill="none" stroke="#9ca3af" stroke-width="0.35"/>
+    <polygon points="34,83 36,82 38,83 38,85 36,86 34,85" fill="none" stroke="#9ca3af" stroke-width="0.35"/>
+    <polygon points="38,83 40,82 42,83 42,85 40,86 38,85" fill="none" stroke="#9ca3af" stroke-width="0.35"/>
+    <polygon points="42,83 44,82 46,83 46,85 44,86 42,85" fill="none" stroke="#9ca3af" stroke-width="0.35"/>
   </g>
+  <text x="69" y="85.5" font-size="3" fill="#838b95" font-family="sans-serif" opacity="0.65" font-weight="bold">CACHE</text>
+
+  <!-- Stratum 2: STATE - Zustand store, game save -->
+  <rect x="18" y="76" width="64" height="5.5" rx="1.5" fill="#6b7280"/>
+  <!-- Flowing lines (dynamic, changing state) -->
+  <path d="M22,78.5 Q33,77.5 44,78.5 Q55,79.5 66,78.5 Q72,78 78,78.5" stroke="#838b95" stroke-width="0.5" fill="none" opacity="0.4"/>
+  <path d="M24,80 Q35,79 46,80 Q57,81 68,80" stroke="#838b95" stroke-width="0.4" fill="none" opacity="0.3"/>
+  <!-- Warm earth accent (organic foundation) -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA.md - complement: #af9c9c (warm earth grey) -->
+  <rect x="18" y="76" width="32" height="1" rx="0.5" fill="#af9c9c" opacity="0.2"/>
+  <text x="67" y="80" font-size="3" fill="#9ca3af" font-family="sans-serif" opacity="0.65" font-weight="bold">STATE</text>
+
+  <!-- Stratum 1 (top): ASSETS - static files, CDN-served -->
+  <rect x="22" y="70.5" width="56" height="5.5" rx="1.5" fill="#838b95"/>
+  <!-- Geometric patterns (static, structured files) -->
+  <g opacity="0.2">
+    <rect x="26" y="72" width="2.5" height="2.5" rx="0.4" fill="none" stroke="#d1d5db" stroke-width="0.35"/>
+    <rect x="30" y="72" width="2.5" height="2.5" rx="0.4" fill="none" stroke="#d1d5db" stroke-width="0.35"/>
+    <rect x="34" y="72" width="2.5" height="2.5" rx="0.4" fill="none" stroke="#d1d5db" stroke-width="0.35"/>
+    <rect x="38" y="72" width="2.5" height="2.5" rx="0.4" fill="none" stroke="#d1d5db" stroke-width="0.35"/>
+    <rect x="42" y="72" width="2.5" height="2.5" rx="0.4" fill="none" stroke="#d1d5db" stroke-width="0.35"/>
+  </g>
+  <text x="62" y="74.5" font-size="3" fill="#d1d5db" font-family="sans-serif" opacity="0.65" font-weight="bold">ASSETS</text>
+
+  <!-- Vertical support pillars (load-bearing infrastructure) -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Two columns holding up all layers = critical path" -->
+  <rect x="20" y="70.5" width="3.5" height="22" rx="0.8" fill="#6b7280" opacity="0.65"/>
+  <rect x="20.5" y="70.5" width="1.2" height="22" fill="#9ca3af" opacity="0.25"/>
+  <rect x="76.5" y="70.5" width="3.5" height="22" rx="0.8" fill="#6b7280" opacity="0.65"/>
+  <rect x="78.5" y="70.5" width="1.2" height="22" fill="#9ca3af" opacity="0.25"/>
+
+  <!-- ===== LAYER 2: PIPELINE NETWORK (multi-level Y-fork distribution) ===== -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Thick horizontal pipe = main communication channel" -->
+  <!-- Ref: Cross-Pillar Motifs - "Y-Fork Branching: pipeline dendritic distribution" -->
+
+  <!-- Main horizontal distribution bus -->
+  <rect x="6" y="48" width="88" height="6" rx="3" fill="url(#od-pipe)"/>
+  <!-- Chrome highlight stripe -->
+  <rect x="10" y="49" width="80" height="1.5" rx="0.75" fill="#e5e7eb" opacity="0.35"/>
+
+  <!-- Central vertical drop (main persistence path) -->
+  <rect x="47" y="53" width="6" height="18" rx="3" fill="url(#od-pipe)"/>
+  <rect x="48.5" y="54" width="1.5" height="16" rx="0.75" fill="#e5e7eb" opacity="0.2"/>
+
+  <!-- Left Y-fork branch (dendritic distribution) -->
+  <path d="M36,51 L26,64 L26,70.5" stroke="#9ca3af" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M36,51 L26.5,64" stroke="#d1d5db" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.25"/>
+
+  <!-- Right Y-fork branch -->
+  <path d="M64,51 L74,64 L74,70.5" stroke="#9ca3af" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M64,51 L74.5,64" stroke="#d1d5db" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.25"/>
+
+  <!-- Far-left vertical drop -->
+  <rect x="11" y="53" width="4.5" height="10" rx="2.25" fill="url(#od-pipe)"/>
+  <!-- Far-right vertical drop -->
+  <rect x="84.5" y="53" width="4.5" height="10" rx="2.25" fill="url(#od-pipe)"/>
+
+  <!-- Secondary dendritic branches (sub-distribution) -->
+  <path d="M15,57 L15,64" stroke="#838b95" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M87,57 L87,64" stroke="#838b95" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+
+  <!-- Flow indicators (blue directional arrows = data being saved) -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Blue arrows pointing down = data being saved" -->
+  <path d="M50,61 L48,59 L52,59 Z" fill="#60a5fa" opacity="0.8"/>
+  <path d="M27,67 L25.5,65 L28.5,65 Z" fill="#60a5fa" opacity="0.65"/>
+  <path d="M75,67 L73.5,65 L76.5,65 Z" fill="#60a5fa" opacity="0.65"/>
+  <!-- Horizontal flow arrows (data moving along bus) -->
+  <path d="M17,50.5 L19,49 L19,52 Z" fill="#60a5fa" opacity="0.7"/>
+  <path d="M83,50.5 L81,49 L81,52 Z" fill="#60a5fa" opacity="0.7"/>
+
+  <!-- Upward load arrows (orange = data being loaded) -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Orange arrows pointing up = data being loaded" -->
+  <path d="M42,51 L40.5,53 L43.5,53 Z" fill="#f59e0b" opacity="0.5"/>
+  <path d="M58,51 L56.5,53 L59.5,53 Z" fill="#f59e0b" opacity="0.5"/>
+
+  <!-- Connection flanges with hex bolt fasteners -->
+  <rect x="34" y="49" width="4" height="3" rx="0.5" fill="#6b7280"/>
+  <g transform="translate(35.5, 50.5)">
+    <polygon points="0,-1 0.87,-0.5 0.87,0.5 0,1 -0.87,0.5 -0.87,-0.5" fill="#374151"/>
+    <circle r="0.4" fill="#838b95"/>
+  </g>
+  <rect x="62" y="49" width="4" height="3" rx="0.5" fill="#6b7280"/>
+  <g transform="translate(63.5, 50.5)">
+    <polygon points="0,-1 0.87,-0.5 0.87,0.5 0,1 -0.87,0.5 -0.87,-0.5" fill="#374151"/>
+    <circle r="0.4" fill="#838b95"/>
+  </g>
+  <!-- Additional bolts at Y-fork junction points -->
+  <g transform="translate(36, 52)">
+    <polygon points="0,-0.8 0.7,-0.4 0.7,0.4 0,0.8 -0.7,0.4 -0.7,-0.4" fill="#374151"/>
+  </g>
+  <g transform="translate(64, 52)">
+    <polygon points="0,-0.8 0.7,-0.4 0.7,0.4 0,0.8 -0.7,0.4 -0.7,-0.4" fill="#374151"/>
+  </g>
+
+  <!-- ===== LAYER 3: 4-GEAR ORCHESTRATION CLUSTER ===== -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "4-Gear Orchestration Cluster" -->
+  <!-- Small gear = asset loader, Medium gears = state + cache, Large = coordination hub -->
+
+  <!-- Small precision gear (upper-left): Asset loader - spins fast, lightweight -->
+  <g>
+    <circle cx="27" cy="25" r="6.5" fill="url(#od-gear3)"/>
+    <!-- 8 gear teeth (precise triangular) -->
+    <path d="M27,17 L25.8,18.5 L28.2,18.5 Z M33,20 L31.5,18.5 L32.5,21.5 Z M35,26 L33.5,24.5 L33.5,27.5 Z M32,31 L33.5,29.5 L30.5,29.5 Z M27,33 L28.2,31.5 L25.8,31.5 Z M21,31 L22.5,32.5 L22.5,29.5 Z M19,26 L20.5,27.5 L20.5,24.5 Z M22,20 L20.5,21.5 L23.5,21.5 Z"
+          fill="#6b7280"/>
+    <!-- Hex face pattern -->
+    <polygon points="27,23 28.5,23.8 28.5,25.8 27,26.6 25.5,25.8 25.5,23.8" fill="none" stroke="#838b95" stroke-width="0.35" opacity="0.35"/>
+    <!-- Bearing housing -->
+    <circle cx="27" cy="25" r="2.2" fill="#374151"/>
+    <circle cx="27" cy="25" r="1.8" fill="none" stroke="#838b95" stroke-width="0.4"/>
+    <!-- Specular highlight -->
+    <path d="M24,22.5 Q25.5,21 27,21 Q28.5,21 30,22.5" fill="none" stroke="#e5e7eb" stroke-width="0.7" opacity="0.55"/>
+    <!-- Timing mark -->
+    <circle cx="27" cy="18.5" r="0.4" fill="#374151" opacity="0.5"/>
+  </g>
+
+  <!-- Left medium gear: State manager -->
+  <g>
+    <circle cx="20" cy="42" r="10" fill="url(#od-gear2)"/>
+    <!-- 10 gear teeth -->
+    <path d="M20,30.5 L18.5,32 L21.5,32 Z M27,33 L25.5,31.5 L26.5,34.5 Z M30.5,39 L29,37.5 L29,40.5 Z M28,45 L29.5,43.5 L26.5,43.5 Z M23,50 L24.5,48.5 L21.5,48.5 Z M15,50 L16.5,48.5 L13.5,48.5 Z M10,45 L11.5,46.5 L11.5,43.5 Z M9.5,39 L11,40.5 L11,37.5 Z M13,33 L11.5,34.5 L14.5,34.5 Z M18,30.5 L19.5,32 L16.5,32 Z"
+          fill="#6b7280"/>
+    <!-- Hex efficiency pattern -->
+    <polygon points="20,39.5 22,40.5 22,42.5 20,43.5 18,42.5 18,40.5" fill="none" stroke="#838b95" stroke-width="0.4" opacity="0.3"/>
+    <!-- Brushed metal texture hint -->
+    <circle cx="20" cy="42" r="10" fill="url(#od-brush)" opacity="0.5"/>
+    <!-- Bearing housing -->
+    <circle cx="20" cy="42" r="3.5" fill="#374151"/>
+    <circle cx="20" cy="42" r="2.8" fill="none" stroke="#6b7280" stroke-width="0.6"/>
+    <circle cx="20" cy="42" r="2" fill="none" stroke="#d1d5db" stroke-width="0.4"/>
+    <!-- Specular highlight -->
+    <path d="M15,38 Q17,36 20,36 Q23,36 25,38" fill="none" stroke="#e5e7eb" stroke-width="0.9" opacity="0.5"/>
+    <!-- Timing marks -->
+    <circle cx="20" cy="31.5" r="0.5" fill="#374151" opacity="0.4"/>
+    <circle cx="29.5" cy="39" r="0.5" fill="#374151" opacity="0.4"/>
+  </g>
+
+  <!-- Right medium gear: Cache manager -->
+  <g>
+    <circle cx="80" cy="42" r="10" fill="url(#od-gear2)"/>
+    <!-- 10 gear teeth -->
+    <path d="M80,30.5 L78.5,32 L81.5,32 Z M87,33 L85.5,31.5 L86.5,34.5 Z M90.5,39 L89,37.5 L89,40.5 Z M88,45 L89.5,43.5 L86.5,43.5 Z M83,50 L84.5,48.5 L81.5,48.5 Z M75,50 L76.5,48.5 L73.5,48.5 Z M70,45 L71.5,46.5 L71.5,43.5 Z M69.5,39 L71,40.5 L71,37.5 Z M73,33 L71.5,34.5 L74.5,34.5 Z M78,30.5 L79.5,32 L76.5,32 Z"
+          fill="#6b7280"/>
+    <!-- Hex efficiency pattern -->
+    <polygon points="80,39.5 82,40.5 82,42.5 80,43.5 78,42.5 78,40.5" fill="none" stroke="#838b95" stroke-width="0.4" opacity="0.3"/>
+    <!-- Brushed metal texture -->
+    <circle cx="80" cy="42" r="10" fill="url(#od-brush)" opacity="0.5"/>
+    <!-- Bearing housing -->
+    <circle cx="80" cy="42" r="3.5" fill="#374151"/>
+    <circle cx="80" cy="42" r="2.8" fill="none" stroke="#6b7280" stroke-width="0.6"/>
+    <circle cx="80" cy="42" r="2" fill="none" stroke="#d1d5db" stroke-width="0.4"/>
+    <!-- Specular highlight -->
+    <path d="M75,38 Q77,36 80,36 Q83,36 85,38" fill="none" stroke="#e5e7eb" stroke-width="0.9" opacity="0.5"/>
+    <!-- Timing marks -->
+    <circle cx="80" cy="31.5" r="0.5" fill="#374151" opacity="0.4"/>
+    <circle cx="70.5" cy="39" r="0.5" fill="#374151" opacity="0.4"/>
+  </g>
+
+  <!-- Central large gear: Coordination hub - spins slow, authoritative -->
+  <g>
+    <circle cx="50" cy="34" r="16" fill="url(#od-gear1)"/>
+    <!-- 12 gear teeth (precise triangular) -->
+    <path d="M50,16.5 L48.5,18.5 L51.5,18.5 Z M56,17.5 L54.5,19 L57.5,19 Z M61.5,21 L60,19.5 L61,23 Z M65,26 L63.5,24.5 L63.5,27.5 Z M66.5,32 L65,30 L65,34 Z M65,38 L66.5,36.5 L63.5,36.5 Z M61,43 L62.5,41.5 L59.5,41.5 Z M56,47 L57.5,45.5 L54.5,45.5 Z M44,47 L45.5,48.5 L42.5,48.5 Z M39,43 L40.5,44.5 L37.5,44.5 Z M35,38 L36.5,39.5 L36.5,36.5 Z M35.5,30 L34,31.5 L37,31.5 Z"
+          fill="#9ca3af"/>
+    <!-- Hexagonal efficiency pattern (nested hexagons = optimized packing) -->
+    <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Hexagonal Efficiency Pattern" -->
+    <polygon points="50,30 53,31.5 53,35 50,36.5 47,35 47,31.5" fill="none" stroke="#d1d5db" stroke-width="0.5" opacity="0.25"/>
+    <polygon points="53,31.5 56,33 56,36 53,37.5 50,36 50,33" fill="none" stroke="#d1d5db" stroke-width="0.35" opacity="0.15"/>
+    <polygon points="47,31.5 50,30 50,33 47,34.5 44,33 44,31" fill="none" stroke="#d1d5db" stroke-width="0.35" opacity="0.15"/>
+    <!-- Brushed metal radial texture -->
+    <circle cx="50" cy="34" r="16" fill="url(#od-brush)" opacity="0.4"/>
+    <!-- Bearing housing (elaborate central hub) -->
+    <circle cx="50" cy="34" r="5.5" fill="#374151"/>
+    <circle cx="50" cy="34" r="4.8" fill="none" stroke="#4b5563" stroke-width="0.6"/>
+    <circle cx="50" cy="34" r="3.8" fill="none" stroke="#6b7280" stroke-width="0.7"/>
+    <circle cx="50" cy="34" r="2.8" fill="none" stroke="#d1d5db" stroke-width="0.5"/>
+    <!-- Central hex bolt -->
+    <polygon points="50,32 51.5,32.8 51.5,35.2 50,36 48.5,35.2 48.5,32.8" fill="#4b5563"/>
+    <polygon points="50,32.5 51,33 51,35 50,35.5 49,35 49,33" fill="none" stroke="#6b7280" stroke-width="0.3"/>
+    <!-- Specular highlight (upper-left light source) -->
+    <path d="M42,27 Q44,24 50,24 Q56,24 58,27" fill="none" stroke="#e5e7eb" stroke-width="1.5" opacity="0.7"/>
+    <!-- Secondary highlight -->
+    <path d="M43,29 Q45,27 50,27 Q55,27 57,29" fill="none" stroke="#e5e7eb" stroke-width="0.6" opacity="0.3"/>
+    <!-- Brushed metal grain lines -->
+    <line x1="41" y1="31" x2="59" y2="31" stroke="#e5e7eb" stroke-width="0.25" opacity="0.12"/>
+    <line x1="40" y1="33" x2="60" y2="33" stroke="#e5e7eb" stroke-width="0.25" opacity="0.1"/>
+    <line x1="41" y1="35" x2="59" y2="35" stroke="#e5e7eb" stroke-width="0.25" opacity="0.08"/>
+    <line x1="42" y1="37" x2="58" y2="37" stroke="#e5e7eb" stroke-width="0.25" opacity="0.06"/>
+    <!-- Timing marks around edge (12 positions) -->
+    <circle cx="50" cy="18" r="0.5" fill="#374151" opacity="0.5"/>
+    <circle cx="58" cy="19" r="0.5" fill="#374151" opacity="0.4"/>
+    <circle cx="64" cy="24" r="0.5" fill="#374151" opacity="0.4"/>
+    <circle cx="66" cy="31" r="0.5" fill="#374151" opacity="0.35"/>
+    <circle cx="34" cy="31" r="0.5" fill="#374151" opacity="0.35"/>
+    <circle cx="36" cy="24" r="0.5" fill="#374151" opacity="0.4"/>
+    <circle cx="42" cy="19" r="0.5" fill="#374151" opacity="0.4"/>
+  </g>
+
+  <!-- ===== LAYER 4: STATUS INDICATORS ===== -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Status Lights: ACTIVE, STRAIN" -->
+
+  <!-- Active operational indicator (top-left) -->
+  <circle cx="10" cy="10" r="5.5" fill="url(#od-active)"/>
+  <circle cx="10" cy="10" r="3.5" fill="#60a5fa"/>
+  <circle cx="10" cy="10" r="2" fill="#d1d5db"/>
+  <circle cx="10" cy="10" r="1" fill="#e5e7eb"/>
+  <text x="10" y="19.5" font-size="2.5" fill="#60a5fa" text-anchor="middle" font-family="sans-serif" opacity="0.75" font-weight="bold">ACTIVE</text>
+
+  <!-- System strain warning (top-right) -->
+  <circle cx="90" cy="10" r="5.5" fill="url(#od-strain)"/>
+  <circle cx="90" cy="10" r="3.5" fill="#f59e0b"/>
+  <circle cx="90" cy="10" r="2" fill="#fde68a"/>
+  <circle cx="90" cy="10" r="1" fill="#fef3c7"/>
+  <text x="90" y="19.5" font-size="2.5" fill="#f59e0b" text-anchor="middle" font-family="sans-serif" opacity="0.75" font-weight="bold">STRAIN</text>
+
+  <!-- ===== LAYER 5: CAPACITY GAUGES ===== -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Capacity Gauges: 78% healthy, 92% strain" -->
+
+  <!-- Left capacity gauge (78% - healthy blue) -->
+  <g transform="translate(10, 34)">
+    <circle r="4" fill="#374151" opacity="0.6"/>
+    <circle r="3.5" fill="none" stroke="#4b5563" stroke-width="0.8"/>
+    <!-- Arc fill (78%) -->
+    <path d="M0,-3 A3,3 0 1,1 -2,2.3" stroke="#60a5fa" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <!-- Empty arc portion -->
+    <path d="M-2,2.3 A3,3 0 0,1 0,-3" stroke="#374151" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <text y="1.2" font-size="3.2" fill="#60a5fa" text-anchor="middle" font-weight="bold" font-family="sans-serif">78</text>
+  </g>
+
+  <!-- Right capacity gauge (92% - strain amber) -->
+  <g transform="translate(90, 34)">
+    <circle r="4" fill="#374151" opacity="0.6"/>
+    <circle r="3.5" fill="none" stroke="#4b5563" stroke-width="0.8"/>
+    <!-- Arc fill (92%) -->
+    <path d="M0,-3 A3,3 0 1,1 -0.4,3" stroke="#f59e0b" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <!-- Empty arc portion -->
+    <path d="M-0.4,3 A3,3 0 0,1 0,-3" stroke="#374151" stroke-width="0.8" fill="none" opacity="0.4"/>
+    <text y="1.2" font-size="3.2" fill="#f59e0b" text-anchor="middle" font-weight="bold" font-family="sans-serif">92</text>
+  </g>
+
+  <!-- ===== LAYER 6: AMBIENT OCCLUSION (gear mesh shadows) ===== -->
+  <!-- Subtle depth at interlocking points -->
+  <g opacity="0.08">
+    <ellipse cx="35" cy="34" rx="5" ry="7" fill="#374151"/>
+    <ellipse cx="65" cy="34" rx="5" ry="7" fill="#374151"/>
+    <ellipse cx="33" cy="28" rx="3" ry="4" fill="#374151"/>
+  </g>
+
+  <!-- ===== LAYER 7: FINE DETAIL TOUCHES ===== -->
+
+  <!-- Pipeline pressure gauge markings (tiny ticks on main bus) -->
+  <g opacity="0.2">
+    <line x1="25" y1="48" x2="25" y2="49" stroke="#d1d5db" stroke-width="0.4"/>
+    <line x1="30" y1="48" x2="30" y2="49" stroke="#d1d5db" stroke-width="0.4"/>
+    <line x1="70" y1="48" x2="70" y2="49" stroke="#d1d5db" stroke-width="0.4"/>
+    <line x1="75" y1="48" x2="75" y2="49" stroke="#d1d5db" stroke-width="0.4"/>
+  </g>
+
+  <!-- Stratum separation highlights (light catches at layer edges) -->
+  <line x1="22" y1="70.5" x2="78" y2="70.5" stroke="#d1d5db" stroke-width="0.4" opacity="0.2"/>
+  <line x1="18" y1="76" x2="82" y2="76" stroke="#9ca3af" stroke-width="0.3" opacity="0.15"/>
+  <line x1="14" y1="81.5" x2="86" y2="81.5" stroke="#6b7280" stroke-width="0.3" opacity="0.12"/>
+
+  <!-- Foundation pillar highlights (polished column edges) -->
+  <line x1="20" y1="70.5" x2="20" y2="92.5" stroke="#838b95" stroke-width="0.3" opacity="0.2"/>
+  <line x1="80" y1="70.5" x2="80" y2="92.5" stroke="#838b95" stroke-width="0.3" opacity="0.2"/>
 </svg>

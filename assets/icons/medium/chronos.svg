@@ -1,45 +1,125 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- CHRONOS MEDIUM - The Archaeologist with temporal rings -->
+  <!-- CHRONOS MEDIUM: 32x32px target, 4-6 colors, 15-25 paths
+       Ref: PILLAR_THEMATIC_SCHEMA.md - "Time crystallized into navigable space"
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - Temporal Compression Engine
+       Ref: CHRONOS_iterations_v2.md - Scroll, 12 strata, Y-fork junction, 8 temporal rings
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - Archaeological precision, Monument Valley meets dig site
+       Structure: Scroll with strata, temporal rings, dendritic Y-fork, archaeological grid -->
+
   <defs>
-    <!-- Subtle gradient for scroll depth -->
-    <linearGradient id="scrollGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#e8d7c3"/>
-      <stop offset="50%" stop-color="#d4a574"/>
+    <!-- Scroll depth gradient: weathered parchment (light surface -> compressed base) -->
+    <!-- Ref: THEMATIC_SCHEMA palette - primary #d4a574, accent #e8d7c3, secondary #8b7355 -->
+    <linearGradient id="cm-scrl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5ead6"/>
+      <stop offset="20%" stop-color="#e8d7c3"/>
+      <stop offset="55%" stop-color="#d4a574"/>
       <stop offset="100%" stop-color="#8b7355"/>
     </linearGradient>
+    <!-- Curl shadow gradient: depth inside rolled parchment -->
+    <linearGradient id="cm-curl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4a3822"/>
+      <stop offset="50%" stop-color="#8b7355"/>
+      <stop offset="100%" stop-color="#c49060"/>
+    </linearGradient>
+    <!-- Temporal glow: subsurface bioluminescent blue field -->
+    <!-- Ref: CHRONOS_iterations_v2.md - "blue glow emanates FROM the parchment itself" -->
+    <radialGradient id="cm-glow" cx="50%" cy="48%" r="45%">
+      <stop offset="0%" stop-color="#7fa9f5" stop-opacity="0.4"/>
+      <stop offset="70%" stop-color="#7fa9f5" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#7fa9f5" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Shadow layer -->
-  <path fill="#4a3822" opacity="0.65" d="M25,15 Q20,50 25,85 L68,85 Q75,50 68,15 Z"/>
+  <!-- === LAYER 0: SHADOW DEPTH === -->
+  <!-- Ref: THEMATIC_SCHEMA - shadow #4a3822 "Deep archaeological pit, ancient soil" -->
+  <path fill="#4a3822" opacity="0.4" d="M21,12 Q14,50 21,88 L74,88 Q82,50 74,12 Z"/>
 
-  <!-- Main scroll body with gradient -->
-  <path fill="url(#scrollGrad)" opacity="0.95" d="M28,18 Q23,50 28,82 L65,82 Q72,50 65,18 Z"/>
+  <!-- === LAYER 1: SCROLL BODY (Unfurled parchment with organic curve) === -->
+  <!-- Ref: SYMBOL_DRIVEN - "Scroll form dominates, corners slightly_rounded (weathered by time)" -->
+  <path fill="url(#cm-scrl)" d="M18,10 Q12,50 18,90 L72,90 Q80,50 72,10 Z"/>
 
-  <!-- Left curl edge -->
-  <path fill="#8b7355" opacity="0.8" d="M28,18 Q18,20 20,30 Q22,25 28,25 Z"/>
+  <!-- === LAYER 2: SCROLL CURLS (Rolled ends showing depth) === -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "Scroll curl showing rolled parchment texture" -->
+  <!-- Top-left curl (beginning of timeline) -->
+  <path fill="url(#cm-curl)" opacity="0.85"
+        d="M18,10 Q8,8 6,14 Q8,20 12,18 Q15,15 18,16 Z"/>
+  <path fill="#d4a574" opacity="0.6"
+        d="M18,16 Q12,18 10,22 Q12,24 15,22 Q17,19 18,20 Z"/>
+  <!-- Bottom-right curl (end of unfurled timeline) -->
+  <path fill="url(#cm-curl)" opacity="0.75"
+        d="M72,90 Q82,92 84,86 Q82,80 78,82 Q75,85 72,84 Z"/>
 
-  <!-- Horizontal strata (7 layers) -->
-  <line x1="30" y1="25" x2="63" y2="25" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
-  <line x1="30" y1="35" x2="63" y2="35" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
-  <line x1="30" y1="45" x2="63" y2="45" stroke="#8b7355" stroke-width="2"/>
-  <line x1="30" y1="55" x2="63" y2="55" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
-  <line x1="30" y1="65" x2="63" y2="65" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
+  <!-- === LAYER 3: STRATIFICATION BANDS (7 geological layers) === -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Stratum 1-12: Progressive compression" -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "Band thickness varies by geological age" -->
+  <!-- Newest strata (lighter, less compressed) -->
+  <line x1="22" y1="18" x2="68" y2="18" stroke="#d9c3a5" stroke-width="1.5" opacity="0.5"/>
+  <line x1="22" y1="26" x2="68" y2="26" stroke="#c49060" stroke-width="1.2" opacity="0.55"/>
+  <line x1="22" y1="33" x2="68" y2="33" stroke="#a6896b" stroke-width="1.5" opacity="0.6"/>
+  <!-- Central excavation zone (strata break around temporal rings) -->
+  <line x1="22" y1="66" x2="68" y2="66" stroke="#a6896b" stroke-width="1.5" opacity="0.6"/>
+  <line x1="22" y1="73" x2="68" y2="73" stroke="#c49060" stroke-width="1.2" opacity="0.55"/>
+  <!-- Oldest strata (compressed, darker) -->
+  <line x1="22" y1="80" x2="68" y2="80" stroke="#8b7355" stroke-width="2" opacity="0.65"/>
+  <line x1="22" y1="86" x2="68" y2="86" stroke="#6b5d4f" stroke-width="1.5" opacity="0.5"/>
 
-  <!-- Concentric temporal rings (center) -->
-  <circle cx="47" cy="50" r="18" fill="none" stroke="#8b7355" stroke-width="1.5" opacity="0.6"/>
-  <circle cx="47" cy="50" r="14" fill="none" stroke="#a6896b" stroke-width="1.5" opacity="0.7"/>
-  <circle cx="47" cy="50" r="10" fill="none" stroke="#d4a574" stroke-width="1.5" opacity="0.8"/>
+  <!-- === LAYER 4: TEMPORAL RING GLOW (Subsurface emanation) === -->
+  <circle cx="46" cy="49" r="24" fill="url(#cm-glow)"/>
 
-  <!-- Git branch Y-fork -->
-  <path stroke="#4a3822" stroke-width="2.5" fill="none" stroke-linecap="round" d="M47,62 L47,50 M47,50 L42,42 M47,50 L52,42"/>
+  <!-- === LAYER 5: TEMPORAL RINGS (5 concentric commit rings) === -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - "Concentric commit rings (tree-ring dating)" -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "Ring opacity increases toward center (attention gradient)" -->
+  <circle cx="46" cy="49" r="22" fill="none" stroke="#7fa9f5" stroke-width="0.8" opacity="0.25"/>
+  <circle cx="46" cy="49" r="18" fill="none" stroke="#7fa9f5" stroke-width="1" opacity="0.35"/>
+  <circle cx="46" cy="49" r="14" fill="none" stroke="#7fa9f5" stroke-width="1.2" opacity="0.45"/>
+  <circle cx="46" cy="49" r="10" fill="none" stroke="#7fa9f5" stroke-width="1.5" opacity="0.55"/>
+  <circle cx="46" cy="49" r="6" fill="none" stroke="#7fa9f5" stroke-width="1.8" opacity="0.65"/>
 
-  <!-- Branch node circles -->
-  <circle cx="42" cy="42" r="3" fill="#8b7355" stroke="#4a3822" stroke-width="1"/>
-  <circle cx="52" cy="42" r="3" fill="#8b7355" stroke="#4a3822" stroke-width="1"/>
-  <circle cx="47" cy="62" r="3" fill="#d4a574" stroke="#4a3822" stroke-width="1"/>
+  <!-- === LAYER 6: DENDRITIC Y-FORK BRANCH STRUCTURE === -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Y-Fork = Parser Junction (chaos -> order)" -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "Branches emanate as parsed output streams" -->
+  <!-- Main trunk -->
+  <line x1="46" y1="70" x2="46" y2="49" stroke="#4a3822" stroke-width="2.8" stroke-linecap="round"/>
+  <!-- Primary Y-fork -->
+  <line x1="46" y1="49" x2="36" y2="38" stroke="#4a3822" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="46" y1="49" x2="56" y2="38" stroke="#4a3822" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Secondary branching (Murray's Law: thinner child branches) -->
+  <line x1="36" y1="38" x2="30" y2="30" stroke="#8b7355" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="36" y1="38" x2="40" y2="30" stroke="#8b7355" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="56" y1="38" x2="52" y2="30" stroke="#8b7355" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="56" y1="38" x2="62" y2="30" stroke="#8b7355" stroke-width="1.5" stroke-linecap="round"/>
 
-  <!-- Archaeological grid overlay (subtle) -->
-  <rect x="32" y="48" width="6" height="6" fill="none" stroke="#4a3822" stroke-width="0.5" opacity="0.3"/>
-  <rect x="56" y="48" width="6" height="6" fill="none" stroke="#4a3822" stroke-width="0.5" opacity="0.3"/>
+  <!-- === LAYER 7: COMMIT FOSSIL NODES === -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - "commit nodes as circular fossil imprints" -->
+  <!-- Root node (HEAD/main) -->
+  <circle cx="46" cy="70" r="3.5" fill="#dda15e" stroke="#4a3822" stroke-width="1.2"/>
+  <circle cx="46" cy="70" r="1.8" fill="#f5ead6" opacity="0.6"/>
+  <!-- Junction node (Y-fork center, largest = decision point) -->
+  <circle cx="46" cy="49" r="4" fill="#d4a574" stroke="#4a3822" stroke-width="1.5"/>
+  <circle cx="46" cy="49" r="2.2" fill="#e8d7c3" opacity="0.5"/>
+  <!-- Primary branch tips -->
+  <circle cx="36" cy="38" r="3" fill="#c49060" stroke="#4a3822" stroke-width="1"/>
+  <circle cx="56" cy="38" r="3" fill="#c49060" stroke="#4a3822" stroke-width="1"/>
+  <!-- Leaf commit nodes (blue glow = active git blame traces) -->
+  <circle cx="30" cy="30" r="2.5" fill="#a6896b" stroke="#4a3822" stroke-width="0.8"/>
+  <circle cx="30" cy="30" r="1.2" fill="#7fa9f5" opacity="0.5"/>
+  <circle cx="40" cy="30" r="2.5" fill="#a6896b" stroke="#4a3822" stroke-width="0.8"/>
+  <circle cx="52" cy="30" r="2.5" fill="#a6896b" stroke="#4a3822" stroke-width="0.8"/>
+  <circle cx="62" cy="30" r="2.5" fill="#a6896b" stroke="#4a3822" stroke-width="0.8"/>
+  <circle cx="62" cy="30" r="1.2" fill="#7fa9f5" opacity="0.5"/>
+
+  <!-- === LAYER 8: ARCHAEOLOGICAL GRID OVERLAY === -->
+  <!-- Ref: SYMBOL_DRIVEN - "Archaeological grid lines suggesting excavation methodology" -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "excavation grid = measurement methodology" -->
+  <g stroke="#4a3822" stroke-width="0.5" opacity="0.25">
+    <rect x="32" y="44" width="8" height="8" fill="none"/>
+    <rect x="52" y="44" width="8" height="8" fill="none"/>
+    <rect x="32" y="52" width="8" height="8" fill="none"/>
+    <rect x="52" y="52" width="8" height="8" fill="none"/>
+  </g>
+
+  <!-- === LAYER 9: SCROLL HIGHLIGHT EDGE === -->
+  <!-- Ref: THEMATIC_SCHEMA palette - highlight #f5ead6 "Surface light on excavated artifact" -->
+  <path stroke="#f5ead6" stroke-width="1.2" fill="none" opacity="0.5"
+        d="M20,12 Q14,50 20,88"/>
 </svg>

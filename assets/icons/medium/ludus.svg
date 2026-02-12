@@ -1,64 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- LUDUS MEDIUM - The Mechanics with game controller detail -->
+  <!-- LUDUS MEDIUM: "The Mechanics" - Balanced detail game controller -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA.md - "Play encoded in systematic rules" -->
+  <!-- Ref: LUDUS_iterations.md - 32x32px optimized, 4-6 colors, 15-25 paths -->
+  <!-- Target: 32x32px clarity with emerging detail at larger sizes -->
 
-  <!-- Background Grid (4x4 tactical context) -->
-  <g stroke="#5fa876" stroke-width="0.5" opacity="0.25">
-    <line x1="20" y1="30" x2="80" y2="30"/>
-    <line x1="20" y1="45" x2="80" y2="45"/>
-    <line x1="20" y1="60" x2="80" y2="60"/>
-    <line x1="20" y1="75" x2="80" y2="75"/>
-    <line x1="30" y1="25" x2="30" y2="75"/>
-    <line x1="45" y1="25" x2="45" y2="75"/>
-    <line x1="60" y1="25" x2="60" y2="75"/>
-    <line x1="70" y1="25" x2="70" y2="75"/>
+  <!-- LAYER 1: Tactical grid background (4x4, subtle context) -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "8x8 board = bounded playable area" -->
+  <g stroke="#5fa876" stroke-width="0.5" opacity="0.2">
+    <line x1="20" y1="25" x2="80" y2="25"/>
+    <line x1="20" y1="40" x2="80" y2="40"/>
+    <line x1="20" y1="55" x2="80" y2="55"/>
+    <line x1="20" y1="70" x2="80" y2="70"/>
+    <line x1="20" y1="85" x2="80" y2="85"/>
+    <line x1="25" y1="20" x2="25" y2="85"/>
+    <line x1="40" y1="20" x2="40" y2="85"/>
+    <line x1="55" y1="20" x2="55" y2="85"/>
+    <line x1="70" y1="20" x2="70" y2="85"/>
+    <line x1="85" y1="20" x2="85" y2="85"/>
   </g>
 
-  <!-- Dendritic Branches (2-3 Y-fork branches) -->
-  <g stroke="#5fa876" stroke-width="2" opacity="0.3" fill="none">
-    <path d="M50,75 L50,55 L45,48"/>
-    <path d="M50,55 L55,48"/>
-    <path d="M50,30 L48,25"/>
-    <path d="M50,30 L52,25"/>
+  <!-- LAYER 2: Dendritic skill tree (2-3 Y-forks behind controller) -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA.md - "Skill trees and quest paths that branch" -->
+  <g stroke="#5fa876" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.35">
+    <!-- Main trunk -->
+    <path d="M50,82 L50,60"/>
+    <!-- Primary Y-fork -->
+    <path d="M50,60 L42,48"/>
+    <path d="M50,60 L58,48"/>
+    <!-- Secondary forks -->
+    <path d="M42,48 L36,38"/>
+    <path d="M42,48 L46,37"/>
+    <path d="M58,48 L54,37"/>
+    <path d="M58,48 L64,38"/>
   </g>
 
-  <!-- Controller Base -->
-  <rect x="30" y="43" width="40" height="24" rx="6" fill="#81c995"/>
+  <!-- Skill nodes -->
+  <!-- Active nodes (unlocked abilities) -->
+  <circle cx="50" cy="60" r="2.5" fill="#5ff59f" opacity="0.8"/>
+  <circle cx="42" cy="48" r="2" fill="#5ff59f" opacity="0.7"/>
+  <circle cx="58" cy="48" r="2" fill="#5ff59f" opacity="0.7"/>
+  <!-- Dormant nodes (locked progression) -->
+  <circle cx="36" cy="38" r="1.5" fill="#648f6f" opacity="0.6"/>
+  <circle cx="46" cy="37" r="1.5" fill="#648f6f" opacity="0.6"/>
+  <circle cx="54" cy="37" r="1.5" fill="#648f6f" opacity="0.6"/>
+  <circle cx="64" cy="38" r="1.5" fill="#648f6f" opacity="0.6"/>
 
-  <!-- Controller Shading (depth) -->
-  <rect x="31" y="44" width="38" height="22" rx="5" fill="#6eb584" opacity="0.3"/>
+  <!-- LAYER 3: Controller body -->
+  <!-- Shadow for depth -->
+  <rect x="24" y="56" width="52" height="28" rx="7" fill="#2d4d3a" opacity="0.25"/>
+  <!-- Main body (primary green) -->
+  <rect x="23" y="54" width="54" height="28" rx="7" fill="#81c995"/>
+  <!-- Depth shading layer -->
+  <rect x="25" y="56" width="50" height="24" rx="6" fill="#6eb584" opacity="0.3"/>
 
-  <!-- D-pad (cross shape with rounded ends) -->
-  <g fill="#5fa876">
-    <rect x="37" y="50" width="12" height="4" rx="2"/>
-    <rect x="41" y="46" width="4" height="12" rx="2"/>
+  <!-- LAYER 4: D-pad cross with rounded ends -->
+  <!-- Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - "cross/plus shapes (directional input)" -->
+  <rect x="30" y="65" width="14" height="4.5" rx="2" fill="#5fa876"/>
+  <rect x="35" y="60" width="4.5" height="14" rx="2" fill="#5fa876"/>
+  <!-- D-pad highlight -->
+  <rect x="31" y="66" width="12" height="1" rx="0.5" fill="#6eb584" opacity="0.5"/>
+  <!-- Center dot -->
+  <circle cx="37.25" cy="67.25" r="1.5" fill="#81c995"/>
+
+  <!-- LAYER 5: Action buttons (4 in diamond) -->
+  <!-- Top button -->
+  <circle cx="62" cy="58" r="4" fill="#b8e6c9"/>
+  <circle cx="62" cy="58" r="3" fill="#d4f5e3" opacity="0.45"/>
+  <!-- Right button -->
+  <circle cx="69" cy="65" r="4" fill="#b8e6c9"/>
+  <circle cx="69" cy="65" r="3" fill="#d4f5e3" opacity="0.45"/>
+  <!-- Bottom button -->
+  <circle cx="62" cy="72" r="4" fill="#b8e6c9"/>
+  <circle cx="62" cy="72" r="3" fill="#d4f5e3" opacity="0.45"/>
+  <!-- Left button -->
+  <circle cx="55" cy="65" r="4" fill="#b8e6c9"/>
+  <circle cx="55" cy="65" r="3" fill="#d4f5e3" opacity="0.45"/>
+
+  <!-- LAYER 6: D6 dice (top-right, tilted) -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "D6: Simpler probability events" -->
+  <g transform="rotate(30, 76, 28)">
+    <rect x="71" y="23" width="10" height="10" rx="1.5" fill="#b8e6c9" opacity="0.75"/>
+    <!-- 3 pips diagonal -->
+    <circle cx="74" cy="26" r="0.9" fill="#5fa876"/>
+    <circle cx="76" cy="28" r="0.9" fill="#5fa876"/>
+    <circle cx="78" cy="30" r="0.9" fill="#5fa876"/>
   </g>
-  <!-- D-pad highlights -->
-  <line x1="38" y1="51" x2="48" y2="51" stroke="#6eb584" stroke-width="1" opacity="0.5"/>
 
-  <!-- Action Buttons (4 in diamond arrangement) -->
-  <g>
-    <circle cx="60" cy="47" r="5" fill="#b8e6c9"/>
-    <circle cx="60" cy="47" r="4" fill="#d4f5e3" opacity="0.5"/>
-
-    <circle cx="66" cy="53" r="5" fill="#b8e6c9"/>
-    <circle cx="66" cy="53" r="4" fill="#d4f5e3" opacity="0.5"/>
-
-    <circle cx="60" cy="59" r="5" fill="#b8e6c9"/>
-    <circle cx="60" cy="59" r="4" fill="#d4f5e3" opacity="0.5"/>
-
-    <circle cx="54" cy="53" r="5" fill="#b8e6c9"/>
-    <circle cx="54" cy="53" r="4" fill="#d4f5e3" opacity="0.5"/>
+  <!-- LAYER 7: Resource bar (bottom, segmented) -->
+  <!-- Ref: LUDUS_iterations.md - "Segmented horizontal bar at bottom" -->
+  <g transform="translate(23, 86)">
+    <!-- Bar background -->
+    <rect x="0" y="0" width="54" height="5" rx="2.5" fill="#2d4d3a" opacity="0.25"/>
+    <!-- Filled segments (4 of 5) with gradient effect -->
+    <rect x="1" y="0.5" width="10" height="4" rx="1" fill="#81c995"/>
+    <rect x="12" y="0.5" width="10" height="4" rx="1" fill="#81c995"/>
+    <rect x="23" y="0.5" width="10" height="4" rx="1" fill="#6eb584"/>
+    <rect x="34" y="0.5" width="10" height="4" rx="1" fill="#5ff59f" opacity="0.7"/>
+    <!-- Empty segment -->
+    <rect x="45" y="0.5" width="8" height="4" rx="1" fill="#2d4d3a" opacity="0.15"/>
   </g>
 
-  <!-- Dice Detail (D6 in top-right corner) -->
-  <g transform="rotate(45 72 32)">
-    <rect x="67" y="27" width="10" height="10" fill="#b8e6c9" opacity="0.7" rx="1"/>
-    <circle cx="70" cy="30" r="0.8" fill="#5fa876"/>
-    <circle cx="72" cy="32" r="0.8" fill="#5fa876"/>
-    <circle cx="74" cy="34" r="0.8" fill="#5fa876"/>
-  </g>
+  <!-- LAYER 8: Energy flow (dynamic diagonal) -->
+  <!-- Ref: LUDUS_iterations.md - "Dynamic diagonal energy flow line" -->
+  <path d="M18,30 Q38,45 58,35 Q70,28 85,38"
+        stroke="#5ff59f" stroke-width="1.8" opacity="0.4" fill="none" stroke-linecap="round"/>
+  <!-- Flow particles -->
+  <circle cx="35" cy="40" r="1.2" fill="#5ff59f" opacity="0.6"/>
+  <circle cx="60" cy="33" r="1" fill="#5ff59f" opacity="0.5"/>
 
-  <!-- Energy Flow (diagonal dynamic line) -->
-  <path d="M25,35 Q45,50 65,45" stroke="#5ff59f" stroke-width="2" opacity="0.4" fill="none"/>
+  <!-- LAYER 9: Turn indicator (top-left) -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Turn order indicators" -->
+  <circle cx="18" cy="22" r="4" fill="#5ff59f" opacity="0.85"/>
+  <text x="18" y="24" font-size="5" fill="#2d4d3a" text-anchor="middle"
+        font-weight="bold" font-family="sans-serif">1</text>
 </svg>

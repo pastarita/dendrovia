@@ -1,53 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- OCULUS MEDIUM - The Interface with hexagonal iris structure -->
+  <!-- OCULUS MEDIUM - The Interface: "Vision structured as navigable information"
+       32x32px optimized | 4-6 colors | 15-25 paths
+       Core motifs: Hexagonal iris segments, focus rings, Miller column radial hints, eyelid framing
+       Ref: PILLAR_THEMATIC_SCHEMA.md (OCULUS PillarTheme)
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md (Navigation Iris Portal)
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md (ellipses, hexagons, concentric frames) -->
+
   <defs>
-    <radialGradient id="irisGrad">
-      <stop offset="0%" stop-color="#f5a97f"/>
+    <!-- Iris gradient: warm amber → sunset (Ref: OCULUS palette primary→secondary) -->
+    <radialGradient id="oc-m-iris">
+      <stop offset="0%" stop-color="#ffd4b8"/>
+      <stop offset="50%" stop-color="#f5a97f"/>
       <stop offset="100%" stop-color="#d88957"/>
     </radialGradient>
   </defs>
 
-  <!-- Outer focus rings (awareness hierarchy) -->
-  <circle cx="50" cy="50" r="38" stroke="#f5c27f" stroke-width="0.5" fill="none" opacity="0.5"/>
-  <circle cx="50" cy="50" r="32" stroke="#f5c27f" stroke-width="0.8" fill="none" opacity="0.5"/>
+  <!-- Concentric focus rings (attention hierarchy - Ref: OCULUS 4 focus rings around pupil)
+       Inner rings = sharp focus (current file), outer = peripheral awareness -->
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#f5c27f" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="50" cy="50" r="36" fill="none" stroke="#f5c27f" stroke-width="0.7" opacity="0.25"/>
 
-  <!-- Eye shape base (sclera) -->
-  <ellipse cx="50" cy="50" rx="30" ry="22" fill="#ffd4b8"/>
+  <!-- Eye shape (sclera - observational boundary / elliptical organic viewing) -->
+  <path d="M8,50 Q50,22 92,50 Q50,78 8,50 Z" fill="#ffd4b8"/>
 
-  <!-- Iris with gradient -->
-  <circle cx="50" cy="50" r="14" fill="url(#irisGrad)"/>
+  <!-- Iris with gradient (structured perception zone) -->
+  <circle cx="50" cy="50" r="18" fill="url(#oc-m-iris)"/>
 
-  <!-- Hexagonal iris segments (6 sections) -->
-  <g opacity="0.3">
-    <path d="M50,36 L54,39 L54,46 L50,50 Z" fill="#d88957"/>
-    <path d="M54,46 L58,50 L54,54 L50,50 Z" fill="#d88957"/>
-    <path d="M54,54 L54,61 L50,64 L50,50 Z" fill="#d88957"/>
-    <path d="M50,64 L46,61 L46,54 L50,50 Z" fill="#d88957"/>
-    <path d="M46,54 L42,50 L46,46 L50,50 Z" fill="#d88957"/>
-    <path d="M46,46 L46,39 L50,36 L50,50 Z" fill="#d88957"/>
+  <!-- Hexagonal iris segments (6 cells = UI layout grid - Ref: INSIGNIA 24 hexagons in 2 rings)
+       Alternating warm tones create structured information architecture pattern -->
+  <g opacity="0.35">
+    <!-- 6-segment hex ring (Ref: Hexagonal iris cells = responsive UI grid) -->
+    <path d="M50,33 L56,38 L56,47 L50,50 Z" fill="#e89b6f"/>
+    <path d="M56,47 L62,50 L56,57 L50,50 Z" fill="#d88957"/>
+    <path d="M56,57 L56,66 L50,67 L50,50 Z" fill="#e89b6f"/>
+    <path d="M50,67 L44,66 L44,57 L50,50 Z" fill="#d88957"/>
+    <path d="M44,57 L38,50 L44,47 L50,50 Z" fill="#e89b6f"/>
+    <path d="M44,47 L44,38 L50,33 L50,50 Z" fill="#d88957"/>
   </g>
 
-  <!-- Subtle radial lines from pupil (Miller columns hint) -->
-  <g stroke="#e89b6f" stroke-width="0.3" opacity="0.2">
-    <line x1="50" y1="50" x2="50" y2="36"/>
-    <line x1="50" y1="50" x2="57" y2="40"/>
-    <line x1="50" y1="50" x2="62" y2="50"/>
-    <line x1="50" y1="50" x2="57" y2="60"/>
-    <line x1="50" y1="50" x2="50" y2="64"/>
-    <line x1="50" y1="50" x2="43" y2="60"/>
-    <line x1="50" y1="50" x2="38" y2="50"/>
-    <line x1="50" y1="50" x2="43" y2="40"/>
+  <!-- 8 Radial spokes (Miller column navigation branches - Ref: INSIGNIA 12 radial branches)
+       Reduced to 8 for medium fidelity; spokes connect center to info nodes -->
+  <g stroke="#e89b6f" stroke-width="0.5" opacity="0.2" stroke-linecap="round">
+    <line x1="50" y1="50" x2="50" y2="33"/>
+    <line x1="50" y1="50" x2="62" y2="38"/>
+    <line x1="50" y1="50" x2="68" y2="50"/>
+    <line x1="50" y1="50" x2="62" y2="62"/>
+    <line x1="50" y1="50" x2="50" y2="67"/>
+    <line x1="50" y1="50" x2="38" y2="62"/>
+    <line x1="50" y1="50" x2="32" y2="50"/>
+    <line x1="50" y1="50" x2="38" y2="38"/>
   </g>
 
-  <!-- Pupil -->
-  <circle cx="50" cy="50" r="7" fill="#5f3d2d"/>
+  <!-- Pupil (portal to code space - deep perceptual void) -->
+  <circle cx="50" cy="50" r="8" fill="#5f3d2d"/>
 
-  <!-- Highlight reflection -->
-  <circle cx="48" cy="47" r="2.5" fill="#ffd4b8"/>
-  <circle cx="47" cy="46" r="1.5" fill="#fff5ed"/>
+  <!-- Miller column hint inside pupil (3 vertical columns = Finder navigation)
+       Ref: INSIGNIA "Miller Columns Inside Pupil" - 3 vertical columns -->
+  <g stroke="#7fa9f5" stroke-width="0.5" opacity="0.4">
+    <line x1="47" y1="45" x2="47" y2="55"/>
+    <line x1="50" y1="44" x2="50" y2="56"/>
+    <line x1="53" y1="45" x2="53" y2="55"/>
+  </g>
 
-  <!-- Eyelid curves (top and bottom) -->
-  <path d="M18,50 Q50,32 82,50" stroke="#d88957" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-  <path d="M18,50 Q50,66 82,50" stroke="#d88957" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <!-- 4 Cardinal information nodes (core HUD elements - Ref: INSIGNIA N/E/S/W always visible) -->
+  <circle cx="50" cy="32" r="2" fill="#7fa9f5" opacity="0.6"/>
+  <circle cx="68" cy="50" r="2" fill="#7fa9f5" opacity="0.6"/>
+  <circle cx="50" cy="68" r="2" fill="#7fa9f5" opacity="0.6"/>
+  <circle cx="32" cy="50" r="2" fill="#7fa9f5" opacity="0.6"/>
+
+  <!-- Highlight reflection (moment of clarity / insight) -->
+  <circle cx="46" cy="46" r="2.8" fill="#ffd4b8" opacity="0.7"/>
+  <circle cx="46" cy="45.5" r="1.5" fill="#fff5ed"/>
+
+  <!-- Eyelid curves (gentle contextual framing - Ref: Upper=tab bar, Lower=status bar)
+       Organic curved boundary of OCULUS's observational domain -->
+  <path d="M8,50 Q50,22 92,50" stroke="#d88957" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M8,50 Q50,72 92,50" stroke="#d88957" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
 </svg>

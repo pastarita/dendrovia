@@ -1,29 +1,100 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <!-- CHRONOS EMOJI: Scroll + Temporal Rings + Y-Fork -->
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHRONOS EMOJI-GRADE: "Time crystallized into navigable space"
+       Ref: PILLAR_THEMATIC_SCHEMA.md - The Archaeologist, temporal cartographer
+       Ref: EMOJI_GRADE_PROMPTS.md - Scroll + Temporal Rings + Y-Fork
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - Temporal Compression Engine (chaos->strata->order)
+       Ref: CHRONOS_iterations_v2.md - Unfurled scroll, 12 strata, Y-fork, 8 temporal rings
+       Target: 16-32px emoji-style, gradient-rich, warm archaeological amber -->
 
   <defs>
-    <linearGradient id="scroll" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#d4a574"/>
+    <!-- Scroll body gradient: aged parchment with depth (SYMBOL_DRIVEN - aged_parchment texture) -->
+    <linearGradient id="ce-scrl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8d7c3"/>
+      <stop offset="35%" stop-color="#d4a574"/>
+      <stop offset="100%" stop-color="#8b7355"/>
+    </linearGradient>
+    <!-- Scroll curl gradient: rolled edge catching light -->
+    <linearGradient id="ce-curl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4a3822"/>
+      <stop offset="40%" stop-color="#8b7355"/>
+      <stop offset="100%" stop-color="#d4a574"/>
+    </linearGradient>
+    <!-- Temporal ring glow: bioluminescent blue emanating from parchment -->
+    <!-- Ref: CHRONOS_iterations_v2.md - "cold light contrasting with warm candlelight" -->
+    <radialGradient id="ce-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7fa9f5" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#7fa9f5" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Y-fork branch gradient: fossilized organic matter pressed into sediment -->
+    <linearGradient id="ce-fork" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a3822"/>
       <stop offset="100%" stop-color="#8b7355"/>
     </linearGradient>
   </defs>
 
-  <!-- Scroll body -->
-  <rect x="6" y="10" width="20" height="12" rx="2" fill="url(#scroll)" stroke="#4a3822" stroke-width="1.5"/>
+  <!-- === SHADOW LAYER: Archaeological depth === -->
+  <!-- Ref: THEMATIC_SCHEMA - shadow #4a3822 "Deep archaeological pit" -->
+  <rect x="20" y="20" width="62" height="64" rx="5" fill="#4a3822" opacity="0.35"/>
 
-  <!-- Scroll edges (unfurled) -->
-  <ellipse cx="6" cy="16" rx="2" ry="6" fill="#d4a574" stroke="#4a3822" stroke-width="1"/>
-  <ellipse cx="26" cy="16" rx="2" ry="6" fill="#d4a574" stroke="#4a3822" stroke-width="1"/>
+  <!-- === SCROLL BODY: Unfurled parchment (primary form, ~60% of canvas) === -->
+  <!-- Ref: SYMBOL_DRIVEN - "Scroll form dominates (60% of canvas height)" -->
+  <rect x="18" y="16" width="64" height="62" rx="4" fill="url(#ce-scrl)"/>
 
-  <!-- Y-Fork branch (fossil) -->
-  <path d="M16,12 L16,16 M16,16 L13,19 M16,16 L19,19"
-        stroke="#8b7355" stroke-width="2" stroke-linecap="round"/>
-  <circle cx="13" cy="19" r="1.5" fill="#8b7355"/>
-  <circle cx="19" cy="19" r="1.5" fill="#8b7355"/>
+  <!-- === SCROLL CURLS: Top and bottom rolled edges === -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "Scroll curl at top showing rolled parchment" -->
+  <!-- Top curl -->
+  <ellipse cx="18" cy="30" rx="6" ry="14" fill="url(#ce-curl)" opacity="0.85"/>
+  <ellipse cx="18" cy="30" rx="3.5" ry="11" fill="#d4a574" opacity="0.6"/>
+  <!-- Bottom curl -->
+  <ellipse cx="82" cy="62" rx="6" ry="14" fill="url(#ce-curl)" opacity="0.75"/>
+  <ellipse cx="82" cy="62" rx="3.5" ry="11" fill="#d4a574" opacity="0.5"/>
 
-  <!-- 3 Temporal rings (blue glow) -->
-  <circle cx="16" cy="16" r="4" fill="none" stroke="#7fa9f5" stroke-width="0.8" opacity="0.6"/>
-  <circle cx="16" cy="16" r="6" fill="none" stroke="#7fa9f5" stroke-width="0.6" opacity="0.4"/>
-  <circle cx="16" cy="16" r="8" fill="none" stroke="#7fa9f5" stroke-width="0.4" opacity="0.3"/>
+  <!-- === STRATIFICATION BANDS: Geological epochs of code history === -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "twelve distinct geological bands" (simplified to 5 for emoji) -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Horizontal strata = version epochs" -->
+  <line x1="22" y1="24" x2="78" y2="24" stroke="#c49060" stroke-width="1.8" opacity="0.5"/>
+  <line x1="22" y1="32" x2="78" y2="32" stroke="#a6896b" stroke-width="1.5" opacity="0.55"/>
+  <line x1="22" y1="60" x2="78" y2="60" stroke="#a6896b" stroke-width="1.5" opacity="0.55"/>
+  <line x1="22" y1="68" x2="78" y2="68" stroke="#c49060" stroke-width="1.8" opacity="0.5"/>
+  <line x1="22" y1="74" x2="78" y2="74" stroke="#8b7355" stroke-width="1.2" opacity="0.4"/>
+
+  <!-- === TEMPORAL RING GLOW: Bioluminescent blue field === -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "rings emanate FROM the parchment, subsurface" -->
+  <circle cx="50" cy="47" r="22" fill="url(#ce-glow)"/>
+
+  <!-- === TEMPORAL RINGS: 3 concentric commit rings (tree-ring dating) === -->
+  <!-- Ref: EMOJI_GRADE_PROMPTS.md - "3 concentric temporal rings (blue glow)" -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - "Concentric commit rings like tree rings" -->
+  <circle cx="50" cy="47" r="20" fill="none" stroke="#7fa9f5" stroke-width="1.2" opacity="0.35"/>
+  <circle cx="50" cy="47" r="14" fill="none" stroke="#7fa9f5" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="50" cy="47" r="8" fill="none" stroke="#7fa9f5" stroke-width="1.8" opacity="0.65"/>
+
+  <!-- === Y-FORK BRANCH: Central fossil (git branch divergence) === -->
+  <!-- Ref: CHRONOS_iterations_v2.md - "fossilized dendritic branch system from central Y-fork" -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL.md - "Y-Fork as Parser Junction" -->
+  <!-- Main trunk (MAIN branch, ascending from bottom) -->
+  <line x1="50" y1="65" x2="50" y2="47" stroke="url(#ce-fork)" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Left branch (divergent evolution) -->
+  <line x1="50" y1="47" x2="38" y2="34" stroke="#4a3822" stroke-width="3" stroke-linecap="round"/>
+  <!-- Right branch (divergent evolution) -->
+  <line x1="50" y1="47" x2="62" y2="34" stroke="#4a3822" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- === COMMIT NODES: Fossil imprints at branch points === -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA symbols - "commit nodes as circular fossil imprints" -->
+  <!-- Root node (trunk base) -->
+  <circle cx="50" cy="65" r="3.5" fill="#dda15e" stroke="#4a3822" stroke-width="1.2"/>
+  <circle cx="50" cy="65" r="1.8" fill="#e8d7c3" opacity="0.6"/>
+  <!-- Junction node (Y-fork center) -->
+  <circle cx="50" cy="47" r="4.5" fill="#d4a574" stroke="#4a3822" stroke-width="1.5"/>
+  <circle cx="50" cy="47" r="2.5" fill="#e8d7c3" opacity="0.5"/>
+  <!-- Left branch tip -->
+  <circle cx="38" cy="34" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
+  <circle cx="38" cy="34" r="1.8" fill="#7fa9f5" opacity="0.5"/>
+  <!-- Right branch tip -->
+  <circle cx="62" cy="34" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
+  <circle cx="62" cy="34" r="1.8" fill="#7fa9f5" opacity="0.5"/>
+
+  <!-- === HIGHLIGHT EDGE: Light catching scroll surface === -->
+  <!-- Ref: THEMATIC_SCHEMA palette - highlight #f5ead6 "Surface light on excavated artifact" -->
+  <line x1="20" y1="17" x2="80" y2="17" stroke="#f5ead6" stroke-width="1.5" opacity="0.55" stroke-linecap="round"/>
 </svg>

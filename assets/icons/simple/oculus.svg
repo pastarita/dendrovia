@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <!-- OCULUS SIMPLE - The Interface -->
-  <g id="oculus-simple">
-    <!-- Eye outline ellipse -->
-    <ellipse cx="50" cy="50" rx="35" ry="22" fill="#f5a97f"/>
+  <!-- OCULUS SIMPLE - The Interface: "Clarify the Context"
+       16x16px optimized | 2-3 colors | 4-8 paths
+       Squint test: Eye shape + hexagonal iris hint + central pupil
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md (ellipses, hexagons, concentric frames)
+       Ref: EMOJI_GRADE_PROMPTS.md (max 5 discrete elements, instant recognition) -->
 
-    <!-- Iris circle -->
-    <circle cx="50" cy="50" r="14" fill="#d88957"/>
+  <!-- Eye shape (elliptical sclera - observational boundary)
+       Primary form: Ellipse = organic viewing (Ref: OCULUS geometry.forms) -->
+  <path d="M5,50 Q50,18 95,50 Q50,82 5,50 Z" fill="#f5a97f"/>
 
-    <!-- Pupil circle -->
-    <circle cx="50" cy="50" r="7" fill="#5f3d2d"/>
+  <!-- Iris circle (warm amber - structured information zone) -->
+  <circle cx="50" cy="50" r="18" fill="#d88957"/>
 
-    <!-- Tiny highlight -->
-    <circle cx="48" cy="48" r="2.5" fill="#ffd4b8"/>
-  </g>
+  <!-- Hexagonal iris hint (information architecture marker - Ref: hexagonal cells = UI grid)
+       Single hexagon distinguishes OCULUS from generic eye icon -->
+  <polygon points="50,35 62,42.5 62,57.5 50,65 38,57.5 38,42.5" fill="#f5a97f" opacity="0.5"/>
+
+  <!-- Pupil (deep perceptual shadow - portal to code space) -->
+  <circle cx="50" cy="50" r="9" fill="#5f3d2d"/>
+
+  <!-- Highlight reflection (moment of clarity - Ref: OCULUS insight spark) -->
+  <circle cx="45" cy="45" r="3.5" fill="#ffd4b8"/>
+
+  <!-- Eyelid contour strokes (contextual framing - upper=tab bar, lower=status bar) -->
+  <path d="M5,50 Q50,18 95,50" stroke="#5f3d2d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M5,50 Q50,82 95,50" stroke="#5f3d2d" stroke-width="2" fill="none" stroke-linecap="round"/>
 </svg>

@@ -35,7 +35,7 @@ function calculateGridPositions(
   const usableWidth = screenWidth - margin * 2;
   const usableHeight = screenHeight - margin * 2 - menuBar;
 
-  const cellWidth = Math.floor(usableWidth / columns);
+  const cellWidth = Math.floor((usableWidth / columns) * 0.85);
   const cellHeight = Math.floor(usableHeight / rows);
 
   for (let i = 0; i < count; i++) {

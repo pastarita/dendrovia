@@ -1,0 +1,19 @@
+{
+  "name": "@dendrovia/imaginarium",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Compiler - Distills AI art into mathematical shaders",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "bun run src/index.ts --watch",
+    "distill": "bun run src/distill.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@dendrovia/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.5"
+  }
+}

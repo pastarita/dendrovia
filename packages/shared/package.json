@@ -1,0 +1,20 @@
+{
+  "name": "@dendrovia/shared",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types/index.ts",
+    "./events": "./src/events/EventBus.ts",
+    "./contracts": "./src/contracts/index.ts"
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

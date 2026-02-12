@@ -1,0 +1,26 @@
+{
+  "name": "dendrovia",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Autogamification of Codebase Archaeologization - The Six-Pillar Architecture",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "slice": "cd packages/proof-of-concept && bun run src/thin-slice.ts"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.5"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "bun": ">=1.0.0"
+  }
+}

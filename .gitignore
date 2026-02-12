@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+.bun/
+
+# Build outputs
+dist/
+build/
+.next/
+.turbo/
+
+# Generated artifacts (can be regenerated)
+packages/*/generated/
+**/generated/*.json
+**/generated/*.glsl
+**/generated/*.wgsl
+
+# But keep the .gitkeep files
+!**/generated/.gitkeep
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.parcel-cache/
+.vite/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Experiments (keep in repo for sharing)
+# packages/*/experiments/ are TRACKED
+
+# CLAUDE.md files in checkout roots are UNTRACKED
+# (only when cloned into CHRONOS/, IMAGINARIUM/, etc.)
+# But the ones in denroot/*/CLAUDE.md should be untracked when those folders become clones

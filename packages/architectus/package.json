@@ -1,0 +1,31 @@
+{
+  "name": "@dendrovia/architectus",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Renderer - WebGPU/R3F engine for procedural dendrites",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@dendrovia/shared": "workspace:*",
+    "three": "^0.171.0",
+    "@react-three/fiber": "^8.17.0",
+    "@react-three/drei": "^9.114.0",
+    "@react-three/postprocessing": "^2.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/three": "^0.171.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.11"
+  }
+}

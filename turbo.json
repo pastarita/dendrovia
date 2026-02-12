@@ -1,0 +1,37 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "generated/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    },
+    "chronos#parse": {
+      "outputs": ["generated/**/*.json"],
+      "cache": true
+    },
+    "imaginarium#distill": {
+      "dependsOn": ["chronos#parse"],
+      "outputs": ["generated/**/*.{glsl,wgsl,json}"],
+      "cache": true
+    },
+    "architectus#build": {
+      "dependsOn": ["imaginarium#distill"],
+      "outputs": ["dist/**"]
+    }
+  }
+}

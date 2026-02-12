@@ -1,0 +1,21 @@
+{
+  "name": "@dendrovia/chronos",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Archaeologist - Parses codebases into game-ready metadata",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "bun run src/index.ts --watch",
+    "parse": "bun run src/parse.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@dendrovia/shared": "workspace:*",
+    "isomorphic-git": "^1.27.1",
+    "ts-morph": "^24.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.5"
+  }
+}

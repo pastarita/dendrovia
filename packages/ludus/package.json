@@ -1,0 +1,20 @@
+{
+  "name": "@dendrovia/ludus",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Mechanics - Pure game logic (no rendering)",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "bun run src/index.ts --watch",
+    "test": "bun test",
+    "simulate": "bun run src/simulate.ts"
+  },
+  "dependencies": {
+    "@dendrovia/shared": "workspace:*",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.5"
+  }
+}

@@ -34,4 +34,5 @@ export interface Pillar {
   description: string;
   primaryPackage: string;
   emoji: string;
+  profile: string;
 }

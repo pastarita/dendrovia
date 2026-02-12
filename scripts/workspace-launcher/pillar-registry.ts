@@ -8,8 +8,6 @@ import type { Pillar } from "./types";
 
 export interface DendroviaConfig {
   name: string;
-  devProfile: string;
-  chatProfile: string;
   layout: {
     columns: number;
     rows: number;
@@ -20,8 +18,6 @@ export interface DendroviaConfig {
 
 export const DENDROVIA_CONFIG: DendroviaConfig = {
   name: "Dendrovia Six-Pillar Architecture",
-  devProfile: "Default", // Can be customized in iTerm preferences
-  chatProfile: "Default",
   layout: {
     columns: 3,
     rows: 2,
@@ -36,6 +32,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
       description: "Git + AST Parsing",
       primaryPackage: "packages/chronos",
       emoji: "📜",
+      profile: "Dendrovia-CHRONOS",
     },
     {
       id: "IMAGINARIUM",
@@ -45,6 +42,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
       description: "AI → Shader Distillation",
       primaryPackage: "packages/imaginarium",
       emoji: "🎨",
+      profile: "Dendrovia-IMAGINARIUM",
     },
     {
       id: "ARCHITECTUS",
@@ -54,6 +52,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
       description: "WebGPU Rendering",
       primaryPackage: "packages/architectus",
       emoji: "🏛️",
+      profile: "Dendrovia-ARCHITECTUS",
     },
     {
       id: "LUDUS",
@@ -63,6 +62,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
       description: "Game Logic",
       primaryPackage: "packages/ludus",
       emoji: "🎮",
+      profile: "Dendrovia-LUDUS",
     },
     {
       id: "OCULUS",
@@ -72,6 +72,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
       description: "UI/UX Components",
       primaryPackage: "packages/oculus",
       emoji: "👁️",
+      profile: "Dendrovia-OCULUS",
     },
     {
       id: "OPERATUS",
@@ -81,6 +82,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
       description: "Asset Loading & Caching",
       primaryPackage: "packages/operatus",
       emoji: "💾",
+      profile: "Dendrovia-OPERATUS",
     },
   ],
 };

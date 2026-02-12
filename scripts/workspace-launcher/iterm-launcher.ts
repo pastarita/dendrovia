@@ -89,8 +89,8 @@ export function generateItermAppleScript(
 
     return `
     -- Window ${i + 1}: ${pillar.name}
-    -- Create window with default profile
-    set newWindow to (create window with default profile)
+    -- Create window with ${pillar.profile} profile
+    set newWindow to (create window with profile "${pillar.profile}")
     delay 0.5
 
     tell newWindow
@@ -102,7 +102,7 @@ export function generateItermAppleScript(
 
       -- Split horizontally to create bottom section
       tell current session
-        set bottomLeftSession to (split horizontally with default profile)
+        set bottomLeftSession to (split horizontally with profile "${pillar.profile}")
       end tell
       delay 0.2
 
@@ -111,7 +111,7 @@ export function generateItermAppleScript(
         write text "${cdCommand} && ${titleBottomLeft}${devServerCmd}"
         delay 0.1
         -- Split vertically to create bottom right
-        set bottomRightSession to (split vertically with default profile)
+        set bottomRightSession to (split vertically with profile "${pillar.profile}")
       end tell
       delay 0.15
 

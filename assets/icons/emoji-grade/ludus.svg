@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- LUDUS EMOJI: Controller + Skill Tree + D20 -->
+
+  <defs>
+    <linearGradient id="controller" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b8e6c9"/>
+      <stop offset="100%" stop-color="#81c995"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Y-Fork skill tree (background, glowing) -->
+  <path d="M16,26 L16,20 M16,20 L13,16 M16,20 L19,16 M13,16 L11,12 M13,16 L15,13 M19,16 L21,12 M19,16 L17,13"
+        stroke="#5fa876" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+
+  <!-- Skill nodes -->
+  <circle cx="16" cy="20" r="2" fill="#5ff59f" opacity="0.8"/>
+  <circle cx="13" cy="16" r="1.5" fill="#5ff59f" opacity="0.7"/>
+  <circle cx="19" cy="16" r="1.5" fill="#5ff59f" opacity="0.7"/>
+  <circle cx="11" cy="12" r="1.2" fill="#648f6f" opacity="0.6"/>
+  <circle cx="21" cy="12" r="1.2" fill="#648f6f" opacity="0.6"/>
+
+  <!-- Controller body -->
+  <rect x="8" y="18" width="16" height="7" rx="2" fill="url(#controller)" stroke="#5fa876" stroke-width="1.5"/>
+
+  <!-- D-pad -->
+  <rect x="10" y="20" width="3" height="1" rx="0.5" fill="#5fa876"/>
+  <rect x="11" y="19" width="1" height="3" rx="0.5" fill="#5fa876"/>
+
+  <!-- Action buttons (diamond) -->
+  <circle cx="19" cy="19.5" r="1" fill="#b8e6c9"/>
+  <circle cx="21" cy="21" r="1" fill="#b8e6c9"/>
+  <circle cx="19" cy="22.5" r="1" fill="#b8e6c9"/>
+  <circle cx="17" cy="21" r="1" fill="#b8e6c9"/>
+
+  <!-- D20 dice -->
+  <g transform="translate(26, 8)">
+    <polygon points="0,-3 -2,0 -1,2 1,2 2,0" fill="#b8e6c9" opacity="0.7" stroke="#5fa876" stroke-width="0.8"/>
+    <text x="0" y="0.5" font-size="2.5" fill="#5fa876" text-anchor="middle" font-weight="bold">20</text>
+  </g>
+
+  <!-- Resource bars -->
+  <rect x="3" y="10" width="1.5" height="6" rx="0.75" fill="#2d4d3a" opacity="0.3"/>
+  <rect x="3" y="12" width="1.5" height="4" rx="0.75" fill="#95c981"/>
+
+  <rect x="27.5" y="10" width="1.5" height="6" rx="0.75" fill="#2d4d3a" opacity="0.3"/>
+  <rect x="27.5" y="11" width="1.5" height="5" rx="0.75" fill="#81c9b8"/>
+</svg>

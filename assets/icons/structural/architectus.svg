@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- ARCHITECTUS STRUCTURAL INSIGNIA: The Rendering Lens System -->
+  <!-- Z-axis flow: SDF space (back) → Lens array (middle) → Screen pixels (front) -->
+
+  <defs>
+    <!-- Void gradient (back space) -->
+    <radialGradient id="voidGrad" cx="0.5" cy="0.5">
+      <stop offset="0%" stop-color="#374151"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </radialGradient>
+
+    <!-- Lens crystal gradient -->
+    <radialGradient id="lensGrad" cx="0.3" cy="0.3">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#c8e0ff"/>
+      <stop offset="100%" stop-color="#8ab4f8"/>
+    </radialGradient>
+
+    <!-- Screen clarity gradient -->
+    <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f4ff"/>
+      <stop offset="100%" stop-color="#c8e0ff"/>
+    </linearGradient>
+
+    <!-- Light beam gradient -->
+    <linearGradient id="beamGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e8f4ff" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#f8c98a" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#e8f4ff" stop-opacity="0.9"/>
+    </linearGradient>
+
+    <!-- Grid pattern for SDF space -->
+    <pattern id="sdfGrid" patternUnits="userSpaceOnUse" width="10" height="10">
+      <line x1="0" y1="0" x2="0" y2="10" stroke="#8ab4f8" stroke-width="0.2" opacity="0.3"/>
+      <line x1="0" y1="0" x2="10" y2="0" stroke="#8ab4f8" stroke-width="0.2" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- LAYER 1: BACK SPACE (SDF mathematical void) -->
+  <g id="sdf-space">
+    <!-- Infinite void background -->
+    <rect x="5" y="10" width="30" height="50" fill="url(#voidGrad)"/>
+    <rect x="5" y="10" width="30" height="50" fill="url(#sdfGrid)"/>
+
+    <!-- Receding grid lines (perspective) -->
+    <line x1="5" y1="35" x2="35" y2="30" stroke="#8ab4f8" stroke-width="0.5" opacity="0.4"/>
+    <line x1="5" y1="35" x2="35" y2="40" stroke="#8ab4f8" stroke-width="0.5" opacity="0.4"/>
+    <line x1="20" y1="10" x2="20" y2="60" stroke="#8ab4f8" stroke-width="0.5" opacity="0.4"/>
+
+    <!-- Dendrite topology (wireframe geometry) -->
+    <path d="M20,30 L20,40 M20,40 L15,45 M20,40 L25,45"
+          stroke="#6fa0e8" stroke-width="1.5" fill="none"/>
+
+    <!-- Platonic solids (SDF primitives) -->
+    <!-- Cube -->
+    <g transform="translate(12, 20) rotate(25)">
+      <rect x="-3" y="-3" width="6" height="6" fill="none" stroke="#8ab4f8" stroke-width="0.8"/>
+      <line x1="-2" y1="-2" x2="2" y2="2" stroke="#8ab4f8" stroke-width="0.5" opacity="0.6"/>
+    </g>
+
+    <!-- Pyramid -->
+    <polygon points="28,50 25,55 31,55" fill="none" stroke="#8ab4f8" stroke-width="0.8"/>
+
+    <!-- Label -->
+    <text x="20" y="58" font-size="2.5" fill="#8ab4f8" text-anchor="middle">SDF SPACE</text>
+  </g>
+
+  <!-- LAYER 2: LENS ARRAY (transformation pipeline) -->
+  <g id="lens-system">
+    <!-- Lens 1: Model Matrix -->
+    <ellipse cx="40" cy="35" rx="6" ry="10" fill="url(#lensGrad)" opacity="0.8"/>
+    <ellipse cx="40" cy="35" rx="5" ry="9" fill="none" stroke="#8ab4f8" stroke-width="1"/>
+    <text x="40" y="48" font-size="2" fill="#5a8dd8" text-anchor="middle">MODEL</text>
+
+    <!-- Lens 2: View Matrix -->
+    <ellipse cx="50" cy="35" rx="7" ry="12" fill="url(#lensGrad)" opacity="0.8"/>
+    <ellipse cx="50" cy="35" rx="6" ry="11" fill="none" stroke="#8ab4f8" stroke-width="1"/>
+    <text x="50" y="50" font-size="2" fill="#5a8dd8" text-anchor="middle">VIEW</text>
+
+    <!-- Lens 3: Projection Matrix -->
+    <ellipse cx="60" cy="35" rx="6" ry="10" fill="url(#lensGrad)" opacity="0.8"/>
+    <ellipse cx="60" cy="35" rx="5" ry="9" fill="none" stroke="#8ab4f8" stroke-width="1"/>
+    <text x="60" y="48" font-size="2" fill="#5a8dd8" text-anchor="middle">PROJ</text>
+
+    <!-- Lens housing -->
+    <rect x="36" y="20" width="28" height="30" rx="2" fill="none" stroke="#6fa0e8" stroke-width="1.5" opacity="0.5"/>
+  </g>
+
+  <!-- LAYER 3: SEVEN LIGHT BEAMS (render rays) -->
+  <g id="render-rays" opacity="0.7">
+    <!-- Ray 1 (top) -->
+    <line x1="20" y1="25" x2="75" y2="28" stroke="url(#beamGrad)" stroke-width="1.5"/>
+
+    <!-- Ray 2 -->
+    <line x1="20" y1="29" x2="75" y2="31" stroke="url(#beamGrad)" stroke-width="1.5"/>
+
+    <!-- Ray 3 -->
+    <line x1="20" y1="33" x2="75" y2="34" stroke="url(#beamGrad)" stroke-width="1.5"/>
+
+    <!-- Ray 4 (center - brightest) -->
+    <line x1="20" y1="35" x2="75" y2="35" stroke="url(#beamGrad)" stroke-width="2"/>
+
+    <!-- Ray 5 -->
+    <line x1="20" y1="37" x2="75" y2="36" stroke="url(#beamGrad)" stroke-width="1.5"/>
+
+    <!-- Ray 6 -->
+    <line x1="20" y1="41" x2="75" y2="39" stroke="url(#beamGrad)" stroke-width="1.5"/>
+
+    <!-- Ray 7 (bottom) -->
+    <line x1="20" y1="45" x2="75" y2="42" stroke="url(#beamGrad)" stroke-width="1.5"/>
+
+    <!-- Refraction points at each lens -->
+    <circle cx="40" cy="32" r="0.8" fill="#e8f4ff"/>
+    <circle cx="50" cy="34" r="0.8" fill="#e8f4ff"/>
+    <circle cx="60" cy="36" r="0.8" fill="#e8f4ff"/>
+  </g>
+
+  <!-- LAYER 4: CLASSICAL COLUMN AT FOCAL PLANE (being rendered) -->
+  <g id="column-geometry">
+    <!-- Shadow -->
+    <rect x="72" y="23" width="6" height="25" fill="#1e3a5f" opacity="0.3"/>
+
+    <!-- Column body -->
+    <rect x="73" y="20" width="5" height="28" fill="#5a8dd8"/>
+    <rect x="73.5" y="20" width="4" height="28" fill="#6fa0e8" opacity="0.5"/>
+
+    <!-- Fluting (11 grooves for high fidelity) -->
+    <g stroke="#8ab4f8" stroke-width="0.3" opacity="0.7">
+      <line x1="73.5" y1="20" x2="73.5" y2="48"/>
+      <line x1="74" y1="20" x2="74" y2="48"/>
+      <line x1="74.5" y1="20" x2="74.5" y2="48"/>
+      <line x1="75" y1="20" x2="75" y2="48"/>
+      <line x1="75.5" y1="20" x2="75.5" y2="48"/>
+      <line x1="76" y1="20" x2="76" y2="48"/>
+      <line x1="76.5" y1="20" x2="76.5" y2="48"/>
+      <line x1="77" y1="20" x2="77" y2="48"/>
+      <line x1="77.5" y1="20" x2="77.5" y2="48"/>
+    </g>
+
+    <!-- Capital -->
+    <rect x="71" y="17" width="9" height="3" fill="#6fa0e8"/>
+
+    <!-- Base -->
+    <rect x="71" y="48" width="9" height="2" fill="#6fa0e8"/>
+  </g>
+
+  <!-- LAYER 5: SCREEN PLANE (front - pixel output) -->
+  <g id="screen-plane">
+    <!-- Focal plane boundary -->
+    <rect x="75" y="15" width="20" height="45" fill="url(#screenGrad)" opacity="0.3"/>
+    <line x1="75" y1="15" x2="75" y2="60" stroke="#8ab4f8" stroke-width="2"/>
+
+    <!-- Pixel grid (rasterized) -->
+    <g stroke="#c8e0ff" stroke-width="0.2" opacity="0.5">
+      <line x1="75" y1="20" x2="95" y2="20"/>
+      <line x1="75" y1="25" x2="95" y2="25"/>
+      <line x1="75" y1="30" x2="95" y2="30"/>
+      <line x1="75" y1="35" x2="95" y2="35"/>
+      <line x1="75" y1="40" x2="95" y2="40"/>
+      <line x1="75" y1="45" x2="95" y2="45"/>
+      <line x1="75" y1="50" x2="95" y2="50"/>
+      <line x1="80" y1="15" x2="80" y2="60"/>
+      <line x1="85" y1="15" x2="85" y2="60"/>
+      <line x1="90" y1="15" x2="90" y2="60"/>
+    </g>
+
+    <!-- Perfect output label -->
+    <text x="85" y="57" font-size="2.5" fill="#8ab4f8" text-anchor="middle">SCREEN</text>
+  </g>
+
+  <!-- LAYER 6: GIMBAL FRAME (border - arbitrary orientation) -->
+  <g id="gimbal-frame">
+    <!-- Outer ring -->
+    <circle cx="50" cy="37.5" r="38" fill="none" stroke="#6fa0e8" stroke-width="1" opacity="0.3"/>
+
+    <!-- Gimbal axes -->
+    <line x1="12" y1="37.5" x2="88" y2="37.5" stroke="#6fa0e8" stroke-width="0.5" opacity="0.3"/>
+    <line x1="50" y1="0" x2="50" y2="75" stroke="#6fa0e8" stroke-width="0.5" opacity="0.3"/>
+
+    <!-- Orientation markers -->
+    <circle cx="12" cy="37.5" r="2" fill="#6fa0e8" opacity="0.5"/>
+    <circle cx="88" cy="37.5" r="2" fill="#6fa0e8" opacity="0.5"/>
+    <circle cx="50" cy="0" r="2" fill="#6fa0e8" opacity="0.5"/>
+    <circle cx="50" cy="75" r="2" fill="#6fa0e8" opacity="0.5"/>
+  </g>
+
+  <!-- LAYER 7: PERFORMANCE INDICATOR (bottom) -->
+  <g id="performance-marker">
+    <rect x="40" y="68" width="20" height="6" rx="3" fill="#374151"/>
+
+    <!-- 60fps lock (green light) -->
+    <circle cx="45" cy="71" r="2" fill="#90ee90" opacity="0.8"/>
+    <circle cx="45" cy="71" r="1.5" fill="#90ee90"/>
+
+    <text x="52" y="72" font-size="3" fill="#90ee90" font-weight="bold">60</text>
+    <text x="59" y="72" font-size="2" fill="#8ab4f8">fps</text>
+  </g>
+
+  <!-- Depth axis labels -->
+  <text x="20" y="65" font-size="2" fill="#8ab4f8" text-anchor="middle" opacity="0.6">∞</text>
+  <text x="50" y="65" font-size="2" fill="#8ab4f8" text-anchor="middle" opacity="0.6">TRANSFORM</text>
+  <text x="85" y="65" font-size="2" fill="#8ab4f8" text-anchor="middle" opacity="0.6">0</text>
+
+  <!-- Title -->
+  <text x="50" y="97" font-size="4" fill="#8ab4f8" text-anchor="middle" font-weight="bold">ARCHITECTUS</text>
+</svg>

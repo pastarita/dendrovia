@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- OPERATUS STRUCTURAL INSIGNIA: The Infrastructure Orchestration Vault -->
+  <!-- Vertical flow: Orchestration (top) → Distribution (middle) → Persistence (bottom) -->
+
+  <defs>
+    <!-- Gear metallic gradient -->
+    <radialGradient id="gearGrad" cx="0.3" cy="0.3">
+      <stop offset="0%" stop-color="#d1d5db"/>
+      <stop offset="50%" stop-color="#9ca3af"/>
+      <stop offset="100%" stop-color="#6b7280"/>
+    </radialGradient>
+
+    <!-- Pipeline gradient -->
+    <linearGradient id="pipeGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e5e7eb"/>
+      <stop offset="50%" stop-color="#838b95"/>
+      <stop offset="100%" stop-color="#6b7280"/>
+    </linearGradient>
+
+    <!-- Foundation strata gradients -->
+    <linearGradient id="assetsGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d1d5db"/>
+      <stop offset="100%" stop-color="#9ca3af"/>
+    </linearGradient>
+
+    <linearGradient id="stateGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9ca3af"/>
+      <stop offset="100%" stop-color="#6b7280"/>
+    </linearGradient>
+
+    <linearGradient id="cacheGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6b7280"/>
+      <stop offset="100%" stop-color="#4b5563"/>
+    </linearGradient>
+
+    <linearGradient id="opfsGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4b5563"/>
+      <stop offset="100%" stop-color="#374151"/>
+    </linearGradient>
+
+    <!-- Hexagonal efficiency pattern -->
+    <pattern id="hexPattern" patternUnits="userSpaceOnUse" width="6" height="6">
+      <polygon points="3,1 5,2 5,4 3,5 1,4 1,2" fill="none" stroke="#838b95" stroke-width="0.3" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- LAYER 1: 4-GEAR ORCHESTRATION CLUSTER (top) -->
+  <g id="gear-cluster">
+    <!-- Small precision gear (upper left) -->
+    <g transform="translate(25, 20)">
+      <circle r="6" fill="url(#gearGrad)"/>
+      <circle r="7.5" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="3 1.5"/>
+      <circle r="6" fill="url(#hexPattern)"/>
+      <circle r="2" fill="#374151"/>
+      <circle r="1.5" fill="none" stroke="#d1d5db" stroke-width="0.5"/>
+      <text y="1" font-size="2" fill="#d1d5db" text-anchor="middle">LOAD</text>
+    </g>
+
+    <!-- Medium gear (left) -->
+    <g transform="translate(20, 40)">
+      <circle r="8" fill="url(#gearGrad)"/>
+      <circle r="10" fill="none" stroke="#6b7280" stroke-width="2" stroke-dasharray="4 2"/>
+      <circle r="8" fill="url(#hexPattern)"/>
+      <circle r="2.5" fill="#374151"/>
+      <circle r="2" fill="none" stroke="#d1d5db" stroke-width="0.5"/>
+      <text y="1" font-size="2.5" fill="#d1d5db" text-anchor="middle">STATE</text>
+    </g>
+
+    <!-- Medium gear (right) -->
+    <g transform="translate(80, 40)">
+      <circle r="8" fill="url(#gearGrad)"/>
+      <circle r="10" fill="none" stroke="#6b7280" stroke-width="2" stroke-dasharray="4 2"/>
+      <circle r="8" fill="url(#hexPattern)"/>
+      <circle r="2.5" fill="#374151"/>
+      <circle r="2" fill="none" stroke="#d1d5db" stroke-width="0.5"/>
+      <text y="1" font-size="2.5" fill="#d1d5db" text-anchor="middle">CACHE</text>
+    </g>
+
+    <!-- Large central gear (coordination hub) -->
+    <g transform="translate(50, 35)">
+      <circle r="12" fill="url(#gearGrad)"/>
+      <circle r="15" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-dasharray="5 3"/>
+      <circle r="12" fill="url(#hexPattern)"/>
+      <circle r="3.5" fill="#374151"/>
+      <circle r="3" fill="none" stroke="#6b7280" stroke-width="0.6"/>
+      <circle r="2.5" fill="none" stroke="#d1d5db" stroke-width="0.8"/>
+
+      <!-- Efficiency hex in center -->
+      <polygon points="0,-2 1.5,-1 1.5,1 0,2 -1.5,1 -1.5,-1" fill="none" stroke="#838b95" stroke-width="0.4"/>
+
+      <text y="1.5" font-size="3" fill="#d1d5db" text-anchor="middle" font-weight="bold">SYNC</text>
+    </g>
+
+    <!-- Gear interlocking indicators -->
+    <circle cx="38" cy="32" r="1" fill="#d1d5db" opacity="0.6"/>
+    <circle cx="62" cy="32" r="1" fill="#d1d5db" opacity="0.6"/>
+    <circle cx="28" cy="28" r="1" fill="#d1d5db" opacity="0.6"/>
+  </g>
+
+  <!-- LAYER 2: PIPELINE NETWORK (distribution layer) -->
+  <g id="pipeline-network">
+    <!-- Main horizontal bus (thick) -->
+    <rect x="10" y="50" width="35" height="5" fill="url(#pipeGrad)" rx="2.5"/>
+    <rect x="55" y="50" width="35" height="5" fill="url(#pipeGrad)" rx="2.5"/>
+
+    <!-- Dendritic Y-fork branches -->
+    <rect x="47" y="35" width="6" height="18" fill="url(#pipeGrad)" rx="3"/>
+    <rect x="47" y="53" width="6" height="12" fill="url(#pipeGrad)" rx="3"/>
+
+    <!-- Side branches -->
+    <rect x="15" y="40" width="4" height="13" fill="url(#pipeGrad)" rx="2"/>
+    <rect x="81" y="40" width="4" height="13" fill="url(#pipeGrad)" rx="2"/>
+
+    <!-- Connection flanges (API boundaries) -->
+    <rect x="46" y="51" width="8" height="2" fill="#6b7280" opacity="0.8"/>
+    <rect x="46" y="54" width="8" height="2" fill="#6b7280" opacity="0.8"/>
+
+    <!-- Hex bolt fasteners -->
+    <g transform="translate(50, 52)">
+      <polygon points="0,-1 0.9,-0.5 0.9,0.5 0,1 -0.9,0.5 -0.9,-0.5" fill="#374151"/>
+      <circle r="0.6" fill="#838b95"/>
+    </g>
+    <g transform="translate(50, 55)">
+      <polygon points="0,-1 0.9,-0.5 0.9,0.5 0,1 -0.9,0.5 -0.9,-0.5" fill="#374151"/>
+      <circle r="0.6" fill="#838b95"/>
+    </g>
+  </g>
+
+  <!-- LAYER 3: FLOW INDICATORS (directional data movement) -->
+  <g id="flow-indicators">
+    <!-- Downward flow (saving) -->
+    <path d="M17,52.5 L15,51 L15,54 Z" fill="#60a5fa" opacity="0.8"/>
+    <path d="M83,52.5 L85,51 L85,54 Z" fill="#60a5fa" opacity="0.8"/>
+
+    <!-- Upward flow (loading) -->
+    <path d="M30,52.5 L32,54 L32,51 Z" fill="#f59e0b" opacity="0.8"/>
+    <path d="M70,52.5 L68,54 L68,51 Z" fill="#f59e0b" opacity="0.8"/>
+  </g>
+
+  <!-- LAYER 4: CAPACITY GAUGES (resource monitoring) -->
+  <g id="capacity-gauges">
+    <!-- Left gauge (healthy) -->
+    <circle cx="12" cy="30" r="4" fill="#374151" opacity="0.8"/>
+    <circle cx="12" cy="30" r="3.5" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="18 4"/>
+    <text x="12" y="31" font-size="2.5" fill="#60a5fa" text-anchor="middle" font-weight="bold">78</text>
+    <text x="12" y="38" font-size="1.5" fill="#838b95" text-anchor="middle">%</text>
+
+    <!-- Right gauge (strain) -->
+    <circle cx="88" cy="30" r="4" fill="#374151" opacity="0.8"/>
+    <circle cx="88" cy="30" r="3.5" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="20 2"/>
+    <text x="88" y="31" font-size="2.5" fill="#f59e0b" text-anchor="middle" font-weight="bold">92</text>
+    <text x="88" y="38" font-size="1.5" fill="#838b95" text-anchor="middle">%</text>
+  </g>
+
+  <!-- LAYER 5: FOUNDATION STRATA (4 storage layers) -->
+  <g id="foundation-strata">
+    <!-- Stratum 1: ASSETS -->
+    <rect x="15" y="70" width="70" height="5" fill="url(#assetsGrad)" rx="1"/>
+    <rect x="15" y="70" width="35" height="1" fill="#d1d5db" opacity="0.3"/>
+    <text x="17" y="73.5" font-size="2.5" fill="#374151" font-weight="bold">ASSETS</text>
+    <path d="M75,71 L77,71 L77,73 L75,73" fill="none" stroke="#374151" stroke-width="0.3" opacity="0.5"/>
+
+    <!-- Stratum 2: STATE -->
+    <rect x="20" y="75" width="60" height="5" fill="url(#stateGrad)" rx="1"/>
+    <rect x="20" y="75" width="28" height="1" fill="#9ca3af" opacity="0.3"/>
+    <text x="22" y="78.5" font-size="2.5" fill="#d1d5db" font-weight="bold">STATE</text>
+    <circle cx="72" cy="77.5" r="1" fill="#d1d5db" opacity="0.4"/>
+
+    <!-- Stratum 3: CACHE -->
+    <rect x="25" y="80" width="50" height="5" fill="url(#cacheGrad)" rx="1"/>
+    <text x="27" y="83.5" font-size="2.5" fill="#d1d5db" font-weight="bold">CACHE</text>
+
+    <!-- Hexagonal pattern (indexed storage) -->
+    <g transform="translate(60, 82)" opacity="0.3">
+      <polygon points="0,-1 1,-0.5 1,0.5 0,1 -1,0.5 -1,-0.5" fill="none" stroke="#d1d5db" stroke-width="0.3"/>
+      <polygon points="2,-1 3,-0.5 3,0.5 2,1 1,0.5 1,-0.5" fill="none" stroke="#d1d5db" stroke-width="0.3"/>
+    </g>
+
+    <!-- Stratum 4: OPFS (deepest) -->
+    <rect x="30" y="85" width="40" height="5" fill="url(#opfsGrad)" rx="1"/>
+    <text x="32" y="88.5" font-size="2.5" fill="#9ca3af" font-weight="bold">OPFS</text>
+
+    <!-- Dense sediment pattern -->
+    <rect x="30" y="85" width="40" height="5" fill="#374151" opacity="0.2"/>
+  </g>
+
+  <!-- LAYER 6: VERTICAL SUPPORT PILLARS (load-bearing) -->
+  <g id="support-pillars">
+    <rect x="28" y="70" width="3" height="20" fill="#6b7280" opacity="0.7"/>
+    <rect x="69" y="70" width="3" height="20" fill="#6b7280" opacity="0.7"/>
+
+    <!-- Pillar bolts -->
+    <circle cx="29.5" cy="72" r="0.8" fill="#374151"/>
+    <circle cx="29.5" cy="88" r="0.8" fill="#374151"/>
+    <circle cx="70.5" cy="72" r="0.8" fill="#374151"/>
+    <circle cx="70.5" cy="88" r="0.8" fill="#374151"/>
+  </g>
+
+  <!-- LAYER 7: STATUS INDICATORS (top corners) -->
+  <g id="status-lights">
+    <!-- Active (left - green) -->
+    <circle cx="10" cy="12" r="4" fill="#60a5fa" opacity="0.3"/>
+    <circle cx="10" cy="12" r="3" fill="#60a5fa"/>
+    <circle cx="10" cy="12" r="1.5" fill="#d1d5db"/>
+    <text x="10" y="20" font-size="2" fill="#838b95" text-anchor="middle">ACTIVE</text>
+
+    <!-- Strain (right - amber) -->
+    <circle cx="90" cy="12" r="4" fill="#f59e0b" opacity="0.3"/>
+    <circle cx="90" cy="12" r="3" fill="#f59e0b"/>
+    <circle cx="90" cy="12" r="1.5" fill="#ffe0b2"/>
+    <text x="90" y="20" font-size="2" fill="#838b95" text-anchor="middle">STRAIN</text>
+  </g>
+
+  <!-- Shadow beneath foundation -->
+  <ellipse cx="50" cy="92" rx="45" ry="2" fill="#374151" opacity="0.4"/>
+
+  <!-- Ambient occlusion at gear interlocks -->
+  <g opacity="0.15">
+    <ellipse cx="50" cy="35" rx="2" ry="12" fill="#374151"/>
+    <ellipse cx="20" cy="40" rx="1.5" ry="8" fill="#374151"/>
+    <ellipse cx="80" cy="40" rx="1.5" ry="8" fill="#374151"/>
+  </g>
+
+  <!-- Title -->
+  <text x="50" y="97" font-size="4" fill="#9ca3af" text-anchor="middle" font-weight="bold">OPERATUS</text>
+</svg>

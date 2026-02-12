@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- IMAGINARIUM EMOJI: Prism + Spectrum Rays + Color Wells -->
+
+  <defs>
+    <linearGradient id="prism" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#e5d4ff"/>
+      <stop offset="100%" stop-color="#c6a0f6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Hexagonal prism (crystal) -->
+  <polygon points="16,8 22,12 22,20 16,24 10,20 10,12"
+           fill="url(#prism)" stroke="#c6a0f6" stroke-width="1.5"/>
+
+  <!-- Inner facets -->
+  <line x1="16" y1="8" x2="16" y2="24" stroke="#e5d4ff" stroke-width="0.5"/>
+  <line x1="10" y1="12" x2="22" y2="20" stroke="#e5d4ff" stroke-width="0.5"/>
+
+  <!-- Input beam (white chaos) -->
+  <line x1="4" y1="16" x2="10" y2="16" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+
+  <!-- 7 Output rays (spectrum) -->
+  <line x1="22" y1="16" x2="28" y2="10" stroke="#ff6b9d" stroke-width="1.5"/>
+  <line x1="22" y1="16" x2="28" y2="12" stroke="#ffa07a" stroke-width="1.5"/>
+  <line x1="22" y1="16" x2="28" y2="14" stroke="#ffd700" stroke-width="1.5"/>
+  <line x1="22" y1="16" x2="28" y2="16" stroke="#90ee90" stroke-width="2"/>
+  <line x1="22" y1="16" x2="28" y2="18" stroke="#87ceeb" stroke-width="1.5"/>
+  <line x1="22" y1="16" x2="28" y2="20" stroke="#9370db" stroke-width="1.5"/>
+  <line x1="22" y1="16" x2="28" y2="22" stroke="#e0b0ff" stroke-width="1.5"/>
+
+  <!-- Color wells -->
+  <circle cx="28" cy="10" r="1.5" fill="#ff6b9d"/>
+  <circle cx="28" cy="12" r="1.5" fill="#ffa07a"/>
+  <circle cx="28" cy="14" r="1.5" fill="#ffd700"/>
+  <circle cx="28" cy="16" r="1.5" fill="#90ee90"/>
+  <circle cx="28" cy="18" r="1.5" fill="#87ceeb"/>
+  <circle cx="28" cy="20" r="1.5" fill="#9370db"/>
+  <circle cx="28" cy="22" r="1.5" fill="#e0b0ff"/>
+</svg>

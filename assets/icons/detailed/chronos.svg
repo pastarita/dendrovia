@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHRONOS DETAILED - Maximum archaeological richness -->
+  <defs>
+    <!-- Complex gradient for scroll depth -->
+    <radialGradient id="scrollDepth" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#f5ead6"/>
+      <stop offset="30%" stop-color="#e8d7c3"/>
+      <stop offset="60%" stop-color="#d4a574"/>
+      <stop offset="100%" stop-color="#8b7355"/>
+    </radialGradient>
+
+    <!-- Sediment texture pattern -->
+    <pattern id="sediment" width="2" height="2" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.3" fill="#a6896b" opacity="0.4"/>
+    </pattern>
+
+    <!-- Fiber texture pattern -->
+    <pattern id="fiber" width="1" height="8" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#c49060" stroke-width="0.3" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- Deep shadow base -->
+  <path fill="#4a3822" opacity="0.4" d="M20,10 Q15,50 20,90 L75,90 Q82,50 75,10 Z"/>
+
+  <!-- Main scroll body with gradient -->
+  <path fill="url(#scrollDepth)" opacity="0.95" d="M22,12 Q17,50 22,88 L72,88 Q79,50 72,12 Z"/>
+
+  <!-- Fiber texture overlay -->
+  <rect x="22" y="12" width="50" height="76" fill="url(#fiber)" opacity="0.5"/>
+
+  <!-- Top scroll curl (detailed) -->
+  <path fill="#8b7355" opacity="0.8" d="M22,12 Q12,10 8,15 Q10,20 15,18 Q18,16 22,17 Z"/>
+  <path fill="#d4a574" opacity="0.9" d="M22,17 Q15,18 12,22 Q14,24 18,22 Q20,20 22,20 Z"/>
+
+  <!-- Bottom scroll curl -->
+  <path fill="#8b7355" opacity="0.8" d="M22,88 Q12,90 8,85 Q10,80 15,82 Q18,84 22,83 Z"/>
+
+  <!-- Stratification layers (12 layers with varying colors/patterns) -->
+  <g id="strata">
+    <rect x="24" y="16" width="46" height="5" fill="#d9c3a5" opacity="0.7"/>
+    <rect x="24" y="21" width="46" height="4" fill="#c49060" opacity="0.6"/>
+    <rect x="25" y="25" width="44" height="6" fill="#a6896b" opacity="0.8"/>
+    <rect x="25" y="31" width="44" height="3" fill="#8b7355" opacity="0.7"/>
+    <rect x="26" y="34" width="42" height="5" fill="#d4a574" opacity="0.6"/>
+    <rect x="26" y="39" width="42" height="4" fill="#c49060" opacity="0.7"/>
+    <!-- Central excavated area -->
+    <circle cx="47" cy="50" r="20" fill="#e8d7c3" opacity="0.5"/>
+    <rect x="27" y="61" width="40" height="4" fill="#c49060" opacity="0.7"/>
+    <rect x="27" y="65" width="40" height="5" fill="#a6896b" opacity="0.8"/>
+    <rect x="26" y="70" width="42" height="3" fill="#8b7355" opacity="0.7"/>
+    <rect x="25" y="73" width="44" height="6" fill="#d4a574" opacity="0.6"/>
+    <rect x="24" y="79" width="46" height="5" fill="#d9c3a5" opacity="0.7"/>
+  </g>
+
+  <!-- Concentric temporal rings (8 rings, irregular spacing) -->
+  <g id="temporalRings" opacity="0.8">
+    <circle cx="47" cy="50" r="24" fill="none" stroke="#6b5d4f" stroke-width="0.8" opacity="0.4"/>
+    <circle cx="47" cy="50" r="21" fill="none" stroke="#8b7355" stroke-width="1" opacity="0.5"/>
+    <circle cx="47" cy="50" r="18" fill="none" stroke="#a6896b" stroke-width="1.2" opacity="0.6"/>
+    <circle cx="47" cy="50" r="15" fill="none" stroke="#c49060" stroke-width="1" opacity="0.7"/>
+    <circle cx="47" cy="50" r="12" fill="none" stroke="#d4a574" stroke-width="1.5" opacity="0.8"/>
+    <circle cx="47" cy="50" r="9" fill="none" stroke="#dda15e" stroke-width="1.2" opacity="0.85"/>
+    <circle cx="47" cy="50" r="6" fill="none" stroke="#e8d7c3" stroke-width="1" opacity="0.9"/>
+    <circle cx="47" cy="50" r="3" fill="none" stroke="#f5ead6" stroke-width="0.8"/>
+  </g>
+
+  <!-- Complex dendritic branch structure -->
+  <g id="branchStructure" stroke="#4a3822" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M47,75 L47,50"/>
+    <path d="M47,50 L42,40"/>
+    <path d="M47,50 L52,40"/>
+    <path d="M42,40 L38,32"/>
+    <path d="M42,40 L44,32"/>
+    <path d="M52,40 L50,32"/>
+    <path d="M52,40 L56,32"/>
+  </g>
+
+  <!-- Fossil imprint nodes at commits -->
+  <g id="commitNodes">
+    <circle cx="47" cy="50" r="4" fill="#d4a574" stroke="#4a3822" stroke-width="1.5"/>
+    <circle cx="47" cy="50" r="2.5" fill="none" stroke="#8b7355" stroke-width="0.5"/>
+
+    <circle cx="42" cy="40" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
+    <circle cx="42" cy="40" r="2" fill="none" stroke="#8b7355" stroke-width="0.5"/>
+
+    <circle cx="52" cy="40" r="3.5" fill="#c49060" stroke="#4a3822" stroke-width="1.2"/>
+    <circle cx="52" cy="40" r="2" fill="none" stroke="#8b7355" stroke-width="0.5"/>
+
+    <circle cx="38" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <circle cx="44" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <circle cx="50" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+    <circle cx="56" cy="32" r="3" fill="#a6896b" stroke="#4a3822" stroke-width="1"/>
+
+    <circle cx="47" cy="75" r="3.5" fill="#dda15e" stroke="#4a3822" stroke-width="1.2"/>
+  </g>
+
+  <!-- Archaeological grid overlay -->
+  <g id="archaeoGrid" stroke="#4a3822" stroke-width="0.5" opacity="0.3">
+    <line x1="35" y1="45" x2="35" y2="55"/>
+    <line x1="41" y1="45" x2="41" y2="55"/>
+    <line x1="53" y1="45" x2="53" y2="55"/>
+    <line x1="59" y1="45" x2="59" y2="55"/>
+    <line x1="35" y1="45" x2="59" y2="45"/>
+    <line x1="35" y1="50" x2="59" y2="50"/>
+    <line x1="35" y1="55" x2="59" y2="55"/>
+  </g>
+
+  <!-- Measurement markers -->
+  <g id="measurements" fill="#4a3822" font-size="2.5" opacity="0.6">
+    <text x="73" y="25">0m</text>
+    <text x="73" y="50">-2m</text>
+    <text x="73" y="75">-4m</text>
+  </g>
+
+  <!-- Micro-text labels (branch names) -->
+  <g id="labels" fill="#4a3822" font-size="3" opacity="0.7">
+    <text x="37" y="30">DEV</text>
+    <text x="51" y="30">FEAT</text>
+    <text x="44" y="77">MAIN</text>
+  </g>
+
+  <!-- Small tool icons (trowel) -->
+  <g id="tools" opacity="0.4">
+    <path d="M8,88 L10,86 L12,88 L10,90 Z" fill="#4a3822"/>
+    <rect x="9.5" y="82" width="1" height="4" fill="#8b7355"/>
+  </g>
+
+  <!-- Weathered edge details (crackle) -->
+  <g id="weathering" stroke="#8b7355" stroke-width="0.3" opacity="0.3">
+    <path d="M25,18 L27,20"/>
+    <path d="M30,15 L32,17"/>
+    <path d="M68,85 L70,83"/>
+  </g>
+
+  <!-- Highlight accent on scroll edge -->
+  <path stroke="#f5ead6" stroke-width="1.5" fill="none" opacity="0.6" d="M24,14 Q18,50 24,86"/>
+</svg>

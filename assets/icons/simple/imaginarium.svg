@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- IMAGINARIUM SIMPLE - The Compiler -->
+  <g id="imaginarium-simple">
+    <!-- Artist Palette (bottom) -->
+    <ellipse cx="50" cy="65" rx="22" ry="16" fill="#c6a0f6"/>
+
+    <!-- Thumb hole -->
+    <circle cx="32" cy="65" r="4" fill="#ffffff" opacity="0.3"/>
+
+    <!-- Color Wells (3 only) -->
+    <circle cx="45" cy="60" r="4" fill="#9b6dd8"/>
+    <circle cx="55" cy="60" r="4" fill="#e5d4ff"/>
+    <circle cx="50" cy="70" r="4" fill="#9b6dd8"/>
+
+    <!-- Prismatic Prism (top) -->
+    <polygon points="50,25 40,45 60,45" fill="none" stroke="#e5d4ff" stroke-width="2"/>
+
+    <!-- Refraction Rays (3 rays) -->
+    <line x1="50" y1="25" x2="40" y2="10" stroke="#c6a0f6" stroke-width="2" stroke-linecap="round"/>
+    <line x1="50" y1="25" x2="50" y2="8" stroke="#e5d4ff" stroke-width="2" stroke-linecap="round"/>
+    <line x1="50" y1="25" x2="60" y2="10" stroke="#9b6dd8" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Connection flow -->
+    <line x1="50" y1="49" x2="50" y2="45" stroke="#c6a0f6" stroke-width="1.5" opacity="0.6" stroke-dasharray="2,2"/>
+  </g>
+</svg>

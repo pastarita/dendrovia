@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- OCULUS DETAILED - Maximum observational richness -->
+  <defs>
+    <!-- Outer glow field -->
+    <radialGradient id="outerGlowField">
+      <stop offset="0%" stop-color="#ffb366"/>
+      <stop offset="40%" stop-color="#f5a97f"/>
+      <stop offset="100%" stop-color="#f5a97f" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Sclera gradient -->
+    <radialGradient id="scleraGradient">
+      <stop offset="0%" stop-color="#fff5ed"/>
+      <stop offset="50%" stop-color="#ffd4b8"/>
+      <stop offset="100%" stop-color="#e89b6f"/>
+    </radialGradient>
+
+    <!-- Complex iris gradient (4 stops) -->
+    <radialGradient id="irisComplexGrad">
+      <stop offset="0%" stop-color="#ffd4b8"/>
+      <stop offset="30%" stop-color="#f5a97f"/>
+      <stop offset="70%" stop-color="#e89b6f"/>
+      <stop offset="100%" stop-color="#d88957"/>
+    </radialGradient>
+
+    <!-- Pupil depth gradient -->
+    <radialGradient id="pupilDepthGrad">
+      <stop offset="0%" stop-color="#7fa9f5" stop-opacity="0.3"/>
+      <stop offset="40%" stop-color="#5f3d2d"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+
+    <!-- Eyelid gradients -->
+    <linearGradient id="eyelidTopGrad">
+      <stop offset="0%" stop-color="#5f3d2d"/>
+      <stop offset="25%" stop-color="#d88957"/>
+      <stop offset="50%" stop-color="#e89b6f"/>
+      <stop offset="75%" stop-color="#d88957"/>
+      <stop offset="100%" stop-color="#5f3d2d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer awareness glow field -->
+  <ellipse cx="50" cy="50" rx="48" ry="38" fill="url(#outerGlowField)" opacity="0.12"/>
+
+  <!-- Concentric focus rings (4 layers) -->
+  <circle cx="50" cy="50" r="38" stroke="#f5c27f" stroke-width="0.5" fill="none" opacity="0.5"/>
+  <circle cx="50" cy="50" r="34" stroke="#f5c27f" stroke-width="0.8" fill="none" opacity="0.35"/>
+  <circle cx="50" cy="50" r="30" stroke="#f5c27f" stroke-width="1" fill="none" opacity="0.2"/>
+  <circle cx="50" cy="50" r="26" stroke="#f5a97f" stroke-width="0.5" fill="none" opacity="0.1"/>
+
+  <!-- Sclera with dendritic veins -->
+  <ellipse cx="50" cy="50" rx="38" ry="28" fill="url(#scleraGradient)"/>
+
+  <!-- Dendritic vein pattern (subtle branching) -->
+  <g stroke="#e89b6f" stroke-width="0.2" opacity="0.15" fill="none">
+    <path d="M50,50 Q48,40 45,35 Q43,32 40,30"/>
+    <path d="M50,50 Q52,40 55,35 Q57,32 60,30"/>
+    <path d="M50,50 Q48,60 45,65 Q43,68 40,70"/>
+    <path d="M50,50 Q52,60 55,65 Q57,68 60,70"/>
+  </g>
+
+  <!-- Upper eyelid shadow -->
+  <path d="M12,45 Q50,38 88,45 L88,50 Q50,43 12,50 Z" fill="#5f3d2d" opacity="0.25"/>
+
+  <!-- Iris base with complex gradient -->
+  <circle cx="50" cy="50" r="18" fill="url(#irisComplexGrad)"/>
+
+  <!-- Hexagonal iris cell pattern (24 hexagons in 2 rings) -->
+  <g opacity="0.35">
+    <!-- Inner ring (6 hexagons) -->
+    <path d="M50,38 L53,40 L53,44 L50,46 L47,44 L47,40 Z" fill="#e89b6f"/>
+    <path d="M53,44 L56,46 L56,50 L53,52 L50,50 L50,46 Z" fill="#d88957"/>
+    <path d="M53,52 L56,54 L56,58 L53,60 L50,56 L50,52 Z" fill="#e89b6f"/>
+    <path d="M50,56 L47,58 L44,56 L44,52 L47,50 L50,52 Z" fill="#d88957"/>
+    <path d="M47,50 L44,48 L44,44 L47,42 L50,44 L50,48 Z" fill="#e89b6f"/>
+    <path d="M50,44 L53,42 L56,44 L56,48 L53,50 L50,46 Z" fill="#d88957"/>
+  </g>
+
+  <!-- Miller column radial branches (12 lines) -->
+  <g stroke="#e89b6f" stroke-width="0.4" opacity="0.25">
+    <line x1="50" y1="50" x2="50" y2="32"/>
+    <line x1="50" y1="50" x2="59.5" y2="35.5"/>
+    <line x1="50" y1="50" x2="65.5" y2="44"/>
+    <line x1="50" y1="50" x2="68" y2="50"/>
+    <line x1="50" y1="50" x2="65.5" y2="56"/>
+    <line x1="50" y1="50" x2="59.5" y2="64.5"/>
+    <line x1="50" y1="50" x2="50" y2="68"/>
+    <line x1="50" y1="50" x2="40.5" y2="64.5"/>
+    <line x1="50" y1="50" x2="34.5" y2="56"/>
+    <line x1="50" y1="50" x2="32" y2="50"/>
+    <line x1="50" y1="50" x2="34.5" y2="44"/>
+    <line x1="50" y1="50" x2="40.5" y2="35.5"/>
+  </g>
+
+  <!-- Information nodes at cardinal points (8 nodes) -->
+  <g>
+    <circle cx="50" cy="32" r="2" fill="#7fa9f5" opacity="0.6"/>
+    <circle cx="68" cy="50" r="2" fill="#7fa9f5" opacity="0.6"/>
+    <circle cx="50" cy="68" r="2" fill="#7fa9f5" opacity="0.6"/>
+    <circle cx="32" cy="50" r="2" fill="#7fa9f5" opacity="0.6"/>
+    <circle cx="59.5" cy="35.5" r="1.5" fill="#f5c27f" opacity="0.5"/>
+    <circle cx="59.5" cy="64.5" r="1.5" fill="#f5c27f" opacity="0.5"/>
+    <circle cx="40.5" cy="64.5" r="1.5" fill="#f5c27f" opacity="0.5"/>
+    <circle cx="40.5" cy="35.5" r="1.5" fill="#f5c27f" opacity="0.5"/>
+  </g>
+
+  <!-- Translucent UI overlay suggestion -->
+  <g opacity="0.15">
+    <rect x="20" y="25" width="15" height="8" rx="1" fill="#7fa9f5"/>
+    <rect x="65" y="25" width="15" height="8" rx="1" fill="#7fa9f5"/>
+    <rect x="35" y="67" width="30" height="6" rx="1" fill="#7fa9f5"/>
+  </g>
+
+  <!-- Pupil with complex depth -->
+  <circle cx="50" cy="50" r="8" fill="url(#pupilDepthGrad)"/>
+
+  <!-- Lens reflection (complex multi-layer) -->
+  <circle cx="47" cy="46" r="4" fill="#7fa9f5" opacity="0.4"/>
+  <circle cx="47" cy="46" r="2.5" fill="#7fa9f5" opacity="0.6"/>
+  <circle cx="46" cy="45" r="1.5" fill="#fff5ed"/>
+  <circle cx="45.5" cy="44.5" r="0.8" fill="#ffffff"/>
+
+  <!-- Eyelid curves (detailed) -->
+  <path d="M8,50 Q50,32 92,50" stroke="url(#eyelidTopGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M8,50 Q50,66 92,50" stroke="#d88957" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+  <!-- Subtle eyelash suggestions -->
+  <g stroke="#5f3d2d" stroke-width="0.3" opacity="0.2">
+    <line x1="25" y1="38" x2="23" y2="34"/>
+    <line x1="35" y1="34" x2="34" y2="30"/>
+    <line x1="50" y1="32" x2="50" y2="28"/>
+    <line x1="65" y1="34" x2="66" y2="30"/>
+    <line x1="75" y1="38" x2="77" y2="34"/>
+  </g>
+
+  <!-- Attention pulse markers -->
+  <g fill="#ffb366" opacity="0.3">
+    <circle cx="50" cy="12" r="1.5"/>
+    <circle cx="88" cy="50" r="1.5"/>
+    <circle cx="50" cy="88" r="1.5"/>
+    <circle cx="12" cy="50" r="1.5"/>
+  </g>
+</svg>

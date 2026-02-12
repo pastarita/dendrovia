@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- OCULUS SIMPLE - The Interface -->
+  <g id="oculus-simple">
+    <!-- Eye outline ellipse -->
+    <ellipse cx="50" cy="50" rx="35" ry="22" fill="#f5a97f"/>
+
+    <!-- Iris circle -->
+    <circle cx="50" cy="50" r="14" fill="#d88957"/>
+
+    <!-- Pupil circle -->
+    <circle cx="50" cy="50" r="7" fill="#5f3d2d"/>
+
+    <!-- Tiny highlight -->
+    <circle cx="48" cy="48" r="2.5" fill="#ffd4b8"/>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- OPERATUS SIMPLE - The Infrastructure -->
+  <g id="operatus-simple">
+    <!-- Foundation block -->
+    <rect x="35" y="75" width="30" height="8" fill="#6b7280" rx="1"/>
+
+    <!-- Pipeline (horizontal) -->
+    <rect x="10" y="46" width="40" height="8" fill="#6b7280" rx="2"/>
+
+    <!-- Gear body -->
+    <circle cx="60" cy="50" r="20" fill="#9ca3af"/>
+
+    <!-- Gear teeth (simplified 8 rectangles) -->
+    <rect x="59" y="28" width="2" height="5" fill="#9ca3af"/>
+    <rect x="59" y="67" width="2" height="5" fill="#9ca3af"/>
+    <rect x="78" y="49" width="5" height="2" fill="#9ca3af"/>
+    <rect x="37" y="49" width="5" height="2" fill="#9ca3af"/>
+    <rect x="72" y="34" width="4" height="4" fill="#9ca3af" transform="rotate(45 74 36)"/>
+    <rect x="72" y="62" width="4" height="4" fill="#9ca3af" transform="rotate(45 74 64)"/>
+    <rect x="44" y="34" width="4" height="4" fill="#9ca3af" transform="rotate(45 46 36)"/>
+    <rect x="44" y="62" width="4" height="4" fill="#9ca3af" transform="rotate(45 46 64)"/>
+
+    <!-- Gear center -->
+    <circle cx="60" cy="50" r="6" fill="#6b7280"/>
+
+    <!-- Active indicator -->
+    <circle cx="85" cy="15" r="4" fill="#60a5fa"/>
+  </g>
+</svg>

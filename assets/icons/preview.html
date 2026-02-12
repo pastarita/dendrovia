@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dendrovia Icon System - Three Fidelity Levels</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'SF Pro', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #a0a0b0;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .fidelity-section {
+            margin-bottom: 4rem;
+        }
+
+        .fidelity-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .fidelity-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .fidelity-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .fidelity-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .icon-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .icon-container {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .icon-container object,
+        .icon-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .icon-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .icon-tagline {
+            font-size: 0.85rem;
+            color: #888;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Pillar-specific colors */
+        .chronos { --pillar-color: #d4a574; }
+        .imaginarium { --pillar-color: #c6a0f6; }
+        .architectus { --pillar-color: #8ab4f8; }
+        .ludus { --pillar-color: #81c995; }
+        .oculus { --pillar-color: #f5a97f; }
+        .operatus { --pillar-color: #9ca3af; }
+
+        .icon-card .icon-name {
+            color: var(--pillar-color);
+        }
+
+        .size-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .simple { color: #4ade80; }
+        .medium { color: #fbbf24; }
+        .detailed { color: #f87171; }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .icon-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .fidelity-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dendrovia Icon System</h1>
+        <p class="subtitle">Symbol-driven design across three fidelity levels</p>
+
+        <!-- SIMPLE SVG Section -->
+        <div class="fidelity-section">
+            <div class="fidelity-header">
+                <div>
+                    <h2 class="fidelity-title">Simple Icons</h2>
+                    <span class="size-badge simple">16×16px Optimized</span>
+                </div>
+                <div class="fidelity-meta">
+                    <span>📊 Complexity: Low</span>
+                    <span>🎨 Colors: 2-3</span>
+                    <span>📐 Paths: 4-8</span>
+                </div>
+            </div>
+
+            <div class="icon-grid">
+                <div class="icon-card chronos">
+                    <div class="icon-container">
+                        <object data="simple/chronos.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Chronos</div>
+                    <div class="icon-tagline">The Archaeologist</div>
+                </div>
+
+                <div class="icon-card imaginarium">
+                    <div class="icon-container">
+                        <object data="simple/imaginarium.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Imaginarium</div>
+                    <div class="icon-tagline">The Compiler</div>
+                </div>
+
+                <div class="icon-card architectus">
+                    <div class="icon-container">
+                        <object data="simple/architectus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Architectus</div>
+                    <div class="icon-tagline">The Renderer</div>
+                </div>
+
+                <div class="icon-card ludus">
+                    <div class="icon-container">
+                        <object data="simple/ludus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Ludus</div>
+                    <div class="icon-tagline">The Mechanics</div>
+                </div>
+
+                <div class="icon-card oculus">
+                    <div class="icon-container">
+                        <object data="simple/oculus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Oculus</div>
+                    <div class="icon-tagline">The Interface</div>
+                </div>
+
+                <div class="icon-card operatus">
+                    <div class="icon-container">
+                        <object data="simple/operatus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Operatus</div>
+                    <div class="icon-tagline">The Infrastructure</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEDIUM SVG Section -->
+        <div class="fidelity-section">
+            <div class="fidelity-header">
+                <div>
+                    <h2 class="fidelity-title">Medium Icons</h2>
+                    <span class="size-badge medium">32×32px Optimized</span>
+                </div>
+                <div class="fidelity-meta">
+                    <span>📊 Complexity: Medium</span>
+                    <span>🎨 Colors: 4-6</span>
+                    <span>📐 Paths: 15-25</span>
+                </div>
+            </div>
+
+            <div class="icon-grid">
+                <div class="icon-card chronos">
+                    <div class="icon-container">
+                        <object data="medium/chronos.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Chronos</div>
+                    <div class="icon-tagline">Temporal Rings + Branches</div>
+                </div>
+
+                <div class="icon-card imaginarium">
+                    <div class="icon-container">
+                        <object data="medium/imaginarium.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Imaginarium</div>
+                    <div class="icon-tagline">Prismatic Transformation</div>
+                </div>
+
+                <div class="icon-card architectus">
+                    <div class="icon-container">
+                        <object data="medium/architectus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Architectus</div>
+                    <div class="icon-tagline">Classical Column Detail</div>
+                </div>
+
+                <div class="icon-card ludus">
+                    <div class="icon-container">
+                        <object data="medium/ludus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Ludus</div>
+                    <div class="icon-tagline">Controller with Skill Tree</div>
+                </div>
+
+                <div class="icon-card oculus">
+                    <div class="icon-container">
+                        <object data="medium/oculus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Oculus</div>
+                    <div class="icon-tagline">Hexagonal Iris Structure</div>
+                </div>
+
+                <div class="icon-card operatus">
+                    <div class="icon-container">
+                        <object data="medium/operatus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Operatus</div>
+                    <div class="icon-tagline">Interlocking Gears</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAILED SVG Section -->
+        <div class="fidelity-section">
+            <div class="fidelity-header">
+                <div>
+                    <h2 class="fidelity-title">Detailed Icons</h2>
+                    <span class="size-badge detailed">64×64px+ Optimized</span>
+                </div>
+                <div class="fidelity-meta">
+                    <span>📊 Complexity: High</span>
+                    <span>🎨 Colors: 8-12</span>
+                    <span>📐 Paths: 40-80</span>
+                </div>
+            </div>
+
+            <div class="icon-grid">
+                <div class="icon-card chronos">
+                    <div class="icon-container">
+                        <object data="detailed/chronos.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Chronos</div>
+                    <div class="icon-tagline">Complete Archaeological Detail</div>
+                </div>
+
+                <div class="icon-card imaginarium">
+                    <div class="icon-container">
+                        <object data="detailed/imaginarium.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Imaginarium</div>
+                    <div class="icon-tagline">Full Alchemical Apparatus</div>
+                </div>
+
+                <div class="icon-card architectus">
+                    <div class="icon-container">
+                        <object data="detailed/architectus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Architectus</div>
+                    <div class="icon-tagline">Maximum Architectural Ornament</div>
+                </div>
+
+                <div class="icon-card ludus">
+                    <div class="icon-container">
+                        <object data="detailed/ludus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Ludus</div>
+                    <div class="icon-tagline">Complete Game System</div>
+                </div>
+
+                <div class="icon-card oculus">
+                    <div class="icon-container">
+                        <object data="detailed/oculus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Oculus</div>
+                    <div class="icon-tagline">Full Observational Richness</div>
+                </div>
+
+                <div class="icon-card operatus">
+                    <div class="icon-container">
+                        <object data="detailed/operatus.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="icon-name">Operatus</div>
+                    <div class="icon-tagline">Complete Infrastructure Orchestration</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

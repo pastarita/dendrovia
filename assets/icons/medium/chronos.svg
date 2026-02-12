@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHRONOS MEDIUM - The Archaeologist with temporal rings -->
+  <defs>
+    <!-- Subtle gradient for scroll depth -->
+    <linearGradient id="scrollGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8d7c3"/>
+      <stop offset="50%" stop-color="#d4a574"/>
+      <stop offset="100%" stop-color="#8b7355"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shadow layer -->
+  <path fill="#4a3822" opacity="0.65" d="M25,15 Q20,50 25,85 L68,85 Q75,50 68,15 Z"/>
+
+  <!-- Main scroll body with gradient -->
+  <path fill="url(#scrollGrad)" opacity="0.95" d="M28,18 Q23,50 28,82 L65,82 Q72,50 65,18 Z"/>
+
+  <!-- Left curl edge -->
+  <path fill="#8b7355" opacity="0.8" d="M28,18 Q18,20 20,30 Q22,25 28,25 Z"/>
+
+  <!-- Horizontal strata (7 layers) -->
+  <line x1="30" y1="25" x2="63" y2="25" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
+  <line x1="30" y1="35" x2="63" y2="35" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
+  <line x1="30" y1="45" x2="63" y2="45" stroke="#8b7355" stroke-width="2"/>
+  <line x1="30" y1="55" x2="63" y2="55" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
+  <line x1="30" y1="65" x2="63" y2="65" stroke="#a6896b" stroke-width="1.5" opacity="0.8"/>
+
+  <!-- Concentric temporal rings (center) -->
+  <circle cx="47" cy="50" r="18" fill="none" stroke="#8b7355" stroke-width="1.5" opacity="0.6"/>
+  <circle cx="47" cy="50" r="14" fill="none" stroke="#a6896b" stroke-width="1.5" opacity="0.7"/>
+  <circle cx="47" cy="50" r="10" fill="none" stroke="#d4a574" stroke-width="1.5" opacity="0.8"/>
+
+  <!-- Git branch Y-fork -->
+  <path stroke="#4a3822" stroke-width="2.5" fill="none" stroke-linecap="round" d="M47,62 L47,50 M47,50 L42,42 M47,50 L52,42"/>
+
+  <!-- Branch node circles -->
+  <circle cx="42" cy="42" r="3" fill="#8b7355" stroke="#4a3822" stroke-width="1"/>
+  <circle cx="52" cy="42" r="3" fill="#8b7355" stroke="#4a3822" stroke-width="1"/>
+  <circle cx="47" cy="62" r="3" fill="#d4a574" stroke="#4a3822" stroke-width="1"/>
+
+  <!-- Archaeological grid overlay (subtle) -->
+  <rect x="32" y="48" width="6" height="6" fill="none" stroke="#4a3822" stroke-width="0.5" opacity="0.3"/>
+  <rect x="56" y="48" width="6" height="6" fill="none" stroke="#4a3822" stroke-width="0.5" opacity="0.3"/>
+</svg>

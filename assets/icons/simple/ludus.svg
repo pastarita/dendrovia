@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- LUDUS SIMPLE - The Mechanics -->
+  <g id="ludus-simple">
+    <!-- Background branch (subtle Y-fork) -->
+    <path d="M50,70 L50,50 L45,45 M50,50 L55,45" stroke="#5fa876" stroke-width="2" opacity="0.3" fill="none"/>
+
+    <!-- Controller body -->
+    <rect x="30" y="44" width="40" height="24" rx="4" fill="#81c995"/>
+
+    <!-- D-pad (cross shape) -->
+    <rect x="37" y="54" width="10" height="3" fill="#5fa876"/>
+    <rect x="40" y="51" width="3" height="10" fill="#5fa876"/>
+
+    <!-- Action Buttons (2 stacked) -->
+    <circle cx="59" cy="52" r="4" fill="#b8e6c9"/>
+    <circle cx="59" cy="60" r="4" fill="#b8e6c9"/>
+  </g>
+</svg>

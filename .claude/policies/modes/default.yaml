@@ -1,0 +1,102 @@
+# Policy Mode: default — Standard Development
+#
+# Standard permissions for day-to-day Dendrovia development.
+# Grants routine build/test/git commands. Blocks destructive operations.
+
+version: 1
+mode: default
+description: Standard development permissions for Dendrovia monorepo
+
+blocked:
+  # Destructive filesystem operations
+  - pattern: "rm -rf /[^t]"
+    reason: "Prevent destructive root filesystem operations"
+    source: "CLAUDE.md:Safety Protocol"
+  - pattern: "rm -rf \\."
+    reason: "Prevent recursive deletion of current directory"
+    source: "CLAUDE.md:Safety Protocol"
+  - pattern: "rm -rf ~"
+    reason: "Prevent home directory deletion"
+    source: "CLAUDE.md:Safety Protocol"
+
+  # Protected branch operations
+  - pattern: "git push origin main"
+    reason: "Never push directly to main — use PR workflow"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git push origin master"
+    reason: "Never push directly to master — use PR workflow"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git push --force"
+    reason: "Force push destroys remote history"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git push.*--force-with-lease.*main"
+    reason: "No force push to main even with lease"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git reset --hard"
+    reason: "Hard reset destroys uncommitted work"
+    source: "CLAUDE.md:Safety Protocol"
+  - pattern: "git clean -f"
+    reason: "Clean -f permanently deletes untracked files"
+    source: "CLAUDE.md:Safety Protocol"
+
+  # Dangerous package operations
+  - pattern: "bun remove (typescript|@types/bun)"
+    reason: "Core type dependencies must not be removed"
+    source: "package.json:devDependencies"
+  - pattern: "npm install|yarn add|pnpm add"
+    reason: "Dendrovia uses bun exclusively"
+    source: "CLAUDE.md:Runtime"
+
+grants:
+  bash:
+    # Build and development
+    - pattern: "bun (install|run|test|build|x)"
+      reason: "Standard bun workflow commands"
+      source: "CLAUDE.md:Common Commands"
+    - pattern: "bun run (dev|build|lint|typecheck|parse)"
+      reason: "Monorepo script commands"
+      source: "CLAUDE.md:Common Commands"
+    - pattern: "turbo (run|build|test|lint)"
+      reason: "TurboRepo orchestration commands"
+      source: "turbo.json"
+
+    # Read-only git operations
+    - pattern: "git (status|diff|log|branch|show|tag|stash list|remote -v|rev-parse|describe)"
+      reason: "Read-only git operations are safe"
+      source: "settings.json:allow"
+    - pattern: "git (fetch|pull)"
+      reason: "Fetching remote state is safe"
+      source: "settings.json:allow"
+
+    # Standard git workflow
+    - pattern: "git (add|commit|checkout|switch|merge|rebase|cherry-pick)"
+      reason: "Standard git workflow operations"
+      source: "settings.json:allow"
+    - pattern: "git push origin (feat|fix|docs|refactor|infra|test|chore|proto)/"
+      reason: "Push to feature branches only"
+      source: "BRANCH_WORKFLOW.rules.md"
+
+    # File exploration
+    - pattern: "ls|cat|head|tail|wc|file|stat|du"
+      reason: "Read-only filesystem exploration"
+      source: "implicit:safe"
+    - pattern: "find|grep|rg|fd|tree"
+      reason: "Search operations are non-destructive"
+      source: "implicit:safe"
+
+    # Development tools
+    - pattern: "npx (husky|tsc|biome)"
+      reason: "Standard development toolchain"
+      source: "package.json:devDependencies"
+
+  read:
+    - pattern: ".*"
+      reason: "Read access is generally safe"
+
+  write:
+    - pattern: ".*"
+      reason: "Write access controlled by tool-level permissions"
+
+  edit:
+    - pattern: ".*"
+      reason: "Edit access controlled by tool-level permissions"

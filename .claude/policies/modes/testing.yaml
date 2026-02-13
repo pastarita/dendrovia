@@ -1,0 +1,67 @@
+# Policy Mode: testing — Test Execution Sessions
+#
+# Broadened permissions for running tests, debugging, and test infrastructure.
+# Same destructive blocks as default mode.
+
+version: 1
+mode: testing
+description: Test-focused development permissions for Dendrovia
+
+blocked:
+  # Same destructive blocks as default
+  - pattern: "rm -rf /[^t]"
+    reason: "Prevent destructive root filesystem operations"
+    source: "CLAUDE.md:Safety Protocol"
+  - pattern: "git push origin main"
+    reason: "Never push directly to main"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git push --force"
+    reason: "Force push destroys remote history"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git reset --hard"
+    reason: "Hard reset destroys uncommitted work"
+    source: "CLAUDE.md:Safety Protocol"
+  - pattern: "npm install|yarn add|pnpm add"
+    reason: "Dendrovia uses bun exclusively"
+    source: "CLAUDE.md:Runtime"
+
+grants:
+  bash:
+    # All default grants
+    - pattern: "bun (install|run|test|build|x)"
+      reason: "Standard bun workflow commands"
+      source: "CLAUDE.md:Common Commands"
+    - pattern: "git (status|diff|log|branch|show|stash list|rev-parse|fetch|pull)"
+      reason: "Read-only git operations"
+      source: "settings.json:allow"
+    - pattern: "git (add|commit|checkout|switch|merge|rebase)"
+      reason: "Standard git workflow"
+      source: "settings.json:allow"
+
+    # Extended test permissions
+    - pattern: "bun test"
+      reason: "Direct test execution"
+      source: "testing-mode"
+    - pattern: "bun run test.*--"
+      reason: "Test execution with flags (--run, --reporter, etc.)"
+      source: "testing-mode"
+    - pattern: "timeout [0-9]+ bun"
+      reason: "Timeout-wrapped test execution"
+      source: "testing-mode"
+
+    # Debugging tools
+    - pattern: "bun --inspect"
+      reason: "Debugger attachment for test debugging"
+      source: "testing-mode"
+
+  read:
+    - pattern: ".*"
+      reason: "Read access unrestricted in testing mode"
+
+  write:
+    - pattern: ".*"
+      reason: "Write access for test fixtures and snapshots"
+
+  edit:
+    - pattern: ".*"
+      reason: "Edit access for test files"

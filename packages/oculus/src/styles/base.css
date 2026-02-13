@@ -1,0 +1,223 @@
+/**
+ * OCULUS Base Styles
+ *
+ * Foundation layout, glass panels, and scrollbar theming.
+ */
+
+@import './tokens.css';
+@import './animations.css';
+
+/* ── Root Container ───────────────────────────────── */
+
+.oculus-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--oculus-font-ui);
+  color: var(--oculus-text);
+  font-size: var(--oculus-font-base);
+  line-height: 1.5;
+  z-index: var(--oculus-z-hud);
+  overflow: hidden;
+}
+
+.oculus-root *,
+.oculus-root *::before,
+.oculus-root *::after {
+  box-sizing: border-box;
+}
+
+/* ── HUD Layout (Four Corners) ────────────────────── */
+
+.oculus-hud {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "top-left    .       top-right"
+    ".           center  ."
+    "bottom-left .       bottom-right";
+  padding: var(--oculus-space-lg);
+  gap: var(--oculus-space-md);
+  pointer-events: none;
+}
+
+.oculus-corner {
+  pointer-events: auto;
+}
+
+.oculus-corner--top-left     { grid-area: top-left; align-self: start; }
+.oculus-corner--top-right    { grid-area: top-right; align-self: start; justify-self: end; }
+.oculus-corner--bottom-left  { grid-area: bottom-left; align-self: end; }
+.oculus-corner--bottom-right { grid-area: bottom-right; align-self: end; justify-self: end; }
+.oculus-center               { grid-area: center; place-self: center; pointer-events: auto; }
+
+/* ── Glass Panel ──────────────────────────────────── */
+
+.oculus-panel {
+  background: var(--oculus-panel-bg);
+  border: var(--oculus-panel-border);
+  border-radius: var(--oculus-panel-radius);
+  backdrop-filter: var(--oculus-panel-blur);
+  -webkit-backdrop-filter: var(--oculus-panel-blur);
+  box-shadow: var(--oculus-panel-shadow);
+  padding: var(--oculus-space-md) var(--oculus-space-lg);
+  pointer-events: auto;
+  animation: oculus-fade-in var(--oculus-transition-base);
+}
+
+.oculus-panel--compact {
+  padding: var(--oculus-space-sm) var(--oculus-space-md);
+}
+
+.oculus-panel--no-padding {
+  padding: 0;
+}
+
+.oculus-panel--glow {
+  box-shadow:
+    var(--oculus-panel-shadow),
+    inset 0 0 30px rgba(245, 169, 127, 0.05);
+}
+
+/* ── Section Headers ──────────────────────────────── */
+
+.oculus-heading {
+  color: var(--oculus-amber);
+  font-size: var(--oculus-font-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: var(--oculus-space-sm);
+}
+
+/* ── Interactive Elements ─────────────────────────── */
+
+.oculus-button {
+  background: rgba(245, 169, 127, 0.1);
+  border: 1px solid var(--oculus-border);
+  border-radius: 6px;
+  color: var(--oculus-amber);
+  padding: var(--oculus-space-sm) var(--oculus-space-md);
+  font-family: var(--oculus-font-ui);
+  font-size: var(--oculus-font-sm);
+  cursor: pointer;
+  transition: all var(--oculus-transition-fast);
+  pointer-events: auto;
+}
+
+.oculus-button:hover {
+  background: rgba(245, 169, 127, 0.2);
+  border-color: var(--oculus-amber);
+}
+
+.oculus-button:active {
+  transform: scale(0.97);
+}
+
+.oculus-button:focus-visible {
+  outline: 2px solid var(--oculus-amber);
+  outline-offset: 2px;
+}
+
+.oculus-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.oculus-button--primary {
+  background: rgba(245, 169, 127, 0.25);
+  border-color: var(--oculus-amber);
+}
+
+.oculus-button--danger {
+  color: var(--oculus-danger);
+  border-color: rgba(255, 68, 68, 0.4);
+  background: rgba(255, 68, 68, 0.1);
+}
+
+.oculus-button--danger:hover {
+  background: rgba(255, 68, 68, 0.2);
+  border-color: var(--oculus-danger);
+}
+
+/* ── Scrollbar Theming ────────────────────────────── */
+
+.oculus-scrollable {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--oculus-orange) transparent;
+}
+
+.oculus-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.oculus-scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.oculus-scrollable::-webkit-scrollbar-thumb {
+  background: var(--oculus-orange);
+  border-radius: 3px;
+}
+
+.oculus-scrollable::-webkit-scrollbar-thumb:hover {
+  background: var(--oculus-amber);
+}
+
+/* ── Depth-of-Field Backdrop ──────────────────────── */
+
+.oculus-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: var(--oculus-z-overlay);
+  animation: oculus-fade-in var(--oculus-transition-fast);
+  pointer-events: auto;
+}
+
+/* ── Code Styling ─────────────────────────────────── */
+
+.oculus-code {
+  font-family: var(--oculus-font-code);
+  font-size: var(--oculus-font-sm);
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+/* ── Responsive ───────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .oculus-hud {
+    padding: var(--oculus-space-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .oculus-hud {
+    padding: var(--oculus-space-sm);
+    gap: var(--oculus-space-sm);
+  }
+
+  .oculus-panel {
+    padding: var(--oculus-space-sm) var(--oculus-space-md);
+  }
+}
+
+/* ── Reduced Motion ───────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .oculus-root *,
+  .oculus-root *::before,
+  .oculus-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

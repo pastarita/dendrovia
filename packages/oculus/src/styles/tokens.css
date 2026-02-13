@@ -1,0 +1,83 @@
+/**
+ * OCULUS Design Tokens
+ *
+ * Warm amber palette from the Symbol-Driven Design System.
+ * Glass-morphism panels with organic curves.
+ */
+
+:root {
+  /* ── Core Palette ───────────────────────────────── */
+  --oculus-amber: #f5a97f;
+  --oculus-orange: #d88957;
+  --oculus-peach: #ffd4b8;
+  --oculus-bg: rgba(10, 10, 10, 0.85);
+  --oculus-bg-solid: #0a0a0a;
+  --oculus-text: #f7f7f7;
+  --oculus-text-muted: #a0a0a0;
+  --oculus-border: rgba(245, 169, 127, 0.4);
+  --oculus-glow: rgba(245, 169, 127, 0.3);
+
+  /* ── Semantic Colors ────────────────────────────── */
+  --oculus-health: #ff6b6b;
+  --oculus-health-bg: rgba(255, 107, 107, 0.15);
+  --oculus-mana: #4ecdc4;
+  --oculus-mana-bg: rgba(78, 205, 196, 0.15);
+  --oculus-xp: #ffe66d;
+  --oculus-xp-bg: rgba(255, 230, 109, 0.15);
+  --oculus-success: #6dffaa;
+  --oculus-danger: #ff4444;
+  --oculus-warning: #ffaa44;
+
+  /* ── Bug Type Colors ────────────────────────────── */
+  --oculus-bug-null: #ff5555;
+  --oculus-bug-memory: #aa55ff;
+  --oculus-bug-race: #ffaa00;
+  --oculus-bug-offbyone: #55aaff;
+
+  /* ── Quest Type Colors ──────────────────────────── */
+  --oculus-quest-bug: #ff6b6b;
+  --oculus-quest-refactor: #4ecdc4;
+  --oculus-quest-feature: #ffe66d;
+  --oculus-quest-archaeology: #c4b5fd;
+
+  /* ── Glass Panel ────────────────────────────────── */
+  --oculus-panel-bg: rgba(10, 10, 10, 0.8);
+  --oculus-panel-border: 1px solid var(--oculus-border);
+  --oculus-panel-radius: 12px;
+  --oculus-panel-blur: blur(12px);
+  --oculus-panel-shadow: 0 0 20px var(--oculus-glow);
+
+  /* ── Typography ─────────────────────────────────── */
+  --oculus-font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --oculus-font-code: 'Courier New', 'Menlo', monospace;
+  --oculus-font-xs: 11px;
+  --oculus-font-sm: 12px;
+  --oculus-font-base: 14px;
+  --oculus-font-lg: 16px;
+  --oculus-font-xl: 20px;
+
+  /* ── Spacing ────────────────────────────────────── */
+  --oculus-space-xs: 4px;
+  --oculus-space-sm: 8px;
+  --oculus-space-md: 12px;
+  --oculus-space-lg: 16px;
+  --oculus-space-xl: 24px;
+  --oculus-space-2xl: 32px;
+
+  /* ── Timing ─────────────────────────────────────── */
+  --oculus-transition-fast: 150ms ease-out;
+  --oculus-transition-base: 200ms ease-out;
+  --oculus-transition-slow: 300ms ease-out;
+  --oculus-transition-dramatic: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Z-Index Layers ─────────────────────────────── */
+  --oculus-z-hud: 10;
+  --oculus-z-panel: 50;
+  --oculus-z-overlay: 100;
+  --oculus-z-modal: 200;
+
+  /* ── Breakpoints (used via media queries) ─────── */
+  /* Desktop: > 1024px (default) */
+  /* Tablet:  768px - 1024px */
+  /* Mobile:  < 768px */
+}

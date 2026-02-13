@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dendrovia Dark Themes - Preview</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1rem;
+      color: #888;
+      margin-bottom: 3rem;
+      font-style: italic;
+    }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 2rem;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    .theme-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+    }
+
+    .theme-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid;
+    }
+
+    .theme-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .theme-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    .theme-palette {
+      display: flex;
+      height: 60px;
+    }
+
+    .palette-color {
+      flex: 1;
+      transition: flex 0.3s ease;
+    }
+
+    .palette-color:hover {
+      flex: 1.5;
+    }
+
+    .theme-code {
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .theme-metadata {
+      padding: 1rem 1.5rem;
+      font-size: 0.75rem;
+      opacity: 0.6;
+      border-top: 1px solid;
+    }
+
+    /* CHRONOS */
+    .chronos {
+      background: #2a1f16;
+      color: #e8d7c3;
+    }
+    .chronos .theme-header { border-color: #4a3822; background: #362a1d; }
+    .chronos .theme-metadata { border-color: #4a3822; }
+    .chronos .theme-title { color: #d4a574; }
+    .chronos .keyword { color: #d4a574; font-weight: bold; }
+    .chronos .string { color: #c49060; }
+    .chronos .function { color: #f5ead6; font-weight: bold; }
+    .chronos .comment { color: #6b5d4f; font-style: italic; }
+    .chronos .number { color: #dda15e; }
+
+    /* IMAGINARIUM */
+    .imaginarium {
+      background: #1a0f1f;
+      color: #e5d4ff;
+    }
+    .imaginarium .theme-header { border-color: #4a2d5f; background: #251832; }
+    .imaginarium .theme-metadata { border-color: #4a2d5f; }
+    .imaginarium .theme-title { color: #c6a0f6; }
+    .imaginarium .keyword { color: #c6a0f6; font-weight: bold; }
+    .imaginarium .string { color: #d0a0f6; }
+    .imaginarium .function { color: #f8f0ff; font-weight: bold; }
+    .imaginarium .comment { color: #7a5fa0; font-style: italic; }
+    .imaginarium .number { color: #da9ef7; }
+
+    /* ARCHITECTUS */
+    .architectus {
+      background: #0d1824;
+      color: #c8e0ff;
+    }
+    .architectus .theme-header { border-color: #1e3a5f; background: #151f2e; }
+    .architectus .theme-metadata { border-color: #1e3a5f; }
+    .architectus .theme-title { color: #8ab4f8; }
+    .architectus .keyword { color: #8ab4f8; font-weight: bold; }
+    .architectus .string { color: #8ad4f8; }
+    .architectus .function { color: #e8f4ff; font-weight: bold; }
+    .architectus .comment { color: #4a6b8f; font-style: italic; }
+    .architectus .number { color: #5dbaff; }
+
+    /* LUDUS */
+    .ludus {
+      background: #1a2820;
+      color: #d4f5e3;
+    }
+    .ludus .theme-header { border-color: #2d4d3a; background: #1f3129; }
+    .ludus .theme-metadata { border-color: #2d4d3a; }
+    .ludus .theme-title { color: #81c995; }
+    .ludus .keyword { color: #81c995; font-weight: bold; }
+    .ludus .string { color: #95c981; }
+    .ludus .function { color: #d4f5e3; font-weight: bold; }
+    .ludus .comment { color: #648f6f; font-style: italic; }
+    .ludus .number { color: #5ff59f; }
+
+    /* OCULUS */
+    .oculus {
+      background: #1f1410;
+      color: #ffd4b8;
+    }
+    .oculus .theme-header { border-color: #5f3d2d; background: #2a1a12; }
+    .oculus .theme-metadata { border-color: #5f3d2d; }
+    .oculus .theme-title { color: #f5a97f; }
+    .oculus .keyword { color: #f5a97f; font-weight: bold; }
+    .oculus .string { color: #f5c27f; }
+    .oculus .function { color: #fff5ed; font-weight: bold; }
+    .oculus .comment { color: #9d7357; font-style: italic; }
+    .oculus .number { color: #ffb366; }
+
+    /* OPERATUS */
+    .operatus {
+      background: #1c1f23;
+      color: #d1d5db;
+    }
+    .operatus .theme-header { border-color: #374151; background: #24272c; }
+    .operatus .theme-metadata { border-color: #374151; }
+    .operatus .theme-title { color: #9ca3af; }
+    .operatus .keyword { color: #9ca3af; font-weight: bold; }
+    .operatus .string { color: #9cadb3; }
+    .operatus .function { color: #e5e7eb; font-weight: bold; }
+    .operatus .comment { color: #52525b; font-style: italic; }
+    .operatus .number { color: #60a5fa; }
+  </style>
+</head>
+<body>
+  <h1>🌳 DENDROVIA DARK THEMES</h1>
+  <p class="subtitle">Six Ghosty Profiles - Comprehensive Dark Mode Themes for Each Pillar</p>
+
+  <div class="themes-grid">
+    <!-- CHRONOS -->
+    <div class="theme-card chronos">
+      <div class="theme-palette">
+        <div class="palette-color" style="background: #4a3822;" title="#4a3822 - Shadow"></div>
+        <div class="palette-color" style="background: #8b7355;" title="#8b7355 - Secondary"></div>
+        <div class="palette-color" style="background: #d4a574;" title="#d4a574 - Primary"></div>
+        <div class="palette-color" style="background: #dda15e;" title="#dda15e - Accent"></div>
+        <div class="palette-color" style="background: #f5ead6;" title="#f5ead6 - Highlight"></div>
+      </div>
+      <div class="theme-header">
+        <div class="theme-title">📜 CHRONOS - The Archaeologist</div>
+        <div class="theme-subtitle">Time crystallized into navigable space</div>
+      </div>
+      <div class="theme-code">
+<span class="comment">// Archaeological excavation of temporal strata</span>
+<span class="keyword">class</span> <span class="function">TemporalArchaeologist</span> {
+  <span class="keyword">private</span> strata: <span class="keyword">number</span> = <span class="number">12</span>;
+
+  <span class="function">excavate</span>(commit: <span class="string">"ancient-fossil"</span>) {
+    <span class="keyword">return</span> <span class="keyword">this</span>.strata.<span class="function">map</span>(layer =>
+      layer.<span class="function">fossilize</span>()
+    );
+  }
+}
+      </div>
+      <div class="theme-metadata">
+        Best For: Git operations • Version control • Historical analysis • Documentation
+      </div>
+    </div>
+
+    <!-- IMAGINARIUM -->
+    <div class="theme-card imaginarium">
+      <div class="theme-palette">
+        <div class="palette-color" style="background: #4a2d5f;" title="#4a2d5f - Shadow"></div>
+        <div class="palette-color" style="background: #9b6dd8;" title="#9b6dd8 - Secondary"></div>
+        <div class="palette-color" style="background: #c6a0f6;" title="#c6a0f6 - Primary"></div>
+        <div class="palette-color" style="background: #da9ef7;" title="#da9ef7 - Accent"></div>
+        <div class="palette-color" style="background: #f8f0ff;" title="#f8f0ff - Highlight"></div>
+      </div>
+      <div class="theme-header">
+        <div class="theme-title">🎨 IMAGINARIUM - The Compiler</div>
+        <div class="theme-subtitle">Dreams distilled into executable mathematics</div>
+      </div>
+      <div class="theme-code">
+<span class="comment">// Alchemical distillation of artistic essence</span>
+<span class="keyword">function</span> <span class="function">distillArt</span>(vision: <span class="string">"ethereal-dream"</span>) {
+  <span class="keyword">const</span> essence = vision.<span class="function">refract</span>();
+  <span class="keyword">const</span> spectrum = <span class="number">7</span>; <span class="comment">// prismatic rays</span>
+
+  <span class="keyword">return</span> essence.<span class="function">compile</span>().to.<span class="function">shader</span>();
+}
+      </div>
+      <div class="theme-metadata">
+        Best For: Shader coding • Creative work • Generative art • Procedural design
+      </div>
+    </div>
+
+    <!-- ARCHITECTUS -->
+    <div class="theme-card architectus">
+      <div class="theme-palette">
+        <div class="palette-color" style="background: #1e3a5f;" title="#1e3a5f - Shadow"></div>
+        <div class="palette-color" style="background: #5a8dd8;" title="#5a8dd8 - Secondary"></div>
+        <div class="palette-color" style="background: #8ab4f8;" title="#8ab4f8 - Primary"></div>
+        <div class="palette-color" style="background: #5dbaff;" title="#5dbaff - Accent"></div>
+        <div class="palette-color" style="background: #e8f4ff;" title="#e8f4ff - Highlight"></div>
+      </div>
+      <div class="theme-header">
+        <div class="theme-title">🏛️ ARCHITECTUS - The Renderer</div>
+        <div class="theme-subtitle">Light made manifest through computational geometry</div>
+      </div>
+      <div class="theme-code">
+<span class="comment">// Raymarched construction of impossible space</span>
+<span class="keyword">interface</span> <span class="function">SDFGeometry</span> {
+  <span class="function">raymarch</span>(position: <span class="string">"platonic-ideal"</span>): <span class="keyword">number</span>;
+  <span class="function">render</span>(webgpu: <span class="keyword">boolean</span>): <span class="string">"infinite-detail"</span>;
+
+  precision: <span class="number">0.001</span>; <span class="comment">// sub-pixel accuracy</span>
+}
+      </div>
+      <div class="theme-metadata">
+        Best For: 3D rendering • WebGPU programming • Graphics code • Spatial computing
+      </div>
+    </div>
+
+    <!-- LUDUS -->
+    <div class="theme-card ludus">
+      <div class="theme-palette">
+        <div class="palette-color" style="background: #2d4d3a;" title="#2d4d3a - Shadow"></div>
+        <div class="palette-color" style="background: #5fa876;" title="#5fa876 - Secondary"></div>
+        <div class="palette-color" style="background: #81c995;" title="#81c995 - Primary"></div>
+        <div class="palette-color" style="background: #5ff59f;" title="#5ff59f - Accent"></div>
+        <div class="palette-color" style="background: #d4f5e3;" title="#d4f5e3 - Highlight"></div>
+      </div>
+      <div class="theme-header">
+        <div class="theme-title">🎮 LUDUS - The Mechanics</div>
+        <div class="theme-subtitle">Play encoded in systematic rules</div>
+      </div>
+      <div class="theme-code">
+<span class="comment">// Turn-based strategic gameplay logic</span>
+<span class="keyword">type</span> <span class="function">GameState</span> = <span class="string">"player-turn"</span> | <span class="string">"enemy-turn"</span>;
+
+<span class="keyword">const</span> encounter = {
+  health: <span class="number">100</span>,
+  mana: <span class="number">50</span>,
+  <span class="function">attack</span>() { <span class="keyword">return</span> <span class="string">"critical-hit"</span>; }
+};
+      </div>
+      <div class="theme-metadata">
+        Best For: Game logic • State machines • Rules engines • Interactive systems
+      </div>
+    </div>
+
+    <!-- OCULUS -->
+    <div class="theme-card oculus">
+      <div class="theme-palette">
+        <div class="palette-color" style="background: #5f3d2d;" title="#5f3d2d - Shadow"></div>
+        <div class="palette-color" style="background: #d88957;" title="#d88957 - Secondary"></div>
+        <div class="palette-color" style="background: #f5a97f;" title="#f5a97f - Primary"></div>
+        <div class="palette-color" style="background: #ffb366;" title="#ffb366 - Accent"></div>
+        <div class="palette-color" style="background: #fff5ed;" title="#fff5ed - Highlight"></div>
+      </div>
+      <div class="theme-header">
+        <div class="theme-title">👁️ OCULUS - The Interface</div>
+        <div class="theme-subtitle">Vision structured as navigable information</div>
+      </div>
+      <div class="theme-code">
+<span class="comment">// Perceptual clarity through structured UI</span>
+<span class="keyword">const</span> <span class="function">MillerColumns</span> = ({depth}) => {
+  <span class="keyword">const</span> focus = <span class="number">3</span>; <span class="comment">// hexagonal iris cells</span>
+
+  <span class="keyword">return</span> <span class="string">`Seeing is ${depth}-dimensional`</span>;
+};
+      </div>
+      <div class="theme-metadata">
+        Best For: UI/UX work • Component design • Interface development • Accessibility
+      </div>
+    </div>
+
+    <!-- OPERATUS -->
+    <div class="theme-card operatus">
+      <div class="theme-palette">
+        <div class="palette-color" style="background: #374151;" title="#374151 - Shadow"></div>
+        <div class="palette-color" style="background: #6b7280;" title="#6b7280 - Secondary"></div>
+        <div class="palette-color" style="background: #9ca3af;" title="#9ca3af - Primary"></div>
+        <div class="palette-color" style="background: #60a5fa;" title="#60a5fa - Accent"></div>
+        <div class="palette-color" style="background: #e5e7eb;" title="#e5e7eb - Highlight"></div>
+      </div>
+      <div class="theme-header">
+        <div class="theme-title">💾 OPERATUS - The Infrastructure</div>
+        <div class="theme-subtitle">Systems beneath systems, invisible foundations</div>
+      </div>
+      <div class="theme-code">
+<span class="comment">// Silent orchestration of foundational systems</span>
+<span class="keyword">class</span> <span class="function">AssetPipeline</span> {
+  <span class="keyword">async</span> <span class="function">load</span>(resource: <span class="string">"shader.glsl"</span>) {
+    <span class="keyword">const</span> cached = <span class="keyword">await</span> <span class="keyword">this</span>.cache.<span class="function">get</span>();
+    <span class="keyword">return</span> cached ?? <span class="keyword">this</span>.<span class="function">fetch</span>(resource);
+  }
+}
+      </div>
+      <div class="theme-metadata">
+        Best For: Infrastructure code • DevOps • Configuration • System administration
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 4rem; opacity: 0.5; font-size: 0.9rem;">
+    <p>Generated from PILLAR_THEMATIC_SCHEMA.md</p>
+    <p style="margin-top: 0.5rem;">Each theme embodies the archetypal essence of its pillar</p>
+  </div>
+</body>
+</html>

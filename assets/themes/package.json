@@ -1,0 +1,67 @@
+{
+  "name": "dendrovia-themes",
+  "displayName": "Dendrovia Dark Themes",
+  "description": "Six comprehensive dark mode themes representing the pillars of Dendrovia - from archaeological amber to computational blue",
+  "version": "1.0.0",
+  "publisher": "dendrovia",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "theme",
+    "dark theme",
+    "color theme",
+    "dendrovia",
+    "archaeological",
+    "computational",
+    "game design",
+    "infrastructure"
+  ],
+  "galleryBanner": {
+    "color": "#2a1f16",
+    "theme": "dark"
+  },
+  "contributes": {
+    "themes": [
+      {
+        "label": "Chronos Dark - The Archaeologist",
+        "uiTheme": "vs-dark",
+        "path": "./chronos-dark.json"
+      },
+      {
+        "label": "Imaginarium Dark - The Compiler",
+        "uiTheme": "vs-dark",
+        "path": "./imaginarium-dark.json"
+      },
+      {
+        "label": "Architectus Dark - The Renderer",
+        "uiTheme": "vs-dark",
+        "path": "./architectus-dark.json"
+      },
+      {
+        "label": "Ludus Dark - The Mechanics",
+        "uiTheme": "vs-dark",
+        "path": "./ludus-dark.json"
+      },
+      {
+        "label": "Oculus Dark - The Interface",
+        "uiTheme": "vs-dark",
+        "path": "./oculus-dark.json"
+      },
+      {
+        "label": "Operatus Dark - The Infrastructure",
+        "uiTheme": "vs-dark",
+        "path": "./operatus-dark.json"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pastarita/dendrovia"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "icon": "icon.png"
+}

@@ -1,0 +1,62 @@
+# Policy Mode: rendover — Visual Verification
+#
+# Broadened permissions for visual review, dev server, browser automation.
+# Same destructive blocks as default mode.
+
+version: 1
+mode: rendover
+description: Visual verification permissions for Dendrovia rendering review
+
+blocked:
+  # Same destructive blocks as default
+  - pattern: "rm -rf /[^t]"
+    reason: "Prevent destructive root filesystem operations"
+    source: "CLAUDE.md:Safety Protocol"
+  - pattern: "git push origin main"
+    reason: "Never push directly to main"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git push --force"
+    reason: "Force push destroys remote history"
+    source: "BRANCH_WORKFLOW.rules.md"
+  - pattern: "git reset --hard"
+    reason: "Hard reset destroys uncommitted work"
+    source: "CLAUDE.md:Safety Protocol"
+  - pattern: "npm install|yarn add|pnpm add"
+    reason: "Dendrovia uses bun exclusively"
+    source: "CLAUDE.md:Runtime"
+
+grants:
+  bash:
+    # All default grants
+    - pattern: "bun (install|run|test|build|x)"
+      reason: "Standard bun workflow commands"
+      source: "CLAUDE.md:Common Commands"
+    - pattern: "git (status|diff|log|branch|show|stash list|rev-parse|fetch|pull)"
+      reason: "Read-only git operations"
+      source: "settings.json:allow"
+    - pattern: "git (add|commit|checkout|switch|merge|rebase)"
+      reason: "Standard git workflow"
+      source: "settings.json:allow"
+
+    # Visual verification permissions
+    - pattern: "bun run dev"
+      reason: "Dev server for visual verification"
+      source: "rendover-mode"
+    - pattern: "open http"
+      reason: "Open browser for visual review"
+      source: "rendover-mode"
+    - pattern: "screenshot|capture"
+      reason: "Screenshot capture for comparison"
+      source: "rendover-mode"
+
+  read:
+    - pattern: ".*"
+      reason: "Read access unrestricted in rendover mode"
+
+  write:
+    - pattern: ".*"
+      reason: "Write access for screenshots and visual artifacts"
+
+  edit:
+    - pattern: ".*"
+      reason: "Edit access for styling and rendering files"

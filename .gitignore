@@ -40,6 +40,14 @@ yarn-debug.log*
 yarn-error.log*
 bun-debug.log*
 
+# Castle Walls audit logs (ephemeral, regenerated per session)
+.claude/hooks/logs/decisions.jsonl
+.claude/hooks/logs/tier1-errors.log
+.claude/hooks/logs/tier2-errors.log
+
+# CHRONOS state cache
+.chronos-state
+
 # Testing
 coverage/
 .nyc_output/

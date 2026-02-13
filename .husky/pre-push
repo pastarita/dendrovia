@@ -1,0 +1,82 @@
+#!/bin/sh
+# ════════════════════════════════════════════════════════════════
+# Castle Walls — Pre-Push Gates
+# Dendrovia Monorepo
+#
+# Branch protection, naming validation, PR readiness reminders.
+# ════════════════════════════════════════════════════════════════
+
+current_branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "detached")
+
+echo ""
+echo "▸ Castle Walls: Pre-Push Gates"
+echo ""
+
+# ── Gate 1: Protected Branch Enforcement (BLOCKING) ─────────
+PROTECTED_BRANCHES="main master"
+PUSH_BLOCKED=0
+
+for protected in $PROTECTED_BRANCHES; do
+    if [ "$current_branch" = "$protected" ]; then
+        echo "╔════════════════════════════════════════════════════════════════╗"
+        echo "║  PUSH TO '$protected' BLOCKED                                ║"
+        echo "╠════════════════════════════════════════════════════════════════╣"
+        echo "║  Direct pushes to protected branches are not allowed.         ║"
+        echo "║  Use the PR workflow instead.                                 ║"
+        echo "╚════════════════════════════════════════════════════════════════╝"
+        echo ""
+        echo "  Required workflow:"
+        echo "  ────────────────────────────────────────"
+        echo "  1. git checkout -b feat/your-feature-name"
+        echo "  2. git cherry-pick <commit-hash>   # if needed"
+        echo "  3. git push origin feat/your-feature-name"
+        echo "  4. Create a PR on GitHub"
+        echo "  ────────────────────────────────────────"
+        echo ""
+        PUSH_BLOCKED=1
+    fi
+done
+
+if [ $PUSH_BLOCKED -eq 1 ]; then
+    exit 1
+fi
+
+echo "  ✓ Branch '$current_branch' is not protected"
+
+# ── Gate 2: Branch Naming Convention (Advisory) ──────────────
+valid_prefixes="feat/ fix/ docs/ refactor/ infra/ test/ chore/ proto/ expedite/"
+is_valid=false
+
+for prefix in $valid_prefixes; do
+    case "$current_branch" in
+        $prefix*) is_valid=true; break ;;
+    esac
+done
+
+if [ "$is_valid" = false ] && [ "$current_branch" != "detached" ]; then
+    echo "  ⚠ Branch '$current_branch' doesn't follow naming convention"
+    echo "    Recommended prefixes: feat/ fix/ docs/ refactor/ infra/ test/ chore/ proto/"
+else
+    echo "  ✓ Branch naming convention satisfied"
+fi
+
+# ── Gate 3: PR Readiness Reminder (Advisory) ─────────────────
+upstream=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || true)
+
+if [ -z "$upstream" ] || [ "$upstream" = "@{u}" ]; then
+    echo ""
+    echo "╔═════════════════════════════════════════════╗"
+    echo "║  New branch push detected                    ║"
+    echo "╠═════════════════════════════════════════════╣"
+    echo "║  Remember to create a PR description:        ║"
+    echo "║  docs/pr-descriptions/PR_DESCRIPTION_...md   ║"
+    echo "║                                              ║"
+    echo "║  Use: /pr-workflow skill for full workflow    ║"
+    echo "╚═════════════════════════════════════════════╝"
+fi
+
+echo ""
+echo "  ✓ Pre-push gates passed"
+echo ""
+
+exit 0

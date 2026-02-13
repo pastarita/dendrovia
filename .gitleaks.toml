@@ -1,0 +1,64 @@
+# Gitleaks Configuration — Dendrovia Castle Walls
+#
+# Custom rules extending the default gitleaks ruleset.
+# Wall 1 Layer 2: comprehensive secret detection via entropy + patterns.
+
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  '\.env\.example$',
+  '__tests__/',
+  '\.test\.ts$',
+  '\.spec\.ts$',
+  'bun\.lock$',
+  'certified-exceptions\.yaml$',
+  '\.husky/pre-commit$',
+]
+regexes = [
+  'AKIAIOSFODNN7EXAMPLE',
+  'your-api-key-here',
+  'password123',
+  'sk-proj-\.\.\.',
+  'sk-ant-api\.\.\.',
+]
+
+# Dendrovia-specific rules
+
+[[rules]]
+id = "neon-connection-string"
+description = "Neon PostgreSQL connection string with credentials"
+regex = '''postgresql://[^:]+:[^@]+@ep-[a-z]+-[a-z]+-[a-z0-9]+\..*\.neon\.tech'''
+secretGroup = 0
+entropy = 3.5
+tags = ["database", "critical"]
+
+[[rules]]
+id = "anthropic-api-key"
+description = "Anthropic API key"
+regex = '''sk-ant-api[0-9]+-[a-zA-Z0-9\-_]{20,}'''
+secretGroup = 0
+tags = ["ai", "critical"]
+
+[[rules]]
+id = "openai-project-key"
+description = "OpenAI project API key"
+regex = '''sk-proj-[a-zA-Z0-9]{20,}'''
+secretGroup = 0
+tags = ["ai", "critical"]
+
+[[rules]]
+id = "vercel-token"
+description = "Vercel deployment token"
+regex = '''v[0-9]_[a-zA-Z0-9]{24,}'''
+secretGroup = 0
+entropy = 3.5
+tags = ["deployment", "critical"]
+
+[[rules]]
+id = "stripe-key"
+description = "Stripe API key (live or test)"
+regex = '''(sk_live|sk_test|pk_live|pk_test)_[a-zA-Z0-9]{20,}'''
+secretGroup = 0
+tags = ["payment", "critical"]

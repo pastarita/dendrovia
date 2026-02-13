@@ -1,0 +1,497 @@
+#!/bin/sh
+# ════════════════════════════════════════════════════════════════
+# Castle Walls v0.8.0 — Pre-Commit Quality Gates
+# Dendrovia Monorepo
+#
+# 7 Walls: Context(0) Secret(1) Static(2) Deps(2.5)
+#          Runtime(2.7) Tests(3) Assets(7)
+#
+# Wall 1 (Secrets) is BLOCKING. All others are ADVISORY.
+# ════════════════════════════════════════════════════════════════
+
+CASTLE_WALLS_VERSION="0.8.0"
+TARGET_DURATION=30
+START_TIME=$(date +%s)
+
+# ── Status tracking ──────────────────────────────────────────
+BRANCH_STATUS=0
+STASH_STATUS=0
+SECRET_STATUS=0
+TYPECHECK_STATUS=0
+LINT_STATUS=0
+DEP_STATUS=0
+SHEBANG_STATUS=0
+TEST_STATUS=0
+ASSET_STATUS=0
+
+BRANCH_SKIPPED=0
+STASH_SKIPPED=0
+TYPECHECK_SKIPPED=0
+LINT_SKIPPED=0
+DEP_SKIPPED=0
+SHEBANG_SKIPPED=0
+TEST_SKIPPED=0
+ASSET_SKIPPED=0
+
+# ── Staged files ─────────────────────────────────────────────
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
+
+if [ -z "$STAGED_FILES" ]; then
+    exit 0
+fi
+
+CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "detached")
+
+# ── Expedition Mode Detection ────────────────────────────────
+EXPEDITION_MODE=0
+if echo "$CURRENT_BRANCH" | grep -qi "expedite"; then
+    EXPEDITION_MODE=1
+fi
+
+# ── Environment variable bypasses ────────────────────────────
+SKIP_SECRET_CHECK=${SKIP_SECRET_CHECK:-0}
+SKIP_TESTS=${SKIP_TESTS:-0}
+
+# ── Banner ───────────────────────────────────────────────────
+if [ $EXPEDITION_MODE -eq 1 ]; then
+    echo ""
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║       EXPEDITION MODE — User-Approved Fast Path               ║"
+    echo "╠════════════════════════════════════════════════════════════════╣"
+    echo "║  Only Wall 1 (Secrets) + Wall 7 (Assets) will run.            ║"
+    echo "║  Advisory walls skipped.                                      ║"
+    echo "╚════════════════════════════════════════════════════════════════╝"
+    echo ""
+else
+    echo ""
+    echo "╔════════════════════════════════════════════════════════════════╗"
+    echo "║         CASTLE WALLS v${CASTLE_WALLS_VERSION} — Pre-Commit Quality Gates          ║"
+    echo "╚════════════════════════════════════════════════════════════════╝"
+    echo ""
+fi
+
+# ══════════════════════════════════════════════════════════════
+# WALL 0: Context Protection (Advisory)
+# ══════════════════════════════════════════════════════════════
+if [ $EXPEDITION_MODE -eq 0 ]; then
+    echo "▸ WALL 0: Context Protection..."
+
+    # Direct-to-main detection
+    if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+        echo "  ⚠ WARNING: Committing directly to '$CURRENT_BRANCH'!"
+        echo ""
+        echo "  Recommended workflow:"
+        echo "    git stash"
+        echo "    git checkout -b feat/your-feature-name"
+        echo "    git stash pop"
+        echo ""
+        BRANCH_STATUS=1
+    else
+        echo "  ✓ Branch: $CURRENT_BRANCH"
+    fi
+
+    # Stash detection
+    STASH_COUNT=$(git stash list 2>/dev/null | wc -l | tr -d ' ')
+    if [ "$STASH_COUNT" -gt 0 ]; then
+        echo "  ⚠ WARNING: $STASH_COUNT stash(es) detected!"
+        echo "  Stashes are invisible context lost between agentic sessions."
+        echo ""
+        echo "  Recover and segment into meaningful commits:"
+        echo "    git stash show -p              # Review stash contents"
+        echo "    git stash apply                # Apply WITHOUT dropping"
+        echo "    git add -p                     # Interactive staging by hunk"
+        echo "    git commit -m 'feat(): ...'    # Commit logical group"
+        echo "    git stash drop                 # Clean up after all committed"
+        echo ""
+        STASH_STATUS=1
+    else
+        echo "  ✓ No stashes detected"
+    fi
+
+    echo ""
+else
+    BRANCH_SKIPPED=1
+    STASH_SKIPPED=1
+fi
+
+# ══════════════════════════════════════════════════════════════
+# WALL 1: Secret Detection (BLOCKING)
+# ══════════════════════════════════════════════════════════════
+echo "▸ WALL 1: Secret Detection..."
+
+if [ "$SKIP_SECRET_CHECK" = "1" ]; then
+    echo "  ○ Skipped (SKIP_SECRET_CHECK=1)"
+    echo ""
+else
+    # Load certified safe strings for false positive filtering
+    SAFE_STRINGS="AKIAIOSFODNN7EXAMPLE|your-api-key-here|password123|sk-proj-\.\.\.|sk-ant-api\.\.\."
+
+    # Layer 1: High-confidence pattern matching (no dependencies)
+    SECRET_PATTERNS='(sk-proj-[a-zA-Z0-9]{20,}|sk-ant-api[0-9]+-[a-zA-Z0-9\-]{20,}|ghp_[a-zA-Z0-9]{36}|gho_[a-zA-Z0-9]{36}|AKIA[0-9A-Z]{16}|sk_live_[a-zA-Z0-9]{20,}|sk_test_[a-zA-Z0-9]{20,}|whsec_[a-zA-Z0-9]{20,}|signkey-[a-z]+-[a-zA-Z0-9]{10,}|v[0-9]_[a-zA-Z0-9]{24,})'
+
+    DIFF_CONTENT=$(git diff --cached --diff-filter=ACM -U0 2>/dev/null || true)
+
+    if [ -n "$DIFF_CONTENT" ]; then
+        # Check for secrets, excluding certified safe strings
+        MATCHES=$(echo "$DIFF_CONTENT" | grep -E "^\+" | grep -v "^+++" | grep -E "$SECRET_PATTERNS" | grep -vE "$SAFE_STRINGS" || true)
+
+        if [ -n "$MATCHES" ]; then
+            echo ""
+            echo "  🚨 BLOCKED: Potential secrets detected in staged changes!"
+            echo ""
+            echo "  Flagged content:"
+            echo "  ────────────────────────────────────────"
+            echo "$MATCHES" | head -5 | while read -r line; do
+                # Redact: show first 10 chars of match then mask
+                echo "    $line" | cut -c1-60
+            done
+            echo "  ────────────────────────────────────────"
+            echo ""
+            echo "  To fix:"
+            echo "  ────────────────────────────────────────"
+            echo "  1. Remove the secret from your code"
+            echo "  2. Use environment variables instead"
+            echo "  3. If false positive, add string to:"
+            echo "     .castle-walls/certified-exceptions.yaml"
+            echo "  ────────────────────────────────────────"
+            echo ""
+            echo "  Emergency bypass (document in commit message):"
+            echo "    SKIP_SECRET_CHECK=1 git commit -m 'reason for bypass'"
+            echo ""
+            SECRET_STATUS=1
+        else
+            echo "  ✓ Pattern scan clean"
+        fi
+    else
+        echo "  ✓ No diff content to scan"
+    fi
+
+    # Layer 2: Gitleaks (only if installed)
+    if command -v gitleaks >/dev/null 2>&1; then
+        echo "  ▸ Running Gitleaks deep scan..."
+        if gitleaks protect --staged --no-banner --redact 2>/dev/null; then
+            echo "  ✓ Gitleaks scan clean"
+        else
+            echo "  🚨 BLOCKED: Gitleaks detected potential secrets!"
+            echo ""
+            echo "  Run for details: gitleaks protect --staged --verbose"
+            SECRET_STATUS=1
+        fi
+    fi
+
+    # BLOCKING: exit immediately if secrets found
+    if [ $SECRET_STATUS -ne 0 ]; then
+        echo ""
+        echo "╔════════════════════════════════════════════════════════════════╗"
+        echo "║  COMMIT BLOCKED — Wall 1 (Secret Detection)                   ║"
+        echo "║  Resolve flagged secrets before committing.                    ║"
+        echo "╚════════════════════════════════════════════════════════════════╝"
+        echo ""
+        exit 1
+    fi
+
+    echo ""
+fi
+
+# ══════════════════════════════════════════════════════════════
+# WALL 2: Static Analysis (Advisory)
+# ══════════════════════════════════════════════════════════════
+if [ $EXPEDITION_MODE -eq 0 ]; then
+    TS_FILES_STAGED=$(echo "$STAGED_FILES" | grep -E '\.(ts|tsx)$' || true)
+
+    if [ -n "$TS_FILES_STAGED" ]; then
+        echo "▸ WALL 2: Static Analysis..."
+
+        # TypeScript Type Check
+        echo "  ▸ Running TypeScript type check..."
+        if bun run typecheck 2>/dev/null; then
+            echo "  ✓ Type check passed"
+        else
+            echo "  ⚠ Type errors found (advisory)"
+            TYPECHECK_STATUS=1
+        fi
+
+        # Linting
+        echo "  ▸ Running linter..."
+        if bun run lint 2>/dev/null; then
+            echo "  ✓ Lint passed"
+        else
+            echo "  ⚠ Lint issues found (advisory)"
+            LINT_STATUS=1
+        fi
+
+        echo ""
+    else
+        echo "▸ WALL 2: Static Analysis..."
+        echo "  ○ Skipped (no .ts/.tsx files staged)"
+        echo ""
+        TYPECHECK_SKIPPED=1
+        LINT_SKIPPED=1
+    fi
+else
+    TYPECHECK_SKIPPED=1
+    LINT_SKIPPED=1
+fi
+
+# ══════════════════════════════════════════════════════════════
+# WALL 2.5: Dependency Validation (Advisory)
+# ══════════════════════════════════════════════════════════════
+if [ $EXPEDITION_MODE -eq 0 ]; then
+    DEP_FILES_STAGED=$(echo "$STAGED_FILES" | grep -E '(package\.json|bun\.lock)' || true)
+
+    if [ -n "$DEP_FILES_STAGED" ]; then
+        echo "▸ WALL 2.5: Dependency Validation..."
+
+        # Quick check: blocked package names in package.json diffs
+        BLOCKED_PKGS='(\"fuse\"|\"eslint\"|\"prettier\"|\"react-flow\"|\"reactflow\"|\"event-stream\"|\"ts-node\")'
+        BLOCKED_MATCH=$(git diff --cached -- '*.json' | grep -E "^\+.*$BLOCKED_PKGS" || true)
+
+        if [ -n "$BLOCKED_MATCH" ]; then
+            echo "  ⚠ WARNING: Potentially blocked package detected!"
+            echo "$BLOCKED_MATCH" | while read -r line; do
+                echo "    $line"
+            done
+            echo ""
+            echo "  Verify this is the intended package (not a semantic collision)."
+            DEP_STATUS=1
+        else
+            echo "  ✓ No blocked packages detected"
+        fi
+
+        # Full validator script (if available)
+        if command -v bun >/dev/null && [ -f "scripts/dependency-validator.ts" ]; then
+            echo "  ▸ Running dependency validator..."
+            if bun scripts/dependency-validator.ts --json 2>/dev/null; then
+                echo "  ✓ Dependency validation passed"
+            else
+                echo "  ⚠ Dependency validation warnings (advisory)"
+                DEP_STATUS=1
+            fi
+        fi
+
+        echo ""
+    else
+        echo "▸ WALL 2.5: Dependency Validation..."
+        echo "  ○ Skipped (no package files staged)"
+        echo ""
+        DEP_SKIPPED=1
+    fi
+else
+    DEP_SKIPPED=1
+fi
+
+# ══════════════════════════════════════════════════════════════
+# WALL 2.7: Runtime Compliance (Advisory)
+# ══════════════════════════════════════════════════════════════
+if [ $EXPEDITION_MODE -eq 0 ]; then
+    SCRIPT_FILES_STAGED=$(echo "$STAGED_FILES" | grep -E '\.(sh|bash|zsh)$' || true)
+    # Also check files with shebangs
+    SHEBANG_FILES=""
+    for f in $STAGED_FILES; do
+        if [ -f "$f" ]; then
+            FIRST_LINE=$(head -n 1 "$f" 2>/dev/null || true)
+            if echo "$FIRST_LINE" | grep -q '^#!'; then
+                SHEBANG_FILES="$SHEBANG_FILES $f"
+            fi
+        fi
+    done
+
+    ALL_SCRIPT_FILES="$SCRIPT_FILES_STAGED $SHEBANG_FILES"
+    ALL_SCRIPT_FILES=$(echo "$ALL_SCRIPT_FILES" | tr ' ' '\n' | sort -u | tr '\n' ' ')
+
+    if [ -n "$(echo "$ALL_SCRIPT_FILES" | tr -d '[:space:]')" ]; then
+        echo "▸ WALL 2.7: Runtime Compliance..."
+
+        for file in $ALL_SCRIPT_FILES; do
+            if [ -f "$file" ]; then
+                SHEBANG=$(head -n 1 "$file")
+                # Check for non-bun shebangs on TypeScript files
+                if echo "$file" | grep -qE '\.(ts|tsx|js|jsx|mjs)$'; then
+                    if echo "$SHEBANG" | grep -q '^#!/usr/bin/env' && ! echo "$SHEBANG" | grep -q 'bun'; then
+                        echo "  ⚠ Non-standard shebang in $file"
+                        echo "    Current:  $SHEBANG"
+                        echo "    Expected: #!/usr/bin/env bun"
+                        SHEBANG_STATUS=1
+                    fi
+                fi
+            fi
+        done
+
+        if [ $SHEBANG_STATUS -eq 0 ]; then
+            echo "  ✓ Runtime compliance passed"
+        fi
+
+        echo ""
+    else
+        echo "▸ WALL 2.7: Runtime Compliance..."
+        echo "  ○ Skipped (no script files staged)"
+        echo ""
+        SHEBANG_SKIPPED=1
+    fi
+else
+    SHEBANG_SKIPPED=1
+fi
+
+# ══════════════════════════════════════════════════════════════
+# WALL 3: Test Suite (Advisory)
+# ══════════════════════════════════════════════════════════════
+if [ $EXPEDITION_MODE -eq 0 ]; then
+    if [ "$SKIP_TESTS" = "1" ]; then
+        echo "▸ WALL 3: Test Suite..."
+        echo "  ○ Skipped (SKIP_TESTS=1)"
+        echo ""
+        TEST_SKIPPED=1
+    else
+        echo "▸ WALL 3: Test Suite..."
+
+        if command -v bun >/dev/null 2>&1; then
+            echo "  ▸ Running tests (10s timeout)..."
+            if timeout 10 bun run test --run 2>/dev/null; then
+                echo "  ✓ Tests passed"
+            else
+                EXIT_CODE=$?
+                if [ $EXIT_CODE -eq 124 ]; then
+                    echo "  ⚠ Tests timed out after 10s (advisory)"
+                    echo "    Slow tests should run in CI, not pre-commit."
+                else
+                    echo "  ⚠ Test failures detected (advisory)"
+                fi
+                TEST_STATUS=1
+            fi
+        else
+            echo "  ○ Skipped (bun not available)"
+            TEST_SKIPPED=1
+        fi
+
+        echo ""
+    fi
+else
+    TEST_SKIPPED=1
+fi
+
+# ══════════════════════════════════════════════════════════════
+# WALL 7: Asset Boundary Warnings (Advisory)
+# ══════════════════════════════════════════════════════════════
+echo "▸ WALL 7: Asset Boundaries..."
+
+LARGE_FILES_FOUND=0
+for f in $(git diff --cached --name-only --diff-filter=ACM); do
+    SIZE=$(git cat-file -s ":$f" 2>/dev/null || echo 0)
+    if [ "$SIZE" -gt 512000 ]; then  # 500 KB
+        KB=$((SIZE / 1024))
+        echo "  ⚠ Large file: ${KB}KB  ${f}"
+        LARGE_FILES_FOUND=1
+        ASSET_STATUS=1
+    fi
+done
+
+if [ $LARGE_FILES_FOUND -eq 0 ]; then
+    echo "  ✓ No oversized files"
+fi
+
+echo ""
+
+# ══════════════════════════════════════════════════════════════
+# Summary Report
+# ══════════════════════════════════════════════════════════════
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
+echo "════════════════════════════════════════════════════════════════"
+
+if [ $EXPEDITION_MODE -eq 1 ]; then
+    echo "Castle Walls Complete — EXPEDITION MODE (${DURATION}s)"
+else
+    echo "Castle Walls Complete (${DURATION}s)"
+fi
+
+echo ""
+
+# Wall 0
+if [ $BRANCH_SKIPPED -eq 1 ]; then
+    echo "WALL 0 (Branch):       ○ Skipped [EXPEDITION]"
+elif [ $BRANCH_STATUS -eq 0 ]; then
+    echo "WALL 0 (Branch):       ✓ Passed [ADVISORY]"
+else
+    echo "WALL 0 (Branch):       ⚠ Warnings [ADVISORY]"
+fi
+
+if [ $STASH_SKIPPED -eq 1 ]; then
+    echo "WALL 0 (Stash):        ○ Skipped [EXPEDITION]"
+elif [ $STASH_STATUS -eq 0 ]; then
+    echo "WALL 0 (Stash):        ✓ Passed [ADVISORY]"
+else
+    echo "WALL 0 (Stash):        ⚠ Warnings [ADVISORY]"
+fi
+
+# Wall 1
+if [ "$SKIP_SECRET_CHECK" = "1" ]; then
+    echo "WALL 1 (Secrets):      ○ Bypassed [BLOCKING]"
+elif [ $SECRET_STATUS -eq 0 ]; then
+    echo "WALL 1 (Secrets):      ✓ Passed [BLOCKING]"
+fi
+
+# Wall 2
+if [ $TYPECHECK_SKIPPED -eq 1 ]; then
+    echo "WALL 2 (TypeCheck):    ○ Skipped"
+elif [ $TYPECHECK_STATUS -eq 0 ]; then
+    echo "WALL 2 (TypeCheck):    ✓ Passed [ADVISORY]"
+else
+    echo "WALL 2 (TypeCheck):    ⚠ Warnings [ADVISORY]"
+fi
+
+if [ $LINT_SKIPPED -eq 1 ]; then
+    echo "WALL 2 (Lint):         ○ Skipped"
+elif [ $LINT_STATUS -eq 0 ]; then
+    echo "WALL 2 (Lint):         ✓ Passed [ADVISORY]"
+else
+    echo "WALL 2 (Lint):         ⚠ Warnings [ADVISORY]"
+fi
+
+# Wall 2.5
+if [ $DEP_SKIPPED -eq 1 ]; then
+    echo "WALL 2.5 (Deps):       ○ Skipped"
+elif [ $DEP_STATUS -eq 0 ]; then
+    echo "WALL 2.5 (Deps):       ✓ Passed [ADVISORY]"
+else
+    echo "WALL 2.5 (Deps):       ⚠ Warnings [ADVISORY]"
+fi
+
+# Wall 2.7
+if [ $SHEBANG_SKIPPED -eq 1 ]; then
+    echo "WALL 2.7 (Shebang):    ○ Skipped"
+elif [ $SHEBANG_STATUS -eq 0 ]; then
+    echo "WALL 2.7 (Shebang):    ✓ Passed [ADVISORY]"
+else
+    echo "WALL 2.7 (Shebang):    ⚠ Warnings [ADVISORY]"
+fi
+
+# Wall 3
+if [ $TEST_SKIPPED -eq 1 ]; then
+    echo "WALL 3 (Tests):        ○ Skipped"
+elif [ $TEST_STATUS -eq 0 ]; then
+    echo "WALL 3 (Tests):        ✓ Passed [ADVISORY]"
+else
+    echo "WALL 3 (Tests):        ⚠ Warnings [ADVISORY]"
+fi
+
+# Wall 7
+if [ $ASSET_STATUS -eq 0 ]; then
+    echo "WALL 7 (Assets):       ✓ Passed [ADVISORY]"
+else
+    echo "WALL 7 (Assets):       ⚠ Warnings [ADVISORY]"
+fi
+
+echo ""
+
+if [ $DURATION -gt $TARGET_DURATION ]; then
+    echo "⚠ Duration exceeded target: ${DURATION}s / ${TARGET_DURATION}s"
+    echo "  Consider optimizing slow checks or moving to CI."
+else
+    echo "✓ Duration within target: ${DURATION}s / ${TARGET_DURATION}s"
+fi
+
+echo "════════════════════════════════════════════════════════════════"
+echo ""
+
+exit 0

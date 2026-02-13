@@ -1,0 +1,86 @@
+# Certified Exception Registry — Dendrovia Castle Walls
+#
+# String-based exceptions for secret detection false positives.
+# Philosophy: Certify specific strings, NOT file types.
+# Every entry must have a reason and approval date.
+
+version: "2.0.0"
+last_updated: "2026-02-12"
+
+certified_strings:
+  # Category: aws_example
+  - string: "AKIAIOSFODNN7EXAMPLE"
+    category: aws_example
+    reason: "Official AWS documentation example key — not a real key"
+    source: "https://docs.aws.amazon.com/IAM/latest/UserGuide/"
+    approved_date: "2026-02-12"
+
+  # Category: placeholder
+  - string: "your-api-key-here"
+    category: placeholder
+    reason: "Instructional placeholder in documentation"
+    approved_date: "2026-02-12"
+
+  - string: "sk-proj-..."
+    category: placeholder
+    reason: "Truncated placeholder showing key format"
+    approved_date: "2026-02-12"
+
+  - string: "sk-ant-api..."
+    category: placeholder
+    reason: "Truncated placeholder showing Anthropic key format"
+    approved_date: "2026-02-12"
+
+  # Category: db_example
+  - string: "postgresql://user:password@"
+    category: db_example
+    reason: "Generic example showing connection string format"
+    approved_date: "2026-02-12"
+
+  - string: "postgresql://neondb_owner:"
+    category: db_example
+    reason: "Example Neon connection string prefix in documentation"
+    approved_date: "2026-02-12"
+
+  # Category: pattern_documentation
+  - string: "AKIA[0-9A-Z]{16}"
+    category: pattern_documentation
+    reason: "Regex pattern documenting what we detect — not an actual key"
+    approved_date: "2026-02-12"
+
+  - string: "sk-proj-[a-zA-Z0-9]{20,}"
+    category: pattern_documentation
+    reason: "Regex pattern for OpenAI key detection documentation"
+    approved_date: "2026-02-12"
+
+  - string: "sk-ant-api[0-9]+-[a-zA-Z0-9-]{20,}"
+    category: pattern_documentation
+    reason: "Regex pattern for Anthropic key detection documentation"
+    approved_date: "2026-02-12"
+
+  - string: "ghp_[a-zA-Z0-9]{36}"
+    category: pattern_documentation
+    reason: "Regex pattern for GitHub PAT detection documentation"
+    approved_date: "2026-02-12"
+
+  - string: "password123"
+    category: test_fixture
+    reason: "Common test fixture password — never a real credential"
+    approved_date: "2026-02-12"
+
+path_exceptions:
+  - pattern: '\.example$'
+    reason: ".example files contain placeholders by design"
+  - pattern: '\.gitleaks\.toml$'
+    reason: "Gitleaks config contains patterns being configured"
+  - pattern: 'bun\.lock$'
+    reason: "Lock files contain hashes, not secrets"
+  - pattern: 'certified-exceptions\.yaml$'
+    reason: "This registry file defines safe strings"
+  - pattern: '\.husky/pre-commit$'
+    reason: "Pre-commit hook contains pattern definitions"
+
+audit_log:
+  - date: "2026-02-12"
+    action: "v2.0 initial — string-based exception registry for Dendrovia"
+    reason: "Establish precise false positive management from day one"

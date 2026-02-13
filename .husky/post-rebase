@@ -1,0 +1,32 @@
+#!/bin/sh
+# ════════════════════════════════════════════════════════════════
+# Castle Walls — Post-Rebase Cache Invalidation
+# Dendrovia Monorepo
+#
+# Ensures build caches and dependencies stay in sync after rebase.
+# ════════════════════════════════════════════════════════════════
+
+echo ""
+echo "▸ Castle Walls: Post-Rebase Sync"
+
+# Invalidate TurboRepo cache if turbo.json changed
+if git diff HEAD@{1} --name-only 2>/dev/null | grep -q "turbo.json"; then
+    echo "  ▸ turbo.json changed — consider clearing cache: rm -rf .turbo"
+fi
+
+# Reinstall deps if lockfile changed
+if git diff HEAD@{1} --name-only 2>/dev/null | grep -q "bun.lock"; then
+    echo "  ▸ bun.lock changed — running bun install..."
+    bun install 2>/dev/null || echo "  ⚠ bun install failed — run manually"
+fi
+
+# Invalidate CHRONOS cache if parser source changed
+if git diff HEAD@{1} --name-only 2>/dev/null | grep -q "packages/chronos/"; then
+    if [ -f ".chronos-state" ]; then
+        echo "  ▸ CHRONOS sources changed — invalidating .chronos-state cache"
+        rm -f .chronos-state
+    fi
+fi
+
+echo "  ✓ Post-rebase sync complete"
+echo ""

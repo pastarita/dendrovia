@@ -1,0 +1,66 @@
+# Policy Mode: deployment — Locked-Down Production Prep
+#
+# Minimal permissions for deployment verification.
+# Blocks ALL pushes, dependency changes, and destructive operations.
+
+version: 1
+mode: deployment
+description: Locked-down deployment verification for Dendrovia
+
+blocked:
+  # All destructive operations
+  - pattern: "rm -rf"
+    reason: "No deletions during deployment verification"
+    source: "deployment-mode"
+  - pattern: "git push"
+    reason: "All pushes blocked during deployment verification"
+    source: "deployment-mode"
+  - pattern: "git reset"
+    reason: "No resets during deployment verification"
+    source: "deployment-mode"
+  - pattern: "git clean"
+    reason: "No cleaning during deployment verification"
+    source: "deployment-mode"
+  - pattern: "git rebase"
+    reason: "No rebasing during deployment verification"
+    source: "deployment-mode"
+
+  # Dependency changes blocked
+  - pattern: "bun (add|remove|install)"
+    reason: "No dependency changes during deployment verification"
+    source: "deployment-mode"
+  - pattern: "npm|yarn|pnpm"
+    reason: "No package manager operations during deployment"
+    source: "deployment-mode"
+
+grants:
+  bash:
+    # Read-only git only
+    - pattern: "git (status|diff|log|branch|show|tag|rev-parse|describe)"
+      reason: "Read-only git for verification"
+      source: "deployment-mode"
+
+    # Build and validate only
+    - pattern: "bun run (build|typecheck|lint|test)"
+      reason: "Validation commands only"
+      source: "deployment-mode"
+    - pattern: "bun test"
+      reason: "Test execution for deployment verification"
+      source: "deployment-mode"
+
+    # Read-only exploration
+    - pattern: "ls|cat|head|tail|wc|file|stat"
+      reason: "Read-only filesystem exploration"
+      source: "implicit:safe"
+
+  read:
+    - pattern: ".*"
+      reason: "Read access unrestricted"
+
+  write:
+    - pattern: "generated/.*"
+      reason: "Only generated output allowed during deployment"
+
+  edit:
+    - pattern: "generated/.*"
+      reason: "Only generated output editable during deployment"

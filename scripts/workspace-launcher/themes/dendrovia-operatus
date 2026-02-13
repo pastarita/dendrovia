@@ -1,0 +1,28 @@
+# Dendrovia OPERATUS - The Infrastructure
+# Industrial grey palette inspired by The Engineer archetype
+# Primary: #9ca3af (grey), Background: #1a1d23 (dark charcoal)
+
+background = 1a1d23
+foreground = e5e7eb
+cursor-color = 6b7280
+cursor-text = e5e7eb
+selection-background = 4b5563
+selection-foreground = e5e7eb
+
+# ANSI Colors (8 normal + 8 bright)
+palette = 0=#374151
+palette = 1=#8b92a0
+palette = 2=#84a98c
+palette = 3=#9ca3af
+palette = 4=#7a8ca1
+palette = 5=#9088a3
+palette = 6=#8b99a8
+palette = 7=#e5e7eb
+palette = 8=#52606f
+palette = 9=#a8b0bf
+palette = 10=#9ec4a9
+palette = 11=#b8c0cf
+palette = 12=#97abc0
+palette = 13=#aba2c2
+palette = 14=#a7b8c9
+palette = 15=#f3f4f6

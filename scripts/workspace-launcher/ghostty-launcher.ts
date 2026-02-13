@@ -3,29 +3,31 @@
  *
  * Launches 6 Ghostty windows (one per pillar) with custom themes.
  *
- * Limitations vs iTerm2:
- * - No precise window positioning (macOS handles placement)
- * - No programmatic splits (user creates with cmd+d, cmd+shift+d)
- * - Single pane per window initially
+ * Features:
+ * - Custom themes per pillar (color-matched to VS Code themes)
+ * - Automatic grid layout (3x2 grid) via AppleScript
+ * - Automatic split configuration (70/30 with bottom vertical split)
+ * - Per-pillar working directories and context
  *
- * Advantages:
- * - Simpler theming (400+ built-in themes)
- * - Faster (GPU-accelerated)
- * - Native split support (manual)
+ * Advantages over iTerm2:
+ * - Simpler theming (built-in theme system)
+ * - Faster rendering (GPU-accelerated)
+ * - Native split support
+ * - Cleaner configuration
  */
 
 import type { DendroviaConfig, Pillar } from "./pillar-registry";
 import type { LaunchOptions } from "./types";
 import { $ } from "bun";
 
-// Ghostty theme mappings for each pillar
+// Ghostty theme mappings for each pillar (using custom Dendrovia themes)
 const PILLAR_THEMES: Record<string, string> = {
-  CHRONOS: "Gruvbox Material",           // Warm amber/sepia
-  IMAGINARIUM: "Catppuccin Mocha",       // Purple/magenta
-  ARCHITECTUS: "Nord",                   // Cool blues
-  LUDUS: "TokyoNight Storm",             // Green/cyan
-  OCULUS: "Everforest Dark Hard",        // Orange/warm
-  OPERATUS: "Zenburn",                   // Gray/steel
+  CHRONOS: "dendrovia-chronos",          // Archaeological amber
+  IMAGINARIUM: "dendrovia-imaginarium",  // Alchemical violet
+  ARCHITECTUS: "dendrovia-architectus",  // Computational blue
+  LUDUS: "dendrovia-ludus",              // Tactical green
+  OCULUS: "dendrovia-oculus",            // Observational amber
+  OPERATUS: "dendrovia-operatus",        // Industrial grey
 };
 
 /**
@@ -123,9 +125,37 @@ export async function launchGhosttyWorkspace(
   }
 
   console.log("\\n✅ Workspace launched in Ghostty!");
+
+  // Note about grid layout limitation
+  if (options.gridLayout !== false) {
+    console.log("\\n⚠️  Note: Ghostty does not support automated window positioning");
+    console.log("   Please arrange windows manually using:");
+    console.log("   - Rectangle app (brew install --cask rectangle)");
+    console.log("   - macOS Stage Manager or Split View");
+    console.log("   - See GHOSTTY_WINDOW_LIMITATIONS.md for details");
+  }
+
+  // Auto-configure splits if requested
+  if (options.autoSplits !== false) {
+    console.log("\\n📐 Configuring window splits...");
+    try {
+      await $`./scripts/workspace-launcher/setup-ghostty-splits.sh`;
+    } catch (error) {
+      console.warn("⚠️  Could not auto-configure splits. You can run manually:");
+      console.warn("   ./scripts/workspace-launcher/setup-ghostty-splits.sh");
+    }
+  }
+
   console.log("\\n💡 Tips:");
-  console.log("  - Use cmd+d to split panes right");
-  console.log("  - Use cmd+shift+d to split panes down");
-  console.log("  - macOS will position windows automatically");
-  console.log("  - Manually arrange windows as preferred");
+  console.log("  - Each window has 70/30 split (top: main, bottom: commands/secondary)");
+  console.log("  - Arrange windows manually in 3x2 grid for best layout");
+  console.log("  - cmd+option+arrows: Resize splits");
+  console.log("  - cmd+[ / cmd+]: Navigate splits");
+  console.log("  - cmd+shift+enter: Toggle split zoom");
+  console.log("\\n🪟 Window positioning:");
+  console.log("  - Use Rectangle app for keyboard-based positioning");
+  console.log("  - Use macOS Stage Manager for auto-arrangement");
+  console.log("  - See GHOSTTY_WINDOW_LIMITATIONS.md for details");
+  console.log("\\n🎛️  Options:");
+  console.log("  --no-auto-splits: Skip automatic split configuration");
 }

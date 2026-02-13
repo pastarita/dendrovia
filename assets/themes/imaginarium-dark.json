@@ -1,0 +1,234 @@
+{
+  "$schema": "vscode://schemas/color-theme",
+  "name": "Imaginarium Dark - The Compiler",
+  "type": "dark",
+  "semanticHighlighting": true,
+  "colors": {
+    "editor.background": "#1a0f1f",
+    "editor.foreground": "#e5d4ff",
+    "activityBar.background": "#4a2d5f",
+    "activityBar.foreground": "#c6a0f6",
+    "activityBarBadge.background": "#da9ef7",
+    "activityBarBadge.foreground": "#1a0f1f",
+    "sideBar.background": "#251832",
+    "sideBar.foreground": "#b088e0",
+    "sideBar.border": "#4a2d5f80",
+    "sideBarTitle.foreground": "#c6a0f6",
+    "sideBarSectionHeader.background": "#4a2d5f40",
+    "sideBarSectionHeader.foreground": "#e5d4ff",
+    "list.activeSelectionBackground": "#4a2d5f60",
+    "list.activeSelectionForeground": "#f8f0ff",
+    "list.inactiveSelectionBackground": "#4a2d5f40",
+    "list.hoverBackground": "#4a2d5f30",
+    "list.focusBackground": "#4a2d5f60",
+    "list.highlightForeground": "#da9ef7",
+    "statusBar.background": "#4a2d5f",
+    "statusBar.foreground": "#b088e0",
+    "statusBar.noFolderBackground": "#4a2d5f",
+    "statusBar.debuggingBackground": "#ff8fd5",
+    "statusBar.debuggingForeground": "#f8f0ff",
+    "statusBarItem.remoteBackground": "#9b6dd8",
+    "statusBarItem.remoteForeground": "#f8f0ff",
+    "titleBar.activeBackground": "#251832",
+    "titleBar.activeForeground": "#c6a0f6",
+    "titleBar.inactiveBackground": "#1a0f1f",
+    "titleBar.inactiveForeground": "#7a5fa0",
+    "titleBar.border": "#4a2d5f80",
+    "menu.background": "#251832",
+    "menu.foreground": "#b088e0",
+    "menu.selectionBackground": "#4a2d5f60",
+    "menu.selectionForeground": "#f8f0ff",
+    "menu.border": "#4a2d5f80",
+    "menubar.selectionBackground": "#4a2d5f60",
+    "menubar.selectionForeground": "#f8f0ff",
+    "editor.lineHighlightBackground": "#4a2d5f20",
+    "editor.lineHighlightBorder": "#4a2d5f00",
+    "editor.selectionBackground": "#9b6dd860",
+    "editor.selectionHighlightBackground": "#9b6dd840",
+    "editor.inactiveSelectionBackground": "#9b6dd830",
+    "editor.wordHighlightBackground": "#c6a0f620",
+    "editor.wordHighlightStrongBackground": "#c6a0f630",
+    "editor.findMatchBackground": "#da9ef760",
+    "editor.findMatchHighlightBackground": "#da9ef740",
+    "editor.findRangeHighlightBackground": "#4a2d5f40",
+    "editorCursor.foreground": "#da9ef7",
+    "editorWhitespace.foreground": "#4a2d5f60",
+    "editorIndentGuide.background": "#4a2d5f30",
+    "editorIndentGuide.activeBackground": "#4a2d5f60",
+    "editorLineNumber.foreground": "#7a5fa0",
+    "editorLineNumber.activeForeground": "#b088e0",
+    "editorBracketMatch.background": "#9b6dd840",
+    "editorBracketMatch.border": "#9b6dd880",
+    "editorGutter.background": "#1a0f1f",
+    "editorGutter.addedBackground": "#a0c6f660",
+    "editorGutter.modifiedBackground": "#da9ef760",
+    "editorGutter.deletedBackground": "#ff8fd560",
+    "diffEditor.insertedTextBackground": "#a0c6f620",
+    "diffEditor.removedTextBackground": "#ff8fd520",
+    "editorWidget.background": "#251832",
+    "editorWidget.border": "#4a2d5f80",
+    "editorSuggestWidget.background": "#251832",
+    "editorSuggestWidget.border": "#4a2d5f80",
+    "editorSuggestWidget.foreground": "#b088e0",
+    "editorSuggestWidget.selectedBackground": "#4a2d5f60",
+    "editorSuggestWidget.highlightForeground": "#da9ef7",
+    "editorHoverWidget.background": "#251832",
+    "editorHoverWidget.border": "#4a2d5f80",
+    "peekView.border": "#c6a0f6",
+    "peekViewEditor.background": "#1a0f1f",
+    "peekViewResult.background": "#251832",
+    "peekViewTitle.background": "#4a2d5f",
+    "panel.background": "#1a0f1f",
+    "panel.border": "#4a2d5f80",
+    "panelTitle.activeBorder": "#c6a0f6",
+    "panelTitle.activeForeground": "#e5d4ff",
+    "panelTitle.inactiveForeground": "#7a5fa0",
+    "terminal.background": "#1a0f1f",
+    "terminal.foreground": "#e5d4ff",
+    "terminal.ansiBlack": "#4a2d5f",
+    "terminal.ansiRed": "#ff8fd5",
+    "terminal.ansiGreen": "#d8f69b",
+    "terminal.ansiYellow": "#da9ef7",
+    "terminal.ansiBlue": "#a0c6f6",
+    "terminal.ansiMagenta": "#d0a0f6",
+    "terminal.ansiCyan": "#a0c6f6",
+    "terminal.ansiWhite": "#e5d4ff",
+    "terminal.ansiBrightBlack": "#7a5fa0",
+    "terminal.ansiBrightRed": "#ff8fd5",
+    "terminal.ansiBrightGreen": "#d8f69b",
+    "terminal.ansiBrightYellow": "#f8f0ff",
+    "terminal.ansiBrightBlue": "#a0c6f6",
+    "terminal.ansiBrightMagenta": "#d0a0f6",
+    "terminal.ansiBrightCyan": "#a0c6f6",
+    "terminal.ansiBrightWhite": "#f8f0ff",
+    "gitDecoration.modifiedResourceForeground": "#da9ef7",
+    "gitDecoration.deletedResourceForeground": "#ff8fd5",
+    "gitDecoration.untrackedResourceForeground": "#d8f69b",
+    "gitDecoration.ignoredResourceForeground": "#7a5fa0",
+    "gitDecoration.conflictingResourceForeground": "#ff8fd5",
+    "badge.background": "#da9ef7",
+    "badge.foreground": "#1a0f1f",
+    "button.background": "#9b6dd8",
+    "button.foreground": "#f8f0ff",
+    "button.hoverBackground": "#b088e0",
+    "input.background": "#4a2d5f40",
+    "input.border": "#4a2d5f80",
+    "input.foreground": "#e5d4ff",
+    "input.placeholderForeground": "#7a5fa0",
+    "inputOption.activeBorder": "#c6a0f6",
+    "inputValidation.errorBackground": "#ff8fd5",
+    "inputValidation.errorBorder": "#ff8fd5",
+    "scrollbarSlider.background": "#4a2d5f60",
+    "scrollbarSlider.hoverBackground": "#4a2d5f80",
+    "scrollbarSlider.activeBackground": "#4a2d5fa0",
+    "tab.activeBackground": "#1a0f1f",
+    "tab.activeForeground": "#e5d4ff",
+    "tab.activeBorder": "#c6a0f6",
+    "tab.inactiveBackground": "#251832",
+    "tab.inactiveForeground": "#7a5fa0",
+    "tab.border": "#4a2d5f80",
+    "breadcrumb.foreground": "#b088e0",
+    "breadcrumb.background": "#1a0f1f",
+    "breadcrumb.focusForeground": "#e5d4ff",
+    "breadcrumb.activeSelectionForeground": "#c6a0f6",
+    "breadcrumbPicker.background": "#251832"
+  },
+  "tokenColors": [
+    {
+      "name": "Comment - Alchemical notation",
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": {
+        "foreground": "#7a5fa0",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "name": "Keyword - Transformation operators",
+      "scope": ["keyword", "storage.type", "storage.modifier"],
+      "settings": {
+        "foreground": "#c6a0f6",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "name": "String - Ethereal essence",
+      "scope": ["string", "string.quoted"],
+      "settings": {
+        "foreground": "#d0a0f6"
+      }
+    },
+    {
+      "name": "Number - Distillation parameters",
+      "scope": ["constant.numeric"],
+      "settings": {
+        "foreground": "#da9ef7"
+      }
+    },
+    {
+      "name": "Function - Compilation vessels",
+      "scope": ["entity.name.function", "support.function"],
+      "settings": {
+        "foreground": "#f8f0ff",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "name": "Class - Alchemical constructs",
+      "scope": ["entity.name.class", "entity.name.type"],
+      "settings": {
+        "foreground": "#e5d4ff",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "name": "Variable - Procedural essence",
+      "scope": ["variable", "support.variable"],
+      "settings": {
+        "foreground": "#b088e0"
+      }
+    },
+    {
+      "name": "Constant - Crystallized values",
+      "scope": ["constant", "support.constant"],
+      "settings": {
+        "foreground": "#da9ef7"
+      }
+    },
+    {
+      "name": "Operator - Transmutation symbols",
+      "scope": ["keyword.operator"],
+      "settings": {
+        "foreground": "#9b6dd8"
+      }
+    },
+    {
+      "name": "Tag - Spectrum markers",
+      "scope": ["entity.name.tag"],
+      "settings": {
+        "foreground": "#c6a0f6"
+      }
+    },
+    {
+      "name": "Attribute - Color properties",
+      "scope": ["entity.other.attribute-name"],
+      "settings": {
+        "foreground": "#d0a0f6"
+      }
+    },
+    {
+      "name": "Type - Mathematical essence",
+      "scope": ["support.type", "entity.name.type"],
+      "settings": {
+        "foreground": "#a0c6f6"
+      }
+    },
+    {
+      "name": "Import - Alchemical ingredients",
+      "scope": ["keyword.control.import", "keyword.control.export"],
+      "settings": {
+        "foreground": "#c6a0f6",
+        "fontStyle": "italic"
+      }
+    }
+  ]
+}

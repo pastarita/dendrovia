@@ -1,0 +1,28 @@
+# Dendrovia IMAGINARIUM - The Compiler
+# Alchemical violet palette inspired by The Alchemist archetype
+# Primary: #c6a0f6 (violet), Background: #24202f (deep purple-black)
+
+background = 24202f
+foreground = ede7f6
+cursor-color = dda0dd
+cursor-text = 24202f
+selection-background = 6e5494
+selection-foreground = ede7f6
+
+# ANSI Colors (8 normal + 8 bright)
+palette = 0=#3e3650
+palette = 1=#d896ff
+palette = 2=#7dc4a0
+palette = 3=#c6a0f6
+palette = 4=#8b9dc3
+palette = 5=#b891c9
+palette = 6=#a5a0d9
+palette = 7=#ede7f6
+palette = 8=#5d5270
+palette = 9=#e8b9ff
+palette = 10=#9dd9bc
+palette = 11=#ddc2ff
+palette = 12=#b5c7e3
+palette = 13=#d1b5e5
+palette = 14=#c9c4f3
+palette = 15=#f8f4ff

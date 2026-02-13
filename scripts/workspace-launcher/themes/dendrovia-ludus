@@ -1,0 +1,28 @@
+# Dendrovia LUDUS - The Mechanics
+# Tactical green palette inspired by The Game Master archetype
+# Primary: #81c995 (green), Background: #1a2520 (dark forest)
+
+background = 1a2520
+foreground = e4f0e7
+cursor-color = 6fb583
+cursor-text = 1a2520
+selection-background = 3d5e4a
+selection-foreground = e4f0e7
+
+# ANSI Colors (8 normal + 8 bright)
+palette = 0=#2d3e35
+palette = 1=#7ab88e
+palette = 2=#81c995
+palette = 3=#9dd9ac
+palette = 4=#6da690
+palette = 5=#8eb09e
+palette = 6=#7dbfa5
+palette = 7=#e4f0e7
+palette = 8=#475a50
+palette = 9=#95d4a6
+palette = 10=#99e3b0
+palette = 11=#b5f0c5
+palette = 12=#89c2ac
+palette = 13=#a8d1be
+palette = 14=#9ae0c4
+palette = 15=#f0f9f3

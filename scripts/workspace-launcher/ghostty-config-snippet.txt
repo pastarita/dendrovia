@@ -1,0 +1,73 @@
+# Dendrovia Ghostty Configuration Snippet
+# Add this to: ~/Library/Application Support/com.mitchellh.ghostty/config
+#
+# These keybindings optimize the split workflow for the 70/30 layout
+
+# ============================================================================
+# DENDROVIA SPLIT KEYBINDINGS
+# ============================================================================
+
+# Split creation
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+
+# Split navigation
+keybind = cmd+left_bracket=goto_split:previous
+keybind = cmd+right_bracket=goto_split:next
+keybind = cmd+k=goto_split:top
+keybind = cmd+j=goto_split:bottom
+keybind = cmd+h=goto_split:left
+keybind = cmd+l=goto_split:right
+
+# Split resizing (finer control)
+keybind = cmd+opt+up=resize_split:up,10
+keybind = cmd+opt+down=resize_split:down,10
+keybind = cmd+opt+left=resize_split:left,10
+keybind = cmd+opt+right=resize_split:right,10
+
+# Larger resize increments (shift+cmd+opt)
+keybind = cmd+opt+shift+up=resize_split:up,20
+keybind = cmd+opt+shift+down=resize_split:down,20
+keybind = cmd+opt+shift+left=resize_split:left,20
+keybind = cmd+opt+shift+right=resize_split:right,20
+
+# Split management
+keybind = cmd+shift+enter=toggle_split_zoom
+keybind = cmd+opt+e=equalize_splits
+keybind = cmd+w=close_surface
+
+# ============================================================================
+# DENDROVIA THEME PATHS
+# ============================================================================
+# Themes are automatically loaded from:
+# ~/.config/ghostty/themes/
+#
+# Available themes:
+# - dendrovia-chronos
+# - dendrovia-imaginarium
+# - dendrovia-architectus
+# - dendrovia-ludus
+# - dendrovia-oculus
+# - dendrovia-operatus
+
+# ============================================================================
+# RECOMMENDED SETTINGS
+# ============================================================================
+
+# Font (choose your preferred monospace font)
+font-family = JetBrains Mono
+font-size = 13
+
+# Window padding for cleaner look
+window-padding-x = 10
+window-padding-y = 10
+
+# Disable close confirmation popup (recommended for quick window closing)
+confirm-close-surface = false
+
+# Shell integration
+shell-integration = detect
+shell-integration-features = cursor,sudo,title
+
+# Performance
+resize-overlay = never

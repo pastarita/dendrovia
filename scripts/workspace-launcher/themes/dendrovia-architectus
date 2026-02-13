@@ -1,0 +1,28 @@
+# Dendrovia ARCHITECTUS - The Renderer
+# Computational blue palette inspired by The Architect archetype
+# Primary: #8ab4f8 (blue), Background: #1a1f2e (dark blue-black)
+
+background = 1a1f2e
+foreground = e3ebf5
+cursor-color = 6fa8dc
+cursor-text = 1a1f2e
+selection-background = 3d5a7e
+selection-foreground = e3ebf5
+
+# ANSI Colors (8 normal + 8 bright)
+palette = 0=#2d3748
+palette = 1=#63a8e8
+palette = 2=#6ab38a
+palette = 3=#8ab4f8
+palette = 4=#5d87c9
+palette = 5=#7a8fc7
+palette = 6=#7db3c9
+palette = 7=#e3ebf5
+palette = 8=#475569
+palette = 9=#85c0ff
+palette = 10=#87d3a8
+palette = 11=#a5ceff
+palette = 12=#7ea5e3
+palette = 13=#9daae3
+palette = 14=#a3d2e8
+palette = 15=#f0f6ff

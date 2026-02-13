@@ -1,0 +1,234 @@
+{
+  "$schema": "vscode://schemas/color-theme",
+  "name": "Chronos Dark - The Archaeologist",
+  "type": "dark",
+  "semanticHighlighting": true,
+  "colors": {
+    "editor.background": "#2a1f16",
+    "editor.foreground": "#e8d7c3",
+    "activityBar.background": "#4a3822",
+    "activityBar.foreground": "#d4a574",
+    "activityBarBadge.background": "#dda15e",
+    "activityBarBadge.foreground": "#2a1f16",
+    "sideBar.background": "#362a1d",
+    "sideBar.foreground": "#a6896b",
+    "sideBar.border": "#4a382280",
+    "sideBarTitle.foreground": "#d4a574",
+    "sideBarSectionHeader.background": "#4a382240",
+    "sideBarSectionHeader.foreground": "#e8d7c3",
+    "list.activeSelectionBackground": "#4a382260",
+    "list.activeSelectionForeground": "#f5ead6",
+    "list.inactiveSelectionBackground": "#4a382240",
+    "list.hoverBackground": "#4a382230",
+    "list.focusBackground": "#4a382260",
+    "list.highlightForeground": "#dda15e",
+    "statusBar.background": "#4a3822",
+    "statusBar.foreground": "#a6896b",
+    "statusBar.noFolderBackground": "#4a3822",
+    "statusBar.debuggingBackground": "#b85c38",
+    "statusBar.debuggingForeground": "#f5ead6",
+    "statusBarItem.remoteBackground": "#8b7355",
+    "statusBarItem.remoteForeground": "#f5ead6",
+    "titleBar.activeBackground": "#362a1d",
+    "titleBar.activeForeground": "#d4a574",
+    "titleBar.inactiveBackground": "#2a1f16",
+    "titleBar.inactiveForeground": "#6b5d4f",
+    "titleBar.border": "#4a382280",
+    "menu.background": "#362a1d",
+    "menu.foreground": "#a6896b",
+    "menu.selectionBackground": "#4a382260",
+    "menu.selectionForeground": "#f5ead6",
+    "menu.border": "#4a382280",
+    "menubar.selectionBackground": "#4a382260",
+    "menubar.selectionForeground": "#f5ead6",
+    "editor.lineHighlightBackground": "#4a382220",
+    "editor.lineHighlightBorder": "#4a382200",
+    "editor.selectionBackground": "#8b735560",
+    "editor.selectionHighlightBackground": "#8b735540",
+    "editor.inactiveSelectionBackground": "#8b735530",
+    "editor.wordHighlightBackground": "#d4a57420",
+    "editor.wordHighlightStrongBackground": "#d4a57430",
+    "editor.findMatchBackground": "#dda15e60",
+    "editor.findMatchHighlightBackground": "#dda15e40",
+    "editor.findRangeHighlightBackground": "#4a382240",
+    "editorCursor.foreground": "#dda15e",
+    "editorWhitespace.foreground": "#4a382260",
+    "editorIndentGuide.background": "#4a382230",
+    "editorIndentGuide.activeBackground": "#4a382260",
+    "editorLineNumber.foreground": "#6b5d4f",
+    "editorLineNumber.activeForeground": "#a6896b",
+    "editorBracketMatch.background": "#8b735540",
+    "editorBracketMatch.border": "#8b735580",
+    "editorGutter.background": "#2a1f16",
+    "editorGutter.addedBackground": "#74a5d460",
+    "editorGutter.modifiedBackground": "#dda15e60",
+    "editorGutter.deletedBackground": "#b85c3860",
+    "diffEditor.insertedTextBackground": "#74a5d420",
+    "diffEditor.removedTextBackground": "#b85c3820",
+    "editorWidget.background": "#362a1d",
+    "editorWidget.border": "#4a382280",
+    "editorSuggestWidget.background": "#362a1d",
+    "editorSuggestWidget.border": "#4a382280",
+    "editorSuggestWidget.foreground": "#a6896b",
+    "editorSuggestWidget.selectedBackground": "#4a382260",
+    "editorSuggestWidget.highlightForeground": "#dda15e",
+    "editorHoverWidget.background": "#362a1d",
+    "editorHoverWidget.border": "#4a382280",
+    "peekView.border": "#d4a574",
+    "peekViewEditor.background": "#2a1f16",
+    "peekViewResult.background": "#362a1d",
+    "peekViewTitle.background": "#4a3822",
+    "panel.background": "#2a1f16",
+    "panel.border": "#4a382280",
+    "panelTitle.activeBorder": "#d4a574",
+    "panelTitle.activeForeground": "#e8d7c3",
+    "panelTitle.inactiveForeground": "#6b5d4f",
+    "terminal.background": "#2a1f16",
+    "terminal.foreground": "#e8d7c3",
+    "terminal.ansiBlack": "#4a3822",
+    "terminal.ansiRed": "#b85c38",
+    "terminal.ansiGreen": "#74a5d4",
+    "terminal.ansiYellow": "#dda15e",
+    "terminal.ansiBlue": "#74a5d4",
+    "terminal.ansiMagenta": "#c49060",
+    "terminal.ansiCyan": "#74a5d4",
+    "terminal.ansiWhite": "#e8d7c3",
+    "terminal.ansiBrightBlack": "#6b5d4f",
+    "terminal.ansiBrightRed": "#b85c38",
+    "terminal.ansiBrightGreen": "#74a5d4",
+    "terminal.ansiBrightYellow": "#f5ead6",
+    "terminal.ansiBrightBlue": "#74a5d4",
+    "terminal.ansiBrightMagenta": "#d9c3a5",
+    "terminal.ansiBrightCyan": "#74a5d4",
+    "terminal.ansiBrightWhite": "#f5ead6",
+    "gitDecoration.modifiedResourceForeground": "#dda15e",
+    "gitDecoration.deletedResourceForeground": "#b85c38",
+    "gitDecoration.untrackedResourceForeground": "#74a5d4",
+    "gitDecoration.ignoredResourceForeground": "#6b5d4f",
+    "gitDecoration.conflictingResourceForeground": "#b85c38",
+    "badge.background": "#dda15e",
+    "badge.foreground": "#2a1f16",
+    "button.background": "#8b7355",
+    "button.foreground": "#f5ead6",
+    "button.hoverBackground": "#a6896b",
+    "input.background": "#4a382240",
+    "input.border": "#4a382280",
+    "input.foreground": "#e8d7c3",
+    "input.placeholderForeground": "#6b5d4f",
+    "inputOption.activeBorder": "#d4a574",
+    "inputValidation.errorBackground": "#b85c38",
+    "inputValidation.errorBorder": "#b85c38",
+    "scrollbarSlider.background": "#4a382260",
+    "scrollbarSlider.hoverBackground": "#4a382280",
+    "scrollbarSlider.activeBackground": "#4a3822a0",
+    "tab.activeBackground": "#2a1f16",
+    "tab.activeForeground": "#e8d7c3",
+    "tab.activeBorder": "#d4a574",
+    "tab.inactiveBackground": "#362a1d",
+    "tab.inactiveForeground": "#6b5d4f",
+    "tab.border": "#4a382280",
+    "breadcrumb.foreground": "#a6896b",
+    "breadcrumb.background": "#2a1f16",
+    "breadcrumb.focusForeground": "#e8d7c3",
+    "breadcrumb.activeSelectionForeground": "#d4a574",
+    "breadcrumbPicker.background": "#362a1d"
+  },
+  "tokenColors": [
+    {
+      "name": "Comment - Archaeological notation",
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": {
+        "foreground": "#6b5d4f",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "name": "Keyword - Temporal markers",
+      "scope": ["keyword", "storage.type", "storage.modifier"],
+      "settings": {
+        "foreground": "#d4a574",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "name": "String - Ancient text",
+      "scope": ["string", "string.quoted"],
+      "settings": {
+        "foreground": "#c49060"
+      }
+    },
+    {
+      "name": "Number - Temporal coordinates",
+      "scope": ["constant.numeric"],
+      "settings": {
+        "foreground": "#dda15e"
+      }
+    },
+    {
+      "name": "Function - Excavation tools",
+      "scope": ["entity.name.function", "support.function"],
+      "settings": {
+        "foreground": "#f5ead6",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "name": "Class - Artifact classification",
+      "scope": ["entity.name.class", "entity.name.type"],
+      "settings": {
+        "foreground": "#e8d7c3",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "name": "Variable - Fossil data",
+      "scope": ["variable", "support.variable"],
+      "settings": {
+        "foreground": "#a6896b"
+      }
+    },
+    {
+      "name": "Constant - Preserved values",
+      "scope": ["constant", "support.constant"],
+      "settings": {
+        "foreground": "#dda15e"
+      }
+    },
+    {
+      "name": "Operator - Stratigraphic relations",
+      "scope": ["keyword.operator"],
+      "settings": {
+        "foreground": "#8b7355"
+      }
+    },
+    {
+      "name": "Tag - Temporal markers",
+      "scope": ["entity.name.tag"],
+      "settings": {
+        "foreground": "#d4a574"
+      }
+    },
+    {
+      "name": "Attribute - Artifact properties",
+      "scope": ["entity.other.attribute-name"],
+      "settings": {
+        "foreground": "#c49060"
+      }
+    },
+    {
+      "name": "Type - Sedimentary classification",
+      "scope": ["support.type", "entity.name.type"],
+      "settings": {
+        "foreground": "#74a5d4"
+      }
+    },
+    {
+      "name": "Import - Archaeological cross-reference",
+      "scope": ["keyword.control.import", "keyword.control.export"],
+      "settings": {
+        "foreground": "#d4a574",
+        "fontStyle": "italic"
+      }
+    }
+  ]
+}

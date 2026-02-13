@@ -12,7 +12,10 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
-    "slice": "cd packages/proof-of-concept && bun run src/thin-slice.ts"
+    "slice": "cd packages/proof-of-concept && bun run src/thin-slice.ts",
+    "launch": "bun run scripts/launch-workspace.ts",
+    "launch:dev": "bun run scripts/launch-workspace.ts --dev",
+    "launch:list": "bun run scripts/launch-workspace.ts --list"
   },
   "devDependencies": {
     "turbo": "^2.3.3",

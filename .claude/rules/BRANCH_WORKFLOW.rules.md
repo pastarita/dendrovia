@@ -4,6 +4,36 @@
 
 ---
 
+## 0. Branch-First Development (MANDATORY)
+
+**NEVER commit directly to `main` or `master`.** All work — including single-file changes, documentation updates, and configuration tweaks — MUST happen on a feature branch.
+
+### Protocol
+
+1. **Before starting any work**, create a feature branch:
+   ```bash
+   git checkout -b {type}/{short-description}
+   ```
+2. Commit all changes to the feature branch
+3. Push the feature branch to origin
+4. Create a PR for merge to main
+
+### This rule applies to:
+- Human developers
+- AI assistants (Claude Code, Cursor, etc.)
+- CI/CD automation
+- Hotfixes (use `fix/` prefix)
+
+### Enforcement
+- `.husky/pre-push` **blocks** pushes to main/master (Castle Walls Gate 1)
+- Tier 1 policy engine **blocks** `git push origin main` (deterministic deny)
+- This rule is referenced in `CLAUDE.md` under Conventions
+
+### No Exceptions
+There is no bypass for this rule. If commits land on main locally by accident, cherry-pick them to a feature branch before pushing.
+
+---
+
 ## 1. Branch Naming
 
 ### Convention

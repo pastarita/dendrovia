@@ -163,6 +163,16 @@ Setup guide: `docs/governance/CASTLE_WALLS_CODEBASE_CONTEXT_SYSTEM_SETUP.md`
 
 ## Conventions
 
+### Branch-First Development (MANDATORY)
+
+**NEVER commit directly to `main`.** All work must happen on a feature branch. Create one before starting any task:
+
+```bash
+git checkout -b {type}/{short-description}
+```
+
+Push the feature branch, then create a PR. The pre-push hook and Tier 1 policy engine both block pushes to main. See `.claude/rules/BRANCH_WORKFLOW.rules.md` for full protocol.
+
 ### Commit Messages
 
 Use conventional commits: `{type}({scope}): {subject}`

@@ -37,6 +37,8 @@ export interface CodeReaderState {
   filePath: string | null;
   content: string | null;
   language: string;
+  loading: boolean;
+  error: string | null;
 }
 
 export interface OculusState {
@@ -102,6 +104,9 @@ export interface OculusActions {
   setHotspots: (hotspots: Hotspot[]) => void;
   openCodeReader: (filePath: string, content: string, language: string) => void;
   closeCodeReader: () => void;
+  setCodeContent: (content: string) => void;
+  setCodeLoading: (loading: boolean) => void;
+  setCodeError: (error: string | null) => void;
   setMillerSelection: (selection: string[]) => void;
 
   // Camera
@@ -140,7 +145,7 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   topology: null,
   hotspots: [],
-  codeReader: { filePath: null, content: null, language: 'typescript' },
+  codeReader: { filePath: null, content: null, language: 'typescript', loading: false, error: null },
   millerSelection: [],
 
   isUiHovered: false,
@@ -220,14 +225,35 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   openCodeReader: (filePath, content, language) =>
     set({
-      codeReader: { filePath, content, language },
+      codeReader: {
+        filePath,
+        content: content || null,
+        language,
+        loading: !content,
+        error: null,
+      },
       activePanel: 'code-reader',
     }),
 
   closeCodeReader: () =>
     set((s) => ({
-      codeReader: { filePath: null, content: null, language: 'typescript' },
+      codeReader: { filePath: null, content: null, language: 'typescript', loading: false, error: null },
       activePanel: s.previousPanel !== 'code-reader' ? s.previousPanel : 'none',
+    })),
+
+  setCodeContent: (content) =>
+    set((s) => ({
+      codeReader: { ...s.codeReader, content, loading: false, error: null },
+    })),
+
+  setCodeLoading: (loading) =>
+    set((s) => ({
+      codeReader: { ...s.codeReader, loading },
+    })),
+
+  setCodeError: (error) =>
+    set((s) => ({
+      codeReader: { ...s.codeReader, error, loading: false },
     })),
 
   setMillerSelection: (selection) => set({ millerSelection: selection }),

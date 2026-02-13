@@ -30,6 +30,7 @@ export { BattleUI } from './components/BattleUI';
 export { QuestLog } from './components/QuestLog';
 export { MillerColumns } from './components/MillerColumns';
 export { CodeReader } from './components/CodeReader';
+export type { CodeReaderProps } from './components/CodeReader';
 export { FalconModeOverlay } from './components/FalconModeOverlay';
 export { Billboard3D } from './components/Billboard3D';
 export type { Billboard3DProps } from './components/Billboard3D';
@@ -55,3 +56,5 @@ export type {
 export { useInputCapture, useIsUiHovered } from './hooks/useInputCapture';
 export { useEventSubscriptions } from './hooks/useEventSubscriptions';
 export { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+export { useCodeLoader } from './hooks/useCodeLoader';
+export type { CodeLoaderOptions } from './hooks/useCodeLoader';

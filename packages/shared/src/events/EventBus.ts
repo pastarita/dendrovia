@@ -101,6 +101,16 @@ export const GameEvents = {
   COMBAT_STARTED: 'combat:started',
   COMBAT_ENDED: 'combat:ended',
 
+  // LUDUS combat granularity
+  COMBAT_TURN_START: 'combat:turn:start',
+  COMBAT_TURN_END: 'combat:turn:end',
+  SPELL_RESOLVED: 'spell:resolved',
+  STATUS_EFFECT_APPLIED: 'status:applied',
+  STATUS_EFFECT_EXPIRED: 'status:expired',
+  EXPERIENCE_GAINED: 'experience:gained',
+  LEVEL_UP: 'level:up',
+  LOOT_DROPPED: 'loot:dropped',
+
   // OCULUS → LUDUS (User actions)
   SPELL_CAST: 'spell:cast',
   ITEM_USED: 'item:used',
@@ -158,6 +168,78 @@ export interface SpellCastEvent {
   spellId: string;
   targetId?: string;
   casterId: string;
+}
+
+export interface CombatTurnEvent {
+  turn: number;
+  phase: 'player' | 'enemy';
+}
+
+export interface SpellResolvedEvent {
+  spellId: string;
+  casterId: string;
+  targetId: string;
+  effectType: string;
+  value: number;
+}
+
+export interface StatusEffectEvent {
+  targetId: string;
+  effectId: string;
+  effectType: string;
+  remainingTurns: number;
+}
+
+export interface ExperienceGainedEvent {
+  characterId: string;
+  amount: number;
+  totalExperience: number;
+}
+
+export interface LevelUpEvent {
+  characterId: string;
+  newLevel: number;
+  statChanges: Record<string, number>;
+}
+
+export interface LootDroppedEvent {
+  monsterId: string;
+  items: Array<{ itemId: string; name: string }>;
+}
+
+export interface DamageDealtEvent {
+  attackerId: string;
+  targetId: string;
+  damage: number;
+  isCritical: boolean;
+  element: string;
+}
+
+export interface CombatStartedEvent {
+  monsterId: string;
+  monsterName: string;
+  monsterType: string;
+  severity: number;
+}
+
+export interface CombatEndedEvent {
+  outcome: 'victory' | 'defeat';
+  turns: number;
+  xpGained?: number;
+}
+
+export interface HealthChangedEvent {
+  entityId: string;
+  current: number;
+  max: number;
+  delta: number;
+}
+
+export interface ManaChangedEvent {
+  entityId: string;
+  current: number;
+  max: number;
+  delta: number;
 }
 
 // Global singleton (lazy initialization)

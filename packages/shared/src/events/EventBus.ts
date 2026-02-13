@@ -112,6 +112,7 @@ export const GameEvents = {
   // IMAGINARIUM → ARCHITECTUS (Build-time events)
   SHADERS_COMPILED: 'shaders:compiled',
   PALETTE_GENERATED: 'palette:generated',
+  MYCOLOGY_CATALOGED: 'mycology:cataloged',
 
   // OPERATUS → All (Infrastructure events)
   ASSETS_LOADED: 'assets:loaded',

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- OCULUS STRUCTURAL INSIGNIA: The Navigation Iris Portal -->
+  <!-- Flow: 3D world + Code → UI layout → HUD overlays → Readable context -->
+
+  <defs>
+    <!-- Sclera gradient -->
+    <radialGradient id="scleraGrad" cx="0.3" cy="0.3">
+      <stop offset="0%" stop-color="#fff5ed"/>
+      <stop offset="50%" stop-color="#ffd4b8"/>
+      <stop offset="100%" stop-color="#f5a97f"/>
+    </radialGradient>
+
+    <!-- Iris gradient -->
+    <radialGradient id="irisGrad" cx="0.35" cy="0.35">
+      <stop offset="0%" stop-color="#ffd4b8"/>
+      <stop offset="40%" stop-color="#f5a97f"/>
+      <stop offset="100%" stop-color="#e89b6f"/>
+    </radialGradient>
+
+    <!-- Pupil depth -->
+    <radialGradient id="pupilDepth" cx="0.3" cy="0.3">
+      <stop offset="0%" stop-color="#7fa9f5" stop-opacity="0.3"/>
+      <stop offset="60%" stop-color="#5f3d2d"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+
+    <!-- HUD panel gradient -->
+    <linearGradient id="hudPanel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5a97f" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#e89b6f" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- LAYER 1: OUTER EYE STRUCTURE -->
+  <g id="eye-structure">
+    <!-- Sclera (observational boundary) -->
+    <ellipse cx="50" cy="50" rx="35" ry="26" fill="url(#scleraGrad)"/>
+
+    <!-- Subtle veins (UI connection lines) -->
+    <g stroke="#e89b6f" stroke-width="0.3" opacity="0.2" fill="none">
+      <path d="M50,50 Q45,35 40,30"/>
+      <path d="M50,50 Q55,35 60,30"/>
+      <path d="M50,50 Q45,65 40,70"/>
+      <path d="M50,50 Q55,65 60,70"/>
+    </g>
+
+    <!-- Eyelid curves -->
+    <path d="M15,50 Q50,28 85,50" stroke="#e89b6f" stroke-width="2" fill="none" opacity="0.6"/>
+    <path d="M15,50 Q50,70 85,50" stroke="#e89b6f" stroke-width="1.5" fill="none" opacity="0.5"/>
+  </g>
+
+  <!-- LAYER 2: HEXAGONAL IRIS (UI grid layout) -->
+  <g id="iris-grid">
+    <!-- Iris base -->
+    <circle cx="50" cy="50" r="18" fill="url(#irisGrad)"/>
+
+    <!-- 24 hexagonal cells (2 rings) -->
+    <!-- Inner ring (6 hexagons) -->
+    <g fill="none" stroke="#e89b6f" stroke-width="0.5" opacity="0.4">
+      <polygon points="50,38 53,40 53,44 50,46 47,44 47,40"/>
+      <polygon points="53,44 56,46 56,50 53,52 50,50 50,46"/>
+      <polygon points="53,52 56,54 56,58 53,60 50,56 50,52"/>
+      <polygon points="50,56 47,58 44,56 44,52 47,50 50,52"/>
+      <polygon points="47,50 44,48 44,44 47,42 50,44 50,48"/>
+      <polygon points="50,44 53,42 56,44 56,48 53,50 50,46"/>
+    </g>
+
+    <!-- Outer ring (12 hexagons - partial) -->
+    <g fill="none" stroke="#d88957" stroke-width="0.4" opacity="0.3">
+      <polygon points="50,32 54,35 54,41 50,44 46,41 46,35"/>
+      <polygon points="58,38 62,41 62,47 58,50 54,47 54,41"/>
+      <polygon points="62,50 66,53 66,59 62,62 58,59 58,53"/>
+      <polygon points="50,65 46,62 42,65 42,59 46,56 50,59"/>
+      <polygon points="38,50 42,47 42,41 38,38 34,41 34,47"/>
+    </g>
+
+    <!-- Grid merge lines (adaptive layout) -->
+    <line x1="50" y1="32" x2="50" y2="68" stroke="#f5a97f" stroke-width="0.3" opacity="0.3"/>
+    <line x1="32" y1="50" x2="68" y2="50" stroke="#f5a97f" stroke-width="0.3" opacity="0.3"/>
+  </g>
+
+  <!-- LAYER 3: PUPIL (portal to code space) -->
+  <g id="pupil-portal">
+    <!-- Pupil depth -->
+    <circle cx="50" cy="50" r="10" fill="url(#pupilDepth)"/>
+
+    <!-- Miller Columns inside pupil (3 vertical columns) -->
+    <g opacity="0.6">
+      <!-- Column 1: Directory list -->
+      <rect x="42" y="44" width="2.5" height="12" rx="0.3" fill="#7fa9f5" opacity="0.5"/>
+      <rect x="42" y="45" width="2.5" height="2" fill="#7fa9f5"/>
+      <rect x="42" y="48" width="2.5" height="1.5" fill="#7fa9f5" opacity="0.7"/>
+      <rect x="42" y="50" width="2.5" height="1.5" fill="#7fa9f5" opacity="0.7"/>
+
+      <!-- Column 2: File list -->
+      <rect x="46" y="44" width="2.5" height="12" rx="0.3" fill="#7fa9f5" opacity="0.5"/>
+      <rect x="46" y="47" width="2.5" height="2" fill="#7fa9f5"/>
+      <rect x="46" y="50" width="2.5" height="1.5" fill="#7fa9f5" opacity="0.7"/>
+
+      <!-- Column 3: Code preview -->
+      <rect x="50" y="44" width="2.5" height="12" rx="0.3" fill="#7fa9f5" opacity="0.5"/>
+      <rect x="50" y="46" width="2.5" height="1" fill="#7fa9f5" opacity="0.7"/>
+      <rect x="50" y="48" width="2.5" height="0.8" fill="#7fa9f5" opacity="0.7"/>
+      <rect x="50" y="50" width="2.5" height="0.8" fill="#7fa9f5" opacity="0.7"/>
+      <rect x="50" y="52" width="2.5" height="0.8" fill="#7fa9f5" opacity="0.7"/>
+    </g>
+
+    <!-- Portal edge -->
+    <circle cx="50" cy="50" r="10" fill="none" stroke="#5f3d2d" stroke-width="1"/>
+
+    <!-- Lens reflection -->
+    <circle cx="47" cy="47" r="3" fill="#7fa9f5" opacity="0.4"/>
+    <circle cx="46" cy="46" r="1.5" fill="#fff5ed"/>
+  </g>
+
+  <!-- LAYER 4: 12 RADIAL BRANCHES (navigation graph) -->
+  <g id="navigation-spokes" stroke="#f5a97f" stroke-width="0.8" opacity="0.3">
+    <!-- Cardinal directions -->
+    <line x1="50" y1="50" x2="50" y2="24"/>
+    <line x1="50" y1="50" x2="68" y2="50"/>
+    <line x1="50" y1="50" x2="50" y2="76"/>
+    <line x1="50" y1="50" x2="32" y2="50"/>
+
+    <!-- Intercardinals -->
+    <line x1="50" y1="50" x2="63" y2="32"/>
+    <line x1="50" y1="50" x2="68" y2="63"/>
+    <line x1="50" y1="50" x2="37" y2="68"/>
+    <line x1="50" y1="50" x2="32" y2="37"/>
+
+    <!-- Secondary -->
+    <line x1="50" y1="50" x2="59" y2="28"/>
+    <line x1="50" y1="50" x2="41" y2="28"/>
+    <line x1="50" y1="50" x2="59" y2="72"/>
+    <line x1="50" y1="50" x2="41" y2="72"/>
+  </g>
+
+  <!-- LAYER 5: 8 CARDINAL INFORMATION NODES (HUD elements) -->
+  <g id="info-nodes">
+    <!-- North: Quest log -->
+    <rect x="45" y="20" width="10" height="4" rx="1" fill="url(#hudPanel)"/>
+    <text x="50" y="23" font-size="2" fill="#5f3d2d" text-anchor="middle">QUEST</text>
+
+    <!-- East: Minimap -->
+    <rect x="72" y="47" width="8" height="6" rx="1" fill="url(#hudPanel)"/>
+    <circle cx="76" cy="50" r="1" fill="#7fa9f5"/>
+    <path d="M74,49 L76,47 L78,49" stroke="#7fa9f5" stroke-width="0.3" fill="none"/>
+
+    <!-- South: Status bar -->
+    <rect x="42" y="78" width="16" height="3" rx="1" fill="url(#hudPanel)"/>
+    <rect x="43" y="79" width="7" height="1" rx="0.5" fill="#90ee90"/>
+    <rect x="51" y="79" width="6" height="1" rx="0.5" fill="#81c9b8"/>
+
+    <!-- West: Spell cooldowns -->
+    <g transform="translate(20, 50)">
+      <circle cx="0" cy="0" r="3" fill="url(#hudPanel)"/>
+      <path d="M0,-2 A2,2 0 0,1 0,2" stroke="#5ff59f" stroke-width="1.5" fill="none"/>
+    </g>
+
+    <!-- NE: Notification -->
+    <circle cx="68" cy="32" r="2" fill="#f5a97f" opacity="0.6"/>
+    <text x="68" y="32.5" font-size="2" fill="#5f3d2d" text-anchor="middle">!</text>
+
+    <!-- SE: Context menu -->
+    <rect x="66" y="65" width="6" height="8" rx="0.5" fill="url(#hudPanel)" opacity="0.5"/>
+    <line x1="67" y1="67" x2="71" y2="67" stroke="#5f3d2d" stroke-width="0.3"/>
+    <line x1="67" y1="69" x2="71" y2="69" stroke="#5f3d2d" stroke-width="0.3"/>
+    <line x1="67" y1="71" x2="71" y2="71" stroke="#5f3d2d" stroke-width="0.3"/>
+
+    <!-- SW: Breadcrumb -->
+    <text x="32" y="69" font-size="1.8" fill="#f5a97f" opacity="0.6">src/ui/</text>
+
+    <!-- NW: Tab indicator -->
+    <rect x="29" y="30" width="5" height="2" rx="0.5" fill="url(#hudPanel)"/>
+    <text x="31.5" y="31.5" font-size="1.5" fill="#5f3d2d">App</text>
+  </g>
+
+  <!-- LAYER 6: 4 FOCUS RINGS (depth of field) -->
+  <g id="focus-rings" fill="none" stroke="#f5c27f" opacity="0.3">
+    <circle cx="50" cy="50" r="22" stroke-width="0.5"/>
+    <circle cx="50" cy="50" r="28" stroke-width="0.4"/>
+    <circle cx="50" cy="50" r="34" stroke-width="0.3"/>
+    <circle cx="50" cy="50" r="40" stroke-width="0.2"/>
+  </g>
+
+  <!-- LAYER 7: ATTENTION PULSE MARKERS -->
+  <g fill="#ffb366" opacity="0.4">
+    <circle cx="50" cy="10" r="1.2"/>
+    <circle cx="90" cy="50" r="1.2"/>
+    <circle cx="50" cy="90" r="1.2"/>
+    <circle cx="10" cy="50" r="1.2"/>
+  </g>
+
+  <!-- Connection lines from nodes to center -->
+  <g stroke="#7fa9f5" stroke-width="0.3" opacity="0.2" stroke-dasharray="1,1">
+    <line x1="50" y1="24" x2="50" y2="40"/>
+    <line x1="68" y1="50" x2="60" y2="50"/>
+    <line x1="50" y1="76" x2="50" y2="60"/>
+    <line x1="32" y1="50" x2="40" y2="50"/>
+  </g>
+
+  <!-- Title -->
+  <text x="50" y="97" font-size="4" fill="#f5a97f" text-anchor="middle" font-weight="bold">OCULUS</text>
+</svg>

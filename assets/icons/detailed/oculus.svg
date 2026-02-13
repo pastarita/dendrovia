@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- OCULUS DETAILED - The Interface: "Vision structured as navigable information"
+       64x64px+ optimized | 8-12 colors | 40-80 paths | Maximum symbolic richness
+       Structural concept: Navigation Iris Portal (eye anatomy with Miller columns inside pupil)
+       Ref: PILLAR_THEMATIC_SCHEMA.md (OCULUS PillarTheme - full specification)
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md (The Navigation Iris Portal - structural diagram)
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md (ellipses, hexagons, concentric frames)
+       Ref: OCULUS_iterations.md (detailed SVG pseudocode & gradient strategy) -->
+
+  <defs>
+    <!-- Outer awareness glow (ambient perception field - Ref: extended awareness) -->
+    <radialGradient id="oc-d-glow">
+      <stop offset="0%" stop-color="#ffb366"/>
+      <stop offset="40%" stop-color="#f5a97f"/>
+      <stop offset="100%" stop-color="#f5a97f" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Sclera gradient: pure clarity center to peach edge (Ref: OCULUS highlight→accent→midtone) -->
+    <radialGradient id="oc-d-sclera">
+      <stop offset="0%" stop-color="#fff5ed"/>
+      <stop offset="45%" stop-color="#ffd4b8"/>
+      <stop offset="100%" stop-color="#e89b6f"/>
+    </radialGradient>
+
+    <!-- Complex iris gradient (4-stop: inner light → outer deep - Ref: OCULUS_iterations gradient strategy) -->
+    <radialGradient id="oc-d-iris">
+      <stop offset="0%" stop-color="#ffd4b8"/>
+      <stop offset="30%" stop-color="#f5a97f"/>
+      <stop offset="70%" stop-color="#e89b6f"/>
+      <stop offset="100%" stop-color="#d88957"/>
+    </radialGradient>
+
+    <!-- Pupil depth gradient (3-stop with blue info reflection - Ref: complement #7fa9f5) -->
+    <radialGradient id="oc-d-pupil" cx="0.4" cy="0.4">
+      <stop offset="0%" stop-color="#7fa9f5" stop-opacity="0.25"/>
+      <stop offset="40%" stop-color="#5f3d2d"/>
+      <stop offset="100%" stop-color="#0d0705"/>
+    </radialGradient>
+
+    <!-- Eyelid top gradient (shadow at corners, bright center - Ref: eyelidTopGrad) -->
+    <linearGradient id="oc-d-lid-top">
+      <stop offset="0%" stop-color="#5f3d2d"/>
+      <stop offset="25%" stop-color="#d88957"/>
+      <stop offset="50%" stop-color="#e89b6f"/>
+      <stop offset="75%" stop-color="#d88957"/>
+      <stop offset="100%" stop-color="#5f3d2d"/>
+    </linearGradient>
+
+    <!-- Eyelid bottom gradient (softer) -->
+    <linearGradient id="oc-d-lid-bot">
+      <stop offset="0%" stop-color="#9d7357"/>
+      <stop offset="50%" stop-color="#d88957"/>
+      <stop offset="100%" stop-color="#9d7357"/>
+    </linearGradient>
+
+    <!-- Eyelid shadow fill gradient (vertical fade) -->
+    <linearGradient id="oc-d-lid-shadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5f3d2d"/>
+      <stop offset="100%" stop-color="#5f3d2d" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Hex cell gradient A (warm) -->
+    <radialGradient id="oc-d-cellA">
+      <stop offset="0%" stop-color="#f5c27f"/>
+      <stop offset="100%" stop-color="#e89b6f"/>
+    </radialGradient>
+
+    <!-- Hex cell gradient B (deep warm) -->
+    <radialGradient id="oc-d-cellB">
+      <stop offset="0%" stop-color="#ffd4b8"/>
+      <stop offset="100%" stop-color="#d88957"/>
+    </radialGradient>
+
+    <!-- Hex cell gradient C (analogous pink accent) -->
+    <radialGradient id="oc-d-cellC">
+      <stop offset="0%" stop-color="#f57f9b" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#d88957"/>
+    </radialGradient>
+
+    <!-- Lens reflection halo -->
+    <radialGradient id="oc-d-lens">
+      <stop offset="0%" stop-color="#fff5ed"/>
+      <stop offset="50%" stop-color="#ffd4b8"/>
+      <stop offset="100%" stop-color="#f5a97f" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Focus ring gradient stroke (circumferential fade) -->
+    <linearGradient id="oc-d-ring1">
+      <stop offset="0%" stop-color="#f5c27f"/>
+      <stop offset="50%" stop-color="#f5a97f"/>
+      <stop offset="100%" stop-color="#f5c27f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ====== LAYER 1: Outer awareness glow field ======
+       Ref: OCULUS ambient perception, extended awareness field -->
+  <ellipse cx="50" cy="50" rx="48" ry="38" fill="url(#oc-d-glow)" opacity="0.1"/>
+
+  <!-- ====== LAYER 2: Concentric focus rings (4 layers, varying opacity) ======
+       Ref: INSIGNIA "Focus Rings (Concentric) - 4 rings around pupil = depth of field"
+       Inner rings = sharp focus, outer rings = peripheral awareness -->
+  <circle cx="50" cy="50" r="44" stroke="url(#oc-d-ring1)" stroke-width="0.4" fill="none" opacity="0.15"/>
+  <circle cx="50" cy="50" r="38" stroke="#f5c27f" stroke-width="0.6" fill="none" opacity="0.35"/>
+  <circle cx="50" cy="50" r="33" stroke="#f5c27f" stroke-width="0.8" fill="none" opacity="0.25"/>
+  <circle cx="50" cy="50" r="28" stroke="#f5a97f" stroke-width="0.5" fill="none" opacity="0.12"/>
+
+  <!-- ====== LAYER 3: Attention pulse markers on outer ring ======
+       Ref: OCULUS_iterations "attention pulse indicators (small circular markers)" -->
+  <g fill="#ffb366" opacity="0.25">
+    <circle cx="50" cy="6" r="1.5"/>
+    <circle cx="94" cy="50" r="1.5"/>
+    <circle cx="50" cy="94" r="1.5"/>
+    <circle cx="6" cy="50" r="1.5"/>
+  </g>
+
+  <!-- ====== LAYER 4: Sclera (white of eye) with warm gradient ======
+       Ref: OCULUS texture = translucent, organic observation surface -->
+  <ellipse cx="50" cy="50" rx="38" ry="27" fill="url(#oc-d-sclera)"/>
+
+  <!-- ====== LAYER 5: Dendritic vein pattern in sclera ======
+       Ref: INSIGNIA "Subtle dendritic vein patterns in sclera (organic information flow)"
+       Each branch = organic data pathway (Dendrovian branching motif) -->
+  <g stroke="#e89b6f" stroke-width="0.25" opacity="0.13" fill="none" stroke-linecap="round">
+    <!-- Upper-left veins -->
+    <path d="M50,50 Q47,42 44,37 Q42,34 39,32"/>
+    <path d="M44,37 Q42,36 40,36"/>
+    <!-- Upper-right veins -->
+    <path d="M50,50 Q53,42 56,37 Q58,34 61,32"/>
+    <path d="M56,37 Q58,36 60,36"/>
+    <!-- Lower-left veins -->
+    <path d="M50,50 Q47,58 44,63 Q42,66 39,68"/>
+    <path d="M44,63 Q42,64 40,64"/>
+    <!-- Lower-right veins -->
+    <path d="M50,50 Q53,58 56,63 Q58,66 61,68"/>
+    <path d="M56,63 Q58,64 60,64"/>
+    <!-- Far lateral veins -->
+    <path d="M50,50 Q38,47 28,44"/>
+    <path d="M50,50 Q62,47 72,44"/>
+    <path d="M50,50 Q38,53 28,56"/>
+    <path d="M50,50 Q62,53 72,56"/>
+  </g>
+
+  <!-- ====== LAYER 6: Upper eyelid shadow gradient ======
+       Ref: depth suggestion through translucent layering -->
+  <path d="M12,44 Q50,37 88,44 L88,50 Q50,43 12,50 Z" fill="url(#oc-d-lid-shadow)" opacity="0.2"/>
+
+  <!-- ====== LAYER 7: Iris base with complex 4-stop gradient ======
+       Ref: OCULUS primary zone of structured perception -->
+  <circle cx="50" cy="50" r="19" fill="url(#oc-d-iris)"/>
+
+  <!-- ====== LAYER 8: Hexagonal iris cell pattern (24 hexagons in 2 rings) ======
+       Ref: INSIGNIA "24 hexagons (2 rings) = responsive UI grid"
+       Ref: OCULUS iconography "hexagonal iris (structured info cells)"
+       Inner ring: 6 hex cells (tighter, higher opacity)
+       Outer ring: 12 hex cells (wider, fading) with varied gradients -->
+  <g opacity="0.33">
+    <!-- Inner hex ring (6 cells around pupil - core UI panels) -->
+    <path d="M50,37 L54,40 L54,46 L50,49 L46,46 L46,40 Z" fill="url(#oc-d-cellA)"/>
+    <path d="M54,46 L58,49 L58,55 L54,58 L50,55 L50,49 Z" fill="url(#oc-d-cellB)"/>
+    <path d="M54,58 L58,61 L58,67 L54,70 L50,67 L50,61 Z" fill="url(#oc-d-cellA)"/>
+    <path d="M50,67 L46,70 L42,67 L42,61 L46,58 L50,61 Z" fill="url(#oc-d-cellB)"/>
+    <path d="M46,58 L42,55 L42,49 L46,46 L50,49 L50,55 Z" fill="url(#oc-d-cellA)"/>
+    <path d="M50,49 L54,46 L58,49 L58,55 L54,58 L50,55 Z" fill="url(#oc-d-cellC)" opacity="0.6"/>
+
+    <!-- Outer hex ring (12+ cells - extended information grid, fading outward) -->
+    <!-- Top sector -->
+    <path d="M50,31 L54,33 L54,37 L50,39 L46,37 L46,33 Z" fill="url(#oc-d-cellB)" opacity="0.5"/>
+    <path d="M54,33 L58,35 L58,39 L54,41 L50,39 L50,35 Z" fill="url(#oc-d-cellA)" opacity="0.4"/>
+    <path d="M46,33 L42,35 L42,39 L46,41 L50,39 L50,35 Z" fill="url(#oc-d-cellA)" opacity="0.4"/>
+    <!-- Right sector -->
+    <path d="M58,39 L62,42 L62,48 L58,50 L54,48 L54,42 Z" fill="url(#oc-d-cellB)" opacity="0.4"/>
+    <path d="M58,50 L62,53 L62,59 L58,61 L54,59 L54,53 Z" fill="url(#oc-d-cellA)" opacity="0.35"/>
+    <!-- Bottom sector -->
+    <path d="M54,67 L58,69 L58,73 L54,75 L50,73 L50,69 Z" fill="url(#oc-d-cellB)" opacity="0.35"/>
+    <path d="M50,73 L46,75 L42,73 L42,69 L46,67 L50,69 Z" fill="url(#oc-d-cellA)" opacity="0.3"/>
+    <path d="M46,67 L42,69 L38,67 L38,63 L42,61 L46,63 Z" fill="url(#oc-d-cellB)" opacity="0.3"/>
+    <!-- Left sector -->
+    <path d="M42,49 L38,47 L38,41 L42,39 L46,41 L46,47 Z" fill="url(#oc-d-cellA)" opacity="0.4"/>
+    <path d="M42,59 L38,57 L38,51 L42,49 L46,51 L46,57 Z" fill="url(#oc-d-cellB)" opacity="0.35"/>
+    <!-- Corners (subtle) -->
+    <path d="M58,35 L62,37 L62,41 L58,43 L54,41 L54,37 Z" fill="url(#oc-d-cellC)" opacity="0.25"/>
+    <path d="M42,35 L38,37 L38,41 L42,43 L46,41 L46,37 Z" fill="url(#oc-d-cellC)" opacity="0.25"/>
+  </g>
+
+  <!-- ====== LAYER 9: Miller column radial branches (12 lines from pupil) ======
+       Ref: INSIGNIA "12 Radial Branches = Navigation Graph"
+       Each spoke = context link (definition, reference, blame)
+       Shows how OCULUS networks related code -->
+  <g stroke="#e89b6f" stroke-width="0.45" opacity="0.22" stroke-linecap="round">
+    <line x1="50" y1="50" x2="50" y2="31"/>    <!-- N  (0 deg) -->
+    <line x1="50" y1="50" x2="59.5" y2="33.5"/> <!-- NNE (30 deg) -->
+    <line x1="50" y1="50" x2="66.5" y2="40.5"/> <!-- ENE (60 deg) -->
+    <line x1="50" y1="50" x2="69" y2="50"/>     <!-- E  (90 deg) -->
+    <line x1="50" y1="50" x2="66.5" y2="59.5"/> <!-- ESE (120 deg) -->
+    <line x1="50" y1="50" x2="59.5" y2="66.5"/> <!-- SSE (150 deg) -->
+    <line x1="50" y1="50" x2="50" y2="69"/>     <!-- S  (180 deg) -->
+    <line x1="50" y1="50" x2="40.5" y2="66.5"/> <!-- SSW (210 deg) -->
+    <line x1="50" y1="50" x2="33.5" y2="59.5"/> <!-- WSW (240 deg) -->
+    <line x1="50" y1="50" x2="31" y2="50"/>     <!-- W  (270 deg) -->
+    <line x1="50" y1="50" x2="33.5" y2="40.5"/> <!-- WNW (300 deg) -->
+    <line x1="50" y1="50" x2="40.5" y2="33.5"/> <!-- NNW (330 deg) -->
+  </g>
+
+  <!-- ====== LAYER 10: Information nodes at cardinal points (8 nodes) ======
+       Ref: INSIGNIA "4 major (N/E/S/W): Core HUD elements (always visible)"
+       Ref: INSIGNIA "4 minor (NE/SE/SW/NW): Contextual panels (modal dialogs)"
+       Nodes pulse with data updates (HP changes, quest progress) -->
+  <g>
+    <!-- Primary nodes (N/E/S/W) - core HUD: Quest log, Minimap, Health/Mana, Spell cooldowns -->
+    <circle cx="50" cy="31" r="2.2" fill="#7fa9f5" opacity="0.65"/>
+    <circle cx="69" cy="50" r="2.2" fill="#7fa9f5" opacity="0.65"/>
+    <circle cx="50" cy="69" r="2.2" fill="#7fa9f5" opacity="0.65"/>
+    <circle cx="31" cy="50" r="2.2" fill="#7fa9f5" opacity="0.65"/>
+    <!-- Node inner dots (data active indicators) -->
+    <circle cx="50" cy="31" r="0.8" fill="#fff5ed" opacity="0.7"/>
+    <circle cx="69" cy="50" r="0.8" fill="#fff5ed" opacity="0.7"/>
+    <circle cx="50" cy="69" r="0.8" fill="#fff5ed" opacity="0.7"/>
+    <circle cx="31" cy="50" r="0.8" fill="#fff5ed" opacity="0.7"/>
+
+    <!-- Secondary nodes (diagonals) - contextual: Inspector, Blame view, References, Definitions -->
+    <circle cx="59.5" cy="33.5" r="1.6" fill="#f5c27f" opacity="0.5"/>
+    <circle cx="66.5" cy="59.5" r="1.6" fill="#f5c27f" opacity="0.5"/>
+    <circle cx="40.5" cy="66.5" r="1.6" fill="#f5c27f" opacity="0.5"/>
+    <circle cx="33.5" cy="40.5" r="1.6" fill="#f5c27f" opacity="0.5"/>
+  </g>
+
+  <!-- ====== LAYER 11: Translucent UI overlay panels ======
+       Ref: INSIGNIA "Translucent UI Layer - all HUD elements have alpha transparency"
+       Shows 2D overlay on 3D world (OCULUS's domain)
+       These suggest the quest log, minimap, and status bar floating in perceptual space -->
+  <g opacity="0.12">
+    <!-- Quest log panel hint (North - upper left) -->
+    <rect x="18" y="24" width="16" height="9" rx="1.5" fill="#7fa9f5"/>
+    <line x1="20" y1="27" x2="32" y2="27" stroke="#fff5ed" stroke-width="0.3" opacity="0.5"/>
+    <line x1="20" y1="29" x2="30" y2="29" stroke="#fff5ed" stroke-width="0.3" opacity="0.4"/>
+    <line x1="20" y1="31" x2="28" y2="31" stroke="#fff5ed" stroke-width="0.3" opacity="0.3"/>
+    <!-- Minimap panel hint (North - upper right) -->
+    <rect x="66" y="24" width="16" height="9" rx="1.5" fill="#7fa9f5"/>
+    <circle cx="74" cy="28.5" r="3" stroke="#fff5ed" stroke-width="0.3" fill="none" opacity="0.4"/>
+    <!-- Status bar hint (South - bottom center) -->
+    <rect x="32" y="68" width="36" height="7" rx="1.5" fill="#7fa9f5"/>
+    <line x1="34" y1="71.5" x2="66" y2="71.5" stroke="#fff5ed" stroke-width="0.3" opacity="0.4"/>
+  </g>
+
+  <!-- ====== LAYER 12: Pupil with complex depth ======
+       Ref: INSIGNIA "Pupil = portal to code space"
+       Deep perceptual void with faint blue information reflection -->
+  <circle cx="50" cy="50" r="9" fill="url(#oc-d-pupil)"/>
+
+  <!-- ====== LAYER 13: Miller columns inside pupil (3 vertical columns) ======
+       Ref: INSIGNIA "Column 1: Directory list, Column 2: File list, Column 3: Code preview"
+       This IS the actual Mac Finder pattern OCULUS implements -->
+  <g opacity="0.45">
+    <!-- Column dividers (3 columns of progressive detail) -->
+    <line x1="46.5" y1="44" x2="46.5" y2="56" stroke="#7fa9f5" stroke-width="0.5"/>
+    <line x1="50" y1="43" x2="50" y2="57" stroke="#7fa9f5" stroke-width="0.5"/>
+    <line x1="53.5" y1="44" x2="53.5" y2="56" stroke="#7fa9f5" stroke-width="0.5"/>
+    <!-- Column content hints (tiny horizontal lines = file entries) -->
+    <g stroke="#7fa9f5" stroke-width="0.25" opacity="0.6">
+      <!-- Column 1 entries (directory names) -->
+      <line x1="43" y1="46" x2="46" y2="46"/>
+      <line x1="43" y1="47.5" x2="45.5" y2="47.5"/>
+      <line x1="43" y1="49" x2="46" y2="49"/>
+      <line x1="43" y1="50.5" x2="45" y2="50.5"/>
+      <line x1="43" y1="52" x2="46" y2="52"/>
+      <!-- Column 2 entries (file names) -->
+      <line x1="47.5" y1="46" x2="49.5" y2="46"/>
+      <line x1="47.5" y1="47.5" x2="49" y2="47.5"/>
+      <line x1="47.5" y1="49" x2="49.5" y2="49"/>
+      <line x1="47.5" y1="50.5" x2="49" y2="50.5"/>
+      <!-- Column 3 entries (code preview) -->
+      <line x1="51" y1="46" x2="56" y2="46"/>
+      <line x1="52" y1="47.5" x2="56.5" y2="47.5"/>
+      <line x1="51" y1="49" x2="55" y2="49"/>
+      <line x1="52" y1="50.5" x2="57" y2="50.5"/>
+      <line x1="51" y1="52" x2="55.5" y2="52"/>
+      <line x1="52" y1="53.5" x2="56" y2="53.5"/>
+    </g>
+    <!-- Active selection highlight in column 1 -->
+    <rect x="42.5" y="48.5" width="4" height="1.2" rx="0.3" fill="#ffb366" opacity="0.4"/>
+  </g>
+
+  <!-- ====== LAYER 14: Lens reflection (complex multi-layer) ======
+       Ref: OCULUS "reflection highlights (moment of clarity)"
+       Multi-layered specular creating depth and glossy eye surface -->
+  <circle cx="46" cy="45" r="4.5" fill="url(#oc-d-lens)" opacity="0.5"/>
+  <circle cx="46" cy="45" r="2.8" fill="#7fa9f5" opacity="0.35"/>
+  <circle cx="45.5" cy="44.5" r="1.8" fill="#fff5ed" opacity="0.85"/>
+  <circle cx="45" cy="44" r="0.9" fill="#ffffff"/>
+
+  <!-- ====== LAYER 15: Eyelid curves (detailed organic framing) ======
+       Ref: INSIGNIA "Upper lid: Tab bar (open files), Lower lid: Status bar (file info)"
+       Lids = persistent UI chrome (not modal) -->
+  <path d="M8,50 Q50,30 92,50"
+        stroke="url(#oc-d-lid-top)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M8,50 Q50,68 92,50"
+        stroke="url(#oc-d-lid-bot)" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+
+  <!-- ====== LAYER 16: Subtle eyelash suggestions (upper) ======
+       Fine ornamental detail visible at 64px+ (Ref: organic perception motif) -->
+  <g stroke="#5f3d2d" stroke-width="0.35" opacity="0.18" stroke-linecap="round">
+    <line x1="20" y1="39" x2="18" y2="35"/>
+    <line x1="28" y1="35" x2="27" y2="31"/>
+    <line x1="36" y1="32.5" x2="35.5" y2="28.5"/>
+    <line x1="44" y1="31" x2="44" y2="27"/>
+    <line x1="50" y1="30" x2="50" y2="26"/>
+    <line x1="56" y1="31" x2="56" y2="27"/>
+    <line x1="64" y1="32.5" x2="64.5" y2="28.5"/>
+    <line x1="72" y1="35" x2="73" y2="31"/>
+    <line x1="80" y1="39" x2="82" y2="35"/>
+  </g>
+
+  <!-- ====== LAYER 17: Inner iris ring accent (concentric depth) ======
+       Thin ring between iris and pupil showing structural boundary -->
+  <circle cx="50" cy="50" r="12" fill="none" stroke="#d88957" stroke-width="0.4" opacity="0.3"/>
+
+  <!-- ====== LAYER 18: Scroll/column indicators (tiny UI affordances) ======
+       Ref: OCULUS iconography details "tiny scroll indicators, column divider lines"
+       These suggest scrollability and navigation arrows -->
+  <g fill="#e89b6f" opacity="0.15">
+    <!-- Small chevrons at cardinal nodes suggesting expandability -->
+    <polygon points="50,28 48.5,26 51.5,26"/>  <!-- Up chevron at N node -->
+    <polygon points="72,50 74,48.5 74,51.5"/>  <!-- Right chevron at E node -->
+    <polygon points="50,72 48.5,74 51.5,74"/>  <!-- Down chevron at S node -->
+    <polygon points="28,50 26,48.5 26,51.5"/>  <!-- Left chevron at W node -->
+  </g>
+
+  <!-- ====== LAYER 19: Focal measurement markers ======
+       Ref: OCULUS iconography "focus state highlights, attention pulse animations"
+       Tiny tick marks on focus rings suggesting calibration/precision -->
+  <g stroke="#f5c27f" stroke-width="0.3" opacity="0.15">
+    <!-- Tick marks on inner focus ring (at 45-degree intervals) -->
+    <line x1="50" y1="17" x2="50" y2="19"/>
+    <line x1="73.3" y1="26.7" x2="71.9" y2="28.1"/>
+    <line x1="83" y1="50" x2="81" y2="50"/>
+    <line x1="73.3" y1="73.3" x2="71.9" y2="71.9"/>
+    <line x1="50" y1="83" x2="50" y2="81"/>
+    <line x1="26.7" y1="73.3" x2="28.1" y2="71.9"/>
+    <line x1="17" y1="50" x2="19" y2="50"/>
+    <line x1="26.7" y1="26.7" x2="28.1" y2="28.1"/>
+  </g>
+
+  <!-- ====== LAYER 20: Warm analogous accent glow on iris edge ======
+       Ref: OCULUS analogous palette #f57f9b (pink warmth in iris periphery) -->
+  <circle cx="50" cy="50" r="19" fill="none" stroke="#f57f9b" stroke-width="0.6" opacity="0.08"/>
+  <circle cx="50" cy="50" r="17" fill="none" stroke="#f5c27f" stroke-width="0.4" opacity="0.1"/>
+</svg>

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- CHRONOS STRUCTURAL INSIGNIA: The Temporal Compression Engine -->
+  <!-- Vertical flow: Chaotic input (top) → Stratified processing → Clean DAG output (bottom) -->
+
+  <defs>
+    <!-- Chaos gradient (input entropy) -->
+    <linearGradient id="chaosGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a574" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#8b7355"/>
+    </linearGradient>
+
+    <!-- Compression gradient (stratification) -->
+    <linearGradient id="compressionGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a574"/>
+      <stop offset="25%" stop-color="#b89464"/>
+      <stop offset="50%" stop-color="#9c8358"/>
+      <stop offset="75%" stop-color="#8b7355"/>
+      <stop offset="100%" stop-color="#6a5840"/>
+    </linearGradient>
+
+    <!-- Output clarity gradient -->
+    <linearGradient id="outputGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6a5840"/>
+      <stop offset="100%" stop-color="#4a3822"/>
+    </linearGradient>
+
+    <!-- Bioluminescent parse energy -->
+    <radialGradient id="parseGlow" cx="0.5" cy="0.5">
+      <stop offset="0%" stop-color="#7fa9f5" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#7fa9f5" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#7fa9f5" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Noise pattern for chaos -->
+    <pattern id="noisePattern" patternUnits="userSpaceOnUse" width="4" height="4">
+      <rect width="4" height="4" fill="#d4a574" opacity="0.1"/>
+      <circle cx="1" cy="1" r="0.5" fill="#4a3822" opacity="0.3"/>
+      <circle cx="3" cy="3" r="0.5" fill="#4a3822" opacity="0.3"/>
+    </pattern>
+
+    <!-- Stratification texture -->
+    <pattern id="strataPattern" patternUnits="userSpaceOnUse" width="100" height="2">
+      <line x1="0" y1="0" x2="100" y2="0" stroke="#4a3822" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- LAYER 1: INPUT CHAOS (top 15%) -->
+  <g id="input-layer">
+    <!-- Chaotic background -->
+    <rect x="10" y="5" width="80" height="12" fill="url(#chaosGrad)"/>
+    <rect x="10" y="5" width="80" height="12" fill="url(#noisePattern)"/>
+
+    <!-- Scattered commit points (organic distribution) -->
+    <circle cx="15" cy="8" r="1" fill="#4a3822" opacity="0.6"/>
+    <circle cx="28" cy="11" r="0.8" fill="#4a3822" opacity="0.5"/>
+    <circle cx="42" cy="9" r="1.2" fill="#4a3822" opacity="0.7"/>
+    <circle cx="55" cy="7" r="0.9" fill="#4a3822" opacity="0.6"/>
+    <circle cx="68" cy="13" r="1.1" fill="#4a3822" opacity="0.5"/>
+    <circle cx="82" cy="10" r="0.7" fill="#4a3822" opacity="0.6"/>
+
+    <!-- Jagged timeline (unstructured) -->
+    <path d="M12,14 L18,12 L25,15 L32,11 L40,14 L48,13 L56,16 L64,12 L72,15 L80,13 L88,14"
+          stroke="#4a3822" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+    <!-- Label -->
+    <text x="50" y="10" font-size="3" fill="#4a3822" text-anchor="middle" font-weight="bold">INPUT: CHAOS</text>
+  </g>
+
+  <!-- LAYER 2: COMPRESSION ZONE (middle 50%) -->
+  <g id="compression-zone">
+    <!-- 12 Stratification bands -->
+    <rect x="10" y="17" width="80" height="3.5" fill="#d4a574" opacity="0.9"/>
+    <rect x="10" y="20.5" width="80" height="3.5" fill="#c9a06e"/>
+    <rect x="10" y="24" width="80" height="3.5" fill="#b89464"/>
+    <rect x="10" y="27.5" width="80" height="3.5" fill="#a8885a"/>
+    <rect x="10" y="31" width="80" height="3.5" fill="#9c8358"/>
+    <rect x="10" y="34.5" width="80" height="3.5" fill="#8b7355"/>
+    <rect x="10" y="38" width="80" height="3.5" fill="#7d6850"/>
+    <rect x="10" y="41.5" width="80" height="3.5" fill="#6f5d4a"/>
+    <rect x="10" y="45" width="80" height="3.5" fill="#655345"/>
+    <rect x="10" y="48.5" width="80" height="3.5" fill="#5a4840"/>
+    <rect x="10" y="52" width="80" height="3.5" fill="#4f3e38"/>
+    <rect x="10" y="55.5" width="80" height="3.5" fill="#4a3822"/>
+
+    <!-- Stratum separators -->
+    <g stroke="#4a3822" stroke-width="0.3" opacity="0.5">
+      <line x1="10" y1="20.5" x2="90" y2="20.5"/>
+      <line x1="10" y1="24" x2="90" y2="24"/>
+      <line x1="10" y1="27.5" x2="90" y2="27.5"/>
+      <line x1="10" y1="31" x2="90" y2="31"/>
+      <line x1="10" y1="34.5" x2="90" y2="34.5"/>
+      <line x1="10" y1="38" x2="90" y2="38"/>
+      <line x1="10" y1="41.5" x2="90" y2="41.5"/>
+      <line x1="10" y1="45" x2="90" y2="45"/>
+      <line x1="10" y1="48.5" x2="90" y2="48.5"/>
+      <line x1="10" y1="52" x2="90" y2="52"/>
+      <line x1="10" y1="55.5" x2="90" y2="55.5"/>
+    </g>
+
+    <!-- Density increases downward (fossil compression) -->
+    <rect x="10" y="17" width="80" height="42" fill="url(#strataPattern)"/>
+
+    <!-- Labels for strata (time periods) -->
+    <text x="12" y="19" font-size="2" fill="#4a3822" opacity="0.6">Recent</text>
+    <text x="12" y="30" font-size="2" fill="#8b7355" opacity="0.6">Months</text>
+    <text x="12" y="42" font-size="2" fill="#d4a574" opacity="0.6">Years</text>
+    <text x="12" y="54" font-size="2" fill="#d4a574" opacity="0.6">Ancient</text>
+  </g>
+
+  <!-- LAYER 3: Y-FORK PARSER JUNCTION (central transition) -->
+  <g id="parser-junction">
+    <!-- Parse glow emanation -->
+    <ellipse cx="50" cy="60" rx="25" ry="15" fill="url(#parseGlow)"/>
+
+    <!-- Central trunk (pre-fork) -->
+    <rect x="48" y="55" width="4" height="8" fill="#6a5840" rx="2"/>
+
+    <!-- Y-Fork bifurcation -->
+    <path d="M50,63 L45,70 M50,63 L55,70"
+          stroke="#8b7355" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+    <!-- Fork nodes (decision points) -->
+    <circle cx="45" cy="70" r="2.5" fill="#7fa9f5" opacity="0.8"/>
+    <circle cx="55" cy="70" r="2.5" fill="#7fa9f5" opacity="0.8"/>
+    <circle cx="50" cy="63" r="3" fill="#7fa9f5"/>
+
+    <!-- Parse label -->
+    <text x="50" y="61" font-size="2.5" fill="#7fa9f5" text-anchor="middle" font-weight="bold">PARSE</text>
+  </g>
+
+  <!-- LAYER 4: TEMPORAL RINGS (normalization waves) -->
+  <g id="temporal-rings">
+    <!-- 8 concentric rings radiating from fork -->
+    <circle cx="50" cy="63" r="8" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.6"/>
+    <circle cx="50" cy="63" r="12" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.5"/>
+    <circle cx="50" cy="63" r="16" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.4"/>
+    <circle cx="50" cy="63" r="20" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.3"/>
+    <circle cx="50" cy="63" r="24" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.2"/>
+    <circle cx="50" cy="63" r="28" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.15"/>
+    <circle cx="50" cy="63" r="32" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.1"/>
+    <circle cx="50" cy="63" r="36" fill="none" stroke="#7fa9f5" stroke-width="0.5" opacity="0.05"/>
+  </g>
+
+  <!-- LAYER 5: OUTPUT DAG (bottom 25%) -->
+  <g id="output-layer">
+    <!-- Clean output zone -->
+    <rect x="10" y="75" width="80" height="20" fill="url(#outputGrad)"/>
+
+    <!-- Geometric precision (clean branches) -->
+    <path d="M45,75 L40,82 L38,88 M45,75 L42,85 M45,75 L45,90"
+          stroke="#8b7355" stroke-width="1.5" fill="none"/>
+    <path d="M55,75 L60,82 L62,88 M55,75 L58,85 M55,75 L55,90"
+          stroke="#8b7355" stroke-width="1.5" fill="none"/>
+
+    <!-- Output nodes (normalized graph) -->
+    <circle cx="38" cy="88" r="1.5" fill="#d4a574"/>
+    <circle cx="42" cy="85" r="1.5" fill="#d4a574"/>
+    <circle cx="45" cy="90" r="1.5" fill="#d4a574"/>
+    <circle cx="55" cy="90" r="1.5" fill="#d4a574"/>
+    <circle cx="58" cy="85" r="1.5" fill="#d4a574"/>
+    <circle cx="62" cy="88" r="1.5" fill="#d4a574"/>
+
+    <!-- Label -->
+    <text x="50" y="80" font-size="3" fill="#d4a574" text-anchor="middle" font-weight="bold">OUTPUT: DAG</text>
+  </g>
+
+  <!-- EDGE CONDITION: Incomplete archive (right edge deterioration) -->
+  <path d="M90,20 L92,25 L90,30 L93,35 L90,40 L92,45 L90,50 L93,55 L90,60"
+        stroke="#4a3822" stroke-width="2" fill="none" opacity="0.3" stroke-dasharray="2,3"/>
+
+  <!-- Flow direction indicators -->
+  <g fill="#7fa9f5" opacity="0.5">
+    <path d="M8,30 L10,28 L10,32 Z"/>
+    <path d="M8,50 L10,48 L10,52 Z"/>
+    <path d="M92,30 L90,28 L90,32 Z"/>
+    <path d="M92,50 L90,48 L90,52 Z"/>
+  </g>
+
+  <!-- Title -->
+  <text x="50" y="97" font-size="4" fill="#8b7355" text-anchor="middle" font-weight="bold">CHRONOS</text>
+</svg>

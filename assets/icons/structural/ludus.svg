@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- LUDUS STRUCTURAL INSIGNIA: The State Machine Game Board -->
+  <!-- Flow: Input events → State nodes → Logic evaluation → Output state -->
+
+  <defs>
+    <!-- Grid background -->
+    <pattern id="tacticalGrid" patternUnits="userSpaceOnUse" width="8" height="8">
+      <rect width="8" height="8" fill="none" stroke="#5fa876" stroke-width="0.3" opacity="0.2"/>
+    </pattern>
+
+    <!-- Active state glow -->
+    <radialGradient id="activeGlow" cx="0.5" cy="0.5">
+      <stop offset="0%" stop-color="#5ff59f"/>
+      <stop offset="50%" stop-color="#81c995" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#5fa876" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Energy flow gradient -->
+    <linearGradient id="flowGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#81c9b8" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#5ff59f"/>
+      <stop offset="100%" stop-color="#81c9b8" stop-opacity="0.3"/>
+    </linearGradient>
+
+    <!-- Controller gradient -->
+    <linearGradient id="controllerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b8e6c9"/>
+      <stop offset="50%" stop-color="#81c995"/>
+      <stop offset="100%" stop-color="#5fa876"/>
+    </linearGradient>
+  </defs>
+
+  <!-- LAYER 1: 8×8 TACTICAL GRID BACKGROUND -->
+  <g id="game-grid">
+    <rect x="10" y="10" width="80" height="80" fill="url(#tacticalGrid)"/>
+
+    <!-- Movement zones (highlighted valid moves) -->
+    <rect x="34" y="34" width="8" height="8" fill="#5ff59f" opacity="0.15"/>
+    <rect x="42" y="42" width="8" height="8" fill="#5ff59f" opacity="0.15"/>
+    <rect x="50" y="34" width="8" height="8" fill="#5ff59f" opacity="0.15"/>
+    <rect x="58" y="42" width="8" height="8" fill="#5ff59f" opacity="0.15"/>
+
+    <!-- Fog of war (edges) -->
+    <rect x="10" y="10" width="80" height="5" fill="#2d4d3a" opacity="0.3"/>
+    <rect x="10" y="85" width="80" height="5" fill="#2d4d3a" opacity="0.3"/>
+  </g>
+
+  <!-- LAYER 2: STATE MACHINE NODES (5 core states) -->
+  <g id="state-nodes">
+    <!-- Node 1: WaitingForInput (grey, dormant) -->
+    <circle cx="30" cy="50" r="5" fill="#648f6f" opacity="0.6"/>
+    <circle cx="30" cy="50" r="4" fill="#2d4d3a" opacity="0.3"/>
+    <text x="30" y="51" font-size="2" fill="#b8e6c9" text-anchor="middle">WAIT</text>
+
+    <!-- Node 2: PlayerTurn (green glow, ACTIVE) -->
+    <circle cx="50" cy="40" r="7" fill="url(#activeGlow)"/>
+    <circle cx="50" cy="40" r="6" fill="#5ff59f" opacity="0.9"/>
+    <circle cx="50" cy="40" r="5" fill="#81c995"/>
+    <text x="50" y="41" font-size="2.5" fill="#2d4d3a" text-anchor="middle" font-weight="bold">PLAY</text>
+
+    <!-- Node 3: EvalAction (yellow, processing) -->
+    <circle cx="70" cy="50" r="5" fill="#ffd700" opacity="0.6"/>
+    <circle cx="70" cy="50" r="4" fill="#ffa500" opacity="0.5"/>
+    <text x="70" y="51" font-size="2" fill="#2d4d3a" text-anchor="middle">EVAL</text>
+
+    <!-- Node 4: EnemyTurn (red, threat) -->
+    <circle cx="50" cy="60" r="5" fill="#ff6b6b" opacity="0.6"/>
+    <circle cx="50" cy="60" r="4" fill="#d63031" opacity="0.5"/>
+    <text x="50" y="61" font-size="2" fill="#2d4d3a" text-anchor="middle">FOE</text>
+
+    <!-- Node 5: Resolution (blue, state change) -->
+    <circle cx="30" cy="70" r="5" fill="#81c9b8" opacity="0.6"/>
+    <circle cx="30" cy="70" r="4" fill="#5fa876" opacity="0.5"/>
+    <text x="30" y="71" font-size="2" fill="#d4f5e3" text-anchor="middle">RESOLVE</text>
+  </g>
+
+  <!-- LAYER 3: STATE TRANSITIONS (directed edges) -->
+  <g id="transitions" stroke="#81c9b8" stroke-width="1.5" fill="none" opacity="0.6">
+    <!-- Wait → PlayerTurn -->
+    <path d="M35,48 L45,42" marker-end="url(#arrow)"/>
+
+    <!-- PlayerTurn → EvalAction -->
+    <path d="M57,42 L65,48" marker-end="url(#arrow)"/>
+
+    <!-- EvalAction → EnemyTurn -->
+    <path d="M68,55 L52,58" marker-end="url(#arrow)"/>
+
+    <!-- EnemyTurn → Resolution -->
+    <path d="M45,62 L35,68" marker-end="url(#arrow)"/>
+
+    <!-- Resolution → Wait (loop back) -->
+    <path d="M30,65 L30,55" marker-end="url(#arrow)"/>
+
+    <!-- Arrow marker -->
+    <defs>
+      <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+        <polygon points="0,0 6,3 0,6" fill="#81c9b8"/>
+      </marker>
+    </defs>
+  </g>
+
+  <!-- LAYER 4: DENDRITIC SKILL TREE (overlay) -->
+  <g id="skill-tree" stroke="#5fa876" stroke-width="1.2" opacity="0.4" fill="none">
+    <!-- Main trunk -->
+    <path d="M50,85 L50,70"/>
+
+    <!-- Y-fork branches -->
+    <path d="M50,70 L45,62"/>
+    <path d="M50,70 L55,62"/>
+
+    <!-- Secondary forks -->
+    <path d="M45,62 L42,55"/>
+    <path d="M45,62 L48,54"/>
+    <path d="M55,62 L52,54"/>
+    <path d="M55,62 L58,55"/>
+
+    <!-- Tertiary branches -->
+    <path d="M42,55 L40,48"/>
+    <path d="M48,54 L50,47"/>
+    <path d="M58,55 L60,48"/>
+  </g>
+
+  <!-- Skill nodes -->
+  <g id="skill-nodes">
+    <!-- Active (unlocked) -->
+    <circle cx="50" cy="70" r="2" fill="#5ff59f" opacity="0.8"/>
+    <circle cx="45" cy="62" r="1.8" fill="#5ff59f" opacity="0.7"/>
+    <circle cx="55" cy="62" r="1.8" fill="#5ff59f" opacity="0.7"/>
+
+    <!-- Dormant (locked) -->
+    <circle cx="42" cy="55" r="1.5" fill="#648f6f" opacity="0.6"/>
+    <circle cx="48" cy="54" r="1.5" fill="#648f6f" opacity="0.6"/>
+    <circle cx="52" cy="54" r="1.5" fill="#648f6f" opacity="0.6"/>
+    <circle cx="58" cy="55" r="1.5" fill="#648f6f" opacity="0.6"/>
+  </g>
+
+  <!-- LAYER 5: CONTROLLER (input device) -->
+  <g id="controller" transform="translate(50, 80)">
+    <!-- Body -->
+    <rect x="-15" y="-6" width="30" height="12" rx="3" fill="url(#controllerGrad)"/>
+
+    <!-- D-pad -->
+    <rect x="-12" y="-2" width="6" height="2" rx="1" fill="#5fa876"/>
+    <rect x="-10" y="-4" width="2" height="6" rx="1" fill="#5fa876"/>
+
+    <!-- Action buttons (diamond) -->
+    <circle cx="8" cy="-3" r="1.5" fill="#b8e6c9"/>
+    <circle cx="11" cy="0" r="1.5" fill="#b8e6c9"/>
+    <circle cx="8" cy="3" r="1.5" fill="#b8e6c9"/>
+    <circle cx="5" cy="0" r="1.5" fill="#b8e6c9"/>
+  </g>
+
+  <!-- LAYER 6: RESOURCE BARS (edges) -->
+  <g id="resource-bars">
+    <!-- HP bar (left) -->
+    <rect x="5" y="20" width="3" height="40" rx="1.5" fill="#2d4d3a" opacity="0.3"/>
+    <rect x="5" y="32" width="3" height="28" rx="1.5" fill="#95c981"/>
+    <text x="6.5" y="18" font-size="2.5" fill="#95c981" text-anchor="middle">HP</text>
+
+    <!-- Mana bar (right) -->
+    <rect x="92" y="20" width="3" height="40" rx="1.5" fill="#2d4d3a" opacity="0.3"/>
+    <rect x="92" y="24" width="3" height="36" rx="1.5" fill="#81c9b8"/>
+    <text x="93.5" y="18" font-size="2.5" fill="#81c9b8" text-anchor="middle">MP</text>
+  </g>
+
+  <!-- LAYER 7: TURN ORDER INDICATORS (top) -->
+  <g id="turn-order">
+    <!-- Current turn -->
+    <circle cx="35" cy="15" r="3" fill="#5ff59f" opacity="0.9"/>
+    <circle cx="35" cy="15" r="2.5" fill="#5ff59f"/>
+    <text x="35" y="16.5" font-size="3" fill="#2d4d3a" text-anchor="middle" font-weight="bold">1</text>
+
+    <!-- Next turn -->
+    <circle cx="45" cy="15" r="3" fill="#648f6f" opacity="0.6"/>
+    <text x="45" y="16.5" font-size="3" fill="#2d4d3a" text-anchor="middle">2</text>
+
+    <!-- Future turn -->
+    <circle cx="55" cy="15" r="3" fill="#648f6f" opacity="0.6"/>
+    <text x="55" y="16.5" font-size="3" fill="#2d4d3a" text-anchor="middle">3</text>
+  </g>
+
+  <!-- LAYER 8: DICE (RNG elements) -->
+  <g id="dice">
+    <!-- D20 (top right) -->
+    <g transform="translate(75, 20)">
+      <polygon points="0,-4 -3,0 -2,3 2,3 3,0" fill="#b8e6c9" opacity="0.7"/>
+      <text x="0" y="1" font-size="2.5" fill="#5fa876" text-anchor="middle" font-weight="bold">20</text>
+    </g>
+
+    <!-- D6 (bottom left) -->
+    <g transform="translate(20, 28) rotate(20)">
+      <rect x="-2.5" y="-2.5" width="5" height="5" fill="#b8e6c9" opacity="0.7" rx="0.5"/>
+      <circle cx="-1" cy="-1" r="0.4" fill="#5fa876"/>
+      <circle cx="0" cy="0" r="0.4" fill="#5fa876"/>
+      <circle cx="1" cy="1" r="0.4" fill="#5fa876"/>
+    </g>
+  </g>
+
+  <!-- LAYER 9: ENERGY FLOW LINES (interconnections) -->
+  <path d="M30,50 Q40,30 50,40 Q60,25 75,20"
+        stroke="url(#flowGrad)" stroke-width="2" fill="none" opacity="0.5"/>
+
+  <!-- Flow particles -->
+  <circle cx="38" cy="38" r="1" fill="#5ff59f" opacity="0.7"/>
+  <circle cx="52" cy="30" r="0.8" fill="#5ff59f" opacity="0.6"/>
+  <circle cx="65" cy="23" r="1.2" fill="#5ff59f" opacity="0.8"/>
+
+  <!-- Title -->
+  <text x="50" y="97" font-size="4" fill="#81c995" text-anchor="middle" font-weight="bold">LUDUS</text>
+</svg>

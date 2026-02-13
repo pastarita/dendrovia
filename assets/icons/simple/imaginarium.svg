@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- IMAGINARIUM SIMPLE (16x16 optimized) - The Distillation Apparatus
+       Ref: PILLAR_INSIGNIA_STRUCTURAL - "Distill Hallucination into Determinism"
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM - Geometric clarity, 2-3 colors, minimal paths
+       Layout: Horizontal pipeline flow (left input -> center prism -> right outputs)
+       Colors: #c6a0f6 (ethereal violet), #9b6dd8 (lavender), #e5d4ff (lilac)
+       Paths: 7 total (alembic, beam, prism, 3 rays = readable at 16px) -->
+
+  <g id="imaginarium-simple">
+
+    <!-- LEFT: Generation Chamber - Alembic flask (input hopper) -->
+    <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Raw prompts, reference chaos, unformed potential -->
+    <ellipse cx="22" cy="50" rx="8" ry="12" fill="#9b6dd8"/>
+
+    <!-- Input beam: white chaos light entering prism -->
+    <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Input beam (white chaos light enters) -->
+    <line x1="30" y1="50" x2="40" y2="50"
+          stroke="#e5d4ff" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- CENTER: Hexagonal Prism (prismatic separator) -->
+    <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Hexagonal geometry = computational structure -->
+    <!-- Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM - Hexagon: efficiency, natural packing -->
+    <polygon points="50,28 40,38 40,62 50,72 60,62 60,38"
+             fill="none" stroke="#c6a0f6" stroke-width="3"/>
+
+    <!-- RIGHT: 3 Refraction rays (Y-fork distribution, simplified from 7) -->
+    <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Rays terminate in collection wells -->
+    <!-- Ref: Cross-Pillar motif - Y-Fork Branching: Pipeline split -->
+    <line x1="60" y1="42" x2="82" y2="26"
+          stroke="#c6a0f6" stroke-width="3" stroke-linecap="round"/>
+    <line x1="60" y1="50" x2="85" y2="50"
+          stroke="#e5d4ff" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="60" y1="58" x2="82" y2="74"
+          stroke="#9b6dd8" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Output wells (3 distilled containers) -->
+    <circle cx="85" cy="26" r="4" fill="#c6a0f6"/>
+    <circle cx="88" cy="50" r="4.5" fill="#e5d4ff"/>
+    <circle cx="85" cy="74" r="4" fill="#9b6dd8"/>
+
+  </g>
+</svg>

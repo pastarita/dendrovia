@@ -1,0 +1,32 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- ARCHITECTUS SIMPLE: 16x16px optimized, 2-3 colors, 4-8 paths
+       Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM.md - Bold structural clarity, instant recognition
+       Ref: EMOJI_GRADE_PROMPTS.md - Fluted column (vertical, centered), 3 light beams, cube
+       Ref: PILLAR_INSIGNIA_STRUCTURAL.md - Lens system: SDF -> transformation -> screen
+       Core concept: Classical column with light ray and Y-fork base
+       Squint test: Vertical structure + diagonal streak = ARCHITECTUS -->
+
+  <!-- Column body: Architectural mass, sharp precise corners -->
+  <!-- #5a8dd8 = deep structure blue (THEMATIC_SCHEMA secondary) -->
+  <rect x="38" y="18" width="24" height="62" fill="#5a8dd8"/>
+
+  <!-- Capital crown: Triangular Y-fork (Dendrovian branching motif) -->
+  <!-- The triangle top doubles as Y-fork structural emphasis -->
+  <polygon points="50,8 32,22 68,22" fill="#8ab4f8"/>
+
+  <!-- Column base: Wider foundation (architectural grounding) -->
+  <rect x="34" y="80" width="32" height="6" fill="#5a8dd8"/>
+
+  <!-- Light ray: Single bold diagonal = raymarching path -->
+  <!-- #f8c98a = golden light (complement tension - warm vs cool) -->
+  <line x1="76" y1="12" x2="24" y2="88" stroke="#f8c98a" stroke-width="4" opacity="0.65" stroke-linecap="round"/>
+
+  <!-- Y-fork base: Dendritic branching from foundation -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - "branchingStyle: columns bifurcate following SDF union" -->
+  <line x1="50" y1="86" x2="40" y2="96" stroke="#8ab4f8" stroke-width="3" stroke-linecap="round"/>
+  <line x1="50" y1="86" x2="60" y2="96" stroke="#8ab4f8" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- SDF node: Circular platonic intersection point -->
+  <!-- #1e3a5f = deep computational void (THEMATIC_SCHEMA shadow) -->
+  <circle cx="50" cy="50" r="5" fill="#1e3a5f" opacity="0.7"/>
+</svg>

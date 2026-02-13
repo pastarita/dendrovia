@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- IMAGINARIUM DETAILED (64x64+ optimized) - The Distillation Apparatus
+       Ref: PILLAR_INSIGNIA_STRUCTURAL - "Distill Hallucination into Determinism"
+       Ref: PILLAR_THEMATIC_SCHEMA - Dreams distilled into executable mathematics
+       Ref: IMAGINARIUM_iterations - Maximum alchemical complexity
+       Layout: Horizontal pipeline (left input -> center prism -> right output manifold)
+       Structural: Factory pipeline schematic, alchemical assembly line
+       Colors: 11 (#c6a0f6, #9b6dd8, #e5d4ff, #4a2d5f, #b088e0, #f8f0ff,
+               #da9ef7, #d0a0f6, #a0c6f6, #ff8fd5, spectrum ROYGBIV)
+       Paths: ~65 (rich detail, fine ornament, visible at 64px+) -->
+
+  <defs>
+    <!-- Prism body gradient - Ref: PILLAR_THEMATIC_SCHEMA crystalline refraction -->
+    <linearGradient id="dt-prism" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f0ff" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#e5d4ff" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#c6a0f6" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#9b6dd8" stop-opacity="0.8"/>
+    </linearGradient>
+    <!-- Inner crystal core -->
+    <radialGradient id="dt-core" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#e5d4ff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#c6a0f6" stop-opacity="0.3"/>
+    </radialGradient>
+    <!-- Atmospheric transformation glow -->
+    <radialGradient id="dt-atmosphere" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#da9ef7" stop-opacity="0.18"/>
+      <stop offset="40%" stop-color="#c6a0f6" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#4a2d5f" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Flask body gradient -->
+    <linearGradient id="dt-flask" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b088e0"/>
+      <stop offset="100%" stop-color="#9b6dd8"/>
+    </linearGradient>
+    <!-- Well gradients (swirling alchemical liquids) -->
+    <radialGradient id="dt-well1">
+      <stop offset="0%" stop-color="#f8f0ff"/>
+      <stop offset="40%" stop-color="#da9ef7"/>
+      <stop offset="100%" stop-color="#9b6dd8"/>
+    </radialGradient>
+    <radialGradient id="dt-well2">
+      <stop offset="0%" stop-color="#e5d4ff"/>
+      <stop offset="40%" stop-color="#c6a0f6"/>
+      <stop offset="100%" stop-color="#9b6dd8"/>
+    </radialGradient>
+    <radialGradient id="dt-well3">
+      <stop offset="0%" stop-color="#c8e0ff"/>
+      <stop offset="40%" stop-color="#a0c6f6"/>
+      <stop offset="100%" stop-color="#5a8dd8"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ============================================ -->
+  <!-- LAYER 0: Background Structure                -->
+  <!-- ============================================ -->
+
+  <!-- Subtle code-structure background pattern -->
+  <!-- Ref: IMAGINARIUM_iterations - Background code structure patterns -->
+  <g opacity="0.04">
+    <line x1="8" y1="20" x2="92" y2="20" stroke="#c6a0f6" stroke-width="0.4"/>
+    <line x1="8" y1="35" x2="92" y2="35" stroke="#c6a0f6" stroke-width="0.4"/>
+    <line x1="8" y1="50" x2="92" y2="50" stroke="#c6a0f6" stroke-width="0.4"/>
+    <line x1="8" y1="65" x2="92" y2="65" stroke="#c6a0f6" stroke-width="0.4"/>
+    <line x1="8" y1="80" x2="92" y2="80" stroke="#c6a0f6" stroke-width="0.4"/>
+  </g>
+
+  <!-- Atmospheric transformation glow -->
+  <circle cx="50" cy="50" r="44" fill="url(#dt-atmosphere)"/>
+
+  <!-- 4 Nested transformation circles (compilation stage boundaries) -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - Nested circles showing compilation stages -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - 7 distillation stages (horizontal) -->
+  <circle cx="50" cy="50" r="46" fill="none" stroke="#9b6dd8" stroke-width="0.3" opacity="0.12" stroke-dasharray="3,3"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#c6a0f6" stroke-width="0.4" opacity="0.2"/>
+  <circle cx="50" cy="50" r="37" fill="none" stroke="#da9ef7" stroke-width="0.4" opacity="0.25"/>
+  <circle cx="50" cy="50" r="30" fill="none" stroke="#e5d4ff" stroke-width="0.4" opacity="0.3"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 1: LEFT - GENERATION CHAMBER           -->
+  <!-- (Input Hopper: Raw prompts + reference chaos)-->
+  <!-- ============================================ -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Flask/alembic shape, swirling generative chaos -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - Generation Chamber (Left) -->
+
+  <!-- Flask drop shadow -->
+  <ellipse cx="15" cy="52" rx="9" ry="13" fill="#4a2d5f" opacity="0.3"/>
+
+  <!-- Alembic flask body (detailed with gradient) -->
+  <ellipse cx="14" cy="50" rx="9" ry="13" fill="url(#dt-flask)" opacity="0.92"/>
+
+  <!-- Flask 3D highlight -->
+  <ellipse cx="11.5" cy="47" rx="4" ry="7" fill="#e5d4ff" opacity="0.2"/>
+
+  <!-- Flask neck (distillation tube) -->
+  <rect x="11" y="33" width="6" height="10" rx="3" fill="#b088e0" opacity="0.88"/>
+  <!-- Neck highlight -->
+  <rect x="12" y="34" width="2" height="8" rx="1" fill="#e5d4ff" opacity="0.2"/>
+
+  <!-- 3 Color wells INSIDE flask (swirling alchemical liquids = tunable parameters) -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - Color wells (tunable parameters) -->
+  <circle cx="11" cy="45" r="3" fill="url(#dt-well1)" opacity="0.9"/>
+  <circle cx="17" cy="45" r="3" fill="url(#dt-well2)" opacity="0.9"/>
+  <circle cx="14" cy="53" r="3" fill="url(#dt-well3)" opacity="0.9"/>
+  <!-- Well swirl details -->
+  <path d="M10,45 Q11,44 12,45" stroke="white" stroke-width="0.3" opacity="0.5" fill="none"/>
+  <path d="M16,45 Q17,44 18,45" stroke="white" stroke-width="0.3" opacity="0.5" fill="none"/>
+  <path d="M13,53 Q14,52 15,53" stroke="white" stroke-width="0.3" opacity="0.5" fill="none"/>
+  <!-- Well shimmer highlights -->
+  <circle cx="10" cy="44" r="0.8" fill="white" opacity="0.6"/>
+  <circle cx="16" cy="44" r="0.8" fill="white" opacity="0.6"/>
+  <circle cx="13" cy="52" r="0.8" fill="white" opacity="0.6"/>
+
+  <!-- Vapor trails (ephemeral to solid, inspiration rising) -->
+  <!-- Ref: IMAGINARIUM_iterations - Vapor trail (ephemeral to solid) -->
+  <path d="M14,33 Q11,27 12.5,22 Q13.5,19 14,16"
+        stroke="#e5d4ff" stroke-width="1.2" fill="none" opacity="0.5" stroke-linecap="round"/>
+  <path d="M14,33 Q16,28 15.5,24 Q15,21 14.5,18"
+        stroke="#f8f0ff" stroke-width="0.8" fill="none" opacity="0.35" stroke-linecap="round"/>
+  <path d="M14,33 Q17,29 16,25"
+        stroke="#da9ef7" stroke-width="0.6" fill="none" opacity="0.25" stroke-linecap="round"/>
+
+  <!-- Distillation drops (pure essence condensing below flask) -->
+  <circle cx="14" cy="65" r="1.8" fill="#da9ef7" opacity="0.85"/>
+  <circle cx="14" cy="65" r="3" fill="#da9ef7" opacity="0.2"/>
+  <circle cx="14.5" cy="69" r="1.2" fill="#c6a0f6" opacity="0.65"/>
+  <circle cx="13.5" cy="72" r="0.9" fill="#e5d4ff" opacity="0.5"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 2: INPUT BEAM (chaos -> prism)         -->
+  <!-- ============================================ -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Input beam (white chaos light enters) -->
+
+  <!-- Beam glow (wide, subtle) -->
+  <line x1="23" y1="50" x2="37" y2="50"
+        stroke="#e5d4ff" stroke-width="6" opacity="0.12" stroke-linecap="round"/>
+  <!-- Beam core (bright white) -->
+  <line x1="23" y1="50" x2="37" y2="50"
+        stroke="#ffffff" stroke-width="2.5" opacity="0.85" stroke-linecap="round"/>
+  <!-- Beam texture (chaos indication: tiny noise dots) -->
+  <circle cx="26" cy="49" r="0.4" fill="#da9ef7" opacity="0.4"/>
+  <circle cx="29" cy="51" r="0.3" fill="#a0c6f6" opacity="0.3"/>
+  <circle cx="32" cy="49.5" r="0.35" fill="#ff8fd5" opacity="0.35"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 3: CENTER - HEXAGONAL PRISM            -->
+  <!-- (Prismatic Separator / Crystalline Engine)    -->
+  <!-- ============================================ -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Hexagonal prism, crystalline structure -->
+  <!-- Ref: SYMBOL_DRIVEN_DESIGN_SYSTEM - Hexagon: efficiency, natural packing -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - Critical junction: hallucination crystallizes -->
+
+  <!-- Prism drop shadow -->
+  <polygon points="50,25 38,35 38,65 50,75 62,65 62,35"
+           fill="#4a2d5f" opacity="0.3"/>
+
+  <!-- Prism body (main crystal) -->
+  <polygon points="50,27 39,36 39,64 50,73 61,64 61,36"
+           fill="url(#dt-prism)" stroke="#c6a0f6" stroke-width="1.8"/>
+
+  <!-- Inner crystalline facets (layered depth) -->
+  <polygon points="50,32 43,38 43,62 50,68 57,62 57,38"
+           fill="white" opacity="0.4"/>
+  <polygon points="50,36 46,40 46,60 50,64 54,60 54,40"
+           fill="url(#dt-core)" opacity="0.5"/>
+
+  <!-- Refraction planes (internal structure) -->
+  <line x1="50" y1="27" x2="50" y2="73" stroke="#e5d4ff" stroke-width="0.5" opacity="0.65"/>
+  <line x1="39" y1="36" x2="61" y2="64" stroke="#e5d4ff" stroke-width="0.4" opacity="0.45"/>
+  <line x1="39" y1="64" x2="61" y2="36" stroke="#e5d4ff" stroke-width="0.4" opacity="0.45"/>
+  <line x1="39" y1="50" x2="61" y2="50" stroke="#d0a0f6" stroke-width="0.3" opacity="0.3"/>
+
+  <!-- Wavelength decomposition markers on prism edges -->
+  <!-- Ref: IMAGINARIUM_iterations - Wavelength decomposition markers -->
+  <circle cx="44" cy="31" r="0.6" fill="#da9ef7" opacity="0.7"/>
+  <circle cx="50" cy="27" r="0.6" fill="#e5d4ff" opacity="0.8"/>
+  <circle cx="56" cy="31" r="0.6" fill="#a0c6f6" opacity="0.7"/>
+  <circle cx="39" cy="50" r="0.6" fill="#c6a0f6" opacity="0.6"/>
+  <circle cx="61" cy="50" r="0.6" fill="#c6a0f6" opacity="0.6"/>
+
+  <!-- Prism edge highlights (3D form, top edges catch light) -->
+  <line x1="50" y1="27" x2="39" y2="36" stroke="#f8f0ff" stroke-width="1" opacity="0.4"/>
+  <line x1="50" y1="27" x2="61" y2="36" stroke="#f8f0ff" stroke-width="1" opacity="0.4"/>
+
+  <!-- Crystal glow halo -->
+  <polygon points="50,27 39,36 39,64 50,73 61,64 61,36"
+           fill="none" stroke="#da9ef7" stroke-width="3" opacity="0.2"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 4: RIGHT - OUTPUT MANIFOLD             -->
+  <!-- (7 spectrum rays + labeled color wells)      -->
+  <!-- ============================================ -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Seven output rays = seven asset types -->
+  <!-- Ref: Cross-Pillar - Y-Fork Branching: Pipeline split -->
+  <!-- Rays: Color, Normal, Roughness, AO, Height, Emission, Mask -->
+
+  <!-- 7 refraction rays (full ROYGBIV spectrum) -->
+  <line x1="61" y1="39" x2="82" y2="15" stroke="#ff6b6b" stroke-width="2.2" opacity="0.75" stroke-linecap="round"/>
+  <line x1="61" y1="42" x2="84" y2="25" stroke="#ffa94d" stroke-width="2.2" opacity="0.8" stroke-linecap="round"/>
+  <line x1="61" y1="46" x2="85" y2="35" stroke="#ffd43b" stroke-width="2" opacity="0.85" stroke-linecap="round"/>
+  <line x1="61" y1="50" x2="86" y2="50" stroke="#69db7c" stroke-width="2.5" opacity="0.9" stroke-linecap="round"/>
+  <line x1="61" y1="54" x2="85" y2="65" stroke="#74c0fc" stroke-width="2" opacity="0.85" stroke-linecap="round"/>
+  <line x1="61" y1="58" x2="84" y2="75" stroke="#9775fa" stroke-width="2.2" opacity="0.8" stroke-linecap="round"/>
+  <line x1="61" y1="61" x2="82" y2="85" stroke="#e599f7" stroke-width="2.2" opacity="0.75" stroke-linecap="round"/>
+
+  <!-- Additional light leakage rays (subtle) -->
+  <!-- Ref: IMAGINARIUM_iterations - Additional subtle rays (light leakage) -->
+  <line x1="61" y1="37" x2="78" y2="10" stroke="#b088e0" stroke-width="0.8" opacity="0.2" stroke-linecap="round"/>
+  <line x1="61" y1="63" x2="78" y2="90" stroke="#b088e0" stroke-width="0.8" opacity="0.2" stroke-linecap="round"/>
+
+  <!-- Color wells (distilled parameter containers with glow halos) -->
+  <!-- Ref: PILLAR_THEMATIC_SCHEMA - Color wells (7 distilled palettes) -->
+  <!-- Well 1: Red (Color channel) -->
+  <circle cx="84" cy="15" r="3" fill="#ff6b6b"/>
+  <circle cx="84" cy="15" r="4.5" fill="#ff6b6b" opacity="0.15"/>
+  <circle cx="83" cy="14" r="0.8" fill="white" opacity="0.6"/>
+
+  <!-- Well 2: Orange (Normal map) -->
+  <circle cx="86" cy="25" r="3" fill="#ffa94d"/>
+  <circle cx="86" cy="25" r="4.5" fill="#ffa94d" opacity="0.15"/>
+  <circle cx="85" cy="24" r="0.8" fill="white" opacity="0.55"/>
+
+  <!-- Well 3: Yellow (Roughness) -->
+  <circle cx="87" cy="35" r="2.8" fill="#ffd43b"/>
+  <circle cx="87" cy="35" r="4.2" fill="#ffd43b" opacity="0.15"/>
+  <circle cx="86" cy="34" r="0.7" fill="white" opacity="0.5"/>
+
+  <!-- Well 4: Green (center, brightest - main asset) -->
+  <circle cx="88" cy="50" r="3.5" fill="#69db7c"/>
+  <circle cx="88" cy="50" r="5" fill="#69db7c" opacity="0.18"/>
+  <circle cx="87" cy="49" r="1" fill="white" opacity="0.7"/>
+
+  <!-- Well 5: Blue (Height) -->
+  <circle cx="87" cy="65" r="2.8" fill="#74c0fc"/>
+  <circle cx="87" cy="65" r="4.2" fill="#74c0fc" opacity="0.15"/>
+  <circle cx="86" cy="64" r="0.7" fill="white" opacity="0.5"/>
+
+  <!-- Well 6: Indigo (Emission) -->
+  <circle cx="86" cy="75" r="3" fill="#9775fa"/>
+  <circle cx="86" cy="75" r="4.5" fill="#9775fa" opacity="0.15"/>
+  <circle cx="85" cy="74" r="0.8" fill="white" opacity="0.55"/>
+
+  <!-- Well 7: Violet (Mask channel) -->
+  <circle cx="84" cy="85" r="3" fill="#e599f7"/>
+  <circle cx="84" cy="85" r="4.5" fill="#e599f7" opacity="0.15"/>
+  <circle cx="83" cy="84" r="0.8" fill="white" opacity="0.6"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 5: FEEDBACK ARC (Top, iteration loop)  -->
+  <!-- ============================================ -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Feedback Loop: Curved pipe returning right to left -->
+  <!-- Shows iteration: "Regenerate if quality check fails" -->
+  <path d="M82,12 Q70,4 50,5 Q30,6 18,16"
+        stroke="#da9ef7" stroke-width="0.8" fill="none" opacity="0.3"
+        stroke-dasharray="2,2" stroke-linecap="round"/>
+  <!-- Feedback arrow tip -->
+  <polygon points="18,16 20,12 22,17" fill="#da9ef7" opacity="0.3"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 6: BAKING OVEN (Bottom, optimization)  -->
+  <!-- ============================================ -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Baking Oven: final optimization stage -->
+  <!-- Assets enter raw, exit compressed (KTX2, GLB) -->
+  <rect x="35" y="82" width="30" height="8" rx="2" fill="#4a2d5f" opacity="0.35"/>
+  <rect x="36" y="83" width="28" height="6" rx="1.5" fill="#9b6dd8" opacity="0.3"/>
+  <!-- Heat/computation glow -->
+  <line x1="40" y1="83" x2="40" y2="80" stroke="#da9ef7" stroke-width="0.5" opacity="0.3" stroke-linecap="round"/>
+  <line x1="50" y1="83" x2="50" y2="79" stroke="#da9ef7" stroke-width="0.6" opacity="0.35" stroke-linecap="round"/>
+  <line x1="60" y1="83" x2="60" y2="80" stroke="#da9ef7" stroke-width="0.5" opacity="0.3" stroke-linecap="round"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 7: FLOWING CONNECTIONS (wells -> prism) -->
+  <!-- ============================================ -->
+  <!-- Ref: IMAGINARIUM_iterations - Flowing connections from wells to prism -->
+  <path d="M17,47 Q25,48 37,50" stroke="#c6a0f6" stroke-width="0.8" fill="none" opacity="0.35"/>
+  <path d="M20,45 Q27,46 37,48" stroke="#da9ef7" stroke-width="0.6" fill="none" opacity="0.25"/>
+  <path d="M17,54 Q25,52 37,51" stroke="#a0c6f6" stroke-width="0.6" fill="none" opacity="0.25"/>
+
+  <!-- ============================================ -->
+  <!-- LAYER 8: TRANSFORMATION STAGE LABELS         -->
+  <!-- ============================================ -->
+  <!-- Ref: PILLAR_INSIGNIA_STRUCTURAL - Could be labeled with stage names -->
+  <g fill="#9b6dd8" font-size="2.5" opacity="0.45" font-family="monospace">
+    <text x="9" y="80">GEN</text>
+    <text x="44" y="95">BAKE</text>
+    <text x="81" y="95">OUT</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- LAYER 9: MICRO ORNAMENTAL DETAILS            -->
+  <!-- ============================================ -->
+
+  <!-- Tiny shader node tree (right side, dendritic branching) -->
+  <!-- Ref: IMAGINARIUM_iterations - Dendritic shader node tree -->
+  <g opacity="0.4">
+    <circle cx="92" cy="50" r="1.5" fill="#c6a0f6"/>
+    <line x1="92" y1="50" x2="89" y2="44" stroke="#9b6dd8" stroke-width="0.6"/>
+    <line x1="92" y1="50" x2="89" y2="56" stroke="#9b6dd8" stroke-width="0.6"/>
+    <circle cx="89" cy="44" r="1" fill="#d0a0f6"/>
+    <circle cx="89" cy="56" r="1" fill="#a0c6f6"/>
+  </g>
+
+  <!-- Tiny mathematical residue near flask (equation traces) -->
+  <!-- Ref: IMAGINARIUM_iterations - Brush strokes leaving mathematical equations -->
+  <g fill="#e5d4ff" font-size="2.2" opacity="0.3" font-family="serif" font-style="italic">
+    <text x="3" y="30">f(x)</text>
+    <text x="4" y="82">dx</text>
+  </g>
+
+</svg>

@@ -1,0 +1,116 @@
+/**
+ * OCULUS Responsive Overrides
+ *
+ * Desktop-first, gracefully degrades to mobile.
+ */
+
+/* ── Tablet (768px - 1024px) ──────────────────────── */
+
+@media (max-width: 1024px) {
+  .oculus-minimap {
+    width: 100px;
+    height: 100px;
+  }
+
+  .oculus-quest-tracker {
+    max-width: 220px;
+  }
+}
+
+/* ── Mobile (< 768px) ────────────────────────────── */
+
+@media (max-width: 768px) {
+  /* HUD collapses to minimal top bar */
+  .oculus-hud {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "top-left"
+      "center"
+      "bottom-left";
+  }
+
+  .oculus-corner--top-right,
+  .oculus-corner--bottom-right {
+    display: none;
+  }
+
+  .oculus-corner--top-left {
+    display: flex;
+    gap: var(--oculus-space-sm);
+    align-items: center;
+  }
+
+  /* Minimap hidden on mobile, toggled on demand */
+  .oculus-minimap {
+    display: none;
+  }
+
+  .oculus-minimap--visible {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    z-index: var(--oculus-z-modal);
+  }
+
+  /* Miller Columns: single-column with back button */
+  .oculus-miller {
+    grid-template-columns: 1fr;
+  }
+
+  .oculus-miller__column:not(.oculus-miller__column--active) {
+    display: none;
+  }
+
+  .oculus-miller__back-btn {
+    display: flex;
+  }
+
+  /* Code Reader: full-screen */
+  .oculus-code-reader {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    border-radius: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+
+  /* Battle UI: vertical stack */
+  .oculus-battle {
+    flex-direction: column;
+    height: auto;
+    max-height: 80vh;
+  }
+
+  .oculus-battle__actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .oculus-battle__actions .oculus-button {
+    min-width: 48px;
+    min-height: 48px;
+    font-size: var(--oculus-font-base);
+  }
+
+  /* Quest Log: full-screen overlay */
+  .oculus-quest-log--expanded {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  /* Touch-friendly targets */
+  .oculus-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: var(--oculus-space-md);
+  }
+}

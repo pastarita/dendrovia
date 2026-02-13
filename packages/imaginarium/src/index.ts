@@ -73,3 +73,21 @@ export type {
   MushroomMeshData, MushroomSpriteProps,
   FileContext,
 } from './mycology/index.js';
+
+// --- Mesh Pipeline ---
+export {
+  // Data structure
+  buildFromIndexed, buildFromProfile, buildFromCylinder,
+  vertexNeighbors, vertexFaces, faceVertices, halfedgeFrom,
+  isBoundaryVertex, meshStats, toFlatArrays,
+  // Pipeline
+  pipe, pipeAsync, when, repeat, MeshPipeline,
+  // Operations
+  subdivide, loopSubdivideOnce,
+  smooth, taubinSmooth, laplacianSmoothOnce,
+  displaceNormal, displaceByFunction, displaceByField, displaceByNoise,
+} from './mesh/index.js';
+export type {
+  HEVertex, HEHalfEdge, HEFace, HalfEdgeMesh, FlatMeshData,
+  MeshOp, AsyncMeshOp, PipelineStep,
+} from './mesh/index.js';

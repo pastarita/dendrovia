@@ -81,6 +81,7 @@ All governance rules live in `.claude/rules/`. See `.claude/rules/INDEX.md` for 
 | `PR_HERALDRY_COMPLETENESS.rules.md` | Heraldic classification taxonomy |
 | `DIAGRAM_CONVENTIONS.rules.md` | Mermaid diagram accessibility |
 | `BRANCH_WORKFLOW.rules.md` | Branch naming and commit conventions |
+| `CASTLE_WALLS.rules.md` | Pre-commit quality gates and permission engine |
 
 ---
 
@@ -95,6 +96,60 @@ PRs are classified using a heraldic system that maps code changes to medieval bl
 
 Type definitions: `lib/heraldry/types.ts`
 Full taxonomy: `.claude/rules/PR_HERALDRY_COMPLETENESS.rules.md`
+
+---
+
+## Castle Walls — Pre-Commit Quality Gates
+
+Tiered quality gate system enforcing code health on every commit.
+
+### Wall System
+
+| Wall | Purpose | Enforcement |
+|------|---------|-------------|
+| 0 | Context protection (branch, stash) | Advisory |
+| 1 | Secret detection | **BLOCKING** |
+| 2 | Static analysis (typecheck, lint) | Advisory |
+| 2.5 | Dependency validation | Advisory |
+| 2.7 | Runtime/shebang compliance | Advisory |
+| 3 | Test suite (10s timeout) | Advisory |
+| 7 | Large file/asset warnings | Advisory |
+
+### Permission Policy Engine
+
+3-tier permission system for agentic workflows (Claude Code hooks):
+
+| Tier | File | Hook Point |
+|------|------|------------|
+| 1 | `.claude/hooks/tier1-gatekeeper.py` | PreToolUse |
+| 2 | `.claude/hooks/tier2-llm-gatekeeper.py` | PermissionRequest |
+| Audit | `.claude/hooks/decision-logger.py` | PostToolUse |
+
+### Policy Modes
+
+```bash
+.claude/hooks/switch-mode.sh testing      # Switch to testing mode
+.claude/hooks/switch-mode.sh              # Show current mode
+```
+
+Modes: `default`, `testing`, `rendover`, `deployment`
+
+### Expedition Mode
+
+Branches with `expedite` in the name skip advisory walls (Wall 1 always runs).
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `.husky/pre-commit` | Castle Walls main script (7 walls) |
+| `.husky/pre-push` | Branch protection + PR readiness |
+| `.castle-walls/certified-exceptions.yaml` | Safe strings registry |
+| `.gitleaks.toml` | Gitleaks custom rules |
+| `.claude/policies/modes/*.yaml` | Policy mode definitions |
+
+Full rules: `.claude/rules/CASTLE_WALLS.rules.md`
+Setup guide: `docs/governance/CASTLE_WALLS_CODEBASE_CONTEXT_SYSTEM_SETUP.md`
 
 ---
 

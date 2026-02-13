@@ -43,19 +43,33 @@
 
 ---
 
+## Castle Walls & Quality Gates
+
+| Trigger | Rules to Consult |
+|---------|------------------|
+| Pre-commit hooks | `CASTLE_WALLS.rules.md` |
+| Secret detection | `CASTLE_WALLS.rules.md` (Wall 1) |
+| "expedition mode" / fast path | `CASTLE_WALLS.rules.md` (Expedition Mode) |
+| Policy mode switching | `CASTLE_WALLS.rules.md` (Permission Policy Engine) |
+| Certified exceptions | `CASTLE_WALLS.rules.md` (Secret Detection) |
+| Pre-push / branch protection | `CASTLE_WALLS.rules.md`, `BRANCH_WORKFLOW.rules.md` |
+
+---
+
 ## Cross-Reference Audit
 
 Every rule file MUST be reachable from this index AND from at least one skill file.
 
-| Rule | Referenced by Skills |
-|------|---------------------|
+| Rule | Referenced by Skills / Systems |
+|------|-------------------------------|
 | `PR_WORKFLOW.rules.md` | pr-workflow, pr-heterogeneous |
 | `PR_DESCRIPTION_CONTENT.rules.md` | pr-workflow, pr-heterogeneous, pr-heraldry |
 | `PR_HERALDRY_COMPLETENESS.rules.md` | pr-workflow, pr-heraldry |
 | `DIAGRAM_CONVENTIONS.rules.md` | pr-workflow |
-| `BRANCH_WORKFLOW.rules.md` | pr-workflow |
+| `BRANCH_WORKFLOW.rules.md` | pr-workflow, Castle Walls (pre-push) |
+| `CASTLE_WALLS.rules.md` | Castle Walls hooks, policy engine |
 
 ---
 
-_Version: 1.0.0_
-_Created: 2026-02-12_
+_Version: 1.1.0_
+_Updated: 2026-02-12_

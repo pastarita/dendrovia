@@ -1,251 +1,436 @@
 # Dendrovia Implementation Status
 
-> **Current Progress:** ~15-20% Complete
+> **Current Progress:** ~85% Complete (per-pillar average)
 
-## ✅ Completed (Phase 0)
+## Infrastructure (Complete)
 
-### Infrastructure
 - [x] Six-pillar monorepo structure (TurboRepo + Bun)
-- [x] Shared types and EventBus architecture
+- [x] Shared types, EventBus, and JSON schema contracts (`@dendrovia/shared`)
 - [x] Build pipeline configuration (turbo.json)
 - [x] Package workspaces setup
-- [x] .gitignore and project configuration
-
-### Proof of Concept (Thin Vertical Slice)
-- [x] **CHRONOS**: Basic file parsing (metadata extraction)
-- [x] **IMAGINARIUM**: Deterministic color palette generation
-- [x] **IMAGINARIUM**: SDF shader code generation
-- [x] **ARCHITECTUS**: React Three Fiber scene setup
-- [x] **LUDUS**: Event-driven interaction (click detection)
-- [x] **OCULUS**: HUD component + Code overlay modal
-- [x] **OPERATUS**: File artifact generation
-
-**Proof:** Run `cd ARCHITECTUS/dendrovia && bun run slice`
-
-This validates the entire pipeline for ONE file end-to-end.
+- [x] 27 GameEvent constants defined with 18 typed payload interfaces
+- [x] Global singleton EventBus with on/once/emit/off/clear
 
 ---
 
-## 🚧 In Progress (Phase 1)
+## CHRONOS - The Archaeologist (~85%)
 
-### CHRONOS - The Archaeologist
-- [ ] Git history parser (isomorphic-git)
-- [ ] Commit classifier (bug/feature/refactor)
-- [ ] AST parser (ts-morph for TypeScript)
-- [ ] Cyclomatic complexity analyzer
-- [ ] Hotspot detector
-- [ ] Topology generator
+**Status:** 9 modules fully implemented. CLI entry point (`parse.ts`) produces 5 JSON artifacts from any Git repository.
 
-**Status:** 5% - Placeholder files created
+### Implemented
 
----
+- [x] **GitParser** - `parseGitHistory`, `extractRawCommits`, `listFilesAtHead`, `getHeadHash`, `getFileChurnCounts`
+- [x] **ASTParser** - `parseFiles`, `parseFile`, `buildStubFile`, `createProject`, `detectLanguage`, `canParse`
+- [x] **CommitClassifier** - `classifyCommit`, `commitFlags` (bug/feature/refactor/chore)
+- [x] **ComplexityAnalyzer** - `analyzeFileComplexity`, `analyzeFunctionComplexities`, difficulty tiers
+- [x] **HotspotDetector** - `detectHotspots`, temporal coupling analysis
+- [x] **ContributorProfiler** - `profileContributors`, archetype classification, time patterns
+- [x] **TreeBuilder** - `buildFileTree`, `countFiles`, `countDirectories`
+- [x] **TopologyBuilder** - `buildTopology`, `writeOutputFiles`
+- [x] **parse.ts** - CLI entry point
 
-### IMAGINARIUM - The Compiler
-- [x] Color palette extractor (deterministic HSL)
-- [ ] AI API integration (Stable Diffusion/Flux)
-- [ ] Image → SDF distillation engine
-- [ ] Noise function generator
-- [ ] L-System compiler
-- [ ] Shader template system
-- [ ] Caching layer (deterministic generation)
+**Exports:** 24 functions, 11 types
 
-**Status:** 10% - Basic palette generation works
+**Output artifacts:** topology.json, commits.json, hotspots.json, contributors.json, tree.json
 
----
+### Gaps
 
-### ARCHITECTUS - The Renderer
-- [x] Basic R3F scene setup
-- [ ] WebGPU renderer initialization
-- [ ] SDF raymarching shader system
-- [ ] Hybrid LOD (SDF far, mesh near)
-- [ ] Camera controller (Falcon ↔ Player modes)
-- [ ] Spatial event emission
-- [ ] Post-processing (glow, color grading)
-- [ ] Performance monitoring
-
-**Status:** 15% - Demo scene renders, no SDFs yet
+- [ ] 0 tests (no test files found)
+- [ ] No EventBus emission (`PARSE_COMPLETE`, `TOPOLOGY_GENERATED` events not wired)
 
 ---
 
-### LUDUS - The Mechanics
-- [ ] Character system (Tank/Healer/DPS)
-- [ ] Spell factory (symbol-driven generation)
-- [ ] Turn-based combat engine
-- [ ] Quest generator (from Git history)
-- [ ] Encounter system (bugs → battles)
-- [ ] State management (Zustand)
-- [ ] Simulation mode (headless testing)
+## IMAGINARIUM - The Compiler (~95%)
 
-**Status:** 5% - EventBus listeners stubbed
+**Status:** Full distillation pipeline with mycology sub-system. 34 source modules across 7 subsystems. 181 tests, 0 failures. Deterministic byte-identical output confirmed. Pipeline runs in <30ms for 100-file topology.
+
+### Implemented - Distillation
+
+- [x] **ColorExtractor** - OKLCH color space, `extractPalette`, `extractFilePalette`
+- [x] **SDFCompiler** - GLSL distance function generation
+- [x] **LSystemCompiler** - `compile`, `expandLSystem` (depth capped at 5 iterations)
+- [x] **NoiseGenerator** - Simplex/Perlin/Worley/FBM noise functions
+- [x] **TurtleInterpreter** - L-system string to 3D geometry segments
+
+### Implemented - Generation
+
+- [x] **ArtGen** - AI art generation with pluggable providers (default: skip)
+- [x] **PromptBuilder** - Topology-driven prompt generation
+
+### Implemented - Shaders
+
+- [x] **ShaderAssembler** - GLSL template assembly with color parameters
+- [x] 5 shader variants: global, language, complexity, structural, hotspot
+
+### Implemented - Pipeline
+
+- [x] **DistillationPipeline** - 9-stage pipeline orchestrator (`distill`)
+- [x] **VariantGenerator** - Multi-variant shader output
+- [x] **ManifestGenerator** - Asset manifest with checksums
+- [x] **TopologyReader** - Reads CHRONOS output
+- [x] **MockTopology** - Synthetic topology for testing
+
+### Implemented - Cache & Fallbacks
+
+- [x] **DeterministicCache** - SHA-256 keyed, byte-identical outputs
+- [x] **DefaultPalettes** - Language-keyed fallback color palettes
+- [x] **DefaultSDFs** - Tiered SDF fallback library
+
+### Implemented - Utilities
+
+- [x] **color.ts** - OKLCH/RGB/HSL/Hex conversions, harmonize, blend, temperature
+- [x] **hash.ts** - `hashString`, `hashObject`, `hashFiles`
+- [x] **glsl.ts** - GLSL helpers, validation, instruction counting
+
+### Implemented - Mycology Sub-system
+
+- [x] **GenusMapper** - 20-genus taxonomy from file metadata
+- [x] **MorphologyGenerator** - Parametric mushroom morphology from code metrics
+- [x] **LoreGenerator** - 5-tier lore (common/uncommon/rare/epic/legendary)
+- [x] **MycelialNetwork** - Co-churn network graph from commit history
+- [x] **SpecimenCatalog** - Full specimen catalog pipeline
+- [x] **MycologyPipeline** - End-to-end `distillMycology` orchestrator
+- [x] **SvgTemplates** - Parametric SVG asset generation
+- [x] **MeshGenerator** - 3D mesh data for mushroom rendering
+- [x] **MushroomSprite** - TSX component for 2D rendering
+
+**Tests:** 16 test files (10 core + 6 mycology), 181 tests total, 0 failures
+
+### Gaps
+
+- [ ] AI art generation defaults to `skip` (procedural-only, by design)
+- [ ] No EventBus emission (`SHADERS_COMPILED`, `PALETTE_GENERATED`, `MYCOLOGY_CATALOGED` not wired)
 
 ---
 
-### OCULUS - The Interface
-- [x] HUD component (basic)
-- [x] Code overlay modal
-- [x] Zustand store (useOculusStore) with EventBus subscriptions
-- [x] OculusProvider context wrapper
-- [x] CSS design system (tokens, animations, responsive)
-- [x] Atomic primitives (Panel, ProgressBar, IconBadge, StatLabel, Tooltip)
-- [x] Full HUD with health/mana bars, mode indicator, corner layout
-- [x] Minimap (SVG, spatial awareness, click-to-navigate)
-- [x] BattleUI (turn-based combat, spell buttons, battle log)
-- [x] QuestLog (compact tracker + full overlay, quest states)
-- [x] Miller Column navigator (virtualized, keyboard nav, breadcrumbs)
-- [x] Code Reader (line numbers, metadata header, hotspot highlighting)
-- [x] FalconModeOverlay (heatmap, stats, top hotspots)
-- [x] Billboard3D (R3F Html wrapper, optional drei peer dep)
-- [x] Input capture coordination (useIsUiHovered)
-- [x] Keyboard shortcuts (Q/M/Esc)
+## ARCHITECTUS - The Renderer (~60%)
+
+**Status:** R3F scene with instanced rendering, L-system geometry, camera rig, and post-processing. 15 source files (6 .ts + 9 .tsx). No tests.
+
+### Implemented
+
+- [x] **App** - Root R3F Canvas with WebGL/WebGPU detection
+- [x] **DendriteWorld** - Scene root combining all components
+- [x] **BranchInstances** - Instanced mesh rendering for branch segments
+- [x] **NodeInstances** - Instanced mesh rendering for file nodes
+- [x] **CameraRig** - Falcon mode (orbit) + Player mode (first-person)
+- [x] **PostProcessing** - Bloom, ChromaticAberration (via @react-three/postprocessing)
+- [x] **Lighting** - Scene lighting setup
+- [x] **PerformanceMonitor** - Runtime FPS/draw-call monitoring
+- [x] **LSystem** - L-system string expansion engine
+- [x] **TurtleInterpreter** - 3D quaternion-based turtle (BranchSegment + NodeMarker output)
+- [x] **detectGPU** - 5-tier quality detection (ultra/high/medium/low/potato)
+- [x] **useRendererStore** - Zustand store (topology, quality, camera mode, selection)
+
+### Gaps
+
+- [ ] No SDF raymarching (instanced mesh only, no distance-field rendering)
+- [ ] No spatial event emission (does not emit `PLAYER_MOVED`, `BRANCH_ENTERED`, `NODE_CLICKED`, `COLLISION_DETECTED`)
+- [ ] Does not load IMAGINARIUM output (no shader/palette/manifest consumption)
+- [ ] Does not load CHRONOS topology (hardcoded or mock data)
+- [ ] 0 tests
+- [ ] No hybrid LOD system (SDF far, mesh near)
+
+---
+
+## LUDUS - The Mechanics (~90%)
+
+**Status:** Full combat engine with deterministic replay. 17 source modules. 251 tests across 4 test files, all passing. Headless-compatible (no DOM/rendering dependencies).
+
+### Implemented - Core
+
+- [x] **SeededRandom** - Deterministic xoshiro128** PRNG
+- [x] **GameStore** - Zustand state management
+- [x] **CharacterSystem** - 3 classes (Tank/Healer/DPS), leveling, stat growth
+- [x] **BalanceConfig** - Centralized tuning constants
+
+### Implemented - Combat Engine
+
+- [x] **TurnBasedEngine** - Full turn loop with phase management
+- [x] **CombatMath** - Damage formulas, critical hits, elemental multipliers
+- [x] **MonsterFactory** - 4 bug types (null-pointer, memory-leak, race-condition, off-by-one), severity 1-5
+- [x] **SpellFactory** - Symbol-driven spell generation, 4 elements
+- [x] **EnemyAI** - Threat evaluation, spell selection, target priority
+- [x] **StatusEffects** - Poison, regen, shield, stun, buff/debuff system
+
+### Implemented - Game Systems
+
+- [x] **QuestGenerator** - Quest generation from Git history (bug-hunt, refactor, feature, archaeology)
+- [x] **EncounterSystem** - File-pattern and complexity-based encounter triggers
+- [x] **InventorySystem** - Item management, consumables, loot
+- [x] **ProgressionSystem** - XP, leveling, stat growth curves
+
+### Implemented - Infrastructure
+
+- [x] **EventWiring** - EventBus integration (LUDUS <-> other pillars)
+- [x] **SimulationHarness** - Headless combat simulation for balance testing
+- [x] **SaveSystem** - Serialization/deserialization of game state
+
+**Tests:** 4 test files (combat-engine, core-data-layer, game-systems, integration-e2e), 251 tests, deterministic replay verified
+
+### Gaps
+
+- [ ] Multi-enemy targeting is basic (single target per action)
+- [ ] No equipment slots (items are consumable-only)
+
+---
+
+## OCULUS - The Interface (~90%)
+
+**Status:** Full UI component library. OculusProvider context, Zustand store with EventBus subscriptions, 8 composite components, 5 atomic primitives, 3 hooks. 21 source files (7 .ts + 14 .tsx). CSS design system with tokens, animations, responsive layout.
+
+### Implemented - Core
+
+- [x] **OculusProvider** - React context wrapper with config
+- [x] **useOculusStore** - Zustand store (panels, camera mode, battle state, code reader)
+- [x] **useEventSubscriptions** - EventBus listener management
+- [x] **useInputCapture / useIsUiHovered** - Input coordination between UI and 3D scene
+- [x] **useKeyboardShortcuts** - Q (quest log), M (minimap), Esc (close)
+
+### Implemented - Components
+
+- [x] **HUD** - Health/mana bars, mode indicator, corner layout
+- [x] **Minimap** - SVG-based, spatial awareness, click-to-navigate
+- [x] **BattleUI** - Turn-based combat UI, spell buttons, battle log
+- [x] **QuestLog** - Compact tracker + full overlay, quest state management
+- [x] **MillerColumns** - Virtualized file navigator, keyboard nav, breadcrumbs
+- [x] **CodeReader** - Line numbers, metadata header, hotspot highlighting
+- [x] **FalconModeOverlay** - Heatmap visualization, stats, top hotspots
+- [x] **Billboard3D** - R3F Html wrapper (optional drei peer dep)
+
+### Implemented - Primitives
+
+- [x] **Panel** - Base container with glass-morphism styling
+- [x] **ProgressBar** - Health/mana/XP variants with animations
+- [x] **IconBadge** - Status icons with tooltip
+- [x] **StatLabel** - Key-value stat display
+- [x] **Tooltip** - Hover tooltip with positioning
+
+### Implemented - Design System
+
+- [x] CSS custom properties (tokens)
+- [x] Animations (fade, slide, pulse)
 - [x] Mobile responsive layout
-- [x] Accessibility (ARIA roles, keyboard navigation, reduced motion)
-- [x] Unit tests (20 tests, all passing)
+- [x] Accessibility (ARIA roles, keyboard nav, reduced motion)
 
-**Status:** 90% - Full component library built, awaiting integration testing
+**Tests:** 1 test file (useOculusStore.test.ts), 20 tests, all passing
 
----
+### Gaps
 
-### OPERATUS - The Infrastructure
-- [x] Basic file loading (generated artifacts)
-- [ ] OPFS cache implementation
-- [ ] Manifest parser
-- [ ] State persistence (save/load)
-- [ ] CDN integration
-- [ ] SpaceTimeDB client (future)
-
-**Status:** 10% - Can load static files
+- [ ] CodeReader content loading is empty (placeholder, no file fetching)
+- [ ] No syntax highlighting in CodeReader
+- [ ] No integration tests with LUDUS combat events
 
 ---
 
-## 📅 Next Milestones
+## OPERATUS - The Infrastructure (~85%)
 
-### Milestone 1: CHRONOS Complete (Week 2-3)
-**Goal:** Parse Dendrovia's own codebase
+**Status:** Tiered caching, asset loading, state persistence, cross-tab sync, service worker, and performance monitoring. 24 source modules across 7 subsystems.
 
-**Deliverables:**
-- [ ] topology.json (file tree structure)
-- [ ] commits.json (Git history with classifications)
-- [ ] hotspots.json (high-risk areas)
-- [ ] bugs.json (detected bug fixes)
+### Implemented - Cache
 
-**Success Criteria:**
-- ✅ Parse 100+ files
-- ✅ Classify 50+ commits
-- ✅ Identify 10+ hotspots
+- [x] **CacheManager** - Unified cache with Memory + OPFS + IDB tiers
+- [x] **OPFSCache** - Origin Private File System cache, `isOPFSSupported` detection
+- [x] **IDBCache** - IndexedDB-backed persistent cache
 
----
+### Implemented - Asset Loading
 
-### Milestone 2: IMAGINARIUM Distillation (Week 4-5)
-**Goal:** Generate shaders from topology
+- [x] **AssetLoader** - Priority-based asset loading queue
+- [x] **CDNLoader** - CDN streaming with progress tracking
 
-**Deliverables:**
-- [ ] 5 unique SDF shaders
-- [ ] Deterministic caching system
-- [ ] Color palettes for different languages
+### Implemented - Persistence
 
-**Success Criteria:**
-- ✅ Generate valid GLSL code
-- ✅ Same input → same output (determinism)
-- ✅ <5 second generation time
+- [x] **StatePersistence** - Zustand + IDB integration with FNV-1a checksums
+- [x] **GameStore** - Persisted game state with hydration
+- [x] **AutoSave** - 3-layer auto-save (memory, session, persistent)
+- [x] Save slot management (`listSaveSlots`, `deleteSaveSlot`, `exportSave`, `importSave`)
+- [x] Migration system (`registerMigration`)
 
----
+### Implemented - Sync & Monitoring
 
-### Milestone 3: ARCHITECTUS WebGPU (Week 6-7)
-**Goal:** Render procedural dendrites at 60fps
+- [x] **CrossTabSync** - Leader election, state broadcast across browser tabs
+- [x] **PerfMonitor** - Runtime performance metrics, cache stats, loading reports
 
-**Deliverables:**
-- [ ] SDF raymarching system
-- [ ] Hybrid LOD rendering
-- [ ] Falcon + Player camera modes
+### Implemented - Service Worker
 
-**Success Criteria:**
-- ✅ 60fps on desktop (M1 MacBook)
-- ✅ 30fps on mobile (iPhone 12+)
-- ✅ Smooth camera transitions
+- [x] **Service Worker** - Registration, cache invalidation, precaching
+- [x] `registerServiceWorker`, `invalidateSWCache`, `precacheURLs`
 
----
+### Implemented - Manifest
 
-### Milestone 4: Integration (Week 8)
-**Goal:** All pillars working together
+- [x] **ManifestGenerator** - Build-time manifest with hashes (Node API, subpath export)
 
-**Deliverables:**
-- [ ] Full pipeline (parse → generate → render → interact)
-- [ ] 10 generated quests
-- [ ] One working character class
+### Implemented - Other
 
-**Success Criteria:**
-- ✅ Can load a real GitHub repo
-- ✅ Generate playable world
-- ✅ Click branches to read code
+- [x] **initializeOperatus** - Bootstrap function for all subsystems
+- [x] **MultiplayerClient** - Stretch goal stub (SpaceTimeDB-compatible interface)
+
+**Tests:** 3 test files (manifest, perf, persistence), 23 tests
+
+### Gaps
+
+- [ ] Browser API test mocks incomplete (OPFS/IDB tests need jsdom or similar)
+- [ ] Multiplayer is stretch goal (client stub only, no server)
+- [ ] No EventBus emission (`ASSETS_LOADED`, `STATE_PERSISTED`, `CACHE_UPDATED` not wired)
 
 ---
 
-## 🎯 MVP Success Criteria
+## Shared Contract (`@dendrovia/shared`)
 
-At the end of Phase 8 (16 weeks):
+### Types Defined (Complete)
 
-- [ ] Can analyze Dendrovia's own codebase
-- [ ] Generates playable 3D world from file structure
-- [ ] Monument Valley aesthetic achieved
-- [ ] Falcon mode + Player mode both functional
-- [ ] At least 10 quests generated from Git history
-- [ ] One working character class with 4 spells
-- [ ] Turn-based combat with 3 bug types
-- [ ] Runs at 60fps desktop, 30fps mobile
+- [x] CHRONOS output: `ParsedFile`, `ParsedCommit`, `CodeTopology`, `FileTreeNode`, `Hotspot`
+- [x] IMAGINARIUM output: `ProceduralPalette`, `SDFShader`, `NoiseFunction`, `LSystemRule`
+- [x] ARCHITECTUS runtime: `DendriteConfig`, `GameWorldState`
+- [x] LUDUS types: `Character`, `CharacterStats`, `Spell`, `SpellEffect`, `SpellSymbol`, `Monster`, `BattleState`, `BattleReplay`, `DamageResult`, `Item`, `Quest`, `Encounter`, `Bug`, `StatusEffect`, `GrowthRates`, combat phases, actions
+- [x] OCULUS types: `HUDState`, `MillerColumn`, `MillerColumnItem`
+- [x] OPERATUS types: `AssetManifest`, `GameSaveState`
+- [x] Mycology types: `FungalSpecimen`, `MushroomLore`, `MycelialNetwork`, `MycologyCatalogedEvent`
+
+### EventBus (Partial)
+
+- [x] 27 event constants defined in `GameEvents`
+- [x] 18 typed payload interfaces (combat, UI, spatial)
+- [ ] 9 event payload types missing: `COLLISION_DETECTED`, `PARSE_COMPLETE`, `TOPOLOGY_GENERATED`, `SHADERS_COMPILED`, `PALETTE_GENERATED`, `MYCOLOGY_CATALOGED`, `ASSETS_LOADED`, `STATE_PERSISTED`, `CACHE_UPDATED`
+
+---
+
+## Current Blockers
+
+### High Priority - Integration Gaps
+
+1. **ARCHITECTUS does not emit spatial events** - `PLAYER_MOVED`, `BRANCH_ENTERED`, `NODE_CLICKED`, `COLLISION_DETECTED` are defined but never emitted. LUDUS encounter system and OCULUS UI cannot react to player movement.
+2. **ARCHITECTUS does not consume IMAGINARIUM output** - Shaders, palettes, and manifests are generated but not loaded. The renderer uses hardcoded/mock geometry instead of distilled assets.
+3. **No unified app bootstrap** - No top-level application shell that wires all six pillars together (Canvas + UI + game state + asset loading).
+4. **9 event payload types missing from shared contract** - Build-time events (`PARSE_COMPLETE`, `TOPOLOGY_GENERATED`, `SHADERS_COMPILED`, `PALETTE_GENERATED`, `MYCOLOGY_CATALOGED`) and infrastructure events (`ASSETS_LOADED`, `STATE_PERSISTED`, `CACHE_UPDATED`, `COLLISION_DETECTED`) lack typed interfaces.
+
+### Medium Priority
+
+5. **CHRONOS has 0 tests** - Most complex parsing logic is untested.
+6. **ARCHITECTUS has 0 tests** - Rendering components untested.
+7. **CodeReader content is empty** - OCULUS CodeReader has no file-fetching mechanism to display source code.
+
+### Low Priority
+
+8. **No SDF raymarching in ARCHITECTUS** - Uses instanced meshes only; the "melted plastic" SDF aesthetic is not yet rendered.
+9. **Multiplayer is stretch goal** - OPERATUS has a stub client but no server.
+
+---
+
+## Testing Summary
+
+| Pillar | Test Files | Test Count | Status |
+|--------|-----------|------------|--------|
+| CHRONOS | 0 | 0 | No tests |
+| IMAGINARIUM | 16 | 181 | All passing |
+| ARCHITECTUS | 0 | 0 | No tests |
+| LUDUS | 4 | 251 | All passing |
+| OCULUS | 1 | 20 | All passing |
+| OPERATUS | 3 | 23 | All passing |
+| **Total** | **24** | **475** | **475 passing** |
+
+---
+
+## Progress Tracking
+
+| Pillar | Completion | Source Files | Exports | Critical Path |
+|--------|-----------|-------------|---------|---------------|
+| CHRONOS | ~85% | 10 | 24 functions, 11 types | Yes |
+| IMAGINARIUM | ~95% | 34 | 50+ functions, 20+ types | Yes |
+| ARCHITECTUS | ~60% | 15 | 12 components/systems, 5 types | Yes |
+| LUDUS | ~90% | 17 | 15 modules (re-exported) | No |
+| OCULUS | ~90% | 21 | 8 components, 5 primitives, 3 hooks | No |
+| OPERATUS | ~85% | 24 | 20+ functions, 15+ types | No |
+
+**Critical Path:** CHRONOS -> IMAGINARIUM -> ARCHITECTUS (build-time pipeline feeds the renderer)
+
+LUDUS, OCULUS, and OPERATUS develop in parallel and integrate via EventBus.
+
+---
+
+## Milestones
+
+### Milestone 1: Per-Pillar Completion (Done)
+
+- [x] CHRONOS: 9 modules, CLI, 5 JSON artifacts
+- [x] IMAGINARIUM: Full distillation pipeline + mycology
+- [x] LUDUS: Full combat engine + game systems + 251 tests
+- [x] OCULUS: Full component library + design system
+- [x] OPERATUS: Tiered caching + persistence + sync
+
+### Milestone 2: CHRONOS Testing (Next)
+
+**Goal:** Add test coverage to the parsing pipeline.
+
+- [ ] Git parser unit tests (mock repos)
+- [ ] AST parser tests (TypeScript/JavaScript)
+- [ ] Commit classifier accuracy tests
+- [ ] Complexity analyzer edge cases
+- [ ] Integration test: parse Dendrovia's own codebase
+
+### Milestone 3: Cross-Pillar Integration (Next)
+
+**Goal:** Wire all six pillars into a functioning application.
+
+- [ ] ARCHITECTUS loads IMAGINARIUM-generated shaders + palettes
+- [ ] ARCHITECTUS loads CHRONOS topology.json for tree structure
+- [ ] ARCHITECTUS emits spatial events on player movement and node interaction
+- [ ] LUDUS receives spatial events and triggers encounters
+- [ ] OCULUS reacts to combat and quest events in real time
+- [ ] OPERATUS manages asset loading and state persistence at runtime
+- [ ] Unified app shell (React root with Canvas + OCULUS overlay)
+
+### Milestone 4: SDF Raymarching (Future)
+
+**Goal:** Implement the "melted plastic" distance-field aesthetic.
+
+- [ ] SDF raymarching shader system in ARCHITECTUS
+- [ ] Hybrid LOD (SDF at distance, instanced mesh up close)
+- [ ] Load IMAGINARIUM-generated SDF shaders at runtime
+- [ ] Smooth transitions between LOD levels
+
+### Milestone 5: MVP (Future)
+
+**Goal:** Playable experience analyzing a real GitHub repository.
+
+- [ ] Load and analyze any Git repository via CHRONOS
+- [ ] Generate procedural world from topology
+- [ ] Navigate in Falcon mode and Player mode
+- [ ] Encounter bugs and fight them in turn-based combat
+- [ ] Complete quests generated from Git history
+- [ ] 60fps desktop, 30fps mobile
 - [ ] <1MB initial load, <10MB total
 
 ---
 
-## 📊 Progress Tracking
+## Architecture Diagram
 
-| Pillar | Completion | Critical Path |
-|--------|-----------|---------------|
-| CHRONOS | 5% | ✅ Yes |
-| IMAGINARIUM | 10% | ✅ Yes |
-| ARCHITECTUS | 15% | ✅ Yes |
-| LUDUS | 5% | ❌ No |
-| OCULUS | 90% | ❌ No |
-| OPERATUS | 10% | ❌ No |
+```
+BUILD-TIME                          RUNTIME
+----------                          -------
 
-**Critical Path:** CHRONOS → IMAGINARIUM → ARCHITECTUS
-
-LUDUS, OCULUS, and OPERATUS can develop in parallel once the core pipeline works.
-
----
-
-## 🔥 Current Blockers
-
-### High Priority
-1. **AI Distillation Unproven** - Need POC for image → SDF conversion
-2. **WebGPU Performance Unknown** - Need benchmarks on real hardware
-3. **Git Parser Not Started** - Blocking quest generation
-
-### Medium Priority
-4. **Camera Controller** - Player mode physics not implemented
-5. **Turn-Based Combat** - Game loop not started
-
-### Low Priority
-6. **Miller Columns** - UI polish, not critical path
-7. **SpaceTimeDB** - Future feature
+CHRONOS ──── topology.json ────┐
+  (parse)    commits.json      │    ARCHITECTUS (R3F scene)
+             hotspots.json     ├──► loads generated assets
+             contributors.json│    emits spatial events
+             tree.json         │        │
+                               │        ▼
+IMAGINARIUM ─ palettes/ ──────┘    LUDUS (game logic)
+  (distill)   shaders/             receives spatial events
+              noise/               emits combat events
+              lsystem/                  │
+              manifest.json             ▼
+              mycology/            OCULUS (UI components)
+                                   reads game state
+                                   dispatches user actions
+                                        │
+                                        ▼
+                                   OPERATUS (infrastructure)
+                                   caches assets
+                                   persists state
+                                   syncs tabs
+```
 
 ---
 
-## 🧪 Testing Strategy
-
-### Unit Tests
-- [ ] CHRONOS: Git parsing correctness
-- [ ] IMAGINARIUM: Deterministic generation
-- [ ] LUDUS: Combat simulation
-
-### Integration Tests
-- [ ] Full pipeline (parse → render)
-- [ ] EventBus communication
-
-### Performance Tests
-- [ ] SDF rendering benchmarks
-- [ ] Mobile device testing
-- [ ] Asset loading times
-
----
-
-*Last Updated: 2026-02-12*
+*Last Updated: 2026-02-13*

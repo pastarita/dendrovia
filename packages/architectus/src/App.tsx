@@ -1,8 +1,9 @@
 import { Suspense, useEffect, useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
-import type { FileTreeNode, ProceduralPalette, Hotspot } from '@dendrovia/shared';
+import type { FileTreeNode, ProceduralPalette, Hotspot, LSystemRule } from '@dendrovia/shared';
 import { useRendererStore } from './store/useRendererStore';
+import { loadGeneratedAssets } from './loader/AssetBridge';
 import { detectGPU } from './renderer/detectGPU';
 import { DendriteWorld } from './components/DendriteWorld';
 import { CameraRig } from './components/CameraRig';
@@ -29,6 +30,8 @@ interface AppProps {
   palette?: ProceduralPalette;
   /** Hotspot data from CHRONOS */
   hotspots?: Hotspot[];
+  /** Path to IMAGINARIUM manifest.json (triggers asset loading when provided) */
+  manifestPath?: string;
 }
 
 // Default "beautiful fallback" palette (Tron-inspired)
@@ -79,7 +82,7 @@ const DEMO_TOPOLOGY: FileTreeNode = {
   ],
 };
 
-export function App({ topology, palette, hotspots }: AppProps = {}) {
+export function App({ topology, palette, hotspots, manifestPath }: AppProps = {}) {
   const quality = useRendererStore((s) => s.quality);
   const setQualityTier = useRendererStore((s) => s.setQualityTier);
   const setGpuBackend = useRendererStore((s) => s.setGpuBackend);
@@ -89,11 +92,18 @@ export function App({ topology, palette, hotspots }: AppProps = {}) {
   const fps = useRendererStore((s) => s.fps);
   const selectedNodeId = useRendererStore((s) => s.selectedNodeId);
   const qualityTier = useRendererStore((s) => s.qualityTier);
+  const generatedAssets = useRendererStore((s) => s.generatedAssets);
+  const setGeneratedAssets = useRendererStore((s) => s.setGeneratedAssets);
 
   const [gpuReady, setGpuReady] = useState(false);
 
   const activeTopology = topology ?? DEMO_TOPOLOGY;
-  const activePalette = palette ?? DEFAULT_PALETTE;
+
+  // Palette priority: explicit prop > loaded IMAGINARIUM palette > hardcoded default
+  const activePalette = palette ?? generatedAssets?.palette ?? DEFAULT_PALETTE;
+
+  // L-system rules from IMAGINARIUM (if available)
+  const activeLSystem: LSystemRule | undefined = generatedAssets?.lsystem ?? undefined;
 
   // Phase 1: GPU detection on mount
   useEffect(() => {
@@ -109,6 +119,19 @@ export function App({ topology, palette, hotspots }: AppProps = {}) {
 
     return () => { cancelled = true; };
   }, [setQualityTier, setGpuBackend, setLoading]);
+
+  // Phase 2: Load IMAGINARIUM generated assets (non-blocking)
+  useEffect(() => {
+    if (!manifestPath) return;
+    let cancelled = false;
+
+    loadGeneratedAssets(manifestPath).then((assets) => {
+      if (cancelled || !assets) return;
+      setGeneratedAssets(assets);
+    });
+
+    return () => { cancelled = true; };
+  }, [manifestPath, setGeneratedAssets]);
 
   // Toggle camera mode with 'C' key
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -177,6 +200,7 @@ export function App({ topology, palette, hotspots }: AppProps = {}) {
             topology={activeTopology}
             hotspots={hotspots}
             palette={activePalette}
+            lsystemOverride={activeLSystem}
           />
           <PostProcessing />
         </Suspense>

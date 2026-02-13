@@ -2,6 +2,8 @@ import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
+import { getEventBus, GameEvents } from '@dendrovia/shared';
+import type { PlayerMovedEvent } from '@dendrovia/shared';
 import { useRendererStore } from '../store/useRendererStore';
 
 type OrbitControlsImpl = {
@@ -37,6 +39,9 @@ const FALCON_DEFAULTS = {
 
 const TRANSITION_DURATION = 1.5; // seconds
 
+/** Minimum distance (in world units) the camera must move before emitting PLAYER_MOVED */
+const MOVE_EMIT_THRESHOLD = 0.5;
+
 export function CameraRig() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
@@ -44,6 +49,9 @@ export function CameraRig() {
   const transitioning = useRendererStore((s) => s.cameraTransitioning);
   const playerPosition = useRendererStore((s) => s.playerPosition);
   const { camera } = useThree();
+
+  // Track last emitted position for PLAYER_MOVED debouncing
+  const lastEmittedPos = useRef(new THREE.Vector3(Infinity, Infinity, Infinity));
 
   // Transition state
   const transitionRef = useRef({
@@ -105,6 +113,22 @@ export function CameraRig() {
     if (progress >= 1) {
       t.active = false;
       useRendererStore.setState({ cameraTransitioning: false });
+    }
+  });
+
+  // Emit PLAYER_MOVED when camera moves more than MOVE_EMIT_THRESHOLD units
+  useFrame(() => {
+    const dist = camera.position.distanceTo(lastEmittedPos.current);
+    if (dist >= MOVE_EMIT_THRESHOLD) {
+      lastEmittedPos.current.copy(camera.position);
+
+      const branchId = useRendererStore.getState().playerBranchId;
+
+      getEventBus().emit<PlayerMovedEvent>(GameEvents.PLAYER_MOVED, {
+        position: camera.position.toArray() as [number, number, number],
+        branchId: branchId ?? 'root',
+        velocity: [0, 0, 0],
+      });
     }
   });
 

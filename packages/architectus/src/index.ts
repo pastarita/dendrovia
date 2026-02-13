@@ -25,3 +25,7 @@ export { LSystem } from './systems/LSystem';
 export { TurtleInterpreter } from './systems/TurtleInterpreter';
 export type { BranchSegment, NodeMarker, TreeGeometry, TurtleState } from './systems/TurtleInterpreter';
 export type { QualityTier } from './store/useRendererStore';
+
+// Loader — IMAGINARIUM asset bridge
+export { loadGeneratedAssets } from './loader/AssetBridge';
+export type { GeneratedAssets } from './loader/AssetBridge';

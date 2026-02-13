@@ -13,6 +13,11 @@
   "dependencies": {
     "@repo/ui": "*",
     "@dendrovia/engine": "*",
+    "@dendrovia/shared": "workspace:*",
+    "@dendrovia/architectus": "workspace:*",
+    "@dendrovia/ludus": "workspace:*",
+    "@dendrovia/oculus": "workspace:*",
+    "@dendrovia/operatus": "workspace:*",
     "@react-three/fiber": "^9.0.0",
     "@react-three/drei": "^10.0.0",
     "@react-three/postprocessing": "^2.16.4",

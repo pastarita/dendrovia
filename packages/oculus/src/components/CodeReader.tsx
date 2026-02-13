@@ -7,6 +7,7 @@
 
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { useOculusStore } from '../store/useOculusStore';
+import { useCodeLoader } from '../hooks/useCodeLoader';
 import { Panel } from './primitives/Panel';
 import { IconBadge } from './primitives/IconBadge';
 import { StatLabel } from './primitives/StatLabel';
@@ -37,11 +38,22 @@ function parseLines(content: string, hotspotLines?: Set<number>): CodeLine[] {
   }));
 }
 
-export function CodeReader() {
+export interface CodeReaderProps {
+  /** Options forwarded to the useCodeLoader hook */
+  codeLoaderOptions?: {
+    baseUrl?: string;
+    fetchContent?: (filePath: string) => Promise<string>;
+  };
+}
+
+export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
   const codeReader = useOculusStore((s) => s.codeReader);
   const activePanel = useOculusStore((s) => s.activePanel);
   const closeCodeReader = useOculusStore((s) => s.closeCodeReader);
   const hotspots = useOculusStore((s) => s.hotspots);
+
+  // Automatically fetch file content when filePath is set without content
+  useCodeLoader(codeLoaderOptions);
 
   // Find hotspot for this file
   const fileHotspot = useMemo(
@@ -142,7 +154,49 @@ export function CodeReader() {
           aria-label="Source code"
           tabIndex={0}
         >
-          {codeReader.content ? (
+          {codeReader.loading ? (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: 'var(--oculus-text-muted)',
+              gap: 'var(--oculus-space-sm)',
+            }}>
+              <div
+                className="oculus-code-reader__spinner"
+                style={{
+                  width: 24,
+                  height: 24,
+                  border: '2px solid var(--oculus-border)',
+                  borderTop: '2px solid var(--oculus-amber)',
+                  borderRadius: '50%',
+                  animation: 'oculus-spin 0.8s linear infinite',
+                }}
+                role="status"
+                aria-label="Loading file content"
+              />
+              <span>Loading {fileName}...</span>
+            </div>
+          ) : codeReader.error && !codeReader.content ? (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: 'var(--oculus-danger, #ff4444)',
+              gap: 'var(--oculus-space-sm)',
+              padding: 'var(--oculus-space-lg)',
+              textAlign: 'center',
+            }}>
+              <span style={{ fontSize: 'var(--oculus-font-md)' }}>Failed to load file</span>
+              <span style={{ fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-text-muted)' }}>
+                {codeReader.error}
+              </span>
+            </div>
+          ) : codeReader.content ? (
             <table
               style={{
                 width: '100%',
@@ -198,7 +252,7 @@ export function CodeReader() {
               height: '100%',
               color: 'var(--oculus-text-muted)',
             }}>
-              Loading...
+              No content available
             </div>
           )}
         </div>

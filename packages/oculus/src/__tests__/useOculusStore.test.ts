@@ -23,7 +23,7 @@ function resetStore() {
     playerSpells: [],
     topology: null,
     hotspots: [],
-    codeReader: { filePath: null, content: null, language: 'typescript' },
+    codeReader: { filePath: null, content: null, language: 'typescript', loading: false, error: null },
     millerSelection: [],
     isUiHovered: false,
     playerPosition: [0, 0, 0],
@@ -176,6 +176,47 @@ describe('useOculusStore', () => {
       const state = useOculusStore.getState();
       expect(state.codeReader.filePath).toBeNull();
       expect(state.activePanel).toBe('none');
+      expect(state.codeReader.loading).toBe(false);
+      expect(state.codeReader.error).toBeNull();
+    });
+
+    it('sets loading when opened without content', () => {
+      useOculusStore.getState().openCodeReader('src/main.ts', '', 'typescript');
+      const state = useOculusStore.getState();
+      expect(state.codeReader.filePath).toBe('src/main.ts');
+      expect(state.codeReader.content).toBeNull();
+      expect(state.codeReader.loading).toBe(true);
+    });
+
+    it('does not set loading when opened with content', () => {
+      useOculusStore.getState().openCodeReader('src/main.ts', 'const x = 1;', 'typescript');
+      const state = useOculusStore.getState();
+      expect(state.codeReader.content).toBe('const x = 1;');
+      expect(state.codeReader.loading).toBe(false);
+    });
+
+    it('sets code content', () => {
+      useOculusStore.getState().openCodeReader('src/main.ts', '', 'typescript');
+      useOculusStore.getState().setCodeContent('const loaded = true;');
+      const state = useOculusStore.getState();
+      expect(state.codeReader.content).toBe('const loaded = true;');
+      expect(state.codeReader.loading).toBe(false);
+      expect(state.codeReader.error).toBeNull();
+    });
+
+    it('sets code loading state', () => {
+      useOculusStore.getState().setCodeLoading(true);
+      expect(useOculusStore.getState().codeReader.loading).toBe(true);
+      useOculusStore.getState().setCodeLoading(false);
+      expect(useOculusStore.getState().codeReader.loading).toBe(false);
+    });
+
+    it('sets code error and clears loading', () => {
+      useOculusStore.getState().setCodeLoading(true);
+      useOculusStore.getState().setCodeError('File not found');
+      const state = useOculusStore.getState();
+      expect(state.codeReader.error).toBe('File not found');
+      expect(state.codeReader.loading).toBe(false);
     });
   });
 

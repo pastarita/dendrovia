@@ -62,8 +62,8 @@ font-size = 13
 window-padding-x = 10
 window-padding-y = 10
 
-# Confirm before closing window with multiple panes
-confirm-close-surface = true
+# Disable close confirmation popup (recommended for quick window closing)
+confirm-close-surface = false
 
 # Shell integration
 shell-integration = detect

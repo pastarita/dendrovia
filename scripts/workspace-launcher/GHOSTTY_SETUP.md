@@ -69,9 +69,27 @@ bun run launch --ghostty --no-auto-splits
 bun run launch --ghostty --dry-run
 ```
 
-## Step 4: Understanding the Layout
+## Step 4: Understanding the Grid Layout
 
-Each Ghostty window opens with a 3-pane split layout:
+All 6 Ghostty windows are arranged in a 3x2 grid:
+
+```
+┌─────────────┬─────────────┬─────────────┐
+│   CHRONOS   │ IMAGINARIUM │ ARCHITECTUS │
+├─────────────┼─────────────┼─────────────┤
+│    LUDUS    │   OCULUS    │  OPERATUS   │
+└─────────────┴─────────────┴─────────────┘
+```
+
+**Grid features:**
+- Automatic positioning and sizing based on screen resolution
+- 10px gaps between windows for visual separation
+- Optimized for widescreen displays (3456x2234, 1920x1080, etc.)
+- Can be disabled with `--no-grid-layout` flag
+
+## Step 5: Understanding the Split Layout
+
+Each Ghostty window has a 3-pane split layout:
 
 ```
 ┌─────────────────────────────────────┐
@@ -92,7 +110,7 @@ Each Ghostty window opens with a 3-pane split layout:
 - **Bottom-left (15%)**: Commands, logs, monitoring (git, npm, etc.)
 - **Bottom-right (15%)**: Secondary tasks, testing, background processes
 
-## Step 5: Keybindings Reference
+## Step 6: Keybindings Reference
 
 ### Split Navigation
 | Keybinding | Action |
@@ -125,6 +143,16 @@ Each Ghostty window opens with a 3-pane split layout:
 | `cmd+shift+enter` | Toggle split zoom (fullscreen) |
 | `cmd+opt+e` | Equalize all splits |
 | `cmd+w` | Close current split |
+
+## Manual Grid Setup
+
+If auto-grid fails, run manually:
+
+```bash
+./scripts/workspace-launcher/setup-ghostty-grid.sh
+```
+
+Or arrange windows manually using macOS window management (Rectangle, Magnet, Stage Manager, etc.)
 
 ## Manual Split Setup
 

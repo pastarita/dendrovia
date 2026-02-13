@@ -3,15 +3,17 @@
  *
  * Launches 6 Ghostty windows (one per pillar) with custom themes.
  *
- * Limitations vs iTerm2:
- * - No precise window positioning (macOS handles placement)
- * - No programmatic splits (user creates with cmd+d, cmd+shift+d)
- * - Single pane per window initially
+ * Features:
+ * - Custom themes per pillar (color-matched to VS Code themes)
+ * - Automatic grid layout (3x2 grid) via AppleScript
+ * - Automatic split configuration (70/30 with bottom vertical split)
+ * - Per-pillar working directories and context
  *
- * Advantages:
- * - Simpler theming (400+ built-in themes)
- * - Faster (GPU-accelerated)
- * - Native split support (manual)
+ * Advantages over iTerm2:
+ * - Simpler theming (built-in theme system)
+ * - Faster rendering (GPU-accelerated)
+ * - Native split support
+ * - Cleaner configuration
  */
 
 import type { DendroviaConfig, Pillar } from "./pillar-registry";
@@ -124,6 +126,17 @@ export async function launchGhosttyWorkspace(
 
   console.log("\\n✅ Workspace launched in Ghostty!");
 
+  // Auto-arrange windows in grid layout if requested
+  if (options.gridLayout !== false) {
+    console.log("\\n📐 Arranging windows in grid layout...");
+    try {
+      await $`./scripts/workspace-launcher/setup-ghostty-grid.sh`;
+    } catch (error) {
+      console.warn("⚠️  Could not arrange windows in grid. You can run manually:");
+      console.warn("   ./scripts/workspace-launcher/setup-ghostty-grid.sh");
+    }
+  }
+
   // Auto-configure splits if requested
   if (options.autoSplits !== false) {
     console.log("\\n📐 Configuring window splits...");
@@ -136,10 +149,12 @@ export async function launchGhosttyWorkspace(
   }
 
   console.log("\\n💡 Tips:");
-  console.log("  - Top pane (70%): Main workspace");
-  console.log("  - Bottom-left (15%): Commands/logs");
-  console.log("  - Bottom-right (15%): Secondary tasks");
+  console.log("  - Windows arranged in 3x2 grid (CHRONOS, IMAGINARIUM, ARCHITECTUS / LUDUS, OCULUS, OPERATUS)");
+  console.log("  - Each window has 70/30 split (top: main, bottom: commands/secondary)");
   console.log("  - cmd+option+arrows: Resize splits");
   console.log("  - cmd+[ / cmd+]: Navigate splits");
   console.log("  - cmd+shift+enter: Toggle split zoom");
+  console.log("\\n🎛️  Options:");
+  console.log("  --no-grid-layout: Skip automatic window positioning");
+  console.log("  --no-auto-splits: Skip automatic split configuration");
 }

@@ -28,6 +28,49 @@
 
 ---
 
+### 🪟 Grid Window Layout
+
+**Implemented automatic 3x2 grid positioning:**
+
+```
+┌─────────────┬─────────────┬─────────────┐
+│   CHRONOS   │ IMAGINARIUM │ ARCHITECTUS │
+├─────────────┼─────────────┼─────────────┤
+│    LUDUS    │   OCULUS    │  OPERATUS   │
+└─────────────┴─────────────┴─────────────┘
+```
+
+**Components:**
+
+1. **`ghostty-window-grid.applescript`**
+   - AppleScript to position windows in grid layout
+   - Calculates screen dimensions and window sizes
+   - Positions each window with configurable gaps
+   - Handles 3x2 grid (3 columns, 2 rows)
+   - Accounts for menu bar and screen margins
+
+2. **`setup-ghostty-grid.sh`**
+   - Bash script to arrange all windows
+   - Calls AppleScript after windows are launched
+   - Waits for windows to fully open
+   - Provides visual feedback of grid layout
+   - Handles errors gracefully
+
+3. **Auto-execution in launcher**
+   - Automatically runs after window launch
+   - Runs BEFORE split configuration
+   - Configurable via `gridLayout` option
+   - Can be disabled with `--no-grid-layout`
+
+**Grid Configuration:**
+- **Columns:** 3 (CHRONOS, IMAGINARIUM, ARCHITECTUS in top row)
+- **Rows:** 2 (LUDUS, OCULUS, OPERATUS in bottom row)
+- **Gap:** 10px between windows
+- **Margins:** 60px top (menu bar), 0px sides/bottom
+- **Adaptive:** Automatically sizes based on screen resolution
+
+---
+
 ### 📐 Split Layout Automation
 
 **Implemented 70/30 split with vertical bottom split:**
@@ -147,9 +190,10 @@ bun run launch --ghostty
 **This will:**
 1. ✅ Launch 6 Ghostty windows (one per pillar)
 2. ✅ Apply custom theme to each window
-3. ✅ Auto-create 70/30 split layout
-4. ✅ Auto-split bottom pane vertically
-5. ✅ Position cursor in top pane
+3. ✅ Arrange windows in 3x2 grid layout
+4. ✅ Auto-create 70/30 split layout in each window
+5. ✅ Auto-split bottom pane vertically
+6. ✅ Position cursor in top pane
 
 ### Launch Options
 
@@ -161,6 +205,16 @@ bun run launch --ghostty --pillars CHRONOS IMAGINARIUM
 **Without auto-splits:**
 ```bash
 bun run launch --ghostty --no-auto-splits
+```
+
+**Without grid layout:**
+```bash
+bun run launch --ghostty --no-grid-layout
+```
+
+**Minimal (no automation):**
+```bash
+bun run launch --ghostty --no-grid-layout --no-auto-splits
 ```
 
 **Dry run:**
@@ -198,13 +252,17 @@ Or create manually:
 └── dendrovia-operatus
 ```
 
-### Scripts (4 files)
+### Scripts (8 files)
 ```
 scripts/workspace-launcher/
-├── ghostty-split-layout.applescript
-├── setup-ghostty-splits.sh
-├── ghostty-config-snippet.txt
-└── GHOSTTY_SETUP.md
+├── ghostty-window-grid.applescript    (NEW: Grid positioning)
+├── setup-ghostty-grid.sh              (NEW: Grid orchestration)
+├── ghostty-split-layout.applescript   (Split automation)
+├── setup-ghostty-splits.sh            (Split orchestration)
+├── install-ghostty-themes.sh          (Theme installation)
+├── ghostty-config-snippet.txt         (Config reference)
+├── GHOSTTY_SETUP.md                   (Setup guide)
+└── themes/                            (Theme files + README)
 ```
 
 ### Updated Files (2 files)
@@ -244,20 +302,28 @@ Or manually copy from `ghostty-config-snippet.txt`
 - Colors derived from PILLAR_THEMATIC_SCHEMA.md
 - Consistent with VS Code themes
 
-### 2. **Automated Layout**
+### 2. **Automated Window Grid**
+- 3x2 grid layout (3 columns, 2 rows)
+- Automatic positioning and sizing
+- Optimized for widescreen displays
+- Configurable gaps and margins
+
+### 3. **Automated Split Layout**
 - No manual split creation required
 - Consistent 70/30 split across all windows
 - Bottom pane split vertically for multi-tasking
+- 3-pane layout (main, commands, secondary)
 
-### 3. **Enhanced Navigation**
+### 4. **Enhanced Navigation**
 - Vim-style split navigation (hjkl)
 - Fine-grained resize controls
 - Quick split zoom for focus
 
-### 4. **Graceful Degradation**
-- Auto-splits can be disabled
-- Manual fallback provided
-- Works without accessibility permissions (but no auto-splits)
+### 5. **User Experience**
+- No close confirmation popup
+- Graceful degradation (all automation optional)
+- Manual fallback procedures provided
+- Works best with accessibility permissions
 
 ---
 

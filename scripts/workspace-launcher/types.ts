@@ -11,6 +11,8 @@ export interface LaunchOptions {
   dryRun?: boolean;
   /** Layout mode */
   layout?: "grid" | "stack";
+  /** Auto-arrange windows in grid (Ghostty only, default: true) */
+  gridLayout?: boolean;
   /** Auto-configure window splits (Ghostty only, default: true) */
   autoSplits?: boolean;
 }

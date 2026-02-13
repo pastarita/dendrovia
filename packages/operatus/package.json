@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "bun run src/index.ts --watch",
     "test": "bun test",
-    "manifest": "bun run src/manifest/ManifestGenerator.ts"
+    "manifest": "bun run src/manifest/generate.ts"
   },
   "dependencies": {
     "@dendrovia/shared": "workspace:*",

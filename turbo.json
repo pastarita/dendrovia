@@ -29,8 +29,13 @@
       "outputs": ["generated/**/*.{glsl,wgsl,json}"],
       "cache": true
     },
-    "architectus#build": {
+    "operatus#manifest": {
       "dependsOn": ["imaginarium#distill"],
+      "outputs": ["../imaginarium/generated/operatus-manifest.json"],
+      "cache": true
+    },
+    "architectus#build": {
+      "dependsOn": ["imaginarium#distill", "operatus#manifest"],
       "outputs": ["dist/**"]
     }
   }

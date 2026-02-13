@@ -1,34 +1,29 @@
 #!/usr/bin/env bash
 #
 # Setup Ghostty Window Grid Layout
-# Arranges 6 Ghostty windows in a 3x2 grid on the main display
+# NOTE: Ghostty does not support programmatic window positioning via Accessibility APIs
 #
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "📐 Arranging Ghostty windows in grid layout..."
+echo "⚠️  Ghostty Window Grid Limitation"
 echo ""
-
-# Wait a moment for windows to fully open
-sleep 1
-
-# Run the AppleScript to arrange windows
-osascript "$SCRIPT_DIR/ghostty-window-grid.applescript"
-
-if [ $? -eq 0 ]; then
-  echo ""
-  echo "✅ Windows arranged in 3x2 grid"
-  echo ""
-  echo "Grid layout:"
-  echo "┌─────────────┬─────────────┬─────────────┐"
-  echo "│   CHRONOS   │ IMAGINARIUM │ ARCHITECTUS │"
-  echo "├─────────────┼─────────────┼─────────────┤"
-  echo "│    LUDUS    │   OCULUS    │  OPERATUS   │"
-  echo "└─────────────┴─────────────┴─────────────┘"
-else
-  echo ""
-  echo "⚠️  Could not arrange windows in grid"
-  echo "    Make sure Accessibility permissions are granted"
-fi
+echo "Ghostty does not expose windows to macOS Accessibility APIs,"
+echo "so automated grid positioning is not currently possible."
+echo ""
+echo "📖 See GHOSTTY_WINDOW_LIMITATIONS.md for workarounds"
+echo ""
+echo "💡 Manual positioning options:"
+echo "   1. Use Rectangle app (brew install --cask rectangle)"
+echo "   2. Use macOS Stage Manager or Split View"
+echo "   3. Use Hammerspoon for automation"
+echo "   4. Manually arrange with mouse/trackpad"
+echo ""
+echo "Target grid layout:"
+echo "┌─────────────┬─────────────┬─────────────┐"
+echo "│   CHRONOS   │ IMAGINARIUM │ ARCHITECTUS │"
+echo "├─────────────┼─────────────┼─────────────┤"
+echo "│    LUDUS    │   OCULUS    │  OPERATUS   │"
+echo "└─────────────┴─────────────┴─────────────┘"

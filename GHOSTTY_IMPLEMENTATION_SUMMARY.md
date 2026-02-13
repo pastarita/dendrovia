@@ -30,7 +30,9 @@
 
 ### 🪟 Grid Window Layout
 
-**Implemented automatic 3x2 grid positioning:**
+**⚠️ LIMITATION: Ghostty does not support automated window positioning**
+
+**Target grid layout (manual arrangement required):**
 
 ```
 ┌─────────────┬─────────────┬─────────────┐
@@ -40,34 +42,36 @@
 └─────────────┴─────────────┴─────────────┘
 ```
 
-**Components:**
+**Why it doesn't work:**
+- Ghostty does not expose windows to macOS Accessibility APIs
+- AppleScript, JXA, and Python window management cannot access Ghostty windows
+- This is a fundamental limitation of Ghostty's macOS integration
 
-1. **`ghostty-window-grid.applescript`**
-   - AppleScript to position windows in grid layout
-   - Calculates screen dimensions and window sizes
-   - Positions each window with configurable gaps
-   - Handles 3x2 grid (3 columns, 2 rows)
-   - Accounts for menu bar and screen margins
+**Workarounds:**
 
-2. **`setup-ghostty-grid.sh`**
-   - Bash script to arrange all windows
-   - Calls AppleScript after windows are launched
-   - Waits for windows to fully open
-   - Provides visual feedback of grid layout
-   - Handles errors gracefully
+1. **Rectangle app** (Recommended, free)
+   ```bash
+   brew install --cask rectangle
+   ```
+   - Use keyboard shortcuts to position windows
+   - Can save custom layouts
+   - Works with all applications
 
-3. **Auto-execution in launcher**
-   - Automatically runs after window launch
-   - Runs BEFORE split configuration
-   - Configurable via `gridLayout` option
-   - Can be disabled with `--no-grid-layout`
+2. **macOS Stage Manager** (macOS 13+)
+   - Auto-arranges windows intelligently
+   - Built into macOS
 
-**Grid Configuration:**
-- **Columns:** 3 (CHRONOS, IMAGINARIUM, ARCHITECTUS in top row)
-- **Rows:** 2 (LUDUS, OCULUS, OPERATUS in bottom row)
-- **Gap:** 10px between windows
-- **Margins:** 60px top (menu bar), 0px sides/bottom
-- **Adaptive:** Automatically sizes based on screen resolution
+3. **Hammerspoon** (Advanced, free)
+   - Lua-based automation tool
+   - Can force-position Ghostty windows using lower-level APIs
+   - Requires custom configuration
+
+4. **Manual arrangement**
+   - Drag and resize windows
+   - macOS Split View for side-by-side
+
+**Documentation:**
+- See `GHOSTTY_WINDOW_LIMITATIONS.md` for detailed workarounds and examples
 
 ---
 

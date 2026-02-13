@@ -126,15 +126,13 @@ export async function launchGhosttyWorkspace(
 
   console.log("\\n✅ Workspace launched in Ghostty!");
 
-  // Auto-arrange windows in grid layout if requested
+  // Note about grid layout limitation
   if (options.gridLayout !== false) {
-    console.log("\\n📐 Arranging windows in grid layout...");
-    try {
-      await $`./scripts/workspace-launcher/setup-ghostty-grid.sh`;
-    } catch (error) {
-      console.warn("⚠️  Could not arrange windows in grid. You can run manually:");
-      console.warn("   ./scripts/workspace-launcher/setup-ghostty-grid.sh");
-    }
+    console.log("\\n⚠️  Note: Ghostty does not support automated window positioning");
+    console.log("   Please arrange windows manually using:");
+    console.log("   - Rectangle app (brew install --cask rectangle)");
+    console.log("   - macOS Stage Manager or Split View");
+    console.log("   - See GHOSTTY_WINDOW_LIMITATIONS.md for details");
   }
 
   // Auto-configure splits if requested
@@ -149,12 +147,15 @@ export async function launchGhosttyWorkspace(
   }
 
   console.log("\\n💡 Tips:");
-  console.log("  - Windows arranged in 3x2 grid (CHRONOS, IMAGINARIUM, ARCHITECTUS / LUDUS, OCULUS, OPERATUS)");
   console.log("  - Each window has 70/30 split (top: main, bottom: commands/secondary)");
+  console.log("  - Arrange windows manually in 3x2 grid for best layout");
   console.log("  - cmd+option+arrows: Resize splits");
   console.log("  - cmd+[ / cmd+]: Navigate splits");
   console.log("  - cmd+shift+enter: Toggle split zoom");
+  console.log("\\n🪟 Window positioning:");
+  console.log("  - Use Rectangle app for keyboard-based positioning");
+  console.log("  - Use macOS Stage Manager for auto-arrangement");
+  console.log("  - See GHOSTTY_WINDOW_LIMITATIONS.md for details");
   console.log("\\n🎛️  Options:");
-  console.log("  --no-grid-layout: Skip automatic window positioning");
   console.log("  --no-auto-splits: Skip automatic split configuration");
 }

@@ -116,16 +116,39 @@ export interface GameWorldState {
  * (Mechanics and rules)
  */
 
-export interface Character {
-  id: string;
-  name: string;
-  class: 'tank' | 'healer' | 'dps';
+export type CharacterClass = 'tank' | 'healer' | 'dps';
+export type Element = 'fire' | 'water' | 'earth' | 'air' | 'none';
+export type BugType = 'null-pointer' | 'memory-leak' | 'race-condition' | 'off-by-one';
+
+export interface CharacterStats {
   health: number;
   maxHealth: number;
   mana: number;
   maxMana: number;
+  attack: number;
+  defense: number;
+  speed: number;
+}
+
+export interface Character {
+  id: string;
+  name: string;
+  class: CharacterClass;
+  stats: CharacterStats;
   level: number;
   experience: number;
+  spells: string[]; // Spell IDs
+  statusEffects: StatusEffect[];
+  cooldowns: Record<string, number>; // spellId → turns remaining
+}
+
+export interface StatusEffect {
+  id: string;
+  name: string;
+  type: 'poison' | 'regen' | 'shield' | 'stun' | 'attack-up' | 'attack-down' | 'defense-up' | 'defense-down';
+  value: number;
+  remainingTurns: number;
+  stackable: boolean;
 }
 
 export interface Spell {
@@ -135,13 +158,127 @@ export interface Spell {
   manaCost: number;
   cooldown: number;
   effect: SpellEffect;
+  element: Element;
 }
 
 export interface SpellEffect {
-  type: 'damage' | 'heal' | 'buff' | 'debug';
+  type: 'damage' | 'heal' | 'shield' | 'buff' | 'debuff' | 'dot' | 'aoe-damage' | 'cleanse' | 'taunt' | 'revive';
+  target: 'self' | 'enemy' | 'all-enemies' | 'all-allies';
   value: number;
   duration?: number;
 }
+
+export interface SpellSymbol {
+  shape: 'circle' | 'triangle' | 'square' | 'star';
+  element: Element;
+  modifier: 'swift' | 'heavy' | 'precise' | 'chaotic';
+}
+
+export interface GrowthRates {
+  hp: number;
+  mana: number;
+  attack: number;
+  defense: number;
+  speed: number;
+}
+
+/**
+ * LUDUS COMBAT TYPES
+ */
+
+export interface RngState {
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+}
+
+export type CombatPhase =
+  | { type: 'PLAYER_TURN' }
+  | { type: 'ENEMY_TURN'; currentEnemyIndex: number }
+  | { type: 'RESOLUTION' }
+  | { type: 'VICTORY'; xpGained: number; loot: Item[] }
+  | { type: 'DEFEAT'; cause: string };
+
+export type Action =
+  | { type: 'ATTACK'; targetIndex: number }
+  | { type: 'CAST_SPELL'; spellId: string; targetIndex: number }
+  | { type: 'DEFEND' }
+  | { type: 'USE_ITEM'; itemId: string }
+  | { type: 'ENEMY_ACT'; enemyIndex: number };
+
+export interface ActionLogEntry {
+  turn: number;
+  actor: 'player' | `enemy:${number}`;
+  action: Action;
+  result: string;
+}
+
+export interface Monster {
+  id: string;
+  name: string;
+  type: BugType;
+  element: Element;
+  severity: 1 | 2 | 3 | 4 | 5;
+  stats: CharacterStats;
+  spells: string[]; // Spell IDs
+  statusEffects: StatusEffect[];
+  xpReward: number;
+  lootTable: LootEntry[];
+  sourceCommit?: string;
+}
+
+export interface LootEntry {
+  itemId: string;
+  chance: number; // 0-1 probability
+}
+
+export interface BattleState {
+  turn: number;
+  phase: CombatPhase;
+  player: Character;
+  enemies: Monster[];
+  log: ActionLogEntry[];
+  rng: RngState;
+}
+
+export interface BattleReplay {
+  seed: number;
+  playerClass: CharacterClass;
+  playerLevel: number;
+  monsterType: string;
+  monsterSeverity: number;
+  actions: ActionLogEntry[];
+}
+
+export interface DamageResult {
+  damage: number;
+  isCritical: boolean;
+  elementMultiplier: number;
+  log: string;
+}
+
+/**
+ * LUDUS ITEM TYPES
+ */
+
+export interface Item {
+  id: string;
+  name: string;
+  description: string;
+  type: 'consumable' | 'equipment' | 'knowledge';
+  effect: ItemEffect;
+}
+
+export interface ItemEffect {
+  type: 'heal-hp' | 'heal-mana' | 'buff-attack' | 'buff-defense' | 'cleanse' | 'full-restore';
+  value: number;
+  duration?: number;
+}
+
+/**
+ * LUDUS QUEST TYPES
+ */
 
 export interface Quest {
   id: string;
@@ -149,7 +286,7 @@ export interface Quest {
   description: string;
   type: 'bug-hunt' | 'refactor' | 'feature' | 'archaeology';
   status: 'locked' | 'available' | 'active' | 'completed';
-  requirements: string[]; // Quest IDs that must be completed first
+  requirements: string[];
   rewards: QuestReward[];
 }
 
@@ -158,13 +295,27 @@ export interface QuestReward {
   value: number | string;
 }
 
+/**
+ * LUDUS ENCOUNTER TYPES
+ */
+
 export interface Bug {
   id: string;
-  type: 'null-pointer' | 'memory-leak' | 'race-condition' | 'off-by-one';
+  type: BugType;
   severity: 1 | 2 | 3 | 4 | 5;
   health: number;
   position: [number, number, number];
   sourceCommit: string;
+}
+
+export interface Encounter {
+  type: 'bug' | 'boss' | 'miniboss';
+  monster: Monster;
+  triggerCondition: {
+    filePattern?: string;
+    complexity?: number;
+    commitType?: string;
+  };
 }
 
 /**

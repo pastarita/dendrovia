@@ -11,6 +11,8 @@ export interface LaunchOptions {
   dryRun?: boolean;
   /** Layout mode */
   layout?: "grid" | "stack";
+  /** Auto-configure window splits (Ghostty only, default: true) */
+  autoSplits?: boolean;
 }
 
 export interface LaunchResult {

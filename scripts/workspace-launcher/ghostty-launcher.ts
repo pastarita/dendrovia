@@ -18,14 +18,14 @@ import type { DendroviaConfig, Pillar } from "./pillar-registry";
 import type { LaunchOptions } from "./types";
 import { $ } from "bun";
 
-// Ghostty theme mappings for each pillar
+// Ghostty theme mappings for each pillar (using custom Dendrovia themes)
 const PILLAR_THEMES: Record<string, string> = {
-  CHRONOS: "Gruvbox Material",           // Warm amber/sepia
-  IMAGINARIUM: "Catppuccin Mocha",       // Purple/magenta
-  ARCHITECTUS: "Nord",                   // Cool blues
-  LUDUS: "TokyoNight Storm",             // Green/cyan
-  OCULUS: "Everforest Dark Hard",        // Orange/warm
-  OPERATUS: "Zenburn",                   // Gray/steel
+  CHRONOS: "dendrovia-chronos",          // Archaeological amber
+  IMAGINARIUM: "dendrovia-imaginarium",  // Alchemical violet
+  ARCHITECTUS: "dendrovia-architectus",  // Computational blue
+  LUDUS: "dendrovia-ludus",              // Tactical green
+  OCULUS: "dendrovia-oculus",            // Observational amber
+  OPERATUS: "dendrovia-operatus",        // Industrial grey
 };
 
 /**
@@ -123,9 +123,23 @@ export async function launchGhosttyWorkspace(
   }
 
   console.log("\\n✅ Workspace launched in Ghostty!");
+
+  // Auto-configure splits if requested
+  if (options.autoSplits !== false) {
+    console.log("\\n📐 Configuring window splits...");
+    try {
+      await $`./scripts/workspace-launcher/setup-ghostty-splits.sh`;
+    } catch (error) {
+      console.warn("⚠️  Could not auto-configure splits. You can run manually:");
+      console.warn("   ./scripts/workspace-launcher/setup-ghostty-splits.sh");
+    }
+  }
+
   console.log("\\n💡 Tips:");
-  console.log("  - Use cmd+d to split panes right");
-  console.log("  - Use cmd+shift+d to split panes down");
-  console.log("  - macOS will position windows automatically");
-  console.log("  - Manually arrange windows as preferred");
+  console.log("  - Top pane (70%): Main workspace");
+  console.log("  - Bottom-left (15%): Commands/logs");
+  console.log("  - Bottom-right (15%): Secondary tasks");
+  console.log("  - cmd+option+arrows: Resize splits");
+  console.log("  - cmd+[ / cmd+]: Navigate splits");
+  console.log("  - cmd+shift+enter: Toggle split zoom");
 }

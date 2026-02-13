@@ -4,7 +4,8 @@
   "private": true,
   "description": "Autogamification of Codebase Archaeologization - The Six-Pillar Architecture",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "dev": "turbo run dev --parallel",
@@ -12,16 +13,29 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
+    "bd": "turbo run dev --filter='./apps/playground-*'",
+    "bd:all": "turbo run dev",
+    "td": "bun run scripts/td-colorizer.ts --concurrency=25 --filter='!dendrovia-quest'",
+    "td:play": "turbo dev --concurrency=25 --filter='./apps/playground-*'",
+    "td:apps": "turbo dev --concurrency=25 --filter='./apps/*'",
+    "td:quest": "turbo dev --filter=dendrovia-quest",
+    "td:architectus": "turbo dev --filter=@dendrovia/playground-architectus",
+    "td:chronos": "turbo dev --filter=@dendrovia/playground-chronos",
+    "td:imaginarium": "turbo dev --filter=@dendrovia/playground-imaginarium",
+    "td:ludus": "turbo dev --filter=@dendrovia/playground-ludus",
+    "td:oculus": "turbo dev --filter=@dendrovia/playground-oculus",
+    "td:operatus": "turbo dev --filter=@dendrovia/playground-operatus",
     "slice": "cd packages/proof-of-concept && bun run src/thin-slice.ts",
     "launch": "bun run scripts/launch-workspace.ts",
     "launch:dev": "bun run scripts/launch-workspace.ts --dev",
     "launch:list": "bun run scripts/launch-workspace.ts --list"
   },
   "devDependencies": {
-    "turbo": "^2.3.3",
+    "turbo": "^2.7.0",
     "typescript": "^5.7.2",
     "@types/node": "^22.10.5"
   },
+  "packageManager": "bun@1.3.5",
   "engines": {
     "node": ">=20.0.0",
     "bun": ">=1.0.0"

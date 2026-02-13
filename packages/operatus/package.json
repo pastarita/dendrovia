@@ -1,19 +1,35 @@
 {
   "name": "@dendrovia/operatus",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "type": "module",
-  "description": "The Infrastructure - Asset loading, caching, state persistence",
+  "description": "The Infrastructure - Asset loading, caching, state persistence, cross-tab sync, performance monitoring, multiplayer",
   "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./cache": "./src/cache/index.ts",
+    "./loader": "./src/loader/index.ts",
+    "./persistence": "./src/persistence/index.ts",
+    "./sync": "./src/sync/index.ts",
+    "./perf": "./src/perf/index.ts",
+    "./manifest": "./src/manifest/index.ts",
+    "./sw": "./src/sw/index.ts",
+    "./multiplayer": "./src/multiplayer/index.ts"
+  },
   "scripts": {
     "dev": "bun run src/index.ts --watch",
-    "serve": "bun run src/server.ts",
-    "test": "bun test"
+    "test": "bun test",
+    "manifest": "bun run src/manifest/ManifestGenerator.ts"
   },
   "dependencies": {
-    "@dendrovia/shared": "workspace:*"
+    "@dendrovia/shared": "workspace:*",
+    "zustand": "^5.0.0"
+  },
+  "optionalDependencies": {
+    "lz-string": "^1.5.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2",
-    "@types/node": "^22.10.5"
+    "@types/node": "^22.10.5",
+    "@types/lz-string": "^1.5.0"
   }
 }

@@ -19,6 +19,7 @@ import { generate as generateNoise } from '../distillation/NoiseGenerator.js';
 import { generate as generateArt } from '../generation/ArtGen.js';
 import { DeterministicCache } from '../cache/DeterministicCache.js';
 import { hashString } from '../utils/hash.js';
+import { distillMycology } from '../mycology/MycologyPipeline.js';
 
 export interface PipelineResult {
   palettes: Array<{ id: string; palette: ProceduralPalette; path: string }>;
@@ -124,13 +125,34 @@ export async function distill(
   await eventBus.emit(GameEvents.SHADERS_COMPILED, { shaders });
   console.log(`[IMAGINARIUM]   Shaders: ${shaderResults.length} variants`);
 
-  // 8. Generate manifest
+  // 8. Mycology catalogization
+  let mycologyData: ManifestInput['mycology'] | undefined;
+  try {
+    const mycologyManifest = await distillMycology(topology, outputDir);
+    mycologyData = {
+      specimens: mycologyManifest.specimens,
+      network: mycologyManifest.network,
+      assetDir: mycologyManifest.assetDir,
+      specimenCount: mycologyManifest.specimenCount,
+    };
+    await eventBus.emit(GameEvents.MYCOLOGY_CATALOGED, {
+      specimenCount: mycologyManifest.specimenCount,
+      networkEdgeCount: mycologyManifest.networkEdgeCount,
+      manifestPath: 'mycology/manifest.json',
+    });
+    console.log(`[IMAGINARIUM]   Mycology: ${mycologyManifest.specimenCount} specimens, ${mycologyManifest.networkEdgeCount} network edges`);
+  } catch (e) {
+    console.log(`[IMAGINARIUM]   Mycology: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+  }
+
+  // 9. Generate manifest
   const manifestInput: ManifestInput = {
     shaders: shaderResults.map(s => ({ id: s.id, path: s.path })),
     palettes: paletteResults.map(p => ({ id: p.id, path: p.path })),
     topologyPath: topologyPath,
     noisePath: 'noise/global.json',
     lsystemPath: 'lsystems/global.json',
+    mycology: mycologyData,
   };
   const manifest = generateManifest(manifestInput);
   const manifestPath = join(outputDir, 'manifest.json');

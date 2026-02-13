@@ -11,6 +11,12 @@ export interface ManifestInput {
   topologyPath: string;
   noisePath?: string;
   lsystemPath?: string;
+  mycology?: {
+    specimens: string;
+    network: string;
+    assetDir: string;
+    specimenCount: number;
+  };
 }
 
 export function generateManifest(input: ManifestInput): AssetManifest {
@@ -35,11 +41,17 @@ export function generateManifest(input: ManifestInput): AssetManifest {
 
   const checksum = hashString(allPaths.sort().join(':'));
 
-  return {
+  const manifest: AssetManifest = {
     version: '1.0.0',
     shaders,
     palettes,
     topology: input.topologyPath,
     checksum,
   };
+
+  if (input.mycology) {
+    manifest.mycology = input.mycology;
+  }
+
+  return manifest;
 }

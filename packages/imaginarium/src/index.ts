@@ -44,3 +44,32 @@ export {
   glslFloat, glslVec3, glslVec3FromHex, glslUniform, glslFunction,
   validateGLSL, countInstructions, type GLSLValidationResult,
 } from './utils/glsl.js';
+
+// --- Mycology ---
+export {
+  // Pipeline
+  distillMycology,
+  // Catalog
+  catalogize,
+  // Classification
+  classifyGenus, buildTaxonomy, buildFileContext, buildCoChurnMap,
+  // Morphology
+  generateMorphology,
+  // Network
+  buildNetwork,
+  // Lore
+  generateLore,
+  // SVG
+  generateSvg, generateSvgBatch,
+  // Mesh
+  generateMeshData,
+  // TSX
+  MushroomSprite,
+} from './mycology/index.js';
+export type {
+  FungalSpecimen, FungalTaxonomy, FungalGenus,
+  MushroomMorphology, MushroomLore, MycelialNetwork,
+  MycologyManifest, MycologyCatalogedEvent,
+  MushroomMeshData, MushroomSpriteProps,
+  FileContext,
+} from './mycology/index.js';

@@ -16,7 +16,7 @@
     "./multiplayer": "./src/multiplayer/index.ts"
   },
   "scripts": {
-    "dev": "bun run src/index.ts --watch",
+    "dev": "tsc --watch --noEmit",
     "test": "bun test",
     "manifest": "bun run src/manifest/generate.ts"
   },

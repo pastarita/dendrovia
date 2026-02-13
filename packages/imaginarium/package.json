@@ -19,7 +19,8 @@
     "clean": "rm -rf generated/palettes/* generated/shaders/* generated/noise/* generated/lsystems/* generated/manifest.json"
   },
   "dependencies": {
-    "@dendrovia/shared": "workspace:*"
+    "@dendrovia/shared": "workspace:*",
+    "react": "^19.2.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

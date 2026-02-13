@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
+import type { GeneratedAssets } from '../loader/AssetBridge';
 
 /**
  * Quality tiers from T5 research: 5-tier adaptive quality system.
@@ -98,6 +99,9 @@ interface RendererState {
   drawCalls: number;
   triangles: number;
 
+  // Generated assets from IMAGINARIUM (null until loaded)
+  generatedAssets: GeneratedAssets | null;
+
   // Actions
   setCameraMode: (mode: CameraMode) => void;
   setPlayerPosition: (pos: [number, number, number]) => void;
@@ -109,6 +113,7 @@ interface RendererState {
   setSceneReady: (ready: boolean) => void;
   setLoading: (loading: boolean, progress?: number) => void;
   updatePerformance: (fps: number, drawCalls: number, triangles: number) => void;
+  setGeneratedAssets: (assets: GeneratedAssets) => void;
 }
 
 export const useRendererStore = create<RendererState>()(
@@ -135,6 +140,9 @@ export const useRendererStore = create<RendererState>()(
     fps: 0,
     drawCalls: 0,
     triangles: 0,
+
+    // Generated assets (null until IMAGINARIUM assets are loaded)
+    generatedAssets: null,
 
     // Actions
     setCameraMode: (mode) =>
@@ -166,6 +174,9 @@ export const useRendererStore = create<RendererState>()(
 
     updatePerformance: (fps, drawCalls, triangles) =>
       set({ fps, drawCalls, triangles }),
+
+    setGeneratedAssets: (assets) =>
+      set({ generatedAssets: assets }),
   }))
 );
 

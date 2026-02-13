@@ -205,6 +205,12 @@ export interface AssetManifest {
   palettes: Record<string, string>;
   topology: string; // Path to topology.json
   checksum: string;
+  mycology?: {
+    specimens: string;    // path to specimens.json
+    network: string;      // path to network.json
+    assetDir: string;     // path to svg asset directory
+    specimenCount: number;
+  };
 }
 
 export interface GameSaveState {
@@ -213,4 +219,96 @@ export interface GameSaveState {
   quests: Quest[];
   visitedNodes: string[];
   unlockedKnowledge: string[];
+}
+
+/**
+ * MYCOLOGY TYPES
+ * (Forest floor specimens and mycelial networks)
+ */
+
+export interface FungalSpecimen {
+  id: string;
+  filePath: string;
+  taxonomy: {
+    division: string;
+    class: string;
+    order: string;
+    family: string;
+    genus: string;
+    species: string;
+  };
+  morphology: {
+    capShape: string;
+    capWidth: number;
+    capHeight: number;
+    gillAttachment: string;
+    gillCount: number;
+    stem: {
+      height: number;
+      thickness: number;
+      bulbous: boolean;
+      rooting: boolean;
+      ringed: boolean;
+    };
+    sporePrintColor: string;
+    bioluminescence: string;
+    sizeClass: string;
+    spots: boolean;
+    scaleColor: string;
+    gillColor: string;
+  };
+  lore: MushroomLore;
+  placement: {
+    position: [number, number, number];
+    hostTree?: string;
+    substrate: string;
+    clusterSize: number;
+    rotation: number;
+    scale: number;
+  };
+  assets: {
+    svgPath?: string;
+    meshDataPath?: string;
+  };
+}
+
+export interface MushroomLore {
+  tier: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  title: string;
+  flavorText: string;
+  codeInsight: string;
+  domainKnowledge?: string;
+  codeSnippet?: string;
+  discoveredAt?: number;
+}
+
+export interface MycelialNetwork {
+  nodes: Array<{
+    id: string;
+    genus: string;
+    connections: number;
+    isHub: boolean;
+  }>;
+  edges: Array<{
+    source: string;
+    target: string;
+    type: string;
+    signalTypes: string[];
+    strength: number;
+    bidirectional: boolean;
+  }>;
+  clusters: Array<{
+    id: string;
+    nodeIds: string[];
+    internalEdges: number;
+    externalEdges: number;
+    density: number;
+  }>;
+  hubNodes: string[];
+}
+
+export interface MycologyCatalogedEvent {
+  specimenCount: number;
+  networkEdgeCount: number;
+  manifestPath: string;
 }

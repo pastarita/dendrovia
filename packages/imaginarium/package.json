@@ -4,10 +4,19 @@
   "type": "module",
   "description": "The Compiler - Distills AI art into mathematical shaders",
   "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./distillation": "./src/distillation/index.ts",
+    "./generation": "./src/generation/index.ts",
+    "./cache": "./src/cache/DeterministicCache.ts",
+    "./fallbacks": "./src/fallback/index.ts"
+  },
   "scripts": {
     "dev": "bun run src/index.ts --watch",
     "distill": "bun run src/distill.ts",
-    "test": "bun test"
+    "build": "tsc --noEmit",
+    "test": "bun test",
+    "clean": "rm -rf generated/palettes/* generated/shaders/* generated/noise/* generated/lsystems/* generated/manifest.json"
   },
   "dependencies": {
     "@dendrovia/shared": "workspace:*"

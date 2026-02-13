@@ -17,6 +17,7 @@ import { detectHotspots } from './analyzer/HotspotDetector.js';
 import { profileContributors } from './builder/ContributorProfiler.js';
 import { buildFileTree, countFiles, countDirectories } from './builder/TreeBuilder.js';
 import { buildTopology, writeOutputFiles } from './builder/TopologyBuilder.js';
+import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { ParsedFile } from '@dendrovia/shared';
 import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer.js';
 
@@ -24,8 +25,13 @@ import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer.js';
 // Configuration
 // ---------------------------------------------------------------------------
 
-const repoPath = resolve(process.argv[2] || process.cwd());
-const outputDir = resolve(process.argv[3] || join(process.cwd(), 'generated'));
+// Separate named flags from positional args
+const rawArgs = process.argv.slice(2);
+const emitEvents = rawArgs.includes('--emit-events');
+const positionalArgs = rawArgs.filter(a => !a.startsWith('--'));
+
+const repoPath = resolve(positionalArgs[0] || process.cwd());
+const outputDir = resolve(positionalArgs[1] || join(process.cwd(), 'generated'));
 
 // Files/dirs to skip during AST parsing
 const IGNORE_PATTERNS = [
@@ -134,6 +140,11 @@ async function main() {
   const elapsed3 = ((performance.now() - t3) / 1000).toFixed(2);
   console.log(`  Done in ${elapsed3}s\n`);
 
+  // Emit parse-complete event when --emit-events is active
+  if (emitEvents) {
+    await getEventBus().emit(GameEvents.PARSE_COMPLETE, { files: allParsedFiles });
+  }
+
   // ── Step 4: Hotspot detection ─────────────────────────────────────────
   const t4 = performance.now();
   console.log('[4/6] Detecting hotspots...');
@@ -189,6 +200,15 @@ async function main() {
 
   const elapsed6 = ((performance.now() - t6) / 1000).toFixed(2);
   console.log(`  Done in ${elapsed6}s\n`);
+
+  // Emit topology-generated event when --emit-events is active
+  if (emitEvents) {
+    await getEventBus().emit(GameEvents.TOPOLOGY_GENERATED, {
+      topology: output.topology,
+      tree,
+      hotspots,
+    });
+  }
 
   // ── Summary ───────────────────────────────────────────────────────────
   const totalTime = ((performance.now() - t0) / 1000).toFixed(2);

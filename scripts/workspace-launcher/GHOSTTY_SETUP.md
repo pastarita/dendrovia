@@ -13,7 +13,7 @@ Complete guide to setting up Ghostty with custom Dendrovia themes and split layo
 
 The workspace launcher automatically installed 6 custom themes to:
 ```
-~/Library/Application Support/com.mitchellh.ghostty/themes/
+~/.config/ghostty/themes/
 ```
 
 **Installed themes:**
@@ -26,7 +26,7 @@ The workspace launcher automatically installed 6 custom themes to:
 
 **Verify installation:**
 ```bash
-ls ~/Library/Application\ Support/com.mitchellh.ghostty/themes/dendrovia-*
+ls ~/.config/ghostty/themes/dendrovia-*
 ```
 
 ## Step 2: Configure Ghostty
@@ -157,7 +157,7 @@ Or run the setup script manually:
 
 **Verify themes exist:**
 ```bash
-ls ~/Library/Application\ Support/com.mitchellh.ghostty/themes/
+ls ~/.config/ghostty/themes/
 ```
 
 **List available themes:**

@@ -17,7 +17,7 @@
 
 **Location:**
 ```
-~/Library/Application Support/com.mitchellh.ghostty/themes/dendrovia-*
+~/.config/ghostty/themes/dendrovia-*
 ```
 
 **Each theme includes:**
@@ -189,7 +189,7 @@ Or create manually:
 
 ### Themes (6 files)
 ```
-~/Library/Application Support/com.mitchellh.ghostty/themes/
+~/.config/ghostty/themes/
 ├── dendrovia-chronos
 ├── dendrovia-imaginarium
 ├── dendrovia-architectus
@@ -280,7 +280,7 @@ Or manually copy from `ghostty-config-snippet.txt`
 
 ### Verify Theme Installation
 ```bash
-ls ~/Library/Application\ Support/com.mitchellh.ghostty/themes/dendrovia-*
+ls ~/.config/ghostty/themes/dendrovia-*
 ```
 
 **Expected output:**

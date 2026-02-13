@@ -1,0 +1,28 @@
+# Dendrovia CHRONOS - The Archaeologist
+# Archaeological amber palette inspired by The Chronicler archetype
+# Primary: #d4a574 (amber/bronze), Background: #2a1f16 (dark earth)
+
+background = 2a1f16
+foreground = e8d7c3
+cursor-color = dda15e
+cursor-text = 2a1f16
+selection-background = 8b7355
+selection-foreground = e8d7c3
+
+# ANSI Colors (8 normal + 8 bright)
+palette = 0=#4a3822
+palette = 1=#b85c38
+palette = 2=#8b9456
+palette = 3=#d4a574
+palette = 4=#7d98a1
+palette = 5=#a07d6f
+palette = 6=#9daa9c
+palette = 7=#e8d7c3
+palette = 8=#6b5940
+palette = 9=#dda15e
+palette = 10=#b5c689
+palette = 11=#ecc094
+palette = 12=#a8c5d1
+palette = 13=#c9ab9e
+palette = 14=#c5d9c6
+palette = 15=#f5ede1

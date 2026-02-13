@@ -40,7 +40,7 @@ keybind = cmd+w=close_surface
 # DENDROVIA THEME PATHS
 # ============================================================================
 # Themes are automatically loaded from:
-# ~/Library/Application Support/com.mitchellh.ghostty/themes/
+# ~/.config/ghostty/themes/
 #
 # Available themes:
 # - dendrovia-chronos

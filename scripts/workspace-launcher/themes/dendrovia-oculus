@@ -1,0 +1,28 @@
+# Dendrovia OCULUS - The Interface
+# Observational amber palette inspired by The Observer archetype
+# Primary: #f5a97f (amber/orange), Background: #2a1e1a (dark warm)
+
+background = 2a1e1a
+foreground = f0e6dc
+cursor-color = e89566
+cursor-text = 2a1e1a
+selection-background = 8b6350
+selection-foreground = f0e6dc
+
+# ANSI Colors (8 normal + 8 bright)
+palette = 0=#4a342a
+palette = 1=#f5a97f
+palette = 2=#9daa8a
+palette = 3=#f5c894
+palette = 4=#a8958a
+palette = 5=#c49a87
+palette = 6=#b8a095
+palette = 7=#f0e6dc
+palette = 8=#6b5044
+palette = 9=#ffc299
+palette = 10=#b9d1a6
+palette = 11=#ffddb0
+palette = 12=#c9b5a8
+palette = 13=#e0baa7
+palette = 14=#d9c4b8
+palette = 15=#faf4ee

@@ -9,6 +9,7 @@ import React, { createContext, useContext, useMemo, type ReactNode } from 'react
 import type { EventBus } from '@dendrovia/shared';
 import { useEventSubscriptions } from './hooks/useEventSubscriptions';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { useCodeLoader, type CodeLoaderOptions } from './hooks/useCodeLoader';
 import './styles/base.css';
 import './styles/responsive.css';
 
@@ -21,6 +22,8 @@ export interface OculusConfig {
   enableShortcuts?: boolean;
   /** Theme overrides (CSS custom properties) */
   themeOverrides?: Record<string, string>;
+  /** Code loader options (base URL or custom fetch) */
+  codeLoader?: CodeLoaderOptions;
 }
 
 const defaultConfig: OculusConfig = {
@@ -53,6 +56,9 @@ export function OculusProvider({ eventBus, config, children }: OculusProviderPro
 
   // Global keyboard shortcuts
   useKeyboardShortcuts(mergedConfig.enableShortcuts);
+
+  // Auto-load file content when CodeReader opens
+  useCodeLoader(mergedConfig.codeLoader);
 
   const value = useMemo(
     () => ({ eventBus, config: mergedConfig }),

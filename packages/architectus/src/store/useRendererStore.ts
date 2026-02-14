@@ -87,6 +87,9 @@ interface RendererState {
   quality: QualitySettings;
   gpuBackend: 'webgpu' | 'webgl2' | null;
 
+  // UI coordination
+  isUiHovered: boolean;
+
   // Scene
   selectedNodeId: string | null;
   hoveredNodeId: string | null;
@@ -114,6 +117,7 @@ interface RendererState {
   setLoading: (loading: boolean, progress?: number) => void;
   updatePerformance: (fps: number, drawCalls: number, triangles: number) => void;
   setGeneratedAssets: (assets: GeneratedAssets) => void;
+  setUiHovered: (hovered: boolean) => void;
 }
 
 export const useRendererStore = create<RendererState>()(
@@ -128,6 +132,9 @@ export const useRendererStore = create<RendererState>()(
     qualityTier: 'high',
     quality: QUALITY_PRESETS.high,
     gpuBackend: null,
+
+    // UI coordination
+    isUiHovered: false,
 
     // Scene defaults
     selectedNodeId: null,
@@ -177,6 +184,9 @@ export const useRendererStore = create<RendererState>()(
 
     setGeneratedAssets: (assets) =>
       set({ generatedAssets: assets }),
+
+    setUiHovered: (hovered) =>
+      set({ isUiHovered: hovered }),
   }))
 );
 

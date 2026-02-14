@@ -9,6 +9,8 @@
  * defined correctly."
  */
 
+import type { FileTreeNode, Hotspot } from '../types/index.js';
+
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
 export class EventBus {
@@ -241,6 +243,11 @@ export interface ManaChangedEvent {
   current: number;
   max: number;
   delta: number;
+}
+
+export interface TopologyGeneratedEvent {
+  tree: FileTreeNode;
+  hotspots: Hotspot[];
 }
 
 // Global singleton (lazy initialization)

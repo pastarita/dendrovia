@@ -108,7 +108,7 @@ export interface GameWorldState {
   playerPosition: [number, number, number];
   cameraMode: 'falcon' | 'player';
   currentBranch: string;
-  visitedNodes: Set<string>;
+  visitedNodes: string[];
 }
 
 /**

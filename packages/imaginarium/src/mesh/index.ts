@@ -25,3 +25,16 @@ export {
   smooth, taubinSmooth, laplacianSmoothOnce,
   displaceNormal, displaceByFunction, displaceByField, displaceByNoise,
 } from './ops/index.js';
+
+// Serialization (OPERATUS-compatible versioned persistence)
+export type { SerializeOptions } from './serialize.js';
+export {
+  serialize, deserializeToHalfEdge, deserializeToFlat, deserializeWithFallback,
+} from './serialize.js';
+
+// Adapters (bridge existing MeshGenerator types ↔ HalfEdgeMesh pipeline)
+export {
+  profileToHalfEdge, cylinderToHalfEdge, specimenToHalfEdge,
+  fallbackMeshFromProfile, fallbackMeshFromCylinder,
+  applyPipelineToProfile, applyPipelineToCylinder,
+} from './adapters.js';

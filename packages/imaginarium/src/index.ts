@@ -86,8 +86,14 @@ export {
   subdivide, loopSubdivideOnce,
   smooth, taubinSmooth, laplacianSmoothOnce,
   displaceNormal, displaceByFunction, displaceByField, displaceByNoise,
+  // Serialization (OPERATUS-compatible)
+  serialize, deserializeToHalfEdge, deserializeToFlat, deserializeWithFallback,
+  // Adapters (bridge MeshGenerator ↔ HalfEdgeMesh)
+  profileToHalfEdge, cylinderToHalfEdge, specimenToHalfEdge,
+  fallbackMeshFromProfile, fallbackMeshFromCylinder,
+  applyPipelineToProfile, applyPipelineToCylinder,
 } from './mesh/index.js';
 export type {
   HEVertex, HEHalfEdge, HEFace, HalfEdgeMesh, FlatMeshData,
-  MeshOp, AsyncMeshOp, PipelineStep,
+  MeshOp, AsyncMeshOp, PipelineStep, SerializeOptions,
 } from './mesh/index.js';

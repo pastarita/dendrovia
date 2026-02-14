@@ -14,3 +14,6 @@ export type { GameStoreState } from './GameStore.js';
 
 export { AutoSave } from './AutoSave.js';
 export type { AutoSaveConfig } from './AutoSave.js';
+
+export { StateAdapter } from './StateAdapter.js';
+export type { StateAdapterConfig } from './StateAdapter.js';

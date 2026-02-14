@@ -42,7 +42,7 @@ import {
 } from '@dendrovia/ludus';
 
 // ── OPERATUS (infrastructure) ─────────────────────────────────
-import { initializeOperatus, type OperatusContext } from '@dendrovia/operatus';
+import { initializeOperatus, StateAdapter, type OperatusContext } from '@dendrovia/operatus';
 
 // ─── Configuration ────────────────────────────────────────────
 
@@ -187,6 +187,13 @@ export function DendroviaQuest({
             battleState: null,
             gameFlags: {},
           });
+
+          // Bridge OPERATUS persistence ↔ LUDUS store (if OPERATUS is active)
+          if (enableOperatus && operatusRef.current) {
+            const adapter = new StateAdapter();
+            await adapter.connect(store);
+            cleanups.push(() => adapter.disconnect());
+          }
 
           // Bridge store changes → EventBus
           const unsubBridge = bridgeStoreToEventBus(store);

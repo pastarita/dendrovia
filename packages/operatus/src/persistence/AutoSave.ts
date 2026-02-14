@@ -108,12 +108,9 @@ export class AutoSave {
     // persisted fields, or we directly call the persist API.
     try {
       // Force persist middleware to write current state
-      const api = useGameStore.persist;
-      if (api?.rehydrate) {
-        // Touch state to trigger persist write
-        const state = useGameStore.getState();
-        useGameStore.setState({ player: { ...state.player } });
-      }
+      // Touch state to trigger persist write
+      const state = useGameStore.getState();
+      useGameStore.setState({ character: { ...state.character } });
     } catch (err) {
       console.warn(`[OPERATUS] Auto-save (${trigger}) failed:`, err);
     }

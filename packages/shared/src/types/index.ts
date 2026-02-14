@@ -443,6 +443,11 @@ export interface GameSaveState {
   quests: Quest[];
   visitedNodes: string[];
   unlockedKnowledge: string[];
+  inventory: Item[];
+  gameFlags: Record<string, boolean>;
+  worldPosition: [number, number, number];
+  cameraMode: 'falcon' | 'player';
+  playtimeMs: number;
 }
 
 /**

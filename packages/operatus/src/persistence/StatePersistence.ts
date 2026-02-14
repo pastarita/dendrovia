@@ -159,7 +159,53 @@ function migrate(data: any, fromVersion: number, toVersion: number): any {
 // ── Zustand Storage Adapter ──────────────────────────────────────
 
 /** Current save format version — increment when changing GameSaveState shape */
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
+
+// ── Built-in Migrations ─────────────────────────────────────────
+
+/**
+ * v1 -> v2: Rename `player` -> `character`, nest flat health/mana into `stats`,
+ * add inventory, gameFlags, playtimeMs, and full Character fields.
+ */
+registerMigration(1, (v1: any) => {
+  const player = v1.player ?? v1.character ?? {};
+
+  // Migrate flat health/mana to nested stats (or preserve if already nested)
+  const stats = player.stats ?? {
+    health: player.health ?? 100,
+    maxHealth: player.maxHealth ?? 100,
+    mana: player.mana ?? 50,
+    maxMana: player.maxMana ?? 50,
+    attack: player.attack ?? 10,
+    defense: player.defense ?? 5,
+    speed: player.speed ?? 5,
+  };
+
+  const character = {
+    id: player.id ?? 'player-1',
+    name: player.name ?? 'Explorer',
+    class: player.class ?? 'dps',
+    stats,
+    level: player.level ?? 1,
+    experience: player.experience ?? 0,
+    spells: player.spells ?? [],
+    statusEffects: player.statusEffects ?? [],
+    cooldowns: player.cooldowns ?? {},
+  };
+
+  // Remove old `player` key, add new fields
+  const { player: _removed, health: _h, maxHealth: _mh, mana: _m, maxMana: _mm, ...rest } = v1;
+
+  return {
+    ...rest,
+    character,
+    inventory: v1.inventory ?? [],
+    gameFlags: v1.gameFlags ?? {},
+    playtimeMs: v1.playtimeMs ?? 0,
+    worldPosition: v1.worldPosition ?? [0, 0, 0],
+    cameraMode: v1.cameraMode ?? 'falcon',
+  };
+});
 
 export interface PersistenceConfig {
   /** Storage key prefix (default: 'dendrovia-save') */

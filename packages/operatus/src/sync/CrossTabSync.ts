@@ -218,7 +218,7 @@ export class CrossTabSync {
         if (this.role === 'leader') {
           // Trigger persist middleware write
           const state = useGameStore.getState();
-          useGameStore.setState({ player: { ...state.player } });
+          useGameStore.setState({ character: { ...state.character } });
         }
         break;
       }
@@ -231,7 +231,7 @@ export class CrossTabSync {
   private debouncedBroadcast(state: any): void {
     // Serialize Set<string> for transport
     const serialized: any = {};
-    const persistKeys = ['player', 'quests', 'visitedNodes', 'unlockedKnowledge', 'worldPosition'];
+    const persistKeys = ['character', 'quests', 'visitedNodes', 'unlockedKnowledge', 'worldPosition', 'inventory', 'gameFlags', 'playtimeMs'];
 
     for (const key of persistKeys) {
       const val = state[key];

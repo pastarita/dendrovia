@@ -51,6 +51,7 @@ export {
   waitForHydration,
   getGameSaveSnapshot,
   AutoSave,
+  StateAdapter,
 } from './persistence/index.js';
 export type {
   PersistenceConfig,
@@ -58,6 +59,7 @@ export type {
   SaveSlot,
   GameStoreState,
   AutoSaveConfig,
+  StateAdapterConfig,
 } from './persistence/index.js';
 
 // ── Cross-tab sync ───────────────────────────────────────────────

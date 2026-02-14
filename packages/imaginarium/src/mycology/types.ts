@@ -280,6 +280,7 @@ export interface MycologyManifest {
   specimens: string;       // path to specimens.json
   network: string;         // path to network.json
   assetDir: string;        // path to svg asset directory
+  meshDir?: string;        // path to meshes directory (e.g. 'mycology/meshes')
   generatedAt: number;     // timestamp
 }
 

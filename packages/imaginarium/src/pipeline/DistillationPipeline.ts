@@ -157,6 +157,11 @@ export async function distill(
       const specimens: FungalSpecimen[] = JSON.parse(specimensRaw);
       const meshResult = await generateMeshAssets(specimens, outputDir);
       meshEntries = meshResult.meshEntries;
+
+      // Write updated specimens back to disk with meshDataPath populated
+      const specimensOutPath = join(outputDir, mycologyData.specimens);
+      await Bun.write(specimensOutPath, JSON.stringify(specimens, null, 2));
+
       console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.successCount} specimens, ${meshResult.stats.totalVertices} total vertices (${meshResult.stats.durationMs}ms)`);
       if (meshResult.stats.failCount > 0) {
         console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.failCount} specimens failed (fallback to SVG)`);

@@ -25,7 +25,8 @@ export async function distillMycology(
   // Ensure output directories
   const mycologyDir = join(outputDir, 'mycology');
   const svgDir = join(mycologyDir, 'svg');
-  for (const d of [mycologyDir, svgDir]) {
+  const meshDir = join(mycologyDir, 'meshes');
+  for (const d of [mycologyDir, svgDir, meshDir]) {
     if (!existsSync(d)) mkdirSync(d, { recursive: true });
   }
 
@@ -76,6 +77,7 @@ export async function distillMycology(
     specimens: 'mycology/specimens.json',
     network: 'mycology/network.json',
     assetDir: 'mycology/svg',
+    meshDir: 'mycology/meshes',
     generatedAt: Date.now(),
   };
 

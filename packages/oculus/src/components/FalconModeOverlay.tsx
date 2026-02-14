@@ -37,8 +37,8 @@ export function FalconModeOverlay() {
       .sort((a, b) => b.riskScore - a.riskScore)
       .slice(0, 5);
 
-    return { totalFiles, totalDirs, topHotspots, visited: visitedNodes.size };
-  }, [topology, hotspots, visitedNodes.size]);
+    return { totalFiles, totalDirs, topHotspots, visited: visitedNodes.length };
+  }, [topology, hotspots, visitedNodes.length]);
 
   if (!stats) return null;
 

@@ -12,9 +12,33 @@ import {
   type NodeClickedEvent,
   type PlayerMovedEvent,
   type QuestUpdatedEvent,
-  type EncounterTriggeredEvent,
+  type HealthChangedEvent,
+  type ManaChangedEvent,
+  type DamageDealtEvent,
+  type CombatStartedEvent,
+  type CombatEndedEvent,
+  type CombatTurnEvent,
+  type SpellResolvedEvent,
+  type ExperienceGainedEvent,
+  type LevelUpEvent,
+  type TopologyGeneratedEvent,
+  type BugType,
 } from '@dendrovia/shared';
+import type { Bug } from '@dendrovia/shared';
 import { useOculusStore } from '../store/useOculusStore';
+
+/** Map file extension to language name for CodeReader */
+const EXT_LANG: Record<string, string> = {
+  ts: 'typescript', tsx: 'typescript', js: 'javascript', jsx: 'javascript',
+  py: 'python', rs: 'rust', go: 'go', md: 'markdown', json: 'json',
+  css: 'css', html: 'html', yaml: 'yaml', yml: 'yaml', sh: 'bash',
+  sql: 'sql', rb: 'ruby', java: 'java', c: 'c', cpp: 'cpp', h: 'c',
+};
+
+function detectLanguage(filePath: string): string {
+  const ext = filePath.split('.').pop()?.toLowerCase() ?? '';
+  return EXT_LANG[ext] ?? 'plaintext';
+}
 
 export function useEventSubscriptions(eventBus: EventBus) {
   const store = useOculusStore;
@@ -22,49 +46,111 @@ export function useEventSubscriptions(eventBus: EventBus) {
   useEffect(() => {
     const unsubs: Array<() => void> = [];
 
-    // Health changes
+    // ── T01: Health changes (uses HealthChangedEvent contract) ──
     unsubs.push(
-      eventBus.on<{ health: number; maxHealth?: number }>(
+      eventBus.on<HealthChangedEvent>(
         GameEvents.HEALTH_CHANGED,
-        (data) => store.getState().setHealth(data.health, data.maxHealth)
+        (data) => store.getState().setHealth(data.current, data.max)
       )
     );
 
-    // Mana changes
+    // ── T02: Mana changes (uses ManaChangedEvent contract) ──
     unsubs.push(
-      eventBus.on<{ mana: number; maxMana?: number }>(
+      eventBus.on<ManaChangedEvent>(
         GameEvents.MANA_CHANGED,
-        (data) => store.getState().setMana(data.mana, data.maxMana)
+        (data) => store.getState().setMana(data.current, data.max)
       )
     );
 
-    // Quest updates
+    // ── T10: Quest updates (maps event status → Quest status) ──
     unsubs.push(
       eventBus.on<QuestUpdatedEvent>(
         GameEvents.QUEST_UPDATED,
-        (data) =>
-          store.getState().updateQuest(data.questId, {
-            status: data.status === 'started' ? 'active' : data.status === 'completed' ? 'completed' : 'active',
-          })
+        (data) => {
+          // QuestUpdatedEvent uses 'started'|'in-progress'|'completed'
+          // Quest.status uses 'locked'|'available'|'active'|'completed'
+          const status = data.status === 'completed' ? 'completed' : 'active';
+          store.getState().updateQuest(data.questId, { status });
+        }
       )
     );
 
-    // Combat started
+    // ── T05: Combat started (constructs Bug from CombatStartedEvent) ──
     unsubs.push(
-      eventBus.on<EncounterTriggeredEvent>(
+      eventBus.on<CombatStartedEvent>(
         GameEvents.COMBAT_STARTED,
-        (_data) => {
-          // Actual bug + spells data will come via direct store calls
-          // from LUDUS integration layer
+        (data) => {
+          const enemy: Bug = {
+            id: data.monsterId,
+            type: (data.monsterType as BugType) || 'null-pointer',
+            severity: (Math.min(5, Math.max(1, data.severity)) as 1 | 2 | 3 | 4 | 5),
+            health: 100, // Initial health — HEALTH_CHANGED events update this
+            position: [0, 0, 0],
+            sourceCommit: '',
+          };
+          store.getState().startCombat(enemy, []);
         }
       )
     );
 
     // Combat ended
     unsubs.push(
-      eventBus.on(GameEvents.COMBAT_ENDED, () => {
+      eventBus.on<CombatEndedEvent>(GameEvents.COMBAT_ENDED, () => {
         store.getState().endCombat();
       })
+    );
+
+    // ── T07: Combat turn phases ──
+    unsubs.push(
+      eventBus.on<CombatTurnEvent>(
+        GameEvents.COMBAT_TURN_START,
+        (data) => {
+          const actor = data.phase === 'player' ? 'Your' : "Enemy's";
+          store.getState().addBattleLog(`Turn ${data.turn}: ${actor} turn begins`);
+        }
+      )
+    );
+
+    unsubs.push(
+      eventBus.on<CombatTurnEvent>(
+        GameEvents.COMBAT_TURN_END,
+        (data) => {
+          store.getState().addBattleLog(`Turn ${data.turn} ended`);
+        }
+      )
+    );
+
+    // ── T07: Spell resolved ──
+    unsubs.push(
+      eventBus.on<SpellResolvedEvent>(
+        GameEvents.SPELL_RESOLVED,
+        (data) => {
+          store.getState().addBattleLog(
+            `${data.casterId} cast ${data.spellId} on ${data.targetId}: ${data.effectType} for ${data.value}`
+          );
+        }
+      )
+    );
+
+    // ── T06: Experience gained ──
+    unsubs.push(
+      eventBus.on<ExperienceGainedEvent>(
+        GameEvents.EXPERIENCE_GAINED,
+        (data) => {
+          store.getState().setCharacter({ experience: data.totalExperience } as any);
+        }
+      )
+    );
+
+    // ── T06: Level up ──
+    unsubs.push(
+      eventBus.on<LevelUpEvent>(
+        GameEvents.LEVEL_UP,
+        (data) => {
+          store.getState().setCharacter({ level: data.newLevel } as any);
+          store.getState().addBattleLog(`Level up! Now level ${data.newLevel}`);
+        }
+      )
     );
 
     // Player movement
@@ -75,35 +161,39 @@ export function useEventSubscriptions(eventBus: EventBus) {
       )
     );
 
-    // Node clicked → open code reader
+    // ── T08: Node clicked → open code reader ──
     unsubs.push(
       eventBus.on<NodeClickedEvent>(
         GameEvents.NODE_CLICKED,
         (data) => {
-          store.getState().addVisitedNode(data.nodeId);
-          // Code loading happens in the component via OPERATUS
+          const state = store.getState();
+          state.addVisitedNode(data.nodeId);
+          state.openCodeReader(data.filePath, '', detectLanguage(data.filePath));
         }
       )
     );
 
-    // Damage animation trigger
+    // ── T03: Damage dealt (uses DamageDealtEvent contract) ──
     unsubs.push(
-      eventBus.on<{ amount: number; target: string; message?: string }>(
+      eventBus.on<DamageDealtEvent>(
         GameEvents.DAMAGE_DEALT,
         (data) => {
-          if (data.message) {
-            store.getState().addBattleLog(data.message);
-          }
+          const crit = data.isCritical ? ' (CRITICAL!)' : '';
+          const msg = `${data.attackerId} dealt ${data.damage} ${data.element} damage to ${data.targetId}${crit}`;
+          store.getState().addBattleLog(msg);
         }
       )
     );
 
-    // Topology loaded
+    // ── T04: Topology loaded (uses TopologyGeneratedEvent contract) ──
     unsubs.push(
-      eventBus.on(GameEvents.TOPOLOGY_GENERATED, (data: any) => {
-        if (data?.tree) store.getState().setTopology(data.tree);
-        if (data?.hotspots) store.getState().setHotspots(data.hotspots);
-      })
+      eventBus.on<TopologyGeneratedEvent>(
+        GameEvents.TOPOLOGY_GENERATED,
+        (data) => {
+          if (data.tree) store.getState().setTopology(data.tree);
+          if (data.hotspots) store.getState().setHotspots(data.hotspots);
+        }
+      )
     );
 
     return () => unsubs.forEach((fn) => fn());

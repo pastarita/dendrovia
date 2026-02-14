@@ -20,6 +20,9 @@ import { generate as generateArt } from '../generation/ArtGen.js';
 import { DeterministicCache } from '../cache/DeterministicCache.js';
 import { hashString } from '../utils/hash.js';
 import { distillMycology } from '../mycology/MycologyPipeline.js';
+import { generateMeshAssets } from '../mesh/generateMeshAssets.js';
+import type { FungalSpecimen } from '../mycology/types.js';
+import type { MeshManifestEntry } from '@dendrovia/shared';
 
 export interface PipelineResult {
   palettes: Array<{ id: string; palette: ProceduralPalette; path: string }>;
@@ -145,6 +148,24 @@ export async function distill(
     console.log(`[IMAGINARIUM]   Mycology: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
   }
 
+  // 8.5. Mesh generation (enriched half-edge meshes for each specimen)
+  let meshEntries: Record<string, MeshManifestEntry> | undefined;
+  if (mycologyData) {
+    try {
+      const specimensPath = join(outputDir, mycologyData.specimens);
+      const specimensRaw = await Bun.file(specimensPath).text();
+      const specimens: FungalSpecimen[] = JSON.parse(specimensRaw);
+      const meshResult = await generateMeshAssets(specimens, outputDir);
+      meshEntries = meshResult.meshEntries;
+      console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.successCount} specimens, ${meshResult.stats.totalVertices} total vertices (${meshResult.stats.durationMs}ms)`);
+      if (meshResult.stats.failCount > 0) {
+        console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.failCount} specimens failed (fallback to SVG)`);
+      }
+    } catch (e) {
+      console.log(`[IMAGINARIUM]   Meshes: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+    }
+  }
+
   // 9. Generate manifest
   const manifestInput: ManifestInput = {
     shaders: shaderResults.map(s => ({ id: s.id, path: s.path })),
@@ -153,6 +174,7 @@ export async function distill(
     noisePath: 'noise/global.json',
     lsystemPath: 'lsystems/global.json',
     mycology: mycologyData,
+    meshes: meshEntries,
   };
   const manifest = generateManifest(manifestInput);
   const manifestPath = join(outputDir, 'manifest.json');

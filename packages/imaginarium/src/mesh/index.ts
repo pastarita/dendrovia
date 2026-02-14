@@ -38,3 +38,10 @@ export {
   fallbackMeshFromProfile, fallbackMeshFromCylinder,
   applyPipelineToProfile, applyPipelineToCylinder,
 } from './adapters.js';
+
+// Genus pipelines (per-genus MeshOp definitions for the distillation pipeline)
+export { genusPipeline, DEFAULT_PIPELINE, STEM_PIPELINE } from './genusPipelines.js';
+
+// Mesh asset generation (orchestrator for the distillation pipeline)
+export type { MeshGenerationResult, MeshGenerationStats } from './generateMeshAssets.js';
+export { generateMeshAssets } from './generateMeshAssets.js';

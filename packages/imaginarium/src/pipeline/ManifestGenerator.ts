@@ -2,7 +2,7 @@
  * ManifestGenerator — collects artifact paths and writes manifest.json.
  */
 
-import type { AssetManifest, SDFShader, ProceduralPalette } from '@dendrovia/shared';
+import type { AssetManifest, SDFShader, ProceduralPalette, MeshManifestEntry } from '@dendrovia/shared';
 import { hashString } from '../utils/hash.js';
 
 export interface ManifestInput {
@@ -17,6 +17,7 @@ export interface ManifestInput {
     assetDir: string;
     specimenCount: number;
   };
+  meshes?: Record<string, MeshManifestEntry>;
 }
 
 export function generateManifest(input: ManifestInput): AssetManifest {
@@ -51,6 +52,10 @@ export function generateManifest(input: ManifestInput): AssetManifest {
 
   if (input.mycology) {
     manifest.mycology = input.mycology;
+  }
+
+  if (input.meshes && Object.keys(input.meshes).length > 0) {
+    manifest.meshes = input.meshes;
   }
 
   return manifest;

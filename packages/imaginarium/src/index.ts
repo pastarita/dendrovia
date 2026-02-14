@@ -92,8 +92,13 @@ export {
   profileToHalfEdge, cylinderToHalfEdge, specimenToHalfEdge,
   fallbackMeshFromProfile, fallbackMeshFromCylinder,
   applyPipelineToProfile, applyPipelineToCylinder,
+  // Genus pipelines
+  genusPipeline, DEFAULT_PIPELINE, STEM_PIPELINE,
+  // Mesh asset generation
+  generateMeshAssets,
 } from './mesh/index.js';
 export type {
   HEVertex, HEHalfEdge, HEFace, HalfEdgeMesh, FlatMeshData,
   MeshOp, AsyncMeshOp, PipelineStep, SerializeOptions,
+  MeshGenerationResult, MeshGenerationStats,
 } from './mesh/index.js';

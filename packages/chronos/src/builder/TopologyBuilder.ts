@@ -10,9 +10,18 @@
  */
 
 import { join } from 'path';
-import type { CodeTopology, ParsedFile, ParsedCommit, Hotspot, FileTreeNode } from '@dendrovia/shared';
+import type {
+  CodeTopology,
+  ParsedFile,
+  ParsedCommit,
+  Hotspot,
+  FileTreeNode,
+  RepositoryMetadata,
+  LanguageDistribution,
+  ContributorSummary,
+  TemporalCoupling,
+} from '@dendrovia/shared';
 import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer.js';
-import type { TemporalCoupling } from '../analyzer/HotspotDetector.js';
 import type { ContributorProfile } from './ContributorProfiler.js';
 
 export interface TopologyInput {
@@ -25,10 +34,18 @@ export interface TopologyInput {
   functionsByFile: Map<string, FunctionComplexity[]>;
   contributors: ContributorProfile[];
   repository: string;
+  repositoryMetadata?: RepositoryMetadata;
+  headHash?: string;
+}
+
+export interface EnrichedTopology extends Omit<CodeTopology, 'repository'> {
+  version: string;
+  analyzedAt: string;
+  repository: string | RepositoryMetadata;
 }
 
 export interface TopologyOutput {
-  topology: CodeTopology & { version: string; analyzedAt: string; repository: string };
+  topology: EnrichedTopology;
   commits: ParsedCommit[];
   complexity: {
     version: string;
@@ -53,20 +70,72 @@ export interface TopologyOutput {
 const VERSION = '1.0.0';
 
 /**
+ * Build language distribution from parsed files.
+ */
+export function buildLanguageDistribution(files: ParsedFile[]): LanguageDistribution[] {
+  const langMap = new Map<string, { fileCount: number; locTotal: number }>();
+
+  for (const file of files) {
+    const lang = file.language || 'unknown';
+    const entry = langMap.get(lang) || { fileCount: 0, locTotal: 0 };
+    entry.fileCount++;
+    entry.locTotal += file.loc;
+    langMap.set(lang, entry);
+  }
+
+  const totalFiles = files.length || 1;
+  const distribution: LanguageDistribution[] = [];
+
+  for (const [language, stats] of langMap) {
+    distribution.push({
+      language,
+      fileCount: stats.fileCount,
+      locTotal: stats.locTotal,
+      percentage: Math.round((stats.fileCount / totalFiles) * 1000) / 10,
+    });
+  }
+
+  distribution.sort((a, b) => b.fileCount - a.fileCount);
+  return distribution;
+}
+
+/**
+ * Build contributor summary from contributor profiles.
+ */
+export function buildContributorSummary(contributors: ContributorProfile[]): ContributorSummary {
+  const archetypeDistribution: Record<string, number> = {};
+
+  for (const c of contributors) {
+    archetypeDistribution[c.archetype] = (archetypeDistribution[c.archetype] || 0) + 1;
+  }
+
+  return {
+    totalContributors: contributors.length,
+    topContributor: contributors[0]?.name ?? 'unknown',
+    archetypeDistribution,
+  };
+}
+
+/**
  * Assemble all parsed data into the final output structures.
  */
 export function buildTopology(input: TopologyInput): TopologyOutput {
   const analyzedAt = new Date().toISOString();
+  const languageDistribution = buildLanguageDistribution(input.files);
+  const contributorSummary = buildContributorSummary(input.contributors);
 
   // Main topology (for OCULUS + IMAGINARIUM)
   const topology = {
     version: VERSION,
     analyzedAt,
-    repository: input.repository,
+    repository: input.repositoryMetadata ?? input.repository,
     files: input.files,
     commits: input.commits,
     tree: input.tree,
     hotspots: input.hotspots,
+    languageDistribution,
+    contributorSummary,
+    temporalCouplings: input.temporalCouplings,
   };
 
   // Commits (for LUDUS quest generation)

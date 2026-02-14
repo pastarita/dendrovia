@@ -11,7 +11,7 @@
 
 import { resolve, join, basename } from 'path';
 import { mkdirSync, existsSync } from 'fs';
-import { parseGitHistory, listFilesAtHead, getHeadHash, getFileChurnCounts } from './parser/GitParser.js';
+import { parseGitHistory, listFilesAtHead, getHeadHash, getFileChurnCounts, extractRepositoryMetadata } from './parser/GitParser.js';
 import { parseFiles, buildStubFile, canParse, detectLanguage } from './parser/ASTParser.js';
 import { detectHotspots } from './analyzer/HotspotDetector.js';
 import { profileContributors } from './builder/ContributorProfiler.js';
@@ -87,6 +87,11 @@ async function main() {
 
   const commits = await parseGitHistory(repoPath);
   console.log(`  ${commits.length} commits parsed`);
+
+  // Extract unique languages from commits will happen after AST parsing;
+  // pre-fetch repo metadata (remote, branch info)
+  const repoMetaBase = await extractRepositoryMetadata(repoPath, { headHash });
+  console.log(`  Branch: ${repoMetaBase.currentBranch} (${repoMetaBase.branchCount} branches)`);
 
   const elapsed1 = ((performance.now() - t1) / 1000).toFixed(2);
   console.log(`  Done in ${elapsed1}s\n`);
@@ -181,6 +186,17 @@ async function main() {
   const tree = buildFileTree(allParsedFiles, basename(repoPath));
   console.log(`  Tree: ${countFiles(tree)} files in ${countDirectories(tree)} directories`);
 
+  // Finalize repository metadata with counts from the pipeline
+  const uniqueLanguages = [...new Set(allParsedFiles.map(f => f.language))].sort();
+  const uniqueContributors = new Set(commits.map(c => c.author)).size;
+  const repositoryMetadata = {
+    ...repoMetaBase,
+    fileCount: allParsedFiles.length,
+    commitCount: commits.length,
+    contributorCount: uniqueContributors,
+    languages: uniqueLanguages,
+  };
+
   const output = buildTopology({
     files: allParsedFiles,
     commits,
@@ -190,6 +206,8 @@ async function main() {
     functionsByFile,
     contributors,
     repository: repoPath,
+    repositoryMetadata,
+    headHash,
   });
 
   const writtenFiles = await writeOutputFiles(output, outputDir);

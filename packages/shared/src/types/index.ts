@@ -10,6 +10,21 @@
  * (What the archaeologist discovers)
  */
 
+export type CommitType =
+  | 'bug-fix'
+  | 'feature'
+  | 'refactor'
+  | 'docs'
+  | 'test'
+  | 'performance'
+  | 'merge'
+  | 'revert'
+  | 'dependency'
+  | 'breaking-change'
+  | 'chore'
+  | 'style'
+  | 'maintenance';
+
 export interface ParsedFile {
   path: string;
   hash: string;
@@ -31,6 +46,47 @@ export interface ParsedCommit {
   isBugFix: boolean;
   isFeature: boolean;
   isMerge: boolean;
+  /** Full 13-value classification */
+  type?: CommitType;
+  /** Scope from conventional commits */
+  scope?: string;
+  /** Breaking change flag */
+  isBreaking?: boolean;
+  /** Classification confidence */
+  confidence?: 'high' | 'medium' | 'low';
+}
+
+export interface TemporalCoupling {
+  fileA: string;
+  fileB: string;
+  coChangeCount: number;
+  strength: number;
+}
+
+export interface RepositoryMetadata {
+  name: string;
+  remoteUrl: string;
+  currentBranch: string;
+  branchCount: number;
+  fileCount: number;
+  commitCount: number;
+  contributorCount: number;
+  languages: string[];
+  analyzedAt: string;
+  headHash: string;
+}
+
+export interface LanguageDistribution {
+  language: string;
+  fileCount: number;
+  locTotal: number;
+  percentage: number;
+}
+
+export interface ContributorSummary {
+  totalContributors: number;
+  topContributor: string;
+  archetypeDistribution: Record<string, number>;
 }
 
 export interface CodeTopology {
@@ -38,6 +94,10 @@ export interface CodeTopology {
   commits: ParsedCommit[];
   tree: FileTreeNode;
   hotspots: Hotspot[];
+  repository?: RepositoryMetadata;
+  languageDistribution?: LanguageDistribution[];
+  contributorSummary?: ContributorSummary;
+  temporalCouplings?: TemporalCoupling[];
 }
 
 export interface FileTreeNode {

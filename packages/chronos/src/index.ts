@@ -12,6 +12,7 @@ export {
   listFilesAtHead,
   getHeadHash,
   getFileChurnCounts,
+  extractRepositoryMetadata,
   type GitParserOptions,
   type RawCommit,
 } from './parser/GitParser.js';
@@ -59,6 +60,8 @@ export {
 export {
   buildTopology,
   writeOutputFiles,
+  buildLanguageDistribution,
+  buildContributorSummary,
   type TopologyInput,
   type TopologyOutput,
 } from './builder/TopologyBuilder.js';

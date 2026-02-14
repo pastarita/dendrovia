@@ -15,6 +15,7 @@ export { useRendererStore } from './store/useRendererStore';
 export { DendriteWorld } from './components/DendriteWorld';
 export { BranchInstances } from './components/BranchInstances';
 export { NodeInstances } from './components/NodeInstances';
+export { MushroomInstances } from './components/MushroomInstances';
 export { CameraRig } from './components/CameraRig';
 export { PostProcessing } from './components/PostProcessing';
 export { Lighting } from './components/Lighting';

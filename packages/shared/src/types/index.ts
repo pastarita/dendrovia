@@ -362,6 +362,79 @@ export interface AssetManifest {
     assetDir: string;     // path to svg asset directory
     specimenCount: number;
   };
+  /** Generated mesh assets, keyed by specimen/genus ID → file path */
+  meshes?: Record<string, MeshManifestEntry>;
+}
+
+/**
+ * MESH ASSET TYPES
+ * (Versioned, cacheable mesh data for OPERATUS delivery)
+ */
+
+/** Manifest entry for a single mesh asset — enables OPERATUS versioning and cache invalidation. */
+export interface MeshManifestEntry {
+  /** Relative path to the serialized mesh file */
+  path: string;
+  /** SHA-256 content hash (truncated to 16 hex chars) for cache busting */
+  hash: string;
+  /** Mesh data format */
+  format: MeshFormat;
+  /** Vertex count (for progress tracking and LOD decisions) */
+  vertices: number;
+  /** Face/triangle count */
+  faces: number;
+  /** File size in bytes (for loading priority and progress) */
+  size: number;
+  /** Generation tier: determines fallback strategy */
+  tier: MeshTier;
+  /** Genus ID — links back to FungalSpecimen taxonomy */
+  genusId?: string;
+}
+
+/** Serialization format of the mesh file. Consumers use this to select the deserializer. */
+export type MeshFormat = 'halfedge' | 'indexed' | 'profile';
+
+/** Generation complexity tier — determines fallback chain:
+ *  If 'enriched' fails → fall back to 'base'
+ *  If 'base' fails → fall back to 'parametric' (regenerate from ProfileGeometry)
+ *  If 'parametric' fails → fall back to 'billboard' (SVG sprite)
+ */
+export type MeshTier = 'enriched' | 'base' | 'parametric' | 'billboard';
+
+/**
+ * Serialized half-edge mesh — the on-disk/over-network format.
+ * All fields are plain JSON-safe values (no typed arrays, no circular refs).
+ * OPERATUS caches this in IDB/OPFS with hash-based invalidation.
+ */
+export interface SerializedMeshData {
+  /** Format version for migration support */
+  version: 1;
+  /** Mesh format discriminator */
+  format: MeshFormat;
+  /** Flat vertex positions [x,y,z, x,y,z, ...] */
+  positions: number[];
+  /** Flat vertex normals [nx,ny,nz, ...] — pre-computed, area-weighted */
+  normals: number[];
+  /** Triangle indices [i0,i1,i2, ...] */
+  indices: number[];
+  /** Vertex count (redundant but useful for pre-allocation) */
+  vertexCount: number;
+  /** Face count */
+  faceCount: number;
+  /** Optional: half-edge topology for consumers that need adjacency queries.
+   *  Omitted when format='indexed' (GPU-only consumers don't need topology). */
+  topology?: {
+    halfedges: Array<{ vertex: number; face: number; next: number; prev: number; twin: number }>;
+    vertexHalfedges: number[]; // per-vertex outgoing halfedge index
+    faceHalfedges: number[];   // per-face one halfedge index
+  };
+  /** Generation metadata for debugging and versioning */
+  meta?: {
+    genus?: string;
+    pipeline?: string[];  // ordered list of MeshOp names that produced this mesh
+    generatedAt?: number; // timestamp
+    sourceHash?: string;  // hash of the input parameters (for determinism verification)
+  };
 }
 
 export interface GameSaveState {

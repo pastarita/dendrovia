@@ -265,6 +265,7 @@ export function DendroviaQuest({
         topology={topology}
         hotspots={hotspots}
         manifestPath={manifestPath}
+        assetLoader={operatusRef.current?.assetLoader}
       />
       {enableOculus && <HUD />}
       {enableOculus && <UiHoverBridge />}

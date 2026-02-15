@@ -7,7 +7,10 @@
 
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { enableMapSet } from "immer";
 import { applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
+
+enableMapSet();
 import type { NodeChange, EdgeChange } from "@xyflow/react";
 import type {
   DendriteState,

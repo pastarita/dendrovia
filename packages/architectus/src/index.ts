@@ -29,4 +29,8 @@ export type { QualityTier } from './store/useRendererStore';
 
 // Loader — IMAGINARIUM asset bridge
 export { loadGeneratedAssets } from './loader/AssetBridge';
-export type { GeneratedAssets } from './loader/AssetBridge';
+export type {
+  GeneratedAssets,
+  CacheableAssetLoader,
+  LoadGeneratedAssetsOptions,
+} from './loader/AssetBridge';

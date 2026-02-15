@@ -12,6 +12,8 @@
  *     with optional fields — the store/components decide what to do when
  *     a field is missing.
  *   - Works with both file:// (dev/Bun) and http:// (production) URLs.
+ *   - When an assetLoader is provided (from OPERATUS), all fetches route
+ *     through the 4-tier cache (memory → OPFS → IDB → network).
  */
 
 import type {
@@ -43,6 +45,24 @@ export interface GeneratedAssets {
    *  manifest.meshes entries via deserializeToFlat(). Null until loaded,
    *  empty map if no meshes are referenced in the manifest. */
   meshes: Map<string, FlatMeshData> | null;
+}
+
+// ---------------------------------------------------------------------------
+// Cacheable Loader Interface
+// ---------------------------------------------------------------------------
+
+/**
+ * Minimal interface that OPERATUS AssetLoader satisfies.
+ * Defined here to avoid a hard dependency from ARCHITECTUS → OPERATUS.
+ */
+export interface CacheableAssetLoader {
+  loadAsset(descriptor: {
+    path: string;
+    hash?: string;
+    priority: number;
+    type: string;
+    size?: number;
+  }): Promise<string>;
 }
 
 // ---------------------------------------------------------------------------
@@ -88,23 +108,97 @@ async function fetchText(url: string, timeoutMs = 5000): Promise<string | null> 
 }
 
 // ---------------------------------------------------------------------------
+// Cached loading helpers (route through AssetLoader when available)
+// ---------------------------------------------------------------------------
+
+/** Asset priority constants matching OPERATUS AssetPriority enum */
+const PRIORITY = { CRITICAL: 0, VISIBLE: 1 } as const;
+
+/** Load JSON via AssetLoader cache, falling back to direct fetch. */
+async function loadJson<T>(
+  path: string,
+  manifestPath: string,
+  loader: CacheableAssetLoader | null,
+  priority: number,
+  type: string,
+  hash?: string,
+  size?: number,
+): Promise<T | null> {
+  if (loader) {
+    try {
+      const raw = await loader.loadAsset({ path, hash, priority, type, size });
+      return JSON.parse(raw) as T;
+    } catch {
+      return null;
+    }
+  }
+  return fetchJson<T>(resolveAssetUrl(manifestPath, path));
+}
+
+/** Load text (shaders) via AssetLoader cache, falling back to direct fetch. */
+async function loadText(
+  path: string,
+  manifestPath: string,
+  loader: CacheableAssetLoader | null,
+  priority: number,
+  hash?: string,
+): Promise<string | null> {
+  if (loader) {
+    try {
+      return await loader.loadAsset({ path, hash, priority, type: 'shader' });
+    } catch {
+      return null;
+    }
+  }
+  return fetchText(resolveAssetUrl(manifestPath, path));
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
+
+export interface LoadGeneratedAssetsOptions {
+  /** OPERATUS AssetLoader for cached loading. When null, falls back to
+   *  direct fetch (no caching). */
+  assetLoader?: CacheableAssetLoader | null;
+}
 
 /**
  * Load all generated assets referenced by an IMAGINARIUM manifest.
  *
  * @param manifestPath  URL or relative path to `manifest.json`.
  *                      In dev this is typically `/generated/manifest.json`.
+ * @param options       Optional configuration including an OPERATUS AssetLoader
+ *                      for cached loading.
  * @returns GeneratedAssets on success, null if the manifest itself cannot be
  *          loaded (individual sub-assets may still be null inside a
  *          successful result).
  */
 export async function loadGeneratedAssets(
   manifestPath: string,
+  options: LoadGeneratedAssetsOptions = {},
 ): Promise<GeneratedAssets | null> {
+  const loader = options.assetLoader ?? null;
+
   // 1. Fetch the manifest — this is the only hard requirement.
-  const manifest = await fetchJson<AssetManifest>(manifestPath);
+  //    The manifest itself is always fetched fresh (or from AssetLoader cache
+  //    if available) since it drives all subsequent loading.
+  let manifest: AssetManifest | null;
+  if (loader) {
+    try {
+      const raw = await loader.loadAsset({
+        path: 'manifest.json',
+        priority: PRIORITY.CRITICAL,
+        type: 'json',
+      });
+      manifest = JSON.parse(raw) as AssetManifest;
+    } catch {
+      manifest = null;
+    }
+  } else {
+    manifest = await fetchJson<AssetManifest>(manifestPath);
+  }
+
   if (!manifest) {
     console.warn('[ARCHITECTUS] Could not load asset manifest from', manifestPath);
     return null;
@@ -116,8 +210,8 @@ export async function loadGeneratedAssets(
   const paletteEntries = Object.entries(manifest.palettes);
   const paletteResults = await Promise.all(
     paletteEntries.map(async ([id, path]) => {
-      const palette = await fetchJson<ProceduralPalette>(
-        resolveAssetUrl(manifestPath, path),
+      const palette = await loadJson<ProceduralPalette>(
+        path, manifestPath, loader, PRIORITY.VISIBLE, 'palette',
       );
       return [id, palette] as const;
     }),
@@ -139,7 +233,9 @@ export async function loadGeneratedAssets(
   const shaderEntries = Object.entries(manifest.shaders);
   const shaderResults = await Promise.all(
     shaderEntries.map(async ([id, path]) => {
-      const source = await fetchText(resolveAssetUrl(manifestPath, path));
+      const source = await loadText(
+        path, manifestPath, loader, PRIORITY.CRITICAL,
+      );
       return [id, source] as const;
     }),
   );
@@ -153,19 +249,25 @@ export async function loadGeneratedAssets(
 
   // 4. Load L-system and noise configs (small files, parallel).
   const [lsystem, noise] = await Promise.all([
-    fetchJson<LSystemRule>(resolveAssetUrl(manifestPath, 'lsystems/global.json')),
-    fetchJson<NoiseFunction>(resolveAssetUrl(manifestPath, 'noise/global.json')),
+    loadJson<LSystemRule>(
+      'lsystems/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json',
+    ),
+    loadJson<NoiseFunction>(
+      'noise/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json',
+    ),
   ]);
 
   // 5. Load mycology data if referenced in the manifest.
   let mycology: GeneratedAssets['mycology'] = null;
   if (manifest.mycology) {
     const [specimens, network] = await Promise.all([
-      fetchJson<FungalSpecimen[]>(
-        resolveAssetUrl(manifestPath, manifest.mycology.specimens),
+      loadJson<FungalSpecimen[]>(
+        manifest.mycology.specimens, manifestPath, loader,
+        PRIORITY.VISIBLE, 'json',
       ),
-      fetchJson<MycelialNetwork>(
-        resolveAssetUrl(manifestPath, manifest.mycology.network),
+      loadJson<MycelialNetwork>(
+        manifest.mycology.network, manifestPath, loader,
+        PRIORITY.VISIBLE, 'json',
       ),
     ]);
     mycology = {
@@ -185,8 +287,9 @@ export async function loadGeneratedAssets(
     const meshEntries = Object.entries(manifest.meshes);
     const meshResults = await Promise.all(
       meshEntries.map(async ([id, entry]) => {
-        const raw = await fetchJson<SerializedMeshData>(
-          resolveAssetUrl(manifestPath, entry.path),
+        const raw = await loadJson<SerializedMeshData>(
+          entry.path, manifestPath, loader,
+          PRIORITY.VISIBLE, 'mesh', entry.hash, entry.size,
         );
         if (!raw) return [id, null] as const;
         const flat = deserializeToFlat(raw);

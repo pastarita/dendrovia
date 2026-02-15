@@ -4,8 +4,8 @@
  * Classifies developers into RPG archetypes based on their commit patterns.
  */
 
-import type { ParsedCommit } from '@dendrovia/shared';
-import { classifyCommit, type CommitType } from '../classifier/CommitClassifier.js';
+import type { ParsedCommit, CommitType } from '@dendrovia/shared';
+import { classifyCommit } from '../classifier/CommitClassifier.js';
 
 export type Archetype =
   | 'guardian'    // >50% chore/ci/build — the infrastructure tank

@@ -17,7 +17,6 @@ export const TopologySchema = {
   properties: {
     version: { type: "string" },
     analyzedAt: { type: "string", format: "date-time" },
-    repository: { type: "string" },
     files: {
       type: "array",
       items: {
@@ -49,7 +48,11 @@ export const TopologySchema = {
           deletions: { type: "number" },
           isBugFix: { type: "boolean" },
           isFeature: { type: "boolean" },
-          isMerge: { type: "boolean" }
+          isMerge: { type: "boolean" },
+          type: { type: "string" },
+          scope: { type: "string" },
+          isBreaking: { type: "boolean" },
+          confidence: { type: "string", enum: ["high", "medium", "low"] }
         }
       }
     },
@@ -64,6 +67,55 @@ export const TopologySchema = {
           churnRate: { type: "number" },
           complexity: { type: "number" },
           riskScore: { type: "number" }
+        }
+      }
+    },
+    repository: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        remoteUrl: { type: "string" },
+        currentBranch: { type: "string" },
+        branchCount: { type: "number" },
+        fileCount: { type: "number" },
+        commitCount: { type: "number" },
+        contributorCount: { type: "number" },
+        languages: { type: "array", items: { type: "string" } },
+        analyzedAt: { type: "string", format: "date-time" },
+        headHash: { type: "string" }
+      }
+    },
+    languageDistribution: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["language", "fileCount", "locTotal", "percentage"],
+        properties: {
+          language: { type: "string" },
+          fileCount: { type: "number" },
+          locTotal: { type: "number" },
+          percentage: { type: "number" }
+        }
+      }
+    },
+    contributorSummary: {
+      type: "object",
+      properties: {
+        totalContributors: { type: "number" },
+        topContributor: { type: "string" },
+        archetypeDistribution: { type: "object", additionalProperties: { type: "number" } }
+      }
+    },
+    temporalCouplings: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["fileA", "fileB", "coChangeCount", "strength"],
+        properties: {
+          fileA: { type: "string" },
+          fileB: { type: "string" },
+          coChangeCount: { type: "number" },
+          strength: { type: "number" }
         }
       }
     }

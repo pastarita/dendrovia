@@ -5,8 +5,9 @@
  * available for targeted tree walks when needed.
  */
 
-import type { ParsedCommit } from '@dendrovia/shared';
+import type { ParsedCommit, RepositoryMetadata } from '@dendrovia/shared';
 import { classifyCommit, commitFlags } from '../classifier/CommitClassifier.js';
+import { basename } from 'path';
 
 // Sentinel separating fields within a single commit record
 const FIELD_SEP = '|||';
@@ -183,6 +184,10 @@ function toCommit(raw: RawCommit): ParsedCommit {
     isBugFix: flags.isBugFix,
     isFeature: flags.isFeature,
     isMerge: raw.parentHashes.length > 1 || flags.isMerge,
+    type: classified.type,
+    scope: classified.scope,
+    isBreaking: classified.isBreaking,
+    confidence: classified.confidence,
   };
 }
 
@@ -260,4 +265,47 @@ export async function getFileChurnCounts(
   }
 
   return counts;
+}
+
+/**
+ * Extract repository metadata using git CLI.
+ */
+export async function extractRepositoryMetadata(
+  repoPath: string,
+  opts: { headHash?: string; fileCount?: number; commitCount?: number; contributorCount?: number; languages?: string[] } = {},
+): Promise<RepositoryMetadata> {
+  const spawn = (args: string[]) =>
+    Bun.spawn(['git', ...args], { cwd: repoPath, stdout: 'pipe', stderr: 'pipe' });
+
+  // Run git commands in parallel
+  const [remoteProc, branchProc, branchListProc] = [
+    spawn(['remote', 'get-url', 'origin']),
+    spawn(['branch', '--show-current']),
+    spawn(['branch', '-a']),
+  ];
+
+  const [remoteOut, branchOut, branchListOut] = await Promise.all([
+    new Response(remoteProc.stdout).text(),
+    new Response(branchProc.stdout).text(),
+    new Response(branchListProc.stdout).text(),
+  ]);
+
+  await Promise.all([remoteProc.exited, branchProc.exited, branchListProc.exited]);
+
+  const remoteUrl = remoteOut.trim() || 'unknown';
+  const currentBranch = branchOut.trim() || 'unknown';
+  const branchCount = branchListOut.trim().split('\n').filter(l => l.trim()).length;
+
+  return {
+    name: basename(repoPath),
+    remoteUrl,
+    currentBranch,
+    branchCount,
+    fileCount: opts.fileCount ?? 0,
+    commitCount: opts.commitCount ?? 0,
+    contributorCount: opts.contributorCount ?? 0,
+    languages: opts.languages ?? [],
+    analyzedAt: new Date().toISOString(),
+    headHash: opts.headHash ?? '',
+  };
 }

@@ -5,7 +5,8 @@
   "description": "Autogamification of Codebase Archaeologization - The Six-Pillar Architecture",
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "lib/*"
   ],
   "scripts": {
     "dev": "turbo run dev --parallel",

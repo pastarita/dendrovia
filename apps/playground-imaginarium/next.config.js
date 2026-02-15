@@ -12,6 +12,7 @@ const nextConfig = {
   transpilePackages: [
     '@dendrovia/shared',
     '@dendrovia/imaginarium',
+    '@dendrovia/dendrite',
   ],
   webpack: (config) => {
     config.resolve.extensionAlias = {

@@ -19,6 +19,12 @@ const PAGES = [
     desc: "Real-time scrolling log of all EventBus emissions across pillars",
     icon: "📡",
   },
+  {
+    name: "Dendrite Observatory",
+    href: "/gyms/dendrite",
+    desc: "Interactive 2D flow visualization of the OPERATUS pipeline",
+    icon: "🌿",
+  },
 ];
 
 export default function GymsPage() {

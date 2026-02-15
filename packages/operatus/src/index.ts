@@ -23,6 +23,7 @@ export type {
   CacheTier,
   CacheResult,
   StorageQuota,
+  CacheEntryInfo,
 } from './cache/index.js';
 
 // ── Asset loaders ────────────────────────────────────────────────

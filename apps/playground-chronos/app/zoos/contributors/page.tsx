@@ -71,7 +71,7 @@ export default async function ContributorsPage() {
               opacity: 0.6,
               marginBottom: "0.75rem",
             }}>
-              <span>Files owned: {c.filesOwned}</span>
+              <span>Files touched: {c.uniqueFilesTouched}</span>
               <span>Peak hour: {c.peakHour}:00</span>
               <span>First: {new Date(c.firstCommit).toLocaleDateString()}</span>
               <span>Last: {new Date(c.lastCommit).toLocaleDateString()}</span>

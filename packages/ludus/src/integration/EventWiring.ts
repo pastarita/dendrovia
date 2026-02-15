@@ -38,6 +38,7 @@ import {
   type LootDroppedEvent,
   type ExperienceGainedEvent,
   type LevelUpEvent,
+  type ItemUsedEvent,
 } from '@dendrovia/shared';
 import { type GameStore, type GameState } from '../state/GameStore.js';
 import { initBattle, executeTurn } from '../combat/TurnBasedEngine.js';
@@ -137,7 +138,7 @@ export function wireGameEvents(session: GameSession): () => void {
 
   // ── OCULUS → LUDUS: Player uses an item ──
 
-  unsubs.push(bus.on(GameEvents.ITEM_USED, (event: { itemId: string }) => {
+  unsubs.push(bus.on<ItemUsedEvent>(GameEvents.ITEM_USED, (event) => {
     handleItemUsed(session, event, bus);
   }));
 
@@ -172,7 +173,7 @@ function handleNodeClicked(
   if (result.encounter) {
     // Emit encounter trigger for ARCHITECTUS visual feedback
     bus.emit<EncounterTriggeredEvent>(GameEvents.ENCOUNTER_TRIGGERED, {
-      type: result.encounter.type as 'bug' | 'merge-conflict' | 'tech-debt',
+      type: result.encounter.type,
       severity: result.encounter.monster.severity,
       position: event.position,
     });
@@ -226,7 +227,7 @@ function handleSpellCast(
 
 function handleItemUsed(
   session: GameSession,
-  event: { itemId: string },
+  event: ItemUsedEvent,
   bus: EventBus,
 ): void {
   const state = session.store.getState();

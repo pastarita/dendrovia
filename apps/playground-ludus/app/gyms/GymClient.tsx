@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import type { Character, Monster, BattleState, CharacterClass, BugType } from '@dendrovia/shared';
 import {
   createCharacter,
@@ -20,6 +20,7 @@ import ActionPanel from './components/ActionPanel';
 import BattleLog from './components/BattleLog';
 import MockEventPanel from './components/MockEventPanel';
 import StatBar from './components/StatBar';
+import { useGamePersistence } from './hooks/useGamePersistence';
 
 const CLASS_OPTIONS: { value: CharacterClass; label: string }[] = [
   { value: 'tank', label: 'Tank (Infrastructure)' },
@@ -59,6 +60,12 @@ export default function GymClient() {
 
   // Battle state
   const [battleState, setBattleState] = useState<BattleState | null>(null);
+
+  // Persistence
+  const { hydrated, savedCharacter, saveGame, loadCharacter, exportJSON, importJSON } = useGamePersistence();
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
+  const [showPersistence, setShowPersistence] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Preview stats
   const previewStats = useMemo(() => computeStatsAtLevel(charClass, charLevel), [charClass, charLevel]);
@@ -127,6 +134,41 @@ export default function GymClient() {
     setBattleState(null);
   }, []);
 
+  const handleSave = useCallback(async () => {
+    if (!battleState) return;
+    setSaveStatus('Saving...');
+    await saveGame(battleState.player);
+    setSaveStatus('Saved');
+    setTimeout(() => setSaveStatus(null), 2000);
+  }, [battleState, saveGame]);
+
+  const handleLoad = useCallback(() => {
+    const char = loadCharacter();
+    if (!char) return;
+    setCharName(char.name);
+    setCharClass(char.class);
+    setCharLevel(char.level);
+  }, [loadCharacter]);
+
+  const handleExport = useCallback(async () => {
+    const json = await exportJSON();
+    if (!json) return;
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `dendrovia-save-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [exportJSON]);
+
+  const handleImport = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const json = await file.text();
+    await importJSON(json);
+  }, [importJSON]);
+
   const isSetup = battleState === null;
   const isTerminal = battleState?.phase.type === 'VICTORY' || battleState?.phase.type === 'DEFEAT';
   const actions = battleState ? getAvailableActions(battleState) : null;
@@ -193,6 +235,42 @@ export default function GymClient() {
               </div>
             </div>
           </div>
+
+          {/* Saved Character Banner */}
+          {hydrated && savedCharacter && (
+            <div style={{
+              gridColumn: '1 / -1',
+              padding: '0.75rem 1rem',
+              border: '1px solid #2563EB',
+              borderRadius: '8px',
+              background: '#111827',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+              <div>
+                <div style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '0.15rem' }}>Saved Character</div>
+                <div style={{ fontSize: '0.9rem' }}>
+                  {savedCharacter.name} — Lv {savedCharacter.level} {savedCharacter.class}
+                </div>
+              </div>
+              <button
+                onClick={handleLoad}
+                style={{
+                  padding: '0.4rem 0.75rem',
+                  borderRadius: '4px',
+                  border: '1px solid #2563EB',
+                  background: 'transparent',
+                  color: '#3B82F6',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                }}
+              >
+                Load
+              </button>
+            </div>
+          )}
 
           {/* Start Button */}
           <div style={{ gridColumn: '1 / -1' }}>
@@ -265,7 +343,7 @@ export default function GymClient() {
                   <span> — {battleState.phase.xpGained} XP earned</span>
                 )}
               </div>
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <button
                   onClick={resetBattle}
                   style={{
@@ -294,6 +372,24 @@ export default function GymClient() {
                 >
                   Rematch (same seed)
                 </button>
+                {battleState.phase.type === 'VICTORY' && (
+                  <button
+                    onClick={handleSave}
+                    disabled={saveStatus === 'Saving...'}
+                    style={{
+                      padding: '0.5rem 1.25rem',
+                      borderRadius: '6px',
+                      border: '1px solid #22C55E',
+                      background: 'transparent',
+                      color: '#22C55E',
+                      cursor: saveStatus === 'Saving...' ? 'wait' : 'pointer',
+                      fontSize: '0.85rem',
+                      opacity: saveStatus === 'Saving...' ? 0.5 : 1,
+                    }}
+                  >
+                    {saveStatus ?? 'Save Character'}
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -316,6 +412,73 @@ export default function GymClient() {
 
       {/* Mock Event Panel */}
       <MockEventPanel />
+
+      {/* Save / Load Panel */}
+      <div style={{ marginTop: '1rem', border: '1px solid #222', borderRadius: '8px', background: '#111' }}>
+        <button
+          onClick={() => setShowPersistence(!showPersistence)}
+          style={{
+            width: '100%',
+            padding: '0.6rem 1rem',
+            background: 'transparent',
+            border: 'none',
+            color: '#ededed',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: '0.85rem',
+          }}
+        >
+          <span>Save / Load</span>
+          <span style={{ opacity: 0.4 }}>{showPersistence ? '\u25B2' : '\u25BC'}</span>
+        </button>
+
+        {showPersistence && (
+          <div style={{ padding: '0 1rem 1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleExport}
+              style={{
+                padding: '0.4rem 0.75rem',
+                borderRadius: '4px',
+                border: '1px solid #333',
+                background: '#1a1a1a',
+                color: '#ededed',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+              }}
+            >
+              Export Save (JSON)
+            </button>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              style={{
+                padding: '0.4rem 0.75rem',
+                borderRadius: '4px',
+                border: '1px solid #333',
+                background: '#1a1a1a',
+                color: '#ededed',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+              }}
+            >
+              Import Save
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleImport}
+              style={{ display: 'none' }}
+            />
+            {hydrated && savedCharacter && (
+              <span style={{ fontSize: '0.75rem', opacity: 0.4, alignSelf: 'center' }}>
+                Last saved: {savedCharacter.name} Lv {savedCharacter.level}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Balance Sim link */}
       <div style={{ marginTop: '1rem', textAlign: 'center' }}>

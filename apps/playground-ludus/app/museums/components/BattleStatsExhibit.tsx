@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import { createCharacter, createMonster, createRngState, simulateBattle, createBattleStatistics } from '@dendrovia/ludus';
+import type { BattleStatistics } from '@dendrovia/ludus';
 
-const STAT_DESCRIPTIONS: Array<{ key: string; label: string; category: string; description: string }> = [
+const STAT_DESCRIPTIONS: Array<{ key: keyof BattleStatistics; label: string; category: string; description: string }> = [
   { key: 'totalBattles', label: 'Total Battles', category: 'Meta', description: 'Total number of battles fought' },
   { key: 'victories', label: 'Victories', category: 'Meta', description: 'Number of battles won' },
   { key: 'defeats', label: 'Defeats', category: 'Meta', description: 'Number of battles lost' },
@@ -70,7 +71,7 @@ export default function BattleStatsExhibit() {
             </div>
             <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.25rem' }}>{stat.description}</div>
             <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)', opacity: 0.4 }}>
-              {stat.key}: {(blankStats as any)[stat.key] === Infinity ? 'Infinity' : (blankStats as any)[stat.key]}
+              {stat.key}: {blankStats[stat.key] === Infinity ? 'Infinity' : blankStats[stat.key]}
             </div>
           </div>
         ))}

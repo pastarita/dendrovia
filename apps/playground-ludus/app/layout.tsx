@@ -26,11 +26,11 @@ const DOMAINS = [
 ];
 
 const CROSS_NAV = [
-  { name: "ARCHITECTUS", port: 3010, emoji: "🏛️" },
-  { name: "CHRONOS", port: 3011, emoji: "📜" },
-  { name: "IMAGINARIUM", port: 3012, emoji: "🎨" },
-  { name: "OCULUS", port: 3014, emoji: "👁️" },
-  { name: "OPERATUS", port: 3015, emoji: "💾" },
+  { name: "ARCHITECTUS", port: 3011, emoji: "🏛️" },
+  { name: "CHRONOS", port: 3012, emoji: "📜" },
+  { name: "IMAGINARIUM", port: 3013, emoji: "🎨" },
+  { name: "OCULUS", port: 3015, emoji: "👁️" },
+  { name: "OPERATUS", port: 3016, emoji: "💾" },
 ];
 
 export default function RootLayout({

@@ -227,7 +227,7 @@ bun run distill --topology ../chronos/generated/topology.json
 ```bash
 cd packages/architectus
 bun run dev
-# Should open browser at localhost:3000
+# Should open browser at localhost:3010
 ```
 
 **Success Criteria:**

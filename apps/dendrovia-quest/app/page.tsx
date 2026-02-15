@@ -4,24 +4,24 @@
  * DENDROVIA QUEST — Hub & Launcher
  *
  * Central landing page for the Dendrovia monorepo workspace.
- * The main 3D experience lives at :3010 (ARCHITECTUS).
+ * The main 3D experience lives at :3011 (ARCHITECTUS).
  * All other pillar playgrounds serve as GMZ-doc servers.
  */
 
 const MAIN_APP = {
   name: 'ARCHITECTUS',
-  port: 3010,
+  port: 3011,
   icon: '🏛️',
   desc: 'The Renderer — Main 3D Experience',
   color: '#3B82F6',
 };
 
 const PILLAR_SERVERS = [
-  { name: 'CHRONOS',     port: 3011, icon: '📜', desc: 'Git History + AST Parsing',       color: '#c77b3f' },
-  { name: 'IMAGINARIUM', port: 3012, icon: '🎨', desc: 'Procedural Art Generation',       color: '#A855F7' },
-  { name: 'LUDUS',       port: 3013, icon: '🎮', desc: 'Game Mechanics + Rules',           color: '#EF4444' },
-  { name: 'OCULUS',      port: 3014, icon: '👁️', desc: 'UI + Navigation',                 color: '#22C55E' },
-  { name: 'OPERATUS',    port: 3015, icon: '💾', desc: 'Infrastructure + Persistence',     color: '#6B7280' },
+  { name: 'CHRONOS',     port: 3012, icon: '📜', desc: 'Git History + AST Parsing',       color: '#c77b3f' },
+  { name: 'IMAGINARIUM', port: 3013, icon: '🎨', desc: 'Procedural Art Generation',       color: '#A855F7' },
+  { name: 'LUDUS',       port: 3014, icon: '🎮', desc: 'Game Mechanics + Rules',           color: '#EF4444' },
+  { name: 'OCULUS',      port: 3015, icon: '👁️', desc: 'UI + Navigation',                 color: '#22C55E' },
+  { name: 'OPERATUS',    port: 3016, icon: '💾', desc: 'Infrastructure + Persistence',     color: '#6B7280' },
 ];
 
 export default function Home() {

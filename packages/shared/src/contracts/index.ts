@@ -118,6 +118,42 @@ export const TopologySchema = {
           strength: { type: "number" }
         }
       }
+    },
+    deepwiki: {
+      type: "object",
+      description: "Optional AI-generated documentation from DeepWiki. Absent when not fetched or unavailable.",
+      required: ["wikiUrl", "fetchedAt"],
+      properties: {
+        wikiUrl: { type: "string" },
+        overview: { type: "string" },
+        topics: {
+          type: "array",
+          items: {
+            type: "object",
+            required: ["title", "id"],
+            properties: {
+              title: { type: "string" },
+              id: { type: "string" },
+              children: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["title", "id"],
+                  properties: {
+                    title: { type: "string" },
+                    id: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        moduleDocumentation: {
+          type: "object",
+          additionalProperties: { type: "string" }
+        },
+        fetchedAt: { type: "string", format: "date-time" }
+      }
     }
   }
 } as const;

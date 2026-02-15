@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "bun run src/index.ts --watch",
     "parse": "bun run src/parse.ts",
+    "analyze": "bun run src/analyze.ts",
     "test": "bun test"
   },
   "dependencies": {

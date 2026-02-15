@@ -9,6 +9,7 @@ const nextConfig = {
   transpilePackages: [
     '@dendrovia/shared',
     '@dendrovia/ludus',
+    '@dendrovia/operatus',
   ],
   turbopack: {
     root: monorepoRoot,

@@ -118,6 +118,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@dendrovia/ludus": "workspace:*",
+        "@dendrovia/operatus": "workspace:*",
         "@dendrovia/shared": "workspace:*",
         "@repo/ui": "*",
         "next": "16.1.5",
@@ -188,6 +189,7 @@
       "name": "@dendrovia/architectus",
       "version": "0.1.0",
       "dependencies": {
+        "@dendrovia/imaginarium": "workspace:*",
         "@dendrovia/shared": "workspace:*",
         "@react-three/drei": "^9.114.0",
         "@react-three/fiber": "^8.17.0",

@@ -27,6 +27,8 @@ export {
   type ASTParseResult,
 } from './parser/ASTParser.js';
 
+export { parseGoFile } from './parser/GoParser.js';
+
 // Classifiers
 export {
   classifyCommit,

@@ -10,10 +10,12 @@ import { statSync } from 'fs';
 import { extname } from 'path';
 import type { ParsedFile } from '@dendrovia/shared';
 import { analyzeFileComplexity, type FunctionComplexity, analyzeFunctionComplexities } from '../analyzer/ComplexityAnalyzer.js';
+import { parseGoFile } from './GoParser.js';
 
 /** Languages we can parse with ts-morph */
 const PARSEABLE_EXTENSIONS = new Set([
   '.ts', '.tsx', '.js', '.jsx', '.mts', '.cts', '.mjs', '.cjs',
+  '.go',
 ]);
 
 /** Extension → language name */
@@ -97,6 +99,11 @@ export function parseFile(
   repoRoot: string,
 ): ASTParseResult | null {
   if (!canParse(filePath)) return null;
+
+  // Go files use regex-based parser (not ts-morph)
+  if (extname(filePath).toLowerCase() === '.go') {
+    return parseGoFile(filePath, repoRoot);
+  }
 
   let sourceFile: SourceFile;
   try {
@@ -210,7 +217,7 @@ export function buildStubFile(
   };
 }
 
-function simpleHash(str: string): string {
+export function simpleHash(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);

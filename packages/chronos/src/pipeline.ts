@@ -125,7 +125,7 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
 
   const parseableFiles = relevantFiles.filter(f => canParse(f));
   const nonParseableFiles = relevantFiles.filter(f => !canParse(f));
-  log(silent, `  ${parseableFiles.length} parseable (TS/JS), ${nonParseableFiles.length} other`);
+  log(silent, `  ${parseableFiles.length} parseable (TS/JS/Go), ${nonParseableFiles.length} other`);
 
   const astResults = parseFiles(
     parseableFiles.map(f => join(repoPath, f)),

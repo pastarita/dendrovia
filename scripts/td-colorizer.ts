@@ -10,6 +10,7 @@
  */
 
 import { spawn } from 'child_process';
+import { launchBrave } from './workspace-launcher/brave-launcher';
 
 // ── Pillar Color Registry ────────────────────────────────────────
 // Maps package name fragments to 24-bit ANSI color codes
@@ -87,12 +88,17 @@ function colorizeLine(line: string): string {
   return `${coloredPrefix}${rest}`;
 }
 
+// ── Browser Launch ──────────────────────────────────────────────
+
+const NO_BROWSER_FLAG = '--no-browser';
+
 // ── Main ─────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
+const skipBrowser = args.includes(NO_BROWSER_FLAG);
 
-// Default: turbo dev with passthrough args
-const turboArgs = ['dev', ...args];
+// Remove our custom flag before passing to turbo
+const turboArgs = ['dev', ...args.filter(a => a !== NO_BROWSER_FLAG)];
 
 const child = spawn('turbo', turboArgs, {
   stdio: ['inherit', 'pipe', 'pipe'],
@@ -125,6 +131,22 @@ function processStream(stream: NodeJS.ReadableStream, output: NodeJS.WritableStr
 
 processStream(child.stdout!, process.stdout);
 processStream(child.stderr!, process.stderr);
+
+// ── Auto-launch Brave once servers are ready ────────────────────
+
+if (!skipBrowser) {
+  // Give turbo a moment to start spawning dev servers, then
+  // wait for them to respond before opening tabs
+  setTimeout(async () => {
+    try {
+      process.stdout.write('\n🌐 Opening Brave Browser...\n');
+      await launchBrave({ waitForServers: true, waitTimeout: 20000 });
+      process.stdout.write('✅ Browser ready\n\n');
+    } catch (err) {
+      process.stderr.write(`⚠ Browser launch failed: ${err}\n`);
+    }
+  }, 2000);
+}
 
 child.on('exit', (code) => {
   process.exit(code ?? 0);

@@ -9,8 +9,34 @@ import type {
   LanguageDistribution,
   ContributorSummary,
 } from '@dendrovia/shared';
-import type { FunctionComplexity } from '@dendrovia/chronos';
-import type { ContributorProfile } from '@dendrovia/chronos';
+// Inline types from @dendrovia/chronos to avoid turbopack .js extension
+// resolution issues (chronos uses .js imports that turbopack can't alias)
+interface FunctionComplexity {
+  name: string;
+  startLine: number;
+  endLine: number;
+  complexity: {
+    cyclomatic: number;
+    cognitive: number;
+    loc: number;
+    difficulty: string;
+  };
+}
+
+interface ContributorProfile {
+  name: string;
+  email: string;
+  archetype: string;
+  timeArchetype: string;
+  characterClass: string;
+  commitCount: number;
+  firstCommit: string;
+  lastCommit: string;
+  filesOwned: number;
+  peakHour: number;
+  typeDistribution: Record<string, number>;
+  facets: Record<string, number>;
+}
 
 const GENERATED_DIR = join(process.cwd(), '../../packages/chronos/generated');
 

@@ -11,14 +11,7 @@ const nextConfig = {
   },
   transpilePackages: [
     '@dendrovia/shared',
-    '@dendrovia/chronos',
   ],
-  webpack: (config) => {
-    config.resolve.extensionAlias = {
-      '.js': ['.ts', '.tsx', '.js'],
-    };
-    return config;
-  },
 };
 
 export default nextConfig;

@@ -3,14 +3,14 @@
 /**
  * Brave Browser Launcher for Dendrovia Playgrounds
  *
- * Opens all 6 pillar playground tabs in Brave, with the ARCHITECTUS
- * playground as the active (first) tab.
+ * Opens all playground tabs in Brave, with Dendrovia Quest (hub)
+ * as the active first tab.
  *
  * Behavior:
  * - If Brave is not running, launches a new instance
  * - Opens a new window with all playground tabs
- * - First tab = the "home" pillar (defaults to ARCHITECTUS)
- * - Remaining tabs open in order: CHR, IMG, ARC, LUD, OCU, OPR
+ * - First tab = Quest hub (:3010), then pillars in order
+ * - Remaining tabs: ARC, CHR, IMG, LUD, OCU, OPR
  */
 
 import { $ } from 'bun';
@@ -25,12 +25,13 @@ interface PlaygroundEntry {
 }
 
 const PLAYGROUNDS: PlaygroundEntry[] = [
-  { pillar: 'ARCHITECTUS', emoji: '🏛️', port: 3010, label: 'The Renderer' },
-  { pillar: 'CHRONOS',     emoji: '📜', port: 3011, label: 'The Archaeologist' },
-  { pillar: 'IMAGINARIUM', emoji: '🎨', port: 3012, label: 'The Compiler' },
-  { pillar: 'LUDUS',       emoji: '🎮', port: 3013, label: 'The Mechanics' },
-  { pillar: 'OCULUS',      emoji: '👁️', port: 3014, label: 'The Interface' },
-  { pillar: 'OPERATUS',    emoji: '💾', port: 3015, label: 'The Infrastructure' },
+  { pillar: 'QUEST',       emoji: '🌳', port: 3010, label: 'The Hub' },
+  { pillar: 'ARCHITECTUS', emoji: '🏛️', port: 3011, label: 'The Renderer' },
+  { pillar: 'CHRONOS',     emoji: '📜', port: 3012, label: 'The Archaeologist' },
+  { pillar: 'IMAGINARIUM', emoji: '🎨', port: 3013, label: 'The Compiler' },
+  { pillar: 'LUDUS',       emoji: '🎮', port: 3014, label: 'The Mechanics' },
+  { pillar: 'OCULUS',      emoji: '👁️', port: 3015, label: 'The Interface' },
+  { pillar: 'OPERATUS',    emoji: '💾', port: 3016, label: 'The Infrastructure' },
 ];
 
 const BRAVE_APP = '/Applications/Brave Browser.app';
@@ -76,7 +77,7 @@ end tell
 // ── Main ────────────────────────────────────────────────────────
 
 export interface BraveLaunchOptions {
-  /** Which pillar gets the first tab (default: ARCHITECTUS) */
+  /** Which pillar gets the first tab (default: QUEST) */
   homePillar?: string;
   /** Only open specific pillars */
   pillars?: string[];
@@ -106,7 +107,7 @@ async function waitForPort(port: number, timeoutMs: number): Promise<boolean> {
 
 export async function launchBrave(options: BraveLaunchOptions = {}): Promise<void> {
   const {
-    homePillar = 'ARCHITECTUS',
+    homePillar = 'QUEST',
     pillars: filterPillars,
     dryRun = false,
     waitForServers = false,
@@ -188,7 +189,7 @@ if (import.meta.main) {
   console.log('\n🌐 Dendrovia Brave Launcher\n');
 
   await launchBrave({
-    homePillar: homePillar || 'ARCHITECTUS',
+    homePillar: homePillar || 'QUEST',
     dryRun,
     waitForServers: wait,
   });

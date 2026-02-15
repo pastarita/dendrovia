@@ -15,6 +15,7 @@ export function FalconModeOverlay() {
   const topology = useOculusStore((s) => s.topology);
   const hotspots = useOculusStore((s) => s.hotspots);
   const visitedNodes = useOculusStore((s) => s.visitedNodes);
+  const deepwiki = useOculusStore((s) => s.deepwiki);
 
   // Only show in falcon mode
   if (cameraMode !== 'falcon') return null;
@@ -120,6 +121,22 @@ export function FalconModeOverlay() {
               </div>
             );
           })}
+        </Panel>
+      )}
+
+      {/* DeepWiki Overview */}
+      {deepwiki?.overview && (
+        <Panel compact>
+          <div className="oculus-heading" style={{ marginBottom: 'var(--oculus-space-xs)' }}>About This Codebase</div>
+          <div style={{
+            fontSize: 'var(--oculus-font-xs)',
+            color: 'var(--oculus-text-muted)',
+            lineHeight: 1.5,
+          }}>
+            {deepwiki.overview.length > 200
+              ? `${deepwiki.overview.slice(0, 200)}...`
+              : deepwiki.overview}
+          </div>
         </Panel>
       )}
     </div>

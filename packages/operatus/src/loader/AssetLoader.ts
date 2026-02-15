@@ -18,6 +18,7 @@ import type {
   AssetManifest,
   ProceduralPalette,
   CodeTopology,
+  SerializedMeshData,
 } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { CacheManager } from '../cache/CacheManager.js';
@@ -33,7 +34,7 @@ export interface AssetDescriptor {
   path: string;
   hash?: string;
   priority: AssetPriority;
-  type: 'shader' | 'palette' | 'topology' | 'texture' | 'json';
+  type: 'shader' | 'palette' | 'topology' | 'texture' | 'json' | 'mesh';
   /** Size in bytes (from manifest, for progress tracking) */
   size?: number;
 }
@@ -139,6 +140,17 @@ export class AssetLoader {
         path: filePath,
         priority: AssetPriority.VISIBLE,
         type: 'palette',
+      });
+    }
+
+    // Meshes — visible tier
+    for (const [id, entry] of Object.entries(this.manifest.meshes ?? {})) {
+      descriptors.push({
+        path: entry.path,
+        hash: entry.hash,
+        priority: AssetPriority.VISIBLE,
+        type: 'mesh',
+        size: entry.size,
       });
     }
 
@@ -352,6 +364,25 @@ export class AssetLoader {
       type: 'palette',
     });
     return JSON.parse(raw) as ProceduralPalette;
+  }
+
+  /**
+   * Load and validate a serialized mesh asset.
+   * Returns null on failure (fallback-friendly).
+   */
+  async loadMesh(path: string): Promise<SerializedMeshData | null> {
+    try {
+      const raw = await this.loadAsset({
+        path,
+        priority: AssetPriority.VISIBLE,
+        type: 'mesh',
+      });
+      const parsed = JSON.parse(raw);
+      if (parsed.version !== 1) return null;
+      return parsed as SerializedMeshData;
+    } catch {
+      return null;
+    }
   }
 
   // ── Cache management ──────────────────────────────────────────

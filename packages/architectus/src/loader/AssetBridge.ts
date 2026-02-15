@@ -21,7 +21,10 @@ import type {
   NoiseFunction,
   FungalSpecimen,
   MycelialNetwork,
+  SerializedMeshData,
 } from '@dendrovia/shared';
+import { deserializeToFlat } from '@dendrovia/imaginarium';
+import type { FlatMeshData } from '@dendrovia/imaginarium';
 
 /** The typed shape returned to consumers. Every field is optional — callers
  *  must fall back to their own defaults when a field is null/undefined. */
@@ -36,6 +39,10 @@ export interface GeneratedAssets {
     specimens: FungalSpecimen[];
     network: MycelialNetwork | null;
   } | null;
+  /** Deserialized mesh data keyed by specimen/genus ID. Loaded from
+   *  manifest.meshes entries via deserializeToFlat(). Null until loaded,
+   *  empty map if no meshes are referenced in the manifest. */
+  meshes: Map<string, FlatMeshData> | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -167,12 +174,44 @@ export async function loadGeneratedAssets(
     };
   }
 
+  // 6. Load mesh data if referenced in the manifest.
+  //    Each entry is a serialized mesh JSON file — we fetch and deserialize
+  //    to FlatMeshData (GPU-ready typed arrays) in parallel.
+  //    Failures are per-mesh (missing file, bad data) and never block other
+  //    meshes or overall asset loading.
+  let meshes: Map<string, FlatMeshData> | null = null;
+  if (manifest.meshes) {
+    meshes = new Map<string, FlatMeshData>();
+    const meshEntries = Object.entries(manifest.meshes);
+    const meshResults = await Promise.all(
+      meshEntries.map(async ([id, entry]) => {
+        const raw = await fetchJson<SerializedMeshData>(
+          resolveAssetUrl(manifestPath, entry.path),
+        );
+        if (!raw) return [id, null] as const;
+        const flat = deserializeToFlat(raw);
+        return [id, flat] as const;
+      }),
+    );
+
+    for (const [id, flat] of meshResults) {
+      if (flat) {
+        meshes.set(id, flat);
+      }
+    }
+
+    if (meshes.size > 0) {
+      console.log(`[ARCHITECTUS] Loaded ${meshes.size} mesh assets`);
+    }
+  }
+
   const assetCount =
     Object.keys(palettes).length +
     Object.keys(shaders).length +
     (lsystem ? 1 : 0) +
     (noise ? 1 : 0) +
-    (mycology ? 1 : 0);
+    (mycology ? 1 : 0) +
+    (meshes ? meshes.size : 0);
 
   console.log(`[ARCHITECTUS] Loaded ${assetCount} generated assets`);
 
@@ -184,5 +223,6 @@ export async function loadGeneratedAssets(
     noise,
     shaders,
     mycology,
+    meshes,
   };
 }

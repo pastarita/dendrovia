@@ -48,6 +48,7 @@ export function CameraRig() {
   const cameraMode = useRendererStore((s) => s.cameraMode);
   const transitioning = useRendererStore((s) => s.cameraTransitioning);
   const playerPosition = useRendererStore((s) => s.playerPosition);
+  const isUiHovered = useRendererStore((s) => s.isUiHovered);
   const { camera } = useThree();
 
   // Track last emitted position for PLAYER_MOVED debouncing
@@ -137,6 +138,7 @@ export function CameraRig() {
     return (
       <OrbitControls
         ref={controlsRef}
+        enabled={!isUiHovered}
         enableDamping
         dampingFactor={FALCON_DEFAULTS.dampingFactor}
         minDistance={FALCON_DEFAULTS.minDistance}
@@ -151,6 +153,7 @@ export function CameraRig() {
   return (
     <OrbitControls
       ref={controlsRef}
+      enabled={!isUiHovered}
       enableDamping
       dampingFactor={0.1}
       minDistance={2}

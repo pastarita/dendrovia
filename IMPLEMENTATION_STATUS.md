@@ -1,6 +1,6 @@
 # Dendrovia Implementation Status
 
-> **Current Progress:** ~85% Complete (per-pillar average)
+> **Current Progress:** ~87% Complete (per-pillar average)
 
 ## Infrastructure (Complete)
 
@@ -113,14 +113,14 @@
 - [x] **DendriteWorld** - Scene root combining all components
 - [x] **BranchInstances** - Instanced mesh rendering for branch segments
 - [x] **NodeInstances** - Instanced mesh rendering for file nodes
-- [x] **CameraRig** - Falcon mode (orbit) + Player mode (first-person)
+- [x] **CameraRig** - Falcon mode (orbit) + Player mode (first-person), respects `isUiHovered` to disable controls over UI panels
 - [x] **PostProcessing** - Bloom, ChromaticAberration (via @react-three/postprocessing)
 - [x] **Lighting** - Scene lighting setup
 - [x] **PerformanceMonitor** - Runtime FPS/draw-call monitoring
 - [x] **LSystem** - L-system string expansion engine
 - [x] **TurtleInterpreter** - 3D quaternion-based turtle (BranchSegment + NodeMarker output)
 - [x] **detectGPU** - 5-tier quality detection (ultra/high/medium/low/potato)
-- [x] **useRendererStore** - Zustand store (topology, quality, camera mode, selection)
+- [x] **useRendererStore** - Zustand store (topology, quality, camera mode, selection, isUiHovered)
 
 ### Gaps
 
@@ -175,16 +175,16 @@
 
 ---
 
-## OCULUS - The Interface (~90%)
+## OCULUS - The Interface (~93%)
 
-**Status:** Full UI component library. OculusProvider context, Zustand store with EventBus subscriptions, 8 composite components, 5 atomic primitives, 3 hooks. 21 source files (7 .ts + 14 .tsx). CSS design system with tokens, animations, responsive layout.
+**Status:** Full UI component library with correct cross-pillar event contracts. OculusProvider context with configurable code loader, Zustand store with typed EventBus subscriptions, 8 composite components, 5 atomic primitives, 4 hooks. 21 source files (7 .ts + 14 .tsx). CSS design system with tokens, animations, responsive layout. 7 SpacePark playground pages (Zoo/Gym/Museum).
 
 ### Implemented - Core
 
-- [x] **OculusProvider** - React context wrapper with config
-- [x] **useOculusStore** - Zustand store (panels, camera mode, battle state, code reader)
-- [x] **useEventSubscriptions** - EventBus listener management
-- [x] **useInputCapture / useIsUiHovered** - Input coordination between UI and 3D scene
+- [x] **OculusProvider** - React context wrapper with config, configurable code loader
+- [x] **useOculusStore** - Zustand store (panels, camera mode, battle state, code reader, serializable visitedNodes, capped battle log)
+- [x] **useEventSubscriptions** - Typed EventBus listeners for all combat, quest, navigation, and topology events
+- [x] **useInputCapture / useIsUiHovered** - Input coordination between UI and 3D scene (bridged to ARCHITECTUS CameraRig)
 - [x] **useKeyboardShortcuts** - Q (quest log), M (minimap), Esc (close)
 
 ### Implemented - Components
@@ -194,7 +194,7 @@
 - [x] **BattleUI** - Turn-based combat UI, spell buttons, battle log
 - [x] **QuestLog** - Compact tracker + full overlay, quest state management
 - [x] **MillerColumns** - Virtualized file navigator, keyboard nav, breadcrumbs
-- [x] **CodeReader** - Line numbers, metadata header, hotspot highlighting
+- [x] **CodeReader** - Line numbers, metadata header, hotspot highlighting, auto-open on node click
 - [x] **FalconModeOverlay** - Heatmap visualization, stats, top hotspots
 - [x] **Billboard3D** - R3F Html wrapper (optional drei peer dep)
 
@@ -213,13 +213,34 @@
 - [x] Mobile responsive layout
 - [x] Accessibility (ARIA roles, keyboard nav, reduced motion)
 
-**Tests:** 1 test file (useOculusStore.test.ts), 20 tests, all passing
+### Implemented - Event Handler Contracts (Remediated)
+
+- [x] `HEALTH_CHANGED` → reads `HealthChangedEvent.current` / `.max`
+- [x] `MANA_CHANGED` → reads `ManaChangedEvent.current` / `.max`
+- [x] `DAMAGE_DEALT` → reads `DamageDealtEvent.damage` / `.isCritical` / `.element`
+- [x] `COMBAT_STARTED` → constructs Bug from `CombatStartedEvent` fields, calls `startCombat()`
+- [x] `COMBAT_ENDED` → calls `endCombat()`
+- [x] `EXPERIENCE_GAINED` → updates character experience
+- [x] `LEVEL_UP` → updates character level
+- [x] `COMBAT_TURN_START` / `COMBAT_TURN_END` → battle log messages
+- [x] `SPELL_RESOLVED` → battle log with spell outcome
+- [x] `NODE_CLICKED` → adds visited node + opens CodeReader with language detection
+- [x] `QUEST_UPDATED` → maps event status to Quest status enum
+- [x] `TOPOLOGY_GENERATED` → sets topology tree + hotspots (typed `TopologyGeneratedEvent`)
+
+### Implemented - Store Improvements
+
+- [x] `setCharacter()` reads health/mana from `character.stats.*` sub-object (matches `Character` type)
+- [x] `visitedNodes` is `string[]` (JSON-serializable, was `Set<string>`)
+- [x] `addBattleLog()` capped at 100 entries (prevents memory growth)
+- [x] Code loader base URL configurable via `OculusConfig.codeLoader`
+
+**Tests:** 1 test file (useOculusStore.test.ts), 28 tests, all passing
 
 ### Gaps
 
-- [ ] CodeReader content loading is empty (placeholder, no file fetching)
 - [ ] No syntax highlighting in CodeReader
-- [ ] No integration tests with LUDUS combat events
+- [ ] No integration tests with live LUDUS combat flow (playground exercises this manually)
 
 ---
 
@@ -281,7 +302,7 @@
 
 - [x] CHRONOS output: `ParsedFile`, `ParsedCommit`, `CodeTopology`, `FileTreeNode`, `Hotspot`
 - [x] IMAGINARIUM output: `ProceduralPalette`, `SDFShader`, `NoiseFunction`, `LSystemRule`
-- [x] ARCHITECTUS runtime: `DendriteConfig`, `GameWorldState`
+- [x] ARCHITECTUS runtime: `DendriteConfig`, `GameWorldState` (visitedNodes: `string[]`, JSON-serializable)
 - [x] LUDUS types: `Character`, `CharacterStats`, `Spell`, `SpellEffect`, `SpellSymbol`, `Monster`, `BattleState`, `BattleReplay`, `DamageResult`, `Item`, `Quest`, `Encounter`, `Bug`, `StatusEffect`, `GrowthRates`, combat phases, actions
 - [x] OCULUS types: `HUDState`, `MillerColumn`, `MillerColumnItem`
 - [x] OPERATUS types: `AssetManifest`, `GameSaveState`
@@ -290,8 +311,8 @@
 ### EventBus (Partial)
 
 - [x] 27 event constants defined in `GameEvents`
-- [x] 18 typed payload interfaces (combat, UI, spatial)
-- [ ] 9 event payload types missing: `COLLISION_DETECTED`, `PARSE_COMPLETE`, `TOPOLOGY_GENERATED`, `SHADERS_COMPILED`, `PALETTE_GENERATED`, `MYCOLOGY_CATALOGED`, `ASSETS_LOADED`, `STATE_PERSISTED`, `CACHE_UPDATED`
+- [x] 19 typed payload interfaces (combat, UI, spatial, topology)
+- [ ] 8 event payload types missing: `COLLISION_DETECTED`, `PARSE_COMPLETE`, `SHADERS_COMPILED`, `PALETTE_GENERATED`, `MYCOLOGY_CATALOGED`, `ASSETS_LOADED`, `STATE_PERSISTED`, `CACHE_UPDATED`
 
 ---
 
@@ -301,14 +322,14 @@
 
 1. **ARCHITECTUS does not emit spatial events** - `PLAYER_MOVED`, `BRANCH_ENTERED`, `NODE_CLICKED`, `COLLISION_DETECTED` are defined but never emitted. LUDUS encounter system and OCULUS UI cannot react to player movement.
 2. **ARCHITECTUS does not consume IMAGINARIUM output** - Shaders, palettes, and manifests are generated but not loaded. The renderer uses hardcoded/mock geometry instead of distilled assets.
-3. **No unified app bootstrap** - No top-level application shell that wires all six pillars together (Canvas + UI + game state + asset loading).
-4. **9 event payload types missing from shared contract** - Build-time events (`PARSE_COMPLETE`, `TOPOLOGY_GENERATED`, `SHADERS_COMPILED`, `PALETTE_GENERATED`, `MYCOLOGY_CATALOGED`) and infrastructure events (`ASSETS_LOADED`, `STATE_PERSISTED`, `CACHE_UPDATED`, `COLLISION_DETECTED`) lack typed interfaces.
+3. ~~No unified app bootstrap~~ — DendroviaQuest app shell now wires CHRONOS → OCULUS via `TOPOLOGY_GENERATED` event and bridges `isUiHovered` from OCULUS → ARCHITECTUS CameraRig.
+4. **8 event payload types missing from shared contract** - Build-time events (`PARSE_COMPLETE`, `SHADERS_COMPILED`, `PALETTE_GENERATED`, `MYCOLOGY_CATALOGED`) and infrastructure events (`ASSETS_LOADED`, `STATE_PERSISTED`, `CACHE_UPDATED`, `COLLISION_DETECTED`) lack typed interfaces. (`TOPOLOGY_GENERATED` now resolved.)
 
 ### Medium Priority
 
 5. **CHRONOS has 0 tests** - Most complex parsing logic is untested.
 6. **ARCHITECTUS has 0 tests** - Rendering components untested.
-7. **CodeReader content is empty** - OCULUS CodeReader has no file-fetching mechanism to display source code.
+7. ~~CodeReader content is empty~~ — Code loader is now configurable via `OculusConfig.codeLoader`; `NODE_CLICKED` handler opens CodeReader with language detection.
 
 ### Low Priority
 
@@ -325,9 +346,9 @@
 | IMAGINARIUM | 16 | 181 | All passing |
 | ARCHITECTUS | 0 | 0 | No tests |
 | LUDUS | 4 | 251 | All passing |
-| OCULUS | 1 | 20 | All passing |
+| OCULUS | 1 | 28 | All passing |
 | OPERATUS | 3 | 23 | All passing |
-| **Total** | **24** | **475** | **475 passing** |
+| **Total** | **24** | **483** | **483 passing** |
 
 ---
 
@@ -337,9 +358,9 @@
 |--------|-----------|-------------|---------|---------------|
 | CHRONOS | ~85% | 10 | 24 functions, 11 types | Yes |
 | IMAGINARIUM | ~95% | 34 | 50+ functions, 20+ types | Yes |
-| ARCHITECTUS | ~60% | 15 | 12 components/systems, 5 types | Yes |
+| ARCHITECTUS | ~62% | 15 | 12 components/systems, 5 types | Yes |
 | LUDUS | ~90% | 17 | 15 modules (re-exported) | No |
-| OCULUS | ~90% | 21 | 8 components, 5 primitives, 3 hooks | No |
+| OCULUS | ~93% | 21 | 8 components, 5 primitives, 4 hooks | No |
 | OPERATUS | ~85% | 24 | 20+ functions, 15+ types | No |
 
 **Critical Path:** CHRONOS -> IMAGINARIUM -> ARCHITECTUS (build-time pipeline feeds the renderer)
@@ -368,7 +389,7 @@ LUDUS, OCULUS, and OPERATUS develop in parallel and integrate via EventBus.
 - [ ] Complexity analyzer edge cases
 - [ ] Integration test: parse Dendrovia's own codebase
 
-### Milestone 3: Cross-Pillar Integration (Next)
+### Milestone 3: Cross-Pillar Integration (In Progress)
 
 **Goal:** Wire all six pillars into a functioning application.
 
@@ -376,9 +397,10 @@ LUDUS, OCULUS, and OPERATUS develop in parallel and integrate via EventBus.
 - [ ] ARCHITECTUS loads CHRONOS topology.json for tree structure
 - [ ] ARCHITECTUS emits spatial events on player movement and node interaction
 - [ ] LUDUS receives spatial events and triggers encounters
-- [ ] OCULUS reacts to combat and quest events in real time
+- [x] OCULUS reacts to combat and quest events in real time (all 12 event handlers typed and wired)
 - [ ] OPERATUS manages asset loading and state persistence at runtime
-- [ ] Unified app shell (React root with Canvas + OCULUS overlay)
+- [x] Unified app shell (DendroviaQuest wires CHRONOS topology → OCULUS via `TOPOLOGY_GENERATED`, bridges `isUiHovered` → CameraRig)
+- [x] OCULUS playground (7 SpacePark pages: 3 Zoo, 2 Gym, 2 Museum)
 
 ### Milestone 4: SDF Raymarching (Future)
 

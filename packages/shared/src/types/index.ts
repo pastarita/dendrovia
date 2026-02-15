@@ -10,6 +10,21 @@
  * (What the archaeologist discovers)
  */
 
+export type CommitType =
+  | 'bug-fix'
+  | 'feature'
+  | 'refactor'
+  | 'docs'
+  | 'test'
+  | 'performance'
+  | 'merge'
+  | 'revert'
+  | 'dependency'
+  | 'breaking-change'
+  | 'chore'
+  | 'style'
+  | 'maintenance';
+
 export interface ParsedFile {
   path: string;
   hash: string;
@@ -31,6 +46,47 @@ export interface ParsedCommit {
   isBugFix: boolean;
   isFeature: boolean;
   isMerge: boolean;
+  /** Full 13-value classification */
+  type?: CommitType;
+  /** Scope from conventional commits */
+  scope?: string;
+  /** Breaking change flag */
+  isBreaking?: boolean;
+  /** Classification confidence */
+  confidence?: 'high' | 'medium' | 'low';
+}
+
+export interface TemporalCoupling {
+  fileA: string;
+  fileB: string;
+  coChangeCount: number;
+  strength: number;
+}
+
+export interface RepositoryMetadata {
+  name: string;
+  remoteUrl: string;
+  currentBranch: string;
+  branchCount: number;
+  fileCount: number;
+  commitCount: number;
+  contributorCount: number;
+  languages: string[];
+  analyzedAt: string;
+  headHash: string;
+}
+
+export interface LanguageDistribution {
+  language: string;
+  fileCount: number;
+  locTotal: number;
+  percentage: number;
+}
+
+export interface ContributorSummary {
+  totalContributors: number;
+  topContributor: string;
+  archetypeDistribution: Record<string, number>;
 }
 
 export interface CodeTopology {
@@ -38,6 +94,10 @@ export interface CodeTopology {
   commits: ParsedCommit[];
   tree: FileTreeNode;
   hotspots: Hotspot[];
+  repository?: RepositoryMetadata;
+  languageDistribution?: LanguageDistribution[];
+  contributorSummary?: ContributorSummary;
+  temporalCouplings?: TemporalCoupling[];
 }
 
 export interface FileTreeNode {
@@ -108,7 +168,7 @@ export interface GameWorldState {
   playerPosition: [number, number, number];
   cameraMode: 'falcon' | 'player';
   currentBranch: string;
-  visitedNodes: Set<string>;
+  visitedNodes: string[];
 }
 
 /**
@@ -362,6 +422,79 @@ export interface AssetManifest {
     assetDir: string;     // path to svg asset directory
     specimenCount: number;
   };
+  /** Generated mesh assets, keyed by specimen/genus ID → file path */
+  meshes?: Record<string, MeshManifestEntry>;
+}
+
+/**
+ * MESH ASSET TYPES
+ * (Versioned, cacheable mesh data for OPERATUS delivery)
+ */
+
+/** Manifest entry for a single mesh asset — enables OPERATUS versioning and cache invalidation. */
+export interface MeshManifestEntry {
+  /** Relative path to the serialized mesh file */
+  path: string;
+  /** SHA-256 content hash (truncated to 16 hex chars) for cache busting */
+  hash: string;
+  /** Mesh data format */
+  format: MeshFormat;
+  /** Vertex count (for progress tracking and LOD decisions) */
+  vertices: number;
+  /** Face/triangle count */
+  faces: number;
+  /** File size in bytes (for loading priority and progress) */
+  size: number;
+  /** Generation tier: determines fallback strategy */
+  tier: MeshTier;
+  /** Genus ID — links back to FungalSpecimen taxonomy */
+  genusId?: string;
+}
+
+/** Serialization format of the mesh file. Consumers use this to select the deserializer. */
+export type MeshFormat = 'halfedge' | 'indexed' | 'profile';
+
+/** Generation complexity tier — determines fallback chain:
+ *  If 'enriched' fails → fall back to 'base'
+ *  If 'base' fails → fall back to 'parametric' (regenerate from ProfileGeometry)
+ *  If 'parametric' fails → fall back to 'billboard' (SVG sprite)
+ */
+export type MeshTier = 'enriched' | 'base' | 'parametric' | 'billboard';
+
+/**
+ * Serialized half-edge mesh — the on-disk/over-network format.
+ * All fields are plain JSON-safe values (no typed arrays, no circular refs).
+ * OPERATUS caches this in IDB/OPFS with hash-based invalidation.
+ */
+export interface SerializedMeshData {
+  /** Format version for migration support */
+  version: 1;
+  /** Mesh format discriminator */
+  format: MeshFormat;
+  /** Flat vertex positions [x,y,z, x,y,z, ...] */
+  positions: number[];
+  /** Flat vertex normals [nx,ny,nz, ...] — pre-computed, area-weighted */
+  normals: number[];
+  /** Triangle indices [i0,i1,i2, ...] */
+  indices: number[];
+  /** Vertex count (redundant but useful for pre-allocation) */
+  vertexCount: number;
+  /** Face count */
+  faceCount: number;
+  /** Optional: half-edge topology for consumers that need adjacency queries.
+   *  Omitted when format='indexed' (GPU-only consumers don't need topology). */
+  topology?: {
+    halfedges: Array<{ vertex: number; face: number; next: number; prev: number; twin: number }>;
+    vertexHalfedges: number[]; // per-vertex outgoing halfedge index
+    faceHalfedges: number[];   // per-face one halfedge index
+  };
+  /** Generation metadata for debugging and versioning */
+  meta?: {
+    genus?: string;
+    pipeline?: string[];  // ordered list of MeshOp names that produced this mesh
+    generatedAt?: number; // timestamp
+    sourceHash?: string;  // hash of the input parameters (for determinism verification)
+  };
 }
 
 export interface GameSaveState {
@@ -370,6 +503,11 @@ export interface GameSaveState {
   quests: Quest[];
   visitedNodes: string[];
   unlockedKnowledge: string[];
+  inventory: Item[];
+  gameFlags: Record<string, boolean>;
+  worldPosition: [number, number, number];
+  cameraMode: 'falcon' | 'player';
+  playtimeMs: number;
 }
 
 /**

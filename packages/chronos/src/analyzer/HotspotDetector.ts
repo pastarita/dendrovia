@@ -8,14 +8,9 @@
  * Low churn  + high complexity = dormant threat (sleeping dragon)
  */
 
-import type { Hotspot, ParsedFile, ParsedCommit } from '@dendrovia/shared';
+import type { Hotspot, ParsedFile, ParsedCommit, TemporalCoupling } from '@dendrovia/shared';
 
-export interface TemporalCoupling {
-  fileA: string;
-  fileB: string;
-  coChangeCount: number;
-  strength: number; // coChanges / max(changesA, changesB)
-}
+export type { TemporalCoupling } from '@dendrovia/shared';
 
 export interface HotspotAnalysis {
   hotspots: Hotspot[];

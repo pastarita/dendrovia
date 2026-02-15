@@ -20,15 +20,15 @@
 import { useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
 
 // ── Shared ────────────────────────────────────────────────────
-import { getEventBus } from '@dendrovia/shared';
-import type { EventBus } from '@dendrovia/shared';
+import { getEventBus, GameEvents } from '@dendrovia/shared';
+import type { EventBus, TopologyGeneratedEvent } from '@dendrovia/shared';
 import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit } from '@dendrovia/shared';
 
 // ── ARCHITECTUS (3D renderer) ─────────────────────────────────
-import { App as ArchitectusApp } from '@dendrovia/architectus';
+import { App as ArchitectusApp, useRendererStore } from '@dendrovia/architectus';
 
 // ── OCULUS (UI layer) ─────────────────────────────────────────
-import { OculusProvider, HUD } from '@dendrovia/oculus';
+import { OculusProvider, HUD, useOculusStore } from '@dendrovia/oculus';
 
 // ── LUDUS (game logic) ────────────────────────────────────────
 import {
@@ -42,7 +42,7 @@ import {
 } from '@dendrovia/ludus';
 
 // ── OPERATUS (infrastructure) ─────────────────────────────────
-import { initializeOperatus, type OperatusContext } from '@dendrovia/operatus';
+import { initializeOperatus, StateAdapter, type OperatusContext } from '@dendrovia/operatus';
 
 // ─── Configuration ────────────────────────────────────────────
 
@@ -59,6 +59,16 @@ export interface DendroviaQuestProps {
   enableOculus?: boolean;
   /** Children rendered inside the OCULUS provider, after HUD */
   children?: ReactNode;
+}
+
+// ─── T11: Bridge OCULUS isUiHovered → ARCHITECTUS renderer store ──
+
+function UiHoverBridge() {
+  const isUiHovered = useOculusStore((s) => s.isUiHovered);
+  useEffect(() => {
+    useRendererStore.getState().setUiHovered(isUiHovered);
+  }, [isUiHovered]);
+  return null;
 }
 
 // ─── Loading Screen ───────────────────────────────────────────
@@ -147,8 +157,15 @@ export function DendroviaQuest({
           if (res.ok) {
             const data = await res.json();
             if (!cancelled) {
-              setTopology(data.tree ?? data);
-              setHotspots(data.hotspots ?? []);
+              const tree = data.tree ?? data;
+              const spots = data.hotspots ?? [];
+              setTopology(tree);
+              setHotspots(spots);
+              // T09: Emit topology to OCULUS via EventBus
+              bus.emit<TopologyGeneratedEvent>(GameEvents.TOPOLOGY_GENERATED, {
+                tree,
+                hotspots: spots,
+              });
             }
           }
         } catch (err) {
@@ -170,6 +187,13 @@ export function DendroviaQuest({
             battleState: null,
             gameFlags: {},
           });
+
+          // Bridge OPERATUS persistence ↔ LUDUS store (if OPERATUS is active)
+          if (enableOperatus && operatusRef.current) {
+            const adapter = new StateAdapter();
+            await adapter.connect(store);
+            cleanups.push(() => adapter.disconnect());
+          }
 
           // Bridge store changes → EventBus
           const unsubBridge = bridgeStoreToEventBus(store);
@@ -243,6 +267,7 @@ export function DendroviaQuest({
         manifestPath={manifestPath}
       />
       {enableOculus && <HUD />}
+      {enableOculus && <UiHoverBridge />}
       {children}
     </div>
   );

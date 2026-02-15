@@ -25,7 +25,7 @@ interface MinimapNode {
 function flattenTree(
   node: FileTreeNode,
   hotspotPaths: Set<string>,
-  visited: Set<string>,
+  visited: string[],
   depth = 0,
   index = 0
 ): MinimapNode[] {
@@ -40,7 +40,7 @@ function flattenTree(
     id: node.path,
     x: Math.max(5, Math.min(95, x)),
     y: Math.max(5, Math.min(95, y)),
-    visited: visited.has(node.path),
+    visited: visited.includes(node.path),
     isHotspot: hotspotPaths.has(node.path),
     isDirectory: node.type === 'directory',
     name: node.name,

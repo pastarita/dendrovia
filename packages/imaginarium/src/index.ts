@@ -73,3 +73,32 @@ export type {
   MushroomMeshData, MushroomSpriteProps,
   FileContext,
 } from './mycology/index.js';
+
+// --- Mesh Pipeline ---
+export {
+  // Data structure
+  buildFromIndexed, buildFromProfile, buildFromCylinder,
+  vertexNeighbors, vertexFaces, faceVertices, halfedgeFrom,
+  isBoundaryVertex, meshStats, toFlatArrays,
+  // Pipeline
+  pipe, pipeAsync, when, repeat, MeshPipeline,
+  // Operations
+  subdivide, loopSubdivideOnce,
+  smooth, taubinSmooth, laplacianSmoothOnce,
+  displaceNormal, displaceByFunction, displaceByField, displaceByNoise,
+  // Serialization (OPERATUS-compatible)
+  serialize, deserializeToHalfEdge, deserializeToFlat, deserializeWithFallback,
+  // Adapters (bridge MeshGenerator ↔ HalfEdgeMesh)
+  profileToHalfEdge, cylinderToHalfEdge, specimenToHalfEdge,
+  fallbackMeshFromProfile, fallbackMeshFromCylinder,
+  applyPipelineToProfile, applyPipelineToCylinder,
+  // Genus pipelines
+  genusPipeline, DEFAULT_PIPELINE, STEM_PIPELINE,
+  // Mesh asset generation
+  generateMeshAssets,
+} from './mesh/index.js';
+export type {
+  HEVertex, HEHalfEdge, HEFace, HalfEdgeMesh, FlatMeshData,
+  MeshOp, AsyncMeshOp, PipelineStep, SerializeOptions,
+  MeshGenerationResult, MeshGenerationStats,
+} from './mesh/index.js';

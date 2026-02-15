@@ -8,6 +8,7 @@ import { LSystem } from '../systems/LSystem';
 import { TurtleInterpreter, type NodeMarker } from '../systems/TurtleInterpreter';
 import { BranchInstances } from './BranchInstances';
 import { NodeInstances } from './NodeInstances';
+import { MushroomInstances } from './MushroomInstances';
 import { useRendererStore } from '../store/useRendererStore';
 
 /**
@@ -95,6 +96,9 @@ function BranchTracker({ nodes }: { nodes: NodeMarker[] }) {
 }
 
 export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverride }: DendriteWorldProps) {
+  // Pull generated assets from the store (loaded by AssetBridge)
+  const generatedAssets = useRendererStore((s) => s.generatedAssets);
+
   // Generate tree geometry from topology (memoized — expensive computation)
   // When IMAGINARIUM provides L-system rules, use its angle for the interpreter.
   const treeGeometry = useMemo(() => {
@@ -104,6 +108,11 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     const interpreter = new TurtleInterpreter(defaultAngle);
     return interpreter.interpret(turtleString);
   }, [topology, hotspots, lsystemOverride]);
+
+  // Resolve mushroom rendering data from generated assets.
+  // Both specimens and meshes must be present to render mushroom instances.
+  const mushroomSpecimens = generatedAssets?.mycology?.specimens ?? null;
+  const mushroomMeshes = generatedAssets?.meshes ?? null;
 
   return (
     <group name="dendrite-world">
@@ -128,6 +137,15 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
           glow: palette.glow,
         }}
       />
+
+      {/* Mushroom specimens — instanced meshes from IMAGINARIUM mycology */}
+      {mushroomSpecimens && mushroomSpecimens.length > 0 && mushroomMeshes && mushroomMeshes.size > 0 && (
+        <MushroomInstances
+          specimens={mushroomSpecimens}
+          meshData={mushroomMeshes}
+          palette={palette}
+        />
+      )}
     </group>
   );
 }

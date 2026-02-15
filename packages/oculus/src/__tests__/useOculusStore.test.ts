@@ -27,7 +27,7 @@ function resetStore() {
     millerSelection: [],
     isUiHovered: false,
     playerPosition: [0, 0, 0],
-    visitedNodes: new Set<string>(),
+    visitedNodes: [],
   });
 }
 
@@ -51,18 +51,37 @@ describe('useOculusStore', () => {
       expect(useOculusStore.getState().mana).toBe(30);
     });
 
-    it('sets character stats', () => {
+    it('sets character from stats sub-object (T12)', () => {
       useOculusStore.getState().setCharacter({
-        health: 90,
-        maxHealth: 150,
-        mana: 40,
+        stats: {
+          health: 90,
+          maxHealth: 150,
+          mana: 40,
+          maxMana: 80,
+          attack: 10,
+          defense: 10,
+          speed: 10,
+        },
         level: 5,
+        experience: 200,
       });
       const state = useOculusStore.getState();
       expect(state.health).toBe(90);
       expect(state.maxHealth).toBe(150);
       expect(state.mana).toBe(40);
+      expect(state.maxMana).toBe(80);
       expect(state.level).toBe(5);
+      expect(state.experience).toBe(200);
+    });
+
+    it('sets level/experience without stats (partial character)', () => {
+      useOculusStore.getState().setCharacter({ level: 7, experience: 500 } as any);
+      const state = useOculusStore.getState();
+      expect(state.level).toBe(7);
+      expect(state.experience).toBe(500);
+      // Health/mana should remain unchanged
+      expect(state.health).toBe(100);
+      expect(state.mana).toBe(50);
     });
   });
 
@@ -133,7 +152,8 @@ describe('useOculusStore', () => {
         description: 'git blame to find the culprit',
         manaCost: 10,
         cooldown: 2,
-        effect: { type: 'damage', value: 15 },
+        effect: { type: 'damage', target: 'enemy', value: 15 },
+        element: 'fire',
       },
     ];
 
@@ -158,6 +178,15 @@ describe('useOculusStore', () => {
       useOculusStore.getState().startCombat(mockBug, mockSpells);
       useOculusStore.getState().addBattleLog('Player used Blame!');
       expect(useOculusStore.getState().battle.log).toHaveLength(2); // initial + added
+    });
+
+    it('caps battle log at 100 entries (T14)', () => {
+      useOculusStore.getState().startCombat(mockBug, mockSpells);
+      // Add 110 entries (+ 1 initial = 111 total attempts)
+      for (let i = 0; i < 110; i++) {
+        useOculusStore.getState().addBattleLog(`Message ${i}`);
+      }
+      expect(useOculusStore.getState().battle.log.length).toBeLessThanOrEqual(100);
     });
   });
 
@@ -226,11 +255,17 @@ describe('useOculusStore', () => {
       expect(useOculusStore.getState().millerSelection).toEqual(['src', 'src/main.ts']);
     });
 
-    it('adds visited nodes', () => {
+    it('adds visited nodes (T13: array-based)', () => {
       useOculusStore.getState().addVisitedNode('node-1');
       useOculusStore.getState().addVisitedNode('node-2');
-      expect(useOculusStore.getState().visitedNodes.size).toBe(2);
-      expect(useOculusStore.getState().visitedNodes.has('node-1')).toBe(true);
+      expect(useOculusStore.getState().visitedNodes).toHaveLength(2);
+      expect(useOculusStore.getState().visitedNodes).toContain('node-1');
+    });
+
+    it('deduplicates visited nodes (T13)', () => {
+      useOculusStore.getState().addVisitedNode('node-1');
+      useOculusStore.getState().addVisitedNode('node-1');
+      expect(useOculusStore.getState().visitedNodes).toHaveLength(1);
     });
 
     it('sets player position', () => {

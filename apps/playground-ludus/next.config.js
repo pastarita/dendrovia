@@ -1,17 +1,24 @@
-import path from 'path';
+import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const monorepoRoot = resolve(__dirname, '../..');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {
-    root: path.resolve(__dirname, '../..'),
+    root: monorepoRoot,
   },
   transpilePackages: [
     '@dendrovia/shared',
     '@dendrovia/ludus',
   ],
+  webpack: (config) => {
+    config.resolve.extensionAlias = {
+      '.js': ['.ts', '.tsx', '.js'],
+    };
+    return config;
+  },
 };
 
 export default nextConfig;

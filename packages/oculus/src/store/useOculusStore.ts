@@ -76,7 +76,7 @@ export interface OculusState {
 
   // Player position (for minimap)
   playerPosition: [number, number, number];
-  visitedNodes: Set<string>;
+  visitedNodes: string[];
 }
 
 export interface OculusActions {
@@ -151,7 +151,7 @@ export const useOculusStore = create<OculusStore>((set) => ({
   isUiHovered: false,
 
   playerPosition: [0, 0, 0],
-  visitedNodes: new Set<string>(),
+  visitedNodes: [],
 
   // ── Actions ────────────────────────────────────────
 
@@ -178,10 +178,10 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   setCharacter: (character) =>
     set((s) => ({
-      ...(character.health !== undefined ? { health: character.health } : {}),
-      ...(character.maxHealth !== undefined ? { maxHealth: character.maxHealth } : {}),
-      ...(character.mana !== undefined ? { mana: character.mana } : {}),
-      ...(character.maxMana !== undefined ? { maxMana: character.maxMana } : {}),
+      ...(character.stats?.health !== undefined ? { health: character.stats.health } : {}),
+      ...(character.stats?.maxHealth !== undefined ? { maxHealth: character.stats.maxHealth } : {}),
+      ...(character.stats?.mana !== undefined ? { mana: character.stats.mana } : {}),
+      ...(character.stats?.maxMana !== undefined ? { maxMana: character.stats.maxMana } : {}),
       ...(character.level !== undefined ? { level: character.level } : {}),
       ...(character.experience !== undefined ? { experience: character.experience } : {}),
     })),
@@ -215,9 +215,10 @@ export const useOculusStore = create<OculusStore>((set) => ({
     })),
 
   addBattleLog: (message) =>
-    set((s) => ({
-      battle: { ...s.battle, log: [...s.battle.log, message] },
-    })),
+    set((s) => {
+      const log = [...s.battle.log, message];
+      return { battle: { ...s.battle, log: log.length > 100 ? log.slice(-100) : log } };
+    }),
 
   setTopology: (tree) => set({ topology: tree }),
 
@@ -266,8 +267,7 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   addVisitedNode: (nodeId) =>
     set((s) => {
-      const visitedNodes = new Set(s.visitedNodes);
-      visitedNodes.add(nodeId);
-      return { visitedNodes };
+      if (s.visitedNodes.includes(nodeId)) return s;
+      return { visitedNodes: [...s.visitedNodes, nodeId] };
     }),
 }));

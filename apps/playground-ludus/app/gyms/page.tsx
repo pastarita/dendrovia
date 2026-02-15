@@ -1,15 +1,16 @@
 import Link from "next/link";
+import GymClient from "./GymClient";
 
 export default function GymsPage() {
   return (
     <div>
       <Link href="/" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; LUDUS Dashboard</Link>
       <h1 style={{ fontSize: "1.75rem", fontWeight: 700, marginTop: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <span>🏋️</span> Gyms
+        <span>🏋️</span> Gyms — Combat Sandbox
       </h1>
-      <p style={{ opacity: 0.5, marginTop: "0.5rem" }}>Interactive sandbox (G modality) — Live mechanic experimentation</p>
-      <div style={{ marginTop: "2rem", padding: "2rem", border: "1px dashed #333", borderRadius: "8px", textAlign: "center", opacity: 0.4 }}>
-        Coming soon — LUDUS interactive gym
+      <p style={{ opacity: 0.5, marginTop: "0.5rem" }}>Interactive sandbox (G modality) — Pick a class, pick an enemy, fight.</p>
+      <div style={{ marginTop: "1.5rem" }}>
+        <GymClient />
       </div>
     </div>
   );

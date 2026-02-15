@@ -9,6 +9,8 @@
  * defined correctly."
  */
 
+import type { FileTreeNode, Hotspot } from '../types/index.js';
+
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
 export class EventBus {
@@ -153,7 +155,7 @@ export interface NodeClickedEvent {
 }
 
 export interface EncounterTriggeredEvent {
-  type: 'bug' | 'merge-conflict' | 'tech-debt';
+  type: 'bug' | 'boss' | 'miniboss' | 'merge-conflict' | 'tech-debt';
   severity: number;
   position: [number, number, number];
 }
@@ -241,6 +243,22 @@ export interface ManaChangedEvent {
   current: number;
   max: number;
   delta: number;
+}
+
+export interface ItemUsedEvent {
+  itemId: string;
+  characterId?: string;
+}
+
+export interface CollisionDetectedEvent {
+  entityId: string;
+  collidedWith: string;
+  position: [number, number, number];
+}
+
+export interface TopologyGeneratedEvent {
+  tree: FileTreeNode;
+  hotspots: Hotspot[];
 }
 
 // Global singleton (lazy initialization)

@@ -22,6 +22,9 @@ import {
   type ExperienceGainedEvent,
   type LevelUpEvent,
   type TopologyGeneratedEvent,
+  type ItemUsedEvent,
+  type CollisionDetectedEvent,
+  type EncounterTriggeredEvent,
   type BugType,
 } from '@dendrovia/shared';
 import type { Bug } from '@dendrovia/shared';
@@ -185,6 +188,46 @@ export function useEventSubscriptions(eventBus: EventBus) {
       )
     );
 
+    // ── Item used → battle log ──
+    unsubs.push(
+      eventBus.on<ItemUsedEvent>(
+        GameEvents.ITEM_USED,
+        (data) => {
+          store.getState().addBattleLog(`Used item: ${data.itemId}`);
+        }
+      )
+    );
+
+    // ── Collision detected → open code reader (mirrors NODE_CLICKED) ──
+    unsubs.push(
+      eventBus.on<CollisionDetectedEvent>(
+        GameEvents.COLLISION_DETECTED,
+        (data) => {
+          const state = store.getState();
+          state.addVisitedNode(data.collidedWith);
+          state.openCodeReader(data.collidedWith, '', detectLanguage(data.collidedWith));
+        }
+      )
+    );
+
+    // ── Encounter triggered → type-aware battle log ──
+    unsubs.push(
+      eventBus.on<EncounterTriggeredEvent>(
+        GameEvents.ENCOUNTER_TRIGGERED,
+        (data) => {
+          let msg: string;
+          if (data.type === 'boss') {
+            msg = `BOSS ENCOUNTER! Severity ${data.severity}`;
+          } else if (data.type === 'miniboss') {
+            msg = `Mini-boss encountered! Severity ${data.severity}`;
+          } else {
+            msg = `Encounter: ${data.type} — Severity ${data.severity}`;
+          }
+          store.getState().addBattleLog(msg);
+        }
+      )
+    );
+
     // ── T04: Topology loaded (uses TopologyGeneratedEvent contract) ──
     unsubs.push(
       eventBus.on<TopologyGeneratedEvent>(
@@ -192,6 +235,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
         (data) => {
           if (data.tree) store.getState().setTopology(data.tree);
           if (data.hotspots) store.getState().setHotspots(data.hotspots);
+          if (data.deepwiki) store.getState().setDeepWiki(data.deepwiki);
         }
       )
     );

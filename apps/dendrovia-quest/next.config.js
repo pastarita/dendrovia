@@ -10,6 +10,10 @@ const nextConfig = {
   },
   transpilePackages: [
     '@dendrovia/shared',
+    '@dendrovia/architectus',
+    '@dendrovia/ludus',
+    '@dendrovia/oculus',
+    '@dendrovia/operatus',
   ],
 };
 

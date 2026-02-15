@@ -73,3 +73,29 @@ export {
   type Archetype,
   type TimeArchetype,
 } from './builder/ContributorProfiler.js';
+
+// Pipeline (reusable entry point)
+export {
+  runPipeline,
+  type PipelineOptions,
+  type PipelineResult,
+} from './pipeline.js';
+
+// Resolver (GitHub URL → local clone)
+export {
+  resolveRepo,
+  loadRegistry,
+  saveRegistry,
+  upsertRegistryEntry,
+  getChronosHome,
+  getReposDir,
+  getGeneratedDir,
+  getOutputDirForRepo,
+  type ResolvedRepo,
+  type Registry,
+  type RegistryEntry,
+} from './resolver/index.js';
+
+// Enrichment (optional DeepWiki layer — additive, never required)
+export { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher.js';
+export { enrichTopology } from './enrichment/TopologyEnricher.js';

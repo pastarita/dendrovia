@@ -89,6 +89,14 @@ export interface ContributorSummary {
   archetypeDistribution: Record<string, number>;
 }
 
+export interface DeepWikiEnrichment {
+  wikiUrl: string;
+  overview?: string;
+  topics?: Array<{ title: string; id: string; children?: Array<{ title: string; id: string }> }>;
+  moduleDocumentation?: Record<string, string>;
+  fetchedAt: string;
+}
+
 export interface CodeTopology {
   files: ParsedFile[];
   commits: ParsedCommit[];
@@ -98,6 +106,8 @@ export interface CodeTopology {
   languageDistribution?: LanguageDistribution[];
   contributorSummary?: ContributorSummary;
   temporalCouplings?: TemporalCoupling[];
+  /** Optional AI-generated documentation from DeepWiki. Absent = not fetched or unavailable. */
+  deepwiki?: DeepWikiEnrichment;
 }
 
 export interface FileTreeNode {

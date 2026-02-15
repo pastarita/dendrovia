@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, Component, type ReactNode } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 import {
@@ -10,6 +10,12 @@ import {
   PerformanceMonitor,
   useRendererStore,
 } from '@dendrovia/architectus';
+
+class R3FErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  render() { return this.state.error ? null : this.props.children; }
+}
 import type { ShowcaseFixture } from './fixtures';
 
 interface ShowcaseViewerProps {
@@ -105,7 +111,9 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
               hotspots={fixture.hotspots}
               palette={fixture.palette}
             />
-            <PostProcessing />
+            <R3FErrorBoundary>
+              <PostProcessing />
+            </R3FErrorBoundary>
           </Suspense>
 
           <PerformanceMonitor />

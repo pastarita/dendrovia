@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, Suspense, Component, type ReactNode } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 import {
@@ -176,6 +176,19 @@ function useSampleGeometry() {
 }
 
 // ---------------------------------------------------------------------------
+// Error boundary for R3F components that may fail (e.g. PostProcessing)
+// ---------------------------------------------------------------------------
+
+class R3FErrorBoundary extends Component<{ fallback?: ReactNode; children: ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  render() {
+    if (this.state.error) return this.props.fallback ?? null;
+    return this.props.children;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Scene that highlights the selected component
 // ---------------------------------------------------------------------------
 
@@ -212,7 +225,9 @@ function PreviewScene({ selectedId }: { selectedId: string }) {
             nodes={geom.nodes}
             palette={{ accent: PALETTE.accent, glow: PALETTE.glow }}
           />
-          <PostProcessing />
+          <R3FErrorBoundary>
+            <PostProcessing />
+          </R3FErrorBoundary>
         </>
       )}
       <PerformanceMonitor />

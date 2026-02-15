@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3010",
+    "dev": "next dev --port 3010 --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
@@ -14,6 +14,7 @@
     "@repo/ui": "*",
     "@dendrovia/shared": "workspace:*",
     "@dendrovia/architectus": "workspace:*",
+    "@dendrovia/imaginarium": "workspace:*",
     "@dendrovia/engine": "*",
     "@react-three/fiber": "^9.0.0",
     "@react-three/drei": "^10.0.0",

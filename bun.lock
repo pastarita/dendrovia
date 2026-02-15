@@ -15,7 +15,6 @@
       "version": "0.1.0",
       "dependencies": {
         "@dendrovia/architectus": "workspace:*",
-        "@dendrovia/engine": "*",
         "@dendrovia/ludus": "workspace:*",
         "@dendrovia/oculus": "workspace:*",
         "@dendrovia/operatus": "workspace:*",
@@ -47,6 +46,7 @@
       "dependencies": {
         "@dendrovia/architectus": "workspace:*",
         "@dendrovia/engine": "*",
+        "@dendrovia/imaginarium": "workspace:*",
         "@dendrovia/shared": "workspace:*",
         "@react-three/drei": "^10.0.0",
         "@react-three/fiber": "^9.0.0",
@@ -188,6 +188,7 @@
       "name": "@dendrovia/architectus",
       "version": "0.1.0",
       "dependencies": {
+        "@dendrovia/imaginarium": "workspace:*",
         "@dendrovia/shared": "workspace:*",
         "@react-three/drei": "^10.0.0",
         "@react-three/fiber": "^9.0.0",

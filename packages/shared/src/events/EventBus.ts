@@ -156,6 +156,11 @@ export const GameEvents = {
   ASSETS_LOADED: 'assets:loaded',
   STATE_PERSISTED: 'state:persisted',
   CACHE_UPDATED: 'cache:updated',
+  SAVE_COMPLETED: 'save:completed',
+
+  // Lifecycle triggers (All → OPERATUS)
+  GAME_STARTED: 'game:started',
+  LEVEL_LOADED: 'level:loaded',
 } as const;
 
 /**
@@ -280,6 +285,37 @@ export interface CollisionDetectedEvent {
   entityId: string;
   collidedWith: string;
   position: [number, number, number];
+}
+
+// ── OPERATUS Infrastructure Event Payloads ───────────────────────
+
+export interface AssetsLoadedEvent {
+  assetCount: number;
+  manifest: unknown | null;
+  /** True if loading partially failed */
+  partial?: boolean;
+}
+
+export interface CacheUpdatedEvent {
+  path: string;
+  action: 'set' | 'delete' | 'clear' | 'evict';
+  /** Byte size (for set operations) */
+  size?: number;
+}
+
+export interface SaveCompletedEvent {
+  trigger: string;
+  timestamp: number;
+}
+
+export interface GameStartedEvent {
+  timestamp: number;
+}
+
+export interface LevelLoadedEvent {
+  levelId: string;
+  /** Asset paths to preload for this level */
+  assetPaths?: string[];
 }
 
 export interface TopologyGeneratedEvent {

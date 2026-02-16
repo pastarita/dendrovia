@@ -7,7 +7,9 @@
  */
 
 import { useState } from 'react';
-import { DendroviaQuest, type WorldMeta } from '../../components/DendroviaQuest';
+import { DendroviaQuest, type WorldMeta } from '../../../components/DendroviaQuest';
+import { DendriteIcon } from '../../../components/DendriteIcon';
+import { OrnateFrame } from '@dendrovia/oculus';
 import type { CharacterClass } from '@dendrovia/shared';
 
 interface WorldExplorerProps {
@@ -65,15 +67,18 @@ function ClassSelect({
       style={{
         width: '100vw',
         height: '100vh',
-        background: '#0a0a0a',
         color: '#ededed',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         fontFamily: 'var(--font-geist-sans), sans-serif',
+        position: 'relative',
       }}
     >
+      {/* Shader background */}
+      <div className="shader-bg" />
+
       {/* Back */}
       <a
         href="/"
@@ -81,10 +86,12 @@ function ClassSelect({
           position: 'absolute',
           top: '14px',
           left: '14px',
+          zIndex: 2,
           padding: '6px 14px',
           borderRadius: '6px',
           border: '1px solid rgba(255,255,255,0.12)',
           background: 'rgba(10,10,10,0.8)',
+          backdropFilter: 'blur(8px)',
           color: '#ededed',
           fontFamily: 'var(--font-geist-mono), monospace',
           fontSize: '0.75rem',
@@ -95,87 +102,98 @@ function ClassSelect({
         &larr; Back
       </a>
 
-      {/* World name */}
-      <h1
-        style={{
-          fontSize: '1.6rem',
-          fontWeight: 700,
-          color: worldMeta.tincture.hex,
-          marginBottom: '0.25rem',
-          fontFamily: 'var(--font-geist-mono), monospace',
-        }}
-      >
-        {worldMeta.name}
-      </h1>
-      <p
-        style={{
-          fontSize: '0.8rem',
-          opacity: 0.4,
-          fontFamily: 'var(--font-geist-mono), monospace',
-          marginBottom: '2.5rem',
-        }}
-      >
-        Choose your class
-      </p>
+      {/* Content above shader-bg */}
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+        {/* DendriteIcon */}
+        <DendriteIcon size={48} />
 
-      {/* Class cards */}
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {CLASSES.map((cls) => {
-          const isHovered = hovered === cls.id;
-          return (
-            <button
-              key={cls.id}
-              onClick={() => onSelect(cls.id)}
-              onMouseEnter={() => setHovered(cls.id)}
-              onMouseLeave={() => setHovered(null)}
-              style={{
-                width: '200px',
-                padding: '20px 16px',
-                borderRadius: '12px',
-                border: `1px solid ${isHovered ? worldMeta.tincture.hex + '66' : '#333'}`,
-                background: isHovered ? worldMeta.tincture.hex + '10' : '#141414',
-                color: '#ededed',
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'border-color 200ms, background 200ms, transform 200ms',
-                transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '1.1rem',
-                  fontWeight: 700,
-                  color: worldMeta.tincture.hex,
-                  marginBottom: '2px',
-                }}
-              >
-                {cls.name}
-              </div>
-              <div
-                style={{
-                  fontSize: '0.7rem',
-                  opacity: 0.5,
-                  fontFamily: 'var(--font-geist-mono), monospace',
-                  marginBottom: '10px',
-                }}
-              >
-                {cls.subtitle}
-              </div>
-              <div style={{ fontSize: '0.8rem', opacity: 0.6, lineHeight: 1.4, marginBottom: '12px' }}>
-                {cls.description}
-              </div>
-              <div
-                style={{
-                  fontSize: '0.65rem',
-                  fontFamily: 'var(--font-geist-mono), monospace',
-                  opacity: 0.35,
-                }}
-              >
-                {cls.stats}
-              </div>
-            </button>
-          );
-        })}
+        {/* World name */}
+        <h1
+          style={{
+            fontSize: '1.6rem',
+            fontWeight: 700,
+            color: worldMeta.tincture.hex,
+            marginTop: '0.75rem',
+            marginBottom: '0.25rem',
+            fontFamily: 'var(--font-geist-mono), monospace',
+          }}
+        >
+          {worldMeta.name}
+        </h1>
+        <p
+          style={{
+            fontSize: '0.8rem',
+            opacity: 0.4,
+            fontFamily: 'var(--font-geist-mono), monospace',
+            marginBottom: '2.5rem',
+          }}
+        >
+          Choose your class
+        </p>
+
+        {/* Class cards */}
+        <div
+          className="oculus-stagger"
+          style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}
+        >
+          {CLASSES.map((cls) => {
+            const isHovered = hovered === cls.id;
+            return (
+              <OrnateFrame key={cls.id} variant="compact" pillar="oculus">
+                <button
+                  onClick={() => onSelect(cls.id)}
+                  onMouseEnter={() => setHovered(cls.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  style={{
+                    width: '200px',
+                    padding: '20px 16px',
+                    background: isHovered ? worldMeta.tincture.hex + '10' : 'rgba(20, 20, 20, 0.6)',
+                    color: '#ededed',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'background 200ms, transform 200ms',
+                    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                    border: 'none',
+                    borderRadius: '0',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 700,
+                      color: worldMeta.tincture.hex,
+                      marginBottom: '2px',
+                    }}
+                  >
+                    {cls.name}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.7rem',
+                      opacity: 0.5,
+                      fontFamily: 'var(--font-geist-mono), monospace',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    {cls.subtitle}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', opacity: 0.6, lineHeight: 1.4, marginBottom: '12px' }}>
+                    {cls.description}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.65rem',
+                      fontFamily: 'var(--font-geist-mono), monospace',
+                      opacity: 0.35,
+                    }}
+                  >
+                    {cls.stats}
+                  </div>
+                </button>
+              </OrnateFrame>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

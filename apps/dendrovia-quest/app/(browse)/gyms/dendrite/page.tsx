@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { ReactFlowProvider } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {
@@ -23,17 +22,14 @@ export default function DendritePage() {
   );
 
   return (
-    <div>
-      <div>
-        <Link href="/gyms" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; Gyms</Link>
-        <h1 style={{ fontSize: "1.25rem", fontWeight: 700, marginTop: "0.5rem" }}>
-          Dendrite Observatory
-        </h1>
-      </div>
+    <div style={{ padding: '1rem 0' }}>
+      <h1 style={{ fontSize: "1.2rem", fontWeight: 700, fontFamily: 'var(--font-geist-mono), monospace', letterSpacing: '0.06em' }}>
+        Dendrite Observatory
+      </h1>
       <div style={{ marginTop: "0.75rem", marginBottom: "0.75rem" }}>
         <DendriteToolbar store={store} availableFixtures={AVAILABLE} />
       </div>
-      <div style={{ width: "100%", height: "calc(100vh - 12rem)" }}>
+      <div style={{ width: "100%", height: "calc(100vh - 180px)" }}>
         <ReactFlowProvider>
           <DendriteCanvas store={store} />
         </ReactFlowProvider>

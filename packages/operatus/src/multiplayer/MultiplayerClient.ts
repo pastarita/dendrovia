@@ -61,7 +61,9 @@ type MessageHandler = (msg: MultiplayerMessage) => void;
 // ── Client ───────────────────────────────────────────────────────
 
 const DEFAULT_CONFIG: Required<MultiplayerConfig> = {
-  url: 'ws://localhost:3010',
+  url: typeof globalThis.window !== 'undefined' && globalThis.window.location.hostname !== 'localhost'
+    ? `wss://${globalThis.window.location.host}`
+    : 'ws://localhost:3010',
   dbName: 'dendrovia',
   maxReconnects: 10,
   baseDelay: 1000,

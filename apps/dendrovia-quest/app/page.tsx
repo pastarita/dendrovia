@@ -1,16 +1,17 @@
 /**
- * DENDROVIA QUEST — World Launcher
+ * DENDROVIA QUEST — Home Page
  *
- * Server Component that loads worlds/index.json and renders a gallery
- * of analyzed codebases, each a playable world. Below the worlds,
- * the six-pillar dev server launcher provides access to playground apps.
+ * Server Component that loads worlds/index.json and renders:
+ * 1. Header with title
+ * 2. Repo URL input (non-functional shell)
+ * 3. Compact world entry cards
+ * 4. Footer
  */
 
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { findMonorepoRoot } from '@dendrovia/shared/paths';
-import { WorldCard } from './components/WorldCard';
-import { PillarLauncher } from './components/PillarLauncher';
+import { WorldCardCompact } from './components/WorldCardCompact';
 
 interface WorldEntry {
   slug: string;
@@ -59,7 +60,7 @@ export default function Home() {
       }}
     >
       {/* Header */}
-      <header style={{ textAlign: 'center', marginBottom: '2.5rem', marginTop: '2rem' }}>
+      <header style={{ textAlign: 'center', marginBottom: '2rem', marginTop: '2rem' }}>
         <h1
           style={{
             fontSize: '2.5rem',
@@ -72,22 +73,69 @@ export default function Home() {
           DENDROVIA
         </h1>
         <p style={{ opacity: 0.5, marginTop: '0.5rem', fontSize: '0.95rem' }}>
-          Choose Your World
+          Explore codebases as 3D worlds
         </p>
       </header>
 
-      {/* Worlds */}
+      {/* Repo URL input (shell — non-functional) */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '560px',
+          marginBottom: '2.5rem',
+          display: 'flex',
+          gap: '8px',
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Paste a GitHub URL or local path..."
+          disabled
+          style={{
+            flex: 1,
+            padding: '10px 14px',
+            borderRadius: '8px',
+            border: '1px solid #333',
+            background: '#141414',
+            color: '#ededed',
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '0.8rem',
+            outline: 'none',
+            opacity: 0.5,
+          }}
+        />
+        <button
+          disabled
+          style={{
+            padding: '10px 18px',
+            borderRadius: '8px',
+            border: '1px solid #333',
+            background: '#1a1a1a',
+            color: '#ededed',
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '0.75rem',
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            cursor: 'default',
+            opacity: 0.35,
+          }}
+        >
+          Analyze
+        </button>
+      </div>
+
+      {/* World cards */}
       <section
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '1.25rem',
+          gap: '10px',
           width: '100%',
-          maxWidth: '740px',
+          maxWidth: '560px',
         }}
       >
         {worlds.map((world, i) => (
-          <WorldCard
+          <WorldCardCompact
             key={world.slug}
             slug={world.slug}
             name={world.name}
@@ -98,7 +146,6 @@ export default function Home() {
             stats={world.stats}
             magnitude={world.magnitude}
             tincture={world.tincture}
-            framePillar={world.framePillar}
             index={i}
           />
         ))}
@@ -117,53 +164,17 @@ export default function Home() {
         )}
       </section>
 
-      {/* Divider */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '740px',
-          borderTop: '1px solid #222',
-          marginTop: '2.5rem',
-          marginBottom: '2rem',
-          position: 'relative',
-        }}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            top: '-0.7em',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'var(--background, #0a0a0a)',
-            padding: '0 1rem',
-            fontSize: '0.7rem',
-            opacity: 0.4,
-            whiteSpace: 'nowrap',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            fontFamily: 'var(--font-geist-mono), monospace',
-          }}
-        >
-          Pillar Servers
-        </span>
-      </div>
-
-      {/* Pillar Launcher */}
-      <section style={{ width: '100%', maxWidth: '740px' }}>
-        <PillarLauncher />
-      </section>
-
       {/* Footer */}
       <footer
         style={{
           marginTop: '3rem',
-          opacity: 0.25,
-          fontSize: '0.7rem',
+          opacity: 0.2,
+          fontSize: '0.65rem',
           textAlign: 'center',
           fontFamily: 'var(--font-geist-mono), monospace',
         }}
       >
-        Six-Pillar Architecture &middot; SDF + Hex Hybrid
+        Six-Pillar Architecture
       </footer>
     </main>
   );

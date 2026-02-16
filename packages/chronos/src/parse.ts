@@ -9,8 +9,9 @@
  * Output goes to ./generated/
  */
 
-import { resolve, join } from 'path';
+import { resolve } from 'path';
 import { runPipeline } from './pipeline.js';
+import { chronosGenerated } from '@dendrovia/shared/paths';
 
 // ---------------------------------------------------------------------------
 // Argument parsing
@@ -21,7 +22,7 @@ const emitEvents = rawArgs.includes('--emit-events');
 const positionalArgs = rawArgs.filter(a => !a.startsWith('--'));
 
 const repoPath = resolve(positionalArgs[0] || process.cwd());
-const outputDir = resolve(positionalArgs[1] || join(process.cwd(), 'generated'));
+const outputDir = positionalArgs[1] ? resolve(positionalArgs[1]) : chronosGenerated();
 
 // ---------------------------------------------------------------------------
 // Main

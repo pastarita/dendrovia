@@ -26,6 +26,7 @@ import { createHash } from 'crypto';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join, extname, relative } from 'path';
 import type { AssetManifest } from '@dendrovia/shared';
+import { validateManifest } from '@dendrovia/shared/schemas';
 
 export interface ManifestEntry {
   path: string;
@@ -104,6 +105,9 @@ export class ManifestGenerator {
       topology,
       checksum: globalHash.digest('hex').slice(0, 16),
     };
+
+    // Validate manifest against the contract before returning
+    validateManifest(manifest);
 
     return manifest;
   }

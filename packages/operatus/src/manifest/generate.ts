@@ -16,14 +16,14 @@
  *   --output ../imaginarium/generated/operatus-manifest.json
  */
 
-import { resolve, dirname } from 'path';
+import { resolve } from 'path';
 import { stat } from 'fs/promises';
 import { ManifestGenerator } from './ManifestGenerator.js';
+import { imaginariumGenerated } from '@dendrovia/shared/paths';
 
 // ── Resolve Paths ───────────────────────────────────────────────
 
-const PACKAGE_ROOT = resolve(dirname(import.meta.dir), '..');
-const IMAGINARIUM_GENERATED = resolve(PACKAGE_ROOT, '..', 'imaginarium', 'generated');
+const IMAGINARIUM_GENERATED = imaginariumGenerated();
 
 function parseArgs(): { inputDir: string; outputPath: string } {
   const args = process.argv.slice(2);

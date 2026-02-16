@@ -19,6 +19,7 @@ export {
   collectGameStore,
   collectCrossTabSync,
   collectPerfMonitor,
+  collectManifest,
   aggregatePhaseHealth,
 } from './collectors.js';
 export {

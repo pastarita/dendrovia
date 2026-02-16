@@ -11,6 +11,7 @@ import type { AssetLoader } from '../loader/AssetLoader.js';
 import type { CDNLoader } from '../loader/CDNLoader.js';
 import type { AutoSave } from '../persistence/AutoSave.js';
 import type { CrossTabSync } from '../sync/CrossTabSync.js';
+import type { ManifestHealthReport } from '../manifest/ManifestHealth.js';
 import { deriveHealth } from './health.js';
 
 // Re-export for convenience
@@ -161,6 +162,35 @@ export function collectPerfMonitor(
       { key: 'hitRate', value: Math.round(metrics.hitRate * 100), unit: '%' },
       { key: 'hits', value: metrics.hits },
       { key: 'misses', value: metrics.misses },
+    ],
+    actions: [],
+    lastUpdated: now(),
+  };
+}
+
+export function collectManifest(report: ManifestHealthReport | null): RuntimeNodeState {
+  if (!report) {
+    return {
+      nodeId: 'op-manifest-gen',
+      health: 'idle',
+      metrics: [{ key: 'status', value: 'no manifest' }],
+      actions: [],
+      lastUpdated: now(),
+    };
+  }
+
+  return {
+    nodeId: 'op-manifest-gen',
+    health: deriveHealth([
+      { check: () => !report.valid, result: 'error' },
+      { check: () => report.stalenessDays > 7, result: 'degraded' },
+      { check: () => report.valid, result: 'healthy' },
+    ]),
+    metrics: [
+      { key: 'entries', value: report.entryCount },
+      { key: 'generated', value: report.generatedAt },
+      { key: 'staleness', value: report.stalenessDays, unit: 'days' },
+      { key: 'valid', value: report.valid },
     ],
     actions: [],
     lastUpdated: now(),

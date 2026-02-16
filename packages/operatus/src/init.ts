@@ -34,6 +34,7 @@ import { useGameStore, waitForHydration } from './persistence/GameStore.js';
 import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave.js';
 import { CrossTabSync, type CrossTabConfig, type TabRole } from './sync/CrossTabSync.js';
 import type { LoadProgress } from './loader/AssetLoader.js';
+import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth.js';
 
 export interface OperatusConfig {
   /** Base path for generated assets (default: '/generated') */
@@ -115,10 +116,19 @@ export async function initializeOperatus(
 
   // ── Step 3: Load manifest + critical assets ────────────────────
 
+  let manifestHealthReport: ManifestHealthReport | null = null;
   try {
-    await assetLoader.loadManifest(manifestPath);
+    const manifest = await assetLoader.loadManifest(manifestPath);
     // Purge stale cached assets that don't match new manifest
     await assetLoader.invalidateStale();
+    // Validate manifest structure
+    manifestHealthReport = validateManifestStructure(manifest);
+    if (manifestHealthReport.stalenessDays > 7) {
+      console.warn(`[OPERATUS] Manifest is ${manifestHealthReport.stalenessDays} days old — consider regenerating`);
+    }
+    if (!manifestHealthReport.valid) {
+      console.warn('[OPERATUS] Manifest validation errors:', manifestHealthReport.errors);
+    }
   } catch {
     // Manifest not available (e.g., first run, dev mode)
     // Continue without manifest — individual assets can still be loaded

@@ -77,6 +77,25 @@ export default function SpellGenerator() {
           </select>
         </div>
         <button
+          onClick={() => {
+            setShape(SHAPES[Math.floor(Math.random() * SHAPES.length)]);
+            setElement(ELEMENTS[Math.floor(Math.random() * ELEMENTS.length)]);
+            setModifier(MODIFIERS[Math.floor(Math.random() * MODIFIERS.length)]);
+          }}
+          style={{
+            padding: '0.4rem 1rem',
+            borderRadius: '4px',
+            border: '1px solid #555',
+            background: 'transparent',
+            color: '#ededed',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+          }}
+        >
+          Random Symbol
+        </button>
+        <button
           onClick={() => setGenerated(preview)}
           style={{
             padding: '0.4rem 1rem',

@@ -83,6 +83,26 @@ export default function MonsterGenerator() {
           style={{
             padding: '0.4rem 1rem',
             borderRadius: '4px',
+            border: '1px solid #555',
+            background: 'transparent',
+            color: '#ededed',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+          }}
+        >
+          New Seed
+        </button>
+        <button
+          onClick={() => {
+            setBugType(BUG_TYPES[Math.floor(Math.random() * BUG_TYPES.length)]);
+            setSeverity(SEVERITIES[Math.floor(Math.random() * SEVERITIES.length)]);
+            setComplexity(Math.floor(Math.random() * 31));
+            setSeed(Math.floor(Math.random() * 99999));
+          }}
+          style={{
+            padding: '0.4rem 1rem',
+            borderRadius: '4px',
             border: '1px solid var(--pillar-accent)',
             background: 'transparent',
             color: 'var(--pillar-accent)',
@@ -91,7 +111,7 @@ export default function MonsterGenerator() {
             fontWeight: 600,
           }}
         >
-          Randomize
+          Randomize All
         </button>
       </div>
 

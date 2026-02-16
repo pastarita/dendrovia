@@ -21,7 +21,7 @@ export default function ArchitectusDashboard() {
           The Renderer — 3D Rendering Engine
         </p>
         <p style={{ opacity: 0.4, marginTop: "0.25rem", fontSize: "0.85rem" }}>
-          Port 3010 · Azure · GMZ: G M
+          Port 3011 · Azure · GMZ: G M
         </p>
       </div>
 

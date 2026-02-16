@@ -67,6 +67,7 @@ chronos#parse → imaginarium#distill → architectus#build
 | `pr-workflow` | `.claude/skills/workflow/pr/SKILL.md` | "create PR", "PR description", "prepare PR" |
 | `pr-heraldry` | `.claude/skills/heraldry/pr-heraldry/SKILL.md` | "generate coat of arms", "PR heraldry" |
 | `pr-heterogeneous` | `.claude/skills/workflow/pr-heterogeneous/SKILL.md` | "heterogeneous PR", "multi-space PR" |
+| `recon` | `.claude/skills/recon/cross-checkout-scan/SKILL.md` | "recon", "scan checkouts", "branch inventory" |
 
 ---
 

@@ -1,10 +1,10 @@
 import { PlaygroundProvider } from '../../components/PlaygroundProvider';
-import { PrimitivesZooClient } from './PrimitivesZooClient';
+import { FrameZooClient } from './FrameZooClient';
 
-export default function PrimitivesPage() {
+export default function FramesZooPage() {
   return (
     <PlaygroundProvider seedData={false}>
-      <PrimitivesZooClient />
+      <FrameZooClient />
     </PlaygroundProvider>
   );
 }

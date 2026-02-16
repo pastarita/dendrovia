@@ -211,7 +211,6 @@ export function LSystemSandbox() {
             maxDistance={100}
           />
 
-          {/* @ts-expect-error React 18/19 type mismatch across workspace packages */}
           <Suspense fallback={null}>
             <Lighting />
             {geometry && (

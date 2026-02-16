@@ -44,7 +44,7 @@ const PILLAR_MAP: Record<string, { name: string; color: string }> = {
 };
 
 function detectPillar(event: string): { name: string; color: string } {
-  const prefix = event.split(':')[0];
+  const prefix = event.split(':')[0] ?? '';
   return PILLAR_MAP[prefix] ?? { name: 'UNKNOWN', color: '#555' };
 }
 

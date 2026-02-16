@@ -55,7 +55,7 @@ export default async function ZoosPage() {
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
               <span style={{ fontSize: "1.4rem" }}>{s.icon}</span>
               <span style={{ fontWeight: 600, fontSize: "1.05rem" }}>{s.name}</span>
-              {counts[s.name] > 0 && (
+              {(counts[s.name] ?? 0) > 0 && (
                 <span style={{
                   marginLeft: "auto",
                   fontSize: "0.75rem",

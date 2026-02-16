@@ -5,8 +5,12 @@ import { OrnateFrame } from "@dendrovia/oculus";
 
 interface FunctionEntry {
   name: string;
-  complexity: number;
-  loc: number;
+  complexity: {
+    cyclomatic: number;
+    cognitive: number;
+    loc: number;
+    difficulty: string;
+  };
   startLine: number;
   endLine: number;
 }
@@ -110,7 +114,7 @@ export function ComplexityDrilldown({ files }: { files: FileEntry[] }) {
               paddingLeft: "0.75rem",
             }}>
               {f.functions
-                .sort((a, b) => b.complexity - a.complexity)
+                .sort((a, b) => b.complexity.cyclomatic - a.complexity.cyclomatic)
                 .map((fn, i) => (
                   <div
                     key={`${fn.name}-${i}`}
@@ -135,16 +139,16 @@ export function ComplexityDrilldown({ files }: { files: FileEntry[] }) {
                       L{fn.startLine}-{fn.endLine}
                     </span>
                     <span style={{ fontSize: "0.7rem", opacity: 0.5 }}>
-                      {fn.loc} LOC
+                      {fn.complexity.loc} LOC
                     </span>
                     <span style={{
                       fontWeight: 600,
                       fontSize: "0.8rem",
-                      color: complexityColor(fn.complexity),
+                      color: complexityColor(fn.complexity.cyclomatic),
                       width: "30px",
                       textAlign: "right",
                     }}>
-                      {fn.complexity}
+                      {fn.complexity.cyclomatic}
                     </span>
                   </div>
                 ))}

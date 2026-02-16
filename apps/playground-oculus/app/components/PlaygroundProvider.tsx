@@ -29,7 +29,7 @@ export function PlaygroundProvider({
     if (!seedData) return;
     const s = useOculusStore.getState();
     s.setQuests(MOCK_QUESTS);
-    s.setActiveQuest(MOCK_QUESTS[0]);
+    s.setActiveQuest(MOCK_QUESTS[0] ?? null);
     s.setTopology(MOCK_TOPOLOGY);
     s.setHotspots(MOCK_HOTSPOTS);
     s.setPlayerPosition([5, 2, -3]);

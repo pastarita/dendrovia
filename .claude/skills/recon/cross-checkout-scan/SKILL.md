@@ -1,6 +1,6 @@
 # Cross-Checkout Recon Skill
 
-_Version: 2.1.0_
+_Version: 2.2.0_
 _Created: 2026-02-15_
 
 ## Purpose
@@ -602,13 +602,205 @@ Generate actionable recommendations based on the gathered data:
 
 ---
 
+## UI Integration Spec: ReconProvider
+
+This section defines the interface between the recon CLI skill and the playground HUD system. Recon produces a static JSON artifact; a React provider consumes it and surfaces status in every playground sidebar.
+
+### Artifact: `generated/recon.json`
+
+When `/recon --json` is invoked, Step 7 output SHOULD also be written to `generated/recon.json` at the monorepo root. This follows the same pattern as CHRONOS (`generated/topology.json`).
+
+The file uses the JSON schema defined in Step 7. It is overwritten on each scan.
+
+```
+generated/
+├── topology.json       ← CHRONOS output
+├── commits.json        ← CHRONOS output
+├── complexity.json     ← CHRONOS output
+└── recon.json          ← Recon output (new)
+```
+
+### Provider: `packages/ui/src/recon/ReconProvider.tsx`
+
+Follows the OculusProvider pattern (`packages/oculus/src/OculusProvider.tsx`):
+
+```typescript
+interface ReconContextValue {
+  data: ReconData | null;
+  loading: boolean;
+  stale: boolean;           // true if file is >10 minutes old
+  refresh: () => void;      // triggers re-read from disk
+}
+
+interface ReconData {
+  timestamp: string;
+  checkouts: Record<string, CheckoutStatus>;
+  shared_drift: SharedDriftReport;
+  maturity_scorecard: MaturityScorecard;
+  branches: BranchInventory;
+  recommendations: string[];
+}
+
+interface CheckoutStatus {
+  branch: string;
+  age: string;
+  behind: number;
+  modified_count: number;
+  untracked_count: number;
+  stash_count: number;
+  pr: { number: number; title: string; url: string } | null;
+  aligned: boolean;
+  shared_drift: { tree_hash: string; shared_behind_count: number; drift_group: string };
+  maturity: { test_coverage: AxisScore; event_completeness: AxisScore; playground_density: AxisScore; pr_documentation: AxisScore; overall: number };
+}
+
+interface AxisScore {
+  ratio: number;
+  score: number;     // 0-3
+  label: string;     // "gap" | "weak" | "adequate" | "strong"
+}
+```
+
+**Loading strategy:**
+- In dev mode: fetch from `/generated/recon.json` (static file served by Next.js)
+- Poll interval: 60 seconds (recon data changes infrequently)
+- Mark as `stale` if `timestamp` is >10 minutes old
+- `refresh()` forces immediate re-fetch
+
+### Hook: `packages/ui/src/recon/useReconStatus.ts`
+
+```typescript
+// Full recon data
+function useReconStatus(): ReconContextValue;
+
+// Single checkout (for pillar-specific views)
+function useCheckoutStatus(pillar: string): CheckoutStatus | null;
+
+// Current pillar (auto-detected from port or env)
+function useCurrentPillarStatus(): CheckoutStatus | null;
+```
+
+**Pillar auto-detection:** Each playground runs on a known port (3011-3016). The hook reads `window.location.port` and maps to the pillar name:
+
+| Port | Pillar |
+|------|--------|
+| 3010 | _(dendrovia-quest, shows all)_ |
+| 3011 | ARCHITECTUS |
+| 3012 | CHRONOS |
+| 3013 | IMAGINARIUM |
+| 3014 | LUDUS |
+| 3015 | OCULUS |
+| 3016 | OPERATUS |
+
+### Component: `packages/ui/src/recon/ReconStatusBar.tsx`
+
+A compact sidebar widget intended for the shared layout footer area. Renders differently based on context:
+
+**In pillar playground (port 3011-3016):** Shows current pillar status only.
+
+```
+┌─────────────────────────────┐
+│ 📜 CHRONOS                  │
+│ feat/recon-skill-v2  ● PR#— │
+│ shared: ●current  ↓0        │
+│ ●●● ●○○ ●●● ●●●   2.5      │
+│ [scan] [detail]             │
+└─────────────────────────────┘
+```
+
+**In dendrovia-quest (port 3010):** Shows all 6 pillars as compact rows.
+
+```
+┌─────────────────────────────┐
+│ Recon Status                │
+│ 📜 CHR main         ●● 2.5 │
+│ 🎨 IMG main         ●● 2.0 │
+│ 🏛️ ARC refactor/..  ⚠ 2.0 │
+│ 🎮 LUD main         ●● 2.0 │
+│ 👁️ OCU main         ●● 2.0 │
+│ 💾 OPE feat/..      ●● 2.0 │
+│ [full scan]                 │
+└─────────────────────────────┘
+```
+
+**Status indicators:**
+- `●` green = branch fresh, shared current, aligned
+- `●` yellow = minor drift or slightly behind
+- `⚠` amber = misaligned, stale, or shared drift >3
+- `●` red = critical (>20 behind, test coverage gap)
+
+**Action triggers:**
+- `[scan]` copies `/recon` to clipboard (user pastes into Claude Code)
+- `[detail]` expands `ReconDetailPanel` as a modal overlay
+- `[full scan]` copies `/recon --json` to clipboard
+
+### Component: `packages/ui/src/recon/ReconDetailPanel.tsx`
+
+Expandable modal showing the full dashboard sections:
+- Shared Contract Drift groups
+- Merge Conflict Predictions
+- Pillar Maturity Scorecard (the table from Step 11)
+- Recommendations list
+- Branch Inventory summary
+
+Uses the existing `Panel` and `OrnateFrame` primitives from `packages/oculus/src/components/primitives`.
+
+### Sidebar Mount Point
+
+**Pre-PillarNav refactor** (current state): Each playground's `layout.tsx` has an inline sidebar. The mount point is the footer `div` with `marginTop: "auto"`:
+
+```tsx
+<div style={{ marginTop: "auto" }}>
+  <ReconStatusBar />                    {/* ← insert here */}
+  <a href="http://localhost:3010">🌳 Dendrovia Quest</a>
+</div>
+```
+
+**Post-PillarNav refactor** (after `refactor/pillar-nav-shared-component` merges): The shared `PillarNav` component owns the sidebar. `ReconStatusBar` is added once in `PillarNav`, available to all 7 apps automatically.
+
+### Dependency Direction
+
+```
+generated/recon.json          (artifact, no package dependency)
+       │
+       ▼
+packages/ui/src/recon/        (provider + components)
+  imports: @dendrovia/shared  (for ReconData types)
+  imports: packages/oculus    (for Panel, OrnateFrame primitives)
+       │
+       ▼
+apps/playground-*/            (consumers via layout.tsx)
+  imports: @dendrovia/ui      (for ReconProvider, ReconStatusBar)
+```
+
+No circular dependencies. Types flow from `shared` → `ui` → `apps`.
+
+### Future: EventBus Integration
+
+Once the recon HUD is interactive, it can participate in the EventBus system:
+
+| Event | Direction | Payload |
+|-------|-----------|---------|
+| `recon:scan:requested` | UI → CLI | `{ pillar?: string, flags?: string[] }` |
+| `recon:data:updated` | artifact → UI | `{ timestamp: string }` |
+| `recon:drift:detected` | UI → OCULUS | `{ pillar: string, behind: number }` |
+
+These events would be added to `GameEvents` in `packages/shared/src/events/EventBus.ts` when the UI components are built.
+
+---
+
 ## Cross-References
 
 | Document | Purpose |
 |----------|---------|
 | `.claude/rules/BRANCH_WORKFLOW.rules.md` | Branch naming conventions referenced for alignment checks |
+| `packages/oculus/src/OculusProvider.tsx` | Provider pattern reference for ReconProvider |
+| `packages/oculus/src/store/useOculusStore.ts` | Zustand store pattern reference |
+| `packages/oculus/src/components/HUD.tsx` | HUD layout pattern (four-corner + center) |
+| `packages/oculus/src/components/primitives/` | Panel, OrnateFrame components for ReconDetailPanel |
+| `packages/ui/` | Target package for ReconProvider components |
 
 ---
 
-_Version: 2.1.0_
+_Version: 2.2.0_
 _Created: 2026-02-15_

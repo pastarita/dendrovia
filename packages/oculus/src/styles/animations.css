@@ -10,35 +10,35 @@
 }
 
 @keyframes oculus-slide-up {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(var(--oc-slide-distance)); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes oculus-slide-down {
-  from { opacity: 0; transform: translateY(-12px); }
+  from { opacity: 0; transform: translateY(calc(-1 * var(--oc-slide-distance))); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes oculus-slide-left {
-  from { opacity: 0; transform: translateX(12px); }
+  from { opacity: 0; transform: translateX(var(--oc-slide-distance)); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes oculus-slide-right {
-  from { opacity: 0; transform: translateX(-12px); }
+  from { opacity: 0; transform: translateX(calc(-1 * var(--oc-slide-distance))); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes oculus-scale-in {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(var(--oc-scale-enter)); }
   to   { opacity: 1; transform: scale(1); }
 }
 
 /* ── Effects ──────────────────────────────────────── */
 
 @keyframes oculus-pulse-glow {
-  0%, 100% { box-shadow: 0 0 10px var(--oculus-glow); }
-  50%      { box-shadow: 0 0 25px var(--oculus-glow), 0 0 50px rgba(245, 169, 127, 0.1); }
+  0%, 100% { box-shadow: 0 0 var(--oc-shadow-glow-sm) var(--oculus-glow); }
+  50%      { box-shadow: 0 0 25px var(--oculus-glow), 0 0 var(--oc-shadow-glow-xl) var(--oc-glow-accent-subtle); }
 }
 
 @keyframes oculus-damage-flash {

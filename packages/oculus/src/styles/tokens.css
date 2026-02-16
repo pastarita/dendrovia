@@ -1,91 +1,98 @@
 /**
- * OCULUS Design Tokens
+ * OCULUS Design Tokens — Barrel
  *
- * Warm amber palette from the Symbol-Driven Design System.
- * Glass-morphism panels with organic curves.
+ * Three-layer architecture:
+ *   Layer 1 (Primitive)  — raw values by what they ARE
+ *   Layer 2 (Semantic)   — decision tokens by what they MEAN
+ *   Layer 3 (Component)  — recipes for specific components
+ *
+ * Backwards-compat: all legacy --oculus-* tokens alias to --oc-* tokens.
+ * New code should use --oc-* directly.
  */
+
+@import './tokens/primitive.css';
+@import './tokens/semantic.css';
+@import './tokens/component.css';
+
+/* ── Backwards Compatibility Aliases ─────────────────── */
+/* Every existing --oculus-* var resolves through the new layers. */
 
 :root {
   /* ── Core Palette ───────────────────────────────── */
-  --oculus-amber: #f5a97f;
-  --oculus-orange: #d88957;
-  --oculus-peach: #ffd4b8;
-  --oculus-bg: rgba(10, 10, 10, 0.85);
-  --oculus-bg-solid: #0a0a0a;
-  --oculus-text: #f7f7f7;
-  --oculus-text-muted: #a0a0a0;
-  --oculus-border: rgba(245, 169, 127, 0.4);
-  --oculus-glow: rgba(245, 169, 127, 0.3);
+  --oculus-amber: var(--oc-color-amber-400);
+  --oculus-orange: var(--oc-color-amber-500);
+  --oculus-peach: var(--oc-color-amber-200);
+  --oculus-bg: var(--oc-surface-base-alpha);
+  --oculus-bg-solid: var(--oc-surface-base);
+  --oculus-text: var(--oc-text-primary);
+  --oculus-text-muted: var(--oc-text-muted);
+  --oculus-border: var(--oc-border-default);
+  --oculus-glow: var(--oc-glow-accent);
 
   /* ── Semantic Colors ────────────────────────────── */
-  --oculus-health: #ff6b6b;
-  --oculus-health-bg: rgba(255, 107, 107, 0.15);
-  --oculus-mana: #4ecdc4;
-  --oculus-mana-bg: rgba(78, 205, 196, 0.15);
-  --oculus-xp: #ffe66d;
-  --oculus-xp-bg: rgba(255, 230, 109, 0.15);
-  --oculus-success: #6dffaa;
-  --oculus-danger: #ff4444;
-  --oculus-warning: #ffaa44;
+  --oculus-health: var(--oc-status-health);
+  --oculus-health-bg: var(--oc-status-health-bg);
+  --oculus-mana: var(--oc-status-mana);
+  --oculus-mana-bg: var(--oc-status-mana-bg);
+  --oculus-xp: var(--oc-status-xp);
+  --oculus-xp-bg: var(--oc-status-xp-bg);
+  --oculus-success: var(--oc-feedback-success);
+  --oculus-danger: var(--oc-feedback-danger);
+  --oculus-warning: var(--oc-feedback-warning);
 
   /* ── Bug Type Colors ────────────────────────────── */
-  --oculus-bug-null: #ff5555;
-  --oculus-bug-memory: #aa55ff;
-  --oculus-bug-race: #ffaa00;
-  --oculus-bug-offbyone: #55aaff;
+  --oculus-bug-null: var(--oc-bug-null);
+  --oculus-bug-memory: var(--oc-bug-memory);
+  --oculus-bug-race: var(--oc-bug-race);
+  --oculus-bug-offbyone: var(--oc-bug-offbyone);
 
   /* ── Quest Type Colors ──────────────────────────── */
-  --oculus-quest-bug: #ff6b6b;
-  --oculus-quest-refactor: #4ecdc4;
-  --oculus-quest-feature: #ffe66d;
-  --oculus-quest-archaeology: #c4b5fd;
+  --oculus-quest-bug: var(--oc-quest-bug);
+  --oculus-quest-refactor: var(--oc-quest-refactor);
+  --oculus-quest-feature: var(--oc-quest-feature);
+  --oculus-quest-archaeology: var(--oc-quest-archaeology);
 
   /* ── Glass Panel ────────────────────────────────── */
-  --oculus-panel-bg: rgba(10, 10, 10, 0.8);
-  --oculus-panel-border: 1px solid var(--oculus-border);
-  --oculus-panel-radius: 12px;
-  --oculus-panel-blur: blur(12px);
-  --oculus-panel-shadow: 0 0 20px var(--oculus-glow);
+  --oculus-panel-bg: var(--oc-panel-bg);
+  --oculus-panel-border: var(--oc-panel-border);
+  --oculus-panel-radius: var(--oc-panel-radius);
+  --oculus-panel-blur: var(--oc-panel-blur);
+  --oculus-panel-shadow: var(--oc-panel-shadow);
 
   /* ── Typography ─────────────────────────────────── */
-  --oculus-font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --oculus-font-code: 'Courier New', 'Menlo', monospace;
-  --oculus-font-xs: 11px;
-  --oculus-font-sm: 12px;
-  --oculus-font-base: 14px;
-  --oculus-font-lg: 16px;
-  --oculus-font-xl: 20px;
+  --oculus-font-ui: var(--oc-font-body);
+  --oculus-font-code: var(--oc-font-code);
+  --oculus-font-xs: var(--oc-text-xs);
+  --oculus-font-sm: var(--oc-text-sm);
+  --oculus-font-base: var(--oc-text-base);
+  --oculus-font-lg: var(--oc-text-lg);
+  --oculus-font-xl: var(--oc-text-xl);
 
   /* ── Spacing ────────────────────────────────────── */
-  --oculus-space-xs: 4px;
-  --oculus-space-sm: 8px;
-  --oculus-space-md: 12px;
-  --oculus-space-lg: 16px;
-  --oculus-space-xl: 24px;
-  --oculus-space-2xl: 32px;
+  --oculus-space-xs: var(--oc-space-2);
+  --oculus-space-sm: var(--oc-space-4);
+  --oculus-space-md: var(--oc-space-6);
+  --oculus-space-lg: var(--oc-space-8);
+  --oculus-space-xl: var(--oc-space-12);
+  --oculus-space-2xl: var(--oc-space-16);
 
   /* ── Timing ─────────────────────────────────────── */
-  --oculus-transition-fast: 150ms ease-out;
-  --oculus-transition-base: 200ms ease-out;
-  --oculus-transition-slow: 300ms ease-out;
-  --oculus-transition-dramatic: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --oculus-transition-fast: var(--oc-transition-fast);
+  --oculus-transition-base: var(--oc-transition-base);
+  --oculus-transition-slow: var(--oc-transition-slow);
+  --oculus-transition-dramatic: var(--oc-transition-dramatic);
 
   /* ── Z-Index Layers ─────────────────────────────── */
-  --oculus-z-hud: 10;
-  --oculus-z-panel: 50;
-  --oculus-z-overlay: 100;
-  --oculus-z-modal: 200;
+  --oculus-z-hud: var(--oc-z-raised);
+  --oculus-z-panel: var(--oc-z-dropdown);
+  --oculus-z-overlay: var(--oc-z-overlay);
+  --oculus-z-modal: var(--oc-z-modal);
 
   /* ── Ornate Frame ───────────────────────────────── */
-  --oculus-frame-corner-modal: 32px;
-  --oculus-frame-corner-panel: 24px;
-  --oculus-frame-corner-compact: 16px;
-  --oculus-frame-corner-tooltip: 8px;
-  --oculus-frame-stroke: 1.5px;
-  --oculus-frame-glow-size: 20px;
-
-  /* ── Breakpoints (used via media queries) ─────── */
-  /* Desktop: > 1024px (default) */
-  /* Tablet:  768px - 1024px */
-  /* Mobile:  < 768px */
+  --oculus-frame-corner-modal: var(--oc-frame-corner-modal);
+  --oculus-frame-corner-panel: var(--oc-frame-corner-panel);
+  --oculus-frame-corner-compact: var(--oc-frame-corner-compact);
+  --oculus-frame-corner-tooltip: var(--oc-frame-corner-tooltip);
+  --oculus-frame-stroke: var(--oc-frame-stroke);
+  --oculus-frame-glow-size: var(--oc-frame-glow-size);
 }

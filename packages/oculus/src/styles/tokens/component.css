@@ -1,0 +1,151 @@
+/**
+ * OCULUS Design Tokens — Layer 3: Component
+ *
+ * Component-specific recipes referencing semantic tokens.
+ * Each block defines the full token API for one component.
+ */
+
+:root {
+  /* ── Panel ────────────────────────────────────────── */
+  --oc-panel-bg: var(--oc-surface-raised);
+  --oc-panel-border: var(--oc-stroke-base) solid var(--oc-border-default);
+  --oc-panel-border-color: var(--oc-border-default);
+  --oc-panel-radius: var(--oc-radius-xl);
+  --oc-panel-blur: var(--oc-blur-md);
+  --oc-panel-shadow: 0 0 var(--oc-shadow-glow-md) var(--oc-glow-accent);
+  --oc-panel-glow-inset: inset 0 0 var(--oc-shadow-glow-lg) var(--oc-accent-alpha-5);
+  --oc-panel-padding-x: var(--oc-space-8);
+  --oc-panel-padding-y: var(--oc-space-6);
+  --oc-panel-padding-compact-x: var(--oc-space-6);
+  --oc-panel-padding-compact-y: var(--oc-space-4);
+
+  /* ── Button ───────────────────────────────────────── */
+  --oc-btn-bg: var(--oc-accent-alpha-10);
+  --oc-btn-border: var(--oc-stroke-base) solid var(--oc-border-default);
+  --oc-btn-radius: var(--oc-radius-md);
+  --oc-btn-color: var(--oc-text-accent);
+  --oc-btn-font-size: var(--oc-text-label);
+  --oc-btn-padding-x: var(--oc-space-6);
+  --oc-btn-padding-y: var(--oc-space-4);
+
+  --oc-btn-hover-bg: var(--oc-accent-alpha-20);
+  --oc-btn-hover-border: var(--oc-border-accent);
+  --oc-btn-active-scale: var(--oc-interactive-active-scale);
+  --oc-btn-disabled-opacity: var(--oc-interactive-disabled-opacity);
+
+  --oc-btn-focus-color: var(--oc-focus-ring-color);
+  --oc-btn-focus-width: var(--oc-focus-ring-width);
+  --oc-btn-focus-offset: var(--oc-focus-ring-offset);
+
+  /* Button: primary variant */
+  --oc-btn-primary-bg: var(--oc-accent-alpha-25);
+  --oc-btn-primary-border: var(--oc-border-accent);
+
+  /* Button: danger variant */
+  --oc-btn-danger-bg: var(--oc-danger-alpha-10);
+  --oc-btn-danger-border: var(--oc-border-danger);
+  --oc-btn-danger-color: var(--oc-feedback-danger);
+  --oc-btn-danger-hover-bg: var(--oc-danger-alpha-20);
+  --oc-btn-danger-hover-border: var(--oc-feedback-danger);
+
+  /* Button: CTA variant */
+  --oc-btn-cta-bg: var(--oc-accent-alpha-25);
+  --oc-btn-cta-border: var(--oc-border-accent);
+  --oc-btn-cta-color: var(--oc-text-accent);
+
+  /* ── Progress Bar ─────────────────────────────────── */
+  --oc-progress-height: var(--oc-space-4);
+  --oc-progress-radius: var(--oc-radius-full);
+  --oc-progress-track-bg: rgba(255, 255, 255, 0.08);
+  --oc-progress-track-border: var(--oc-stroke-base) solid var(--oc-border-subtle);
+
+  /* Progress: health */
+  --oc-progress-health-fill: var(--oc-status-health);
+  --oc-progress-health-glow: rgba(255, 107, 107, 0.30);
+
+  /* Progress: mana */
+  --oc-progress-mana-fill: var(--oc-status-mana);
+  --oc-progress-mana-glow: rgba(78, 205, 196, 0.30);
+
+  /* Progress: xp */
+  --oc-progress-xp-fill: var(--oc-status-xp);
+  --oc-progress-xp-glow: rgba(255, 230, 109, 0.30);
+
+  /* Progress: quest */
+  --oc-progress-quest-fill: var(--oc-text-accent);
+  --oc-progress-quest-glow: var(--oc-glow-accent);
+
+  /* ── Card ─────────────────────────────────────────── */
+  --oc-card-radius: var(--oc-radius-lg);
+  --oc-card-hover-lift: var(--oc-lift-sm);
+  --oc-card-stat-bg: var(--oc-accent-alpha-5);
+  --oc-card-stat-border: var(--oc-border-subtle);
+  --oc-card-stat-radius: var(--oc-radius-md);
+  --oc-card-stat-text: var(--oc-text-muted);
+
+  /* ── Badge ────────────────────────────────────────── */
+  --oc-badge-sm: var(--oc-space-2);
+  --oc-badge-md: var(--oc-space-3);
+  --oc-badge-lg: var(--oc-space-4);
+  --oc-badge-font-size: var(--oc-text-2xs);
+  --oc-badge-font-weight: var(--oc-weight-semibold);
+  --oc-badge-bg-alpha: var(--oc-opacity-15);
+  --oc-badge-border-alpha: var(--oc-opacity-30);
+
+  /* ── Tooltip ──────────────────────────────────────── */
+  --oc-tooltip-bg: var(--oc-surface-overlay);
+  --oc-tooltip-border: var(--oc-stroke-base) solid var(--oc-border-default);
+  --oc-tooltip-radius: var(--oc-radius-lg);
+  --oc-tooltip-padding-x: var(--oc-space-6);
+  --oc-tooltip-padding-y: var(--oc-space-4);
+  --oc-tooltip-font-size: var(--oc-text-sm);
+  --oc-tooltip-delay: var(--oc-duration-slow);
+  --oc-tooltip-offset: var(--oc-space-2);
+
+  /* ── Scrollbar ────────────────────────────────────── */
+  --oc-scrollbar-thumb: var(--oc-color-amber-500);
+  --oc-scrollbar-thumb-hover: var(--oc-color-amber-400);
+  --oc-scrollbar-track: transparent;
+  --oc-scrollbar-width: 6px;
+  --oc-scrollbar-thumb-radius: var(--oc-radius-sm);
+
+  /* ── Backdrop ─────────────────────────────────────── */
+  --oc-backdrop-bg: var(--oc-surface-scrim);
+  --oc-backdrop-blur: var(--oc-blur-sm);
+  --oc-backdrop-scrim-bg: rgba(0, 0, 0, 0.60);
+
+  /* ── Code Viewer ──────────────────────────────────── */
+  --oc-code-header-bg: var(--oc-accent-alpha-5);
+  --oc-code-docs-bg: var(--oc-accent-alpha-3);
+  --oc-code-hotspot-line-bg: var(--oc-accent-alpha-10);
+  --oc-code-line-number-opacity: var(--oc-opacity-40);
+
+  /* ── Miller Columns ───────────────────────────────── */
+  --oc-miller-selected-bg: var(--oc-interactive-selected-bg);
+  --oc-miller-selected-border: var(--oc-interactive-selected-border);
+  --oc-miller-divider: var(--oc-border-subtle);
+
+  /* ── Minimap ──────────────────────────────────────── */
+  --oc-minimap-grid-stroke: var(--oc-border-muted);
+  --oc-minimap-player-color: var(--oc-color-amber-400);
+  --oc-minimap-hotspot-color: var(--oc-color-red-400);
+  --oc-minimap-visited-color: var(--oc-color-gray-500);
+  --oc-minimap-unvisited-color: var(--oc-color-gray-300);
+
+  /* ── Heading ──────────────────────────────────────── */
+  --oc-heading-color: var(--oc-text-heading);
+  --oc-heading-font-size: var(--oc-text-label);
+  --oc-heading-weight: var(--oc-weight-semibold);
+  --oc-heading-tracking: var(--oc-tracking-heading);
+
+  /* ── Ornate Frame ─────────────────────────────────── */
+  --oc-frame-corner-modal: var(--oc-corner-lg);
+  --oc-frame-corner-panel: var(--oc-corner-md);
+  --oc-frame-corner-compact: var(--oc-corner-sm);
+  --oc-frame-corner-tooltip: var(--oc-corner-xs);
+  --oc-frame-stroke: var(--oc-stroke-medium);
+  --oc-frame-glow-size: var(--oc-shadow-glow-md);
+
+  /* ── Stagger ──────────────────────────────────────── */
+  --oc-stagger-step: 30ms;
+}

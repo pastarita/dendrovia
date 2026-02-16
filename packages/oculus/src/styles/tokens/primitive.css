@@ -1,0 +1,190 @@
+/**
+ * OCULUS Design Tokens — Layer 1: Primitive
+ *
+ * Raw values named by what they ARE, not what they mean.
+ * No semantic intent — just the palette, scales, and constants.
+ */
+
+:root {
+  /* ── Color: Amber Family ──────────────────────────── */
+  --oc-color-amber-200: #ffd4b8;
+  --oc-color-amber-300: #f5c9a8;
+  --oc-color-amber-400: #f5a97f;
+  --oc-color-amber-500: #d88957;
+
+  /* ── Color: Neutrals ──────────────────────────────── */
+  --oc-color-black: #000000;
+  --oc-color-gray-100: #f7f7f7;
+  --oc-color-gray-200: #e5e5e5;
+  --oc-color-gray-300: #d4d4d4;
+  --oc-color-gray-400: #a0a0a0;
+  --oc-color-gray-500: #737373;
+  --oc-color-gray-600: #525252;
+  --oc-color-gray-700: #404040;
+  --oc-color-gray-800: #262626;
+  --oc-color-gray-900: #0a0a0a;
+  --oc-color-white: #ffffff;
+
+  /* ── Color: Red ───────────────────────────────────── */
+  --oc-color-red-400: #ff6b6b;
+  --oc-color-red-500: #ff4444;
+  --oc-color-red-600: #ff5555;
+  --oc-color-red-700: #cc3333;
+
+  /* ── Color: Teal ──────────────────────────────────── */
+  --oc-color-teal-400: #4ecdc4;
+
+  /* ── Color: Yellow ────────────────────────────────── */
+  --oc-color-yellow-300: #ffe66d;
+
+  /* ── Color: Green ─────────────────────────────────── */
+  --oc-color-green-300: #6dffaa;
+  --oc-color-green-500: #22c55e;
+
+  /* ── Color: Orange ────────────────────────────────── */
+  --oc-color-orange-400: #ffaa44;
+
+  /* ── Color: Purple ────────────────────────────────── */
+  --oc-color-purple-300: #c4b5fd;
+  --oc-color-purple-400: #a78bfa;
+  --oc-color-purple-500: #aa55ff;
+  --oc-color-purple-600: #a855f7;
+  --oc-color-purple-700: #7c3aed;
+
+  /* ── Color: Blue ──────────────────────────────────── */
+  --oc-color-blue-300: #55aaff;
+  --oc-color-blue-400: #60a5fa;
+  --oc-color-blue-500: #3b82f6;
+  --oc-color-blue-600: #2563eb;
+
+  /* ── Opacity Scale ────────────────────────────────── */
+  --oc-opacity-3: 0.03;
+  --oc-opacity-5: 0.05;
+  --oc-opacity-8: 0.08;
+  --oc-opacity-10: 0.10;
+  --oc-opacity-15: 0.15;
+  --oc-opacity-20: 0.20;
+  --oc-opacity-25: 0.25;
+  --oc-opacity-30: 0.30;
+  --oc-opacity-40: 0.40;
+  --oc-opacity-50: 0.50;
+  --oc-opacity-60: 0.60;
+  --oc-opacity-80: 0.80;
+  --oc-opacity-85: 0.85;
+
+  /* ── Spacing Scale (2px increments) ───────────────── */
+  --oc-space-1: 2px;
+  --oc-space-2: 4px;
+  --oc-space-3: 6px;
+  --oc-space-4: 8px;
+  --oc-space-5: 10px;
+  --oc-space-6: 12px;
+  --oc-space-7: 14px;
+  --oc-space-8: 16px;
+  --oc-space-9: 18px;
+  --oc-space-10: 20px;
+  --oc-space-12: 24px;
+  --oc-space-14: 28px;
+  --oc-space-16: 32px;
+
+  /* ── Font Size Scale ──────────────────────────────── */
+  --oc-text-2xs: 10px;
+  --oc-text-xs: 11px;
+  --oc-text-sm: 12px;
+  --oc-text-base: 14px;
+  --oc-text-lg: 16px;
+  --oc-text-xl: 20px;
+  --oc-text-2xl: 24px;
+
+  /* ── Font Families ────────────────────────────────── */
+  --oc-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --oc-font-mono: 'Courier New', 'Menlo', monospace;
+
+  /* ── Font Weights ─────────────────────────────────── */
+  --oc-weight-normal: 400;
+  --oc-weight-semibold: 600;
+  --oc-weight-bold: 700;
+
+  /* ── Line Heights ─────────────────────────────────── */
+  --oc-leading-none: 1;
+  --oc-leading-tight: 1.25;
+  --oc-leading-normal: 1.5;
+  --oc-leading-relaxed: 1.6;
+
+  /* ── Letter Spacing ───────────────────────────────── */
+  --oc-tracking-tight: -0.01em;
+  --oc-tracking-normal: 0;
+  --oc-tracking-wide: 0.05em;
+  --oc-tracking-heading: 1.5px;
+
+  /* ── Border Radius ────────────────────────────────── */
+  --oc-radius-xs: 2px;
+  --oc-radius-sm: 3px;
+  --oc-radius-md: 6px;
+  --oc-radius-lg: 8px;
+  --oc-radius-xl: 12px;
+  --oc-radius-full: 9999px;
+
+  /* ── Duration Scale ───────────────────────────────── */
+  --oc-duration-instant: 0ms;
+  --oc-duration-fast: 150ms;
+  --oc-duration-base: 200ms;
+  --oc-duration-slow: 300ms;
+  --oc-duration-dramatic: 400ms;
+  --oc-duration-deliberate: 600ms;
+  --oc-duration-cinematic: 1000ms;
+  --oc-duration-ambient: 3s;
+
+  /* ── Easing Curves ────────────────────────────────── */
+  --oc-ease-out: ease-out;
+  --oc-ease-in-out: ease-in-out;
+  --oc-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --oc-ease-linear: linear;
+
+  /* ── Z-Index Scale ────────────────────────────────── */
+  --oc-z-base: 1;
+  --oc-z-raised: 10;
+  --oc-z-hint: 25;
+  --oc-z-dropdown: 50;
+  --oc-z-overlay: 100;
+  --oc-z-modal: 200;
+
+  /* ── Blur Scale ───────────────────────────────────── */
+  --oc-blur-sm: blur(4px);
+  --oc-blur-md: blur(12px);
+  --oc-blur-lg: blur(20px);
+
+  /* ── Shadow Glow Spread ───────────────────────────── */
+  --oc-shadow-glow-sm: 10px;
+  --oc-shadow-glow-md: 20px;
+  --oc-shadow-glow-lg: 30px;
+  --oc-shadow-glow-xl: 50px;
+
+  /* ── Motion Offsets ───────────────────────────────── */
+  --oc-motion-offset-sm: 8px;
+  --oc-motion-offset-md: 12px;
+
+  /* ── Scale Transforms ─────────────────────────────── */
+  --oc-scale-press: 0.97;
+  --oc-scale-enter: 0.95;
+
+  /* ── Hover Lifts ──────────────────────────────────── */
+  --oc-lift-sm: -1px;
+  --oc-lift-md: -2px;
+
+  /* ── Frame Corners ────────────────────────────────── */
+  --oc-corner-xs: 8px;
+  --oc-corner-sm: 16px;
+  --oc-corner-md: 24px;
+  --oc-corner-lg: 32px;
+
+  /* ── Stroke Widths ────────────────────────────────── */
+  --oc-stroke-thin: 0.5px;
+  --oc-stroke-base: 1px;
+  --oc-stroke-medium: 1.5px;
+  --oc-stroke-thick: 2px;
+  --oc-stroke-heavy: 3px;
+
+  /* ── Touch Target ─────────────────────────────────── */
+  --oc-touch-target-min: 44px;
+}

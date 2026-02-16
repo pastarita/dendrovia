@@ -79,69 +79,69 @@
 .oculus-panel--glow {
   box-shadow:
     var(--oculus-panel-shadow),
-    inset 0 0 30px rgba(245, 169, 127, 0.05);
+    var(--oc-panel-glow-inset);
 }
 
 /* ── Section Headers ──────────────────────────────── */
 
 .oculus-heading {
-  color: var(--oculus-amber);
-  font-size: var(--oculus-font-sm);
-  font-weight: 600;
+  color: var(--oc-heading-color);
+  font-size: var(--oc-heading-font-size);
+  font-weight: var(--oc-heading-weight);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--oc-heading-tracking);
   margin-bottom: var(--oculus-space-sm);
 }
 
 /* ── Interactive Elements ─────────────────────────── */
 
 .oculus-button {
-  background: rgba(245, 169, 127, 0.1);
-  border: 1px solid var(--oculus-border);
-  border-radius: 6px;
-  color: var(--oculus-amber);
-  padding: var(--oculus-space-sm) var(--oculus-space-md);
+  background: var(--oc-btn-bg);
+  border: var(--oc-btn-border);
+  border-radius: var(--oc-btn-radius);
+  color: var(--oc-btn-color);
+  padding: var(--oc-btn-padding-y) var(--oc-btn-padding-x);
   font-family: var(--oculus-font-ui);
-  font-size: var(--oculus-font-sm);
+  font-size: var(--oc-btn-font-size);
   cursor: pointer;
   transition: all var(--oculus-transition-fast);
   pointer-events: auto;
 }
 
 .oculus-button:hover {
-  background: rgba(245, 169, 127, 0.2);
-  border-color: var(--oculus-amber);
+  background: var(--oc-btn-hover-bg);
+  border-color: var(--oc-btn-hover-border);
 }
 
 .oculus-button:active {
-  transform: scale(0.97);
+  transform: scale(var(--oc-btn-active-scale));
 }
 
 .oculus-button:focus-visible {
-  outline: 2px solid var(--oculus-amber);
-  outline-offset: 2px;
+  outline: var(--oc-btn-focus-width) solid var(--oc-btn-focus-color);
+  outline-offset: var(--oc-btn-focus-offset);
 }
 
 .oculus-button:disabled {
-  opacity: 0.4;
+  opacity: var(--oc-btn-disabled-opacity);
   cursor: not-allowed;
   pointer-events: none;
 }
 
 .oculus-button--primary {
-  background: rgba(245, 169, 127, 0.25);
-  border-color: var(--oculus-amber);
+  background: var(--oc-btn-primary-bg);
+  border-color: var(--oc-btn-primary-border);
 }
 
 .oculus-button--danger {
-  color: var(--oculus-danger);
-  border-color: rgba(255, 68, 68, 0.4);
-  background: rgba(255, 68, 68, 0.1);
+  color: var(--oc-btn-danger-color);
+  border-color: var(--oc-btn-danger-border);
+  background: var(--oc-btn-danger-bg);
 }
 
 .oculus-button--danger:hover {
-  background: rgba(255, 68, 68, 0.2);
-  border-color: var(--oculus-danger);
+  background: var(--oc-btn-danger-hover-bg);
+  border-color: var(--oc-btn-danger-hover-border);
 }
 
 /* ── Scrollbar Theming ────────────────────────────── */
@@ -153,7 +153,7 @@
 }
 
 .oculus-scrollable::-webkit-scrollbar {
-  width: 6px;
+  width: var(--oc-scrollbar-width);
 }
 
 .oculus-scrollable::-webkit-scrollbar-track {
@@ -161,12 +161,12 @@
 }
 
 .oculus-scrollable::-webkit-scrollbar-thumb {
-  background: var(--oculus-orange);
-  border-radius: 3px;
+  background: var(--oc-scrollbar-thumb);
+  border-radius: var(--oc-scrollbar-thumb-radius);
 }
 
 .oculus-scrollable::-webkit-scrollbar-thumb:hover {
-  background: var(--oculus-amber);
+  background: var(--oc-scrollbar-thumb-hover);
 }
 
 /* ── Depth-of-Field Backdrop ──────────────────────── */
@@ -174,9 +174,9 @@
 .oculus-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: var(--oc-backdrop-bg);
+  backdrop-filter: var(--oc-backdrop-blur);
+  -webkit-backdrop-filter: var(--oc-backdrop-blur);
   z-index: var(--oculus-z-overlay);
   animation: oculus-fade-in var(--oculus-transition-fast);
   pointer-events: auto;

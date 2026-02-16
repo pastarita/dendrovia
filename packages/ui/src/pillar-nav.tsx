@@ -1,6 +1,7 @@
 "use client";
 
 import { ReconStatusBar } from "./recon-status";
+import { PillarIcon, DendroviaIcon } from "./icons";
 
 export const ALL_PILLARS = [
   { name: "ARCHITECTUS", port: 3011, emoji: "\u{1F3DB}\uFE0F", tincture: "Azure", hex: "#3B82F6" },
@@ -37,7 +38,7 @@ export function PillarNav({ currentPillar }: { currentPillar: string }) {
                 fontWeight: isCurrent ? 600 : 400,
               }}
             >
-              <span>{p.emoji}</span>
+              <PillarIcon pillar={p.name} size={18} />
               <span>{p.name}</span>
               <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>
                 {isCurrent ? "(you)" : `:${p.port}`}
@@ -53,7 +54,7 @@ export function PillarNav({ currentPillar }: { currentPillar: string }) {
           href="http://localhost:3010"
           style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem", borderRadius: "4px", fontSize: "0.85rem", border: "1px solid #333" }}
         >
-          {"\u{1F333}"} Dendrovia Quest <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:3010</span>
+          <DendroviaIcon size={18} /> Dendrovia Quest <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:3010</span>
         </a>
         <a
           href="http://localhost:3030"

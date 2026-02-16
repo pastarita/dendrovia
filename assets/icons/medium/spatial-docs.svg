@@ -1,0 +1,40 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- SPATIAL-DOCS MEDIUM: Open book with measurement lines and annotation nodes -->
+
+  <!-- === LAYER 0: BOOK SHADOW === -->
+  <path d="M50,22 L16,30 L16,82 L50,76 L84,82 L84,30 Z" fill="#4a3822" opacity="0.35"/>
+
+  <!-- === LAYER 1: OPEN BOOK / CODEX (V-shape with spine) === -->
+  <path d="M50,24 L18,32 L18,80 L50,74 Z" fill="#f5ead6"/>
+  <path d="M50,24 L82,32 L82,80 L50,74 Z" fill="#f5ead6" opacity="0.9"/>
+  <line x1="50" y1="24" x2="50" y2="74" stroke="#8b7355" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- === LAYER 2: TEXT LINES (strata on pages — 3 per page) === -->
+  <line x1="24" y1="42" x2="44" y2="39" stroke="#8b7355" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="24" y1="51" x2="40" y2="48.5" stroke="#8b7355" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+  <line x1="24" y1="60" x2="42" y2="57.5" stroke="#8b7355" stroke-width="1.2" stroke-linecap="round" opacity="0.45"/>
+  <line x1="56" y1="39" x2="76" y2="42" stroke="#8b7355" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="56" y1="48.5" x2="72" y2="51" stroke="#8b7355" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+  <line x1="56" y1="57.5" x2="74" y2="60" stroke="#8b7355" stroke-width="1.2" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- === LAYER 3: TRIANGULAR RULER (overlaid at angle with tick marks) === -->
+  <polygon points="68,18 88,58 58,50" fill="none" stroke="#d4a574" stroke-width="1.5" opacity="0.6" stroke-linejoin="round"/>
+  <path d="M72,24 Q76,30 74,36" fill="none" stroke="#d4a574" stroke-width="0.8" opacity="0.45"/>
+  <path d="M70,21 L72,22 M76,30 L78,31.5 M82,39 L84,41 M86,48 L88,50" fill="none" stroke="#8b7355" stroke-width="0.8" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- === LAYER 4: Y-FORK BRANCH FROM SPINE (knowledge branching) === -->
+  <line x1="50" y1="24" x2="50" y2="14" stroke="#4a3822" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="50" y1="14" x2="40" y2="6" stroke="#8b7355" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="50" y1="14" x2="60" y2="6" stroke="#8b7355" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="50" cy="14" r="2.5" fill="#d4a574" stroke="#4a3822" stroke-width="1"/>
+  <circle cx="40" cy="6" r="2" fill="#7fa9f5" stroke="#4a3822" stroke-width="0.8"/>
+  <circle cx="60" cy="6" r="2" fill="#7fa9f5" stroke="#4a3822" stroke-width="0.8"/>
+
+  <!-- === LAYER 5: ANNOTATION NODES with connectors === -->
+  <circle cx="12" cy="44" r="2.5" fill="#74c0fc" stroke="#4a3822" stroke-width="0.8"/>
+  <line x1="14.5" y1="44" x2="23" y2="42" stroke="#74c0fc" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="92" cy="34" r="2.5" fill="#74c0fc" stroke="#4a3822" stroke-width="0.8"/>
+  <line x1="89.5" y1="35" x2="82" y2="38" stroke="#74c0fc" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+  <!-- === LAYER 6: EDGE HIGHLIGHT + MEASUREMENT TICKS (left book edge) === -->
+  <path d="M16,36 L19,35.5 M16,46 L19,45.5 M16,56 L19,55.5 M16,66 L19,65.5 M18,32 L50,24" fill="none" stroke="#d4a574" stroke-width="0.7" stroke-linecap="round" opacity="0.5"/>
+</svg>

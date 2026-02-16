@@ -17,6 +17,7 @@ import { QuestLog } from './QuestLog';
 import { BattleUI } from './BattleUI';
 import { StatusEffectBar } from './StatusEffectBar';
 import { LootPanel } from './LootPanel';
+import { FalconModeOverlay } from './FalconModeOverlay';
 
 export function HUD() {
   const health = useOculusStore((s) => s.health);
@@ -96,6 +97,9 @@ export function HUD() {
           <BattleUI />
         </div>
       )}
+
+      {/* ── Bottom-Center: Falcon Mode Stats ──────────── */}
+      <FalconModeOverlay />
 
       {/* ── Bottom-Center: Loot Notifications ────────── */}
       <div style={{

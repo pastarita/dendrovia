@@ -1,5 +1,7 @@
 "use client";
 
+import { ReconStatusBar } from "./recon-status";
+
 export const ALL_PILLARS = [
   { name: "ARCHITECTUS", port: 3011, emoji: "\u{1F3DB}\uFE0F", tincture: "Azure", hex: "#3B82F6" },
   { name: "CHRONOS", port: 3012, emoji: "\u{1F4DC}", tincture: "Amber", hex: "#c77b3f" },
@@ -46,6 +48,7 @@ export function PillarNav({ currentPillar }: { currentPillar: string }) {
       </div>
 
       <div style={{ marginTop: "auto" }}>
+        <ReconStatusBar currentPillar={currentPillar} />
         <a
           href="http://localhost:3010"
           style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem", borderRadius: "4px", fontSize: "0.85rem", border: "1px solid #333" }}

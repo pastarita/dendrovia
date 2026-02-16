@@ -136,6 +136,7 @@
         "@dagrejs/dagre": "^1.1.4",
         "@dendrovia/dendrite": "workspace:*",
         "@dendrovia/ludus": "workspace:*",
+        "@dendrovia/oculus": "workspace:*",
         "@dendrovia/operatus": "workspace:*",
         "@dendrovia/shared": "workspace:*",
         "@repo/ui": "*",

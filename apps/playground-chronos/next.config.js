@@ -13,6 +13,7 @@ const nextConfig = {
     '@dendrovia/shared',
     '@dendrovia/chronos',
     '@dendrovia/dendrite',
+    '@dendrovia/oculus',
   ],
 };
 

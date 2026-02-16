@@ -14,6 +14,7 @@
     "@repo/ui": "*",
     "@dendrovia/shared": "workspace:*",
     "@dendrovia/ludus": "workspace:*",
+    "@dendrovia/oculus": "workspace:*",
     "@dendrovia/operatus": "workspace:*",
     "next": "16.1.5",
     "react": "^19.2.0",

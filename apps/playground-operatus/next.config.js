@@ -13,6 +13,7 @@ const nextConfig = {
     '@dendrovia/shared',
     '@dendrovia/operatus',
     '@dendrovia/dendrite',
+    '@dendrovia/oculus',
   ],
   webpack: (config) => {
     config.resolve.extensionAlias = {

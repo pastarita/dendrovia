@@ -86,7 +86,7 @@ export class LSystem {
       let i = 0;
 
       while (i < current.length) {
-        const char = current[i];
+        const char = current[i]!;
 
         // Skip parameter blocks — copy them through unchanged
         if (char === '(' || char === '[' || char === ']') {
@@ -188,7 +188,7 @@ export class LSystem {
     const angleStep = 360 / Math.max(tree.children.length, 1);
 
     for (let i = 0; i < tree.children.length; i++) {
-      const child = tree.children[i];
+      const child = tree.children[i]!;
       const hotspot = hotspots.find((h) => h.path === child.path);
 
       // Radius: directories thicker, files thinner, scaled from parent

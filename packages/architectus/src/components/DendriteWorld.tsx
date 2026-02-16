@@ -69,10 +69,11 @@ function BranchTracker({ nodes }: { nodes: NodeMarker[] }) {
     _pos.current.copy(camera.position);
 
     for (let i = 0; i < nodes.length; i++) {
-      const d = _pos.current.distanceToSquared(nodes[i].position);
+      const node = nodes[i]!;
+      const d = _pos.current.distanceToSquared(node.position);
       if (d < closestDist) {
         closestDist = d;
-        closestNode = nodes[i];
+        closestNode = node;
       }
     }
 

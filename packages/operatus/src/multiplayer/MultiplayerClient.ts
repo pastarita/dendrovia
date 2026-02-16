@@ -16,6 +16,9 @@
  */
 
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('OPERATUS', 'multiplayer');
 
 // ── Types ────────────────────────────────────────────────────────
 
@@ -316,7 +319,7 @@ export class MultiplayerClient {
         try {
           handler(msg);
         } catch (err) {
-          console.warn(`[OPERATUS] Message handler error (${msg.type}):`, err);
+          log.warn({ messageType: msg.type, err }, 'Message handler error');
         }
       }
     }

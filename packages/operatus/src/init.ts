@@ -27,7 +27,10 @@
  */
 
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import { CacheManager } from './cache/CacheManager.js';
+
+const log = createLogger('OPERATUS', 'init');
 import { AssetLoader } from './loader/AssetLoader.js';
 import { CDNLoader, type CDNConfig } from './loader/CDNLoader.js';
 import { useGameStore, waitForHydration } from './persistence/GameStore.js';
@@ -151,9 +154,7 @@ export async function initializeOperatus(
       ),
     ]);
   } catch {
-    console.warn(
-      `[OPERATUS] State hydration timed out after ${HYDRATION_TIMEOUT_MS}ms — proceeding with defaults`,
-    );
+    log.warn({ timeoutMs: HYDRATION_TIMEOUT_MS }, 'State hydration timed out — proceeding with defaults');
   }
 
   // ── Step 5: Cross-tab sync + leader election ───────────────────

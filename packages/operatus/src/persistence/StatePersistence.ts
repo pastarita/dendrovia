@@ -14,6 +14,9 @@
 
 import type { GameSaveState, Character, Quest } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('OPERATUS', 'persistence');
 
 // ── IndexedDB Storage Backend ────────────────────────────────────
 
@@ -256,14 +259,14 @@ export function createDendroviaStorage(config: PersistenceConfig = {}) {
       // Decompress
       const raw = useCompression ? decompress(envelope.data) : envelope.data;
       if (raw === null) {
-        console.warn(`[OPERATUS] Save data corrupted (decompression failed) for key: ${key}`);
+        log.warn({ key }, 'Save data corrupted (decompression failed)');
         return null;
       }
 
       // Verify checksum
       const expectedChecksum = fnv1a(raw);
       if (expectedChecksum !== envelope.checksum) {
-        console.warn(`[OPERATUS] Save data corrupted (checksum mismatch) for key: ${key}`);
+        log.warn({ key }, 'Save data corrupted (checksum mismatch)');
         return null;
       }
 
@@ -271,7 +274,7 @@ export function createDendroviaStorage(config: PersistenceConfig = {}) {
       try {
         parsed = JSON.parse(raw);
       } catch {
-        console.warn(`[OPERATUS] Save data corrupted (invalid JSON) for key: ${key}`);
+        log.warn({ key }, 'Save data corrupted (invalid JSON)');
         return null;
       }
 
@@ -280,7 +283,7 @@ export function createDendroviaStorage(config: PersistenceConfig = {}) {
         try {
           parsed.state = migrate(parsed.state, envelope.version, version);
         } catch (e) {
-          console.error(`[OPERATUS] Migration failed:`, e);
+          log.error({ err: e, key }, 'Migration failed');
           return null;
         }
       }

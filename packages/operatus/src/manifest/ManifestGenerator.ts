@@ -27,6 +27,7 @@ import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join, extname, relative } from 'path';
 import type { AssetManifest } from '@dendrovia/shared';
 import { validateManifest } from '@dendrovia/shared/schemas';
+import { createLogger } from '@dendrovia/shared/logger';
 
 export interface ManifestEntry {
   path: string;
@@ -258,6 +259,7 @@ export class ManifestGenerator {
 // ── CLI Entry Point ──────────────────────────────────────────────
 
 async function main() {
+  const log = createLogger('OPERATUS', 'manifest-cli');
   const args = process.argv.slice(2);
   let inputDir = './generated';
   let outputPath: string | undefined;
@@ -273,19 +275,21 @@ async function main() {
   const gen = new ManifestGenerator({ inputDir, outputPath });
   const { manifest, entries } = await gen.generateAndWrite();
 
-  console.log(`[OPERATUS] Manifest generated:`);
-  console.log(`  Assets: ${entries.length}`);
-  console.log(`  Shaders: ${Object.keys(manifest.shaders).length}`);
-  console.log(`  Palettes: ${Object.keys(manifest.palettes).length}`);
-  console.log(`  Topology: ${manifest.topology || 'none'}`);
-  console.log(`  Checksum: ${manifest.checksum}`);
-  console.log(`  Written to: ${outputPath ?? inputDir + '/manifest.json'}`);
+  log.info({
+    assets: entries.length,
+    shaders: Object.keys(manifest.shaders).length,
+    palettes: Object.keys(manifest.palettes).length,
+    topology: manifest.topology || 'none',
+    checksum: manifest.checksum,
+    writtenTo: outputPath ?? inputDir + '/manifest.json',
+  }, 'Manifest generated');
 }
 
 // Run if invoked directly
 if (import.meta.main) {
   main().catch((err) => {
-    console.error('[OPERATUS] Manifest generation failed:', err);
+    const log = createLogger('OPERATUS', 'manifest-cli');
+    log.fatal(err, 'Manifest generation failed');
     process.exit(1);
   });
 }

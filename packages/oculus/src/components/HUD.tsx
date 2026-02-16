@@ -15,6 +15,8 @@ import { IconBadge } from './primitives/IconBadge';
 import { Minimap } from './Minimap';
 import { QuestLog } from './QuestLog';
 import { BattleUI } from './BattleUI';
+import { StatusEffectBar } from './StatusEffectBar';
+import { LootPanel } from './LootPanel';
 
 export function HUD() {
   const health = useOculusStore((s) => s.health);
@@ -61,6 +63,7 @@ export function HUD() {
             <ProgressBar value={mana} max={maxMana} variant="mana" height={6} />
           </div>
         </Panel>
+        <StatusEffectBar />
       </div>
 
       {/* ── Top-Right: Minimap ──────────────────────── */}
@@ -93,6 +96,18 @@ export function HUD() {
           <BattleUI />
         </div>
       )}
+
+      {/* ── Bottom-Center: Loot Notifications ────────── */}
+      <div style={{
+        position: 'absolute',
+        bottom: 'var(--oculus-space-lg)',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        pointerEvents: 'auto',
+        zIndex: 10,
+      }}>
+        <LootPanel />
+      </div>
     </div>
   );
 }

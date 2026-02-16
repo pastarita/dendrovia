@@ -10,12 +10,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@dendrovia/shared': path.resolve(__dirname, '../shared/src/index.ts'),
+      '@dendrovia/shared': path.resolve(__dirname, '../shared/src'),
     },
   },
   build: {
     target: 'esnext',
     rollupOptions: {
+      external: ['path', 'fs', 'url', 'node:path', 'node:fs', 'node:url', 'node:fs/promises', 'pino', 'pino-pretty'],
       output: {
         manualChunks: {
           three: ['three'],

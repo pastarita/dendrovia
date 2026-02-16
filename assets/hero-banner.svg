@@ -1,0 +1,317 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400">
+  <defs>
+    <!-- L0: Background warm glow -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2a2220" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1a1514" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- L3: Tree trunk gradient -->
+    <linearGradient id="trunkGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5e6d3"/>
+      <stop offset="100%" stop-color="#8b7355"/>
+    </linearGradient>
+
+    <!-- L3: Branch gradients (parchment → pillar color) -->
+    <linearGradient id="brChronos" gradientUnits="userSpaceOnUse" x1="600" y1="192" x2="100" y2="222">
+      <stop offset="0%" stop-color="#f5e6d3"/>
+      <stop offset="100%" stop-color="#d4a574"/>
+    </linearGradient>
+    <linearGradient id="brOper" gradientUnits="userSpaceOnUse" x1="600" y1="218" x2="210" y2="248">
+      <stop offset="0%" stop-color="#f5e6d3"/>
+      <stop offset="100%" stop-color="#9ca3af"/>
+    </linearGradient>
+    <linearGradient id="brImag" gradientUnits="userSpaceOnUse" x1="600" y1="180" x2="370" y2="230">
+      <stop offset="0%" stop-color="#f5e6d3"/>
+      <stop offset="100%" stop-color="#c6a0f6"/>
+    </linearGradient>
+    <linearGradient id="brArch" gradientUnits="userSpaceOnUse" x1="600" y1="180" x2="730" y2="230">
+      <stop offset="0%" stop-color="#f5e6d3"/>
+      <stop offset="100%" stop-color="#8ab4f8"/>
+    </linearGradient>
+    <linearGradient id="brLudus" gradientUnits="userSpaceOnUse" x1="600" y1="192" x2="940" y2="255">
+      <stop offset="0%" stop-color="#f5e6d3"/>
+      <stop offset="100%" stop-color="#81c995"/>
+    </linearGradient>
+    <linearGradient id="brOculus" gradientUnits="userSpaceOnUse" x1="600" y1="218" x2="1090" y2="262">
+      <stop offset="0%" stop-color="#f5e6d3"/>
+      <stop offset="100%" stop-color="#f5a97f"/>
+    </linearGradient>
+
+    <!-- L4: Pillar glow halos -->
+    <radialGradient id="chronosGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d4a574" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#d4a574" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="operGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9ca3af" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#9ca3af" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="imagGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c6a0f6" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#c6a0f6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="archGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8ab4f8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#8ab4f8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ludusGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#81c995" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#81c995" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="oculusGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f5a97f" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#f5a97f" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- L8: Edge vignette -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1a1514" stop-opacity="0"/>
+      <stop offset="80%" stop-color="#1a1514" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1a1514" stop-opacity="0.7"/>
+    </radialGradient>
+
+    <!-- L8: Bottom fog -->
+    <linearGradient id="fogBottom" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1514" stop-opacity="0"/>
+      <stop offset="55%" stop-color="#1a1514" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1a1514" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ===== L0: BACKGROUND ===== -->
+  <rect width="1200" height="400" fill="#1a1514"/>
+  <rect width="1200" height="400" fill="url(#bgGlow)"/>
+
+  <!-- ===== L1: STAR FIELD ===== -->
+  <circle cx="80" cy="28" r="1.0" fill="#d4a574" opacity="0.12"/>
+  <circle cx="200" cy="52" r="0.7" fill="#f5e6d3" opacity="0.10"/>
+  <circle cx="155" cy="20" r="0.5" fill="#c6a0f6" opacity="0.08"/>
+  <circle cx="320" cy="38" r="1.2" fill="#8ab4f8" opacity="0.10"/>
+  <circle cx="380" cy="16" r="0.6" fill="#f5e6d3" opacity="0.07"/>
+  <circle cx="450" cy="58" r="0.8" fill="#81c995" opacity="0.09"/>
+  <circle cx="520" cy="23" r="1.0" fill="#f5a97f" opacity="0.11"/>
+  <circle cx="560" cy="53" r="0.5" fill="#d4a574" opacity="0.08"/>
+  <circle cx="640" cy="14" r="1.3" fill="#f5e6d3" opacity="0.12"/>
+  <circle cx="700" cy="43" r="0.6" fill="#c6a0f6" opacity="0.07"/>
+  <circle cx="760" cy="28" r="0.9" fill="#8ab4f8" opacity="0.10"/>
+  <circle cx="830" cy="48" r="0.7" fill="#f5e6d3" opacity="0.06"/>
+  <circle cx="880" cy="18" r="1.1" fill="#81c995" opacity="0.09"/>
+  <circle cx="950" cy="38" r="0.5" fill="#d4a574" opacity="0.10"/>
+  <circle cx="1020" cy="58" r="0.8" fill="#f5e6d3" opacity="0.08"/>
+  <circle cx="1080" cy="23" r="1.0" fill="#9ca3af" opacity="0.11"/>
+  <circle cx="1140" cy="43" r="0.6" fill="#c6a0f6" opacity="0.07"/>
+  <circle cx="130" cy="68" r="0.9" fill="#f5e6d3" opacity="0.09"/>
+  <circle cx="270" cy="78" r="0.5" fill="#8ab4f8" opacity="0.06"/>
+  <circle cx="410" cy="92" r="1.1" fill="#f5a97f" opacity="0.08"/>
+  <circle cx="530" cy="73" r="0.7" fill="#d4a574" opacity="0.10"/>
+  <circle cx="660" cy="83" r="0.8" fill="#81c995" opacity="0.07"/>
+  <circle cx="790" cy="98" r="0.6" fill="#f5e6d3" opacity="0.09"/>
+  <circle cx="910" cy="68" r="1.0" fill="#c6a0f6" opacity="0.11"/>
+  <circle cx="1050" cy="88" r="0.5" fill="#9ca3af" opacity="0.06"/>
+  <circle cx="180" cy="108" r="0.7" fill="#f5e6d3" opacity="0.08"/>
+  <circle cx="470" cy="118" r="0.9" fill="#8ab4f8" opacity="0.07"/>
+  <circle cx="750" cy="112" r="0.6" fill="#d4a574" opacity="0.09"/>
+
+  <!-- ===== L2: HORIZON MOUNTAINS (Monument Valley mesas) ===== -->
+  <!-- Mountain 1: far left -->
+  <polygon points="0,260 45,178 80,170 130,182 200,260" fill="#4a3822" opacity="0.12"/>
+  <line x1="20" y1="210" x2="170" y2="210" stroke="#5a4832" stroke-width="0.4" opacity="0.08"/>
+  <line x1="10" y1="230" x2="185" y2="230" stroke="#5a4832" stroke-width="0.4" opacity="0.06"/>
+
+  <!-- Mountain 2: center-left -->
+  <polygon points="280,260 370,152 430,146 510,156 600,260" fill="#4a2d5f" opacity="0.10"/>
+  <line x1="320" y1="192" x2="560" y2="192" stroke="#5a3d6f" stroke-width="0.4" opacity="0.07"/>
+  <line x1="300" y1="218" x2="580" y2="218" stroke="#5a3d6f" stroke-width="0.4" opacity="0.05"/>
+  <line x1="290" y1="240" x2="590" y2="240" stroke="#5a3d6f" stroke-width="0.4" opacity="0.04"/>
+
+  <!-- Mountain 3: center-right -->
+  <polygon points="600,260 710,156 790,150 860,158 970,260" fill="#1e3a5f" opacity="0.12"/>
+  <line x1="640" y1="195" x2="930" y2="195" stroke="#2e4a6f" stroke-width="0.4" opacity="0.07"/>
+  <line x1="620" y1="220" x2="950" y2="220" stroke="#2e4a6f" stroke-width="0.4" opacity="0.05"/>
+  <line x1="610" y1="242" x2="960" y2="242" stroke="#2e4a6f" stroke-width="0.4" opacity="0.04"/>
+
+  <!-- Mountain 4: far right -->
+  <polygon points="960,260 1050,168 1110,160 1200,185 1200,260" fill="#2d4d3a" opacity="0.10"/>
+  <line x1="990" y1="200" x2="1180" y2="200" stroke="#3d5d4a" stroke-width="0.4" opacity="0.07"/>
+  <line x1="975" y1="225" x2="1195" y2="225" stroke="#3d5d4a" stroke-width="0.4" opacity="0.05"/>
+
+  <!-- ===== L5: PIPELINE CONNECTIONS (behind tree) ===== -->
+  <!-- CHRONOS → IMAGINARIUM -->
+  <path d="M 128,270 Q 240,298 342,262" fill="none" stroke="#d4a574" stroke-width="1" stroke-dasharray="4,3" opacity="0.2"/>
+  <!-- IMAGINARIUM → ARCHITECTUS (crosses center) -->
+  <path d="M 398,260 Q 550,315 702,258" fill="none" stroke="#c6a0f6" stroke-width="1" stroke-dasharray="4,3" opacity="0.18"/>
+  <!-- ARCHITECTUS → LUDUS -->
+  <path d="M 758,268 Q 848,298 918,272" fill="none" stroke="#8ab4f8" stroke-width="1" stroke-dasharray="4,3" opacity="0.2"/>
+  <!-- LUDUS → OCULUS -->
+  <path d="M 968,280 Q 1028,298 1064,280" fill="none" stroke="#81c995" stroke-width="1" stroke-dasharray="4,3" opacity="0.2"/>
+
+  <!-- ===== L3: THE GREAT DENDRITIC TREE ===== -->
+
+  <!-- Main trunk -->
+  <path d="M 600,378 Q 598,260 600,155" fill="none" stroke="url(#trunkGrad)" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- 6 Primary branches (Murray's Law: parent^3 = sum children^3) -->
+  <!-- To CHRONOS (leftmost, long reach) -->
+  <path d="M 598,192 Q 380,165 102,222" fill="none" stroke="url(#brChronos)" stroke-width="4" stroke-linecap="round"/>
+  <!-- To OPERATUS (left-center) -->
+  <path d="M 599,218 Q 430,205 212,248" fill="none" stroke="url(#brOper)" stroke-width="3" stroke-linecap="round"/>
+  <!-- To IMAGINARIUM (left, major branch) -->
+  <path d="M 599,180 Q 505,162 372,230" fill="none" stroke="url(#brImag)" stroke-width="5" stroke-linecap="round"/>
+  <!-- To ARCHITECTUS (right, major branch) -->
+  <path d="M 601,180 Q 660,162 728,230" fill="none" stroke="url(#brArch)" stroke-width="5" stroke-linecap="round"/>
+  <!-- To LUDUS (right-center, long reach) -->
+  <path d="M 602,192 Q 780,170 938,255" fill="none" stroke="url(#brLudus)" stroke-width="4" stroke-linecap="round"/>
+  <!-- To OCULUS (rightmost) -->
+  <path d="M 601,218 Q 850,208 1088,262" fill="none" stroke="url(#brOculus)" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Branch connection nodes (small circles at junctions) -->
+  <circle cx="598" cy="192" r="2.5" fill="#f5e6d3" opacity="0.6"/>
+  <circle cx="599" cy="218" r="2" fill="#f5e6d3" opacity="0.5"/>
+  <circle cx="600" cy="180" r="3" fill="#f5e6d3" opacity="0.7"/>
+  <circle cx="600" cy="155" r="3.5" fill="#f5e6d3" opacity="0.8"/>
+
+  <!-- Tertiary canopy branches -->
+  <path d="M 600,163 Q 565,140 535,128" fill="none" stroke="#f5e6d3" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+  <path d="M 600,163 Q 635,140 665,128" fill="none" stroke="#f5e6d3" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+  <path d="M 600,158 Q 575,132 548,120" fill="none" stroke="#f5e6d3" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 600,158 Q 625,132 652,120" fill="none" stroke="#f5e6d3" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 535,128 Q 520,118 510,112" fill="none" stroke="#f5e6d3" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+  <path d="M 665,128 Q 680,118 690,112" fill="none" stroke="#f5e6d3" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+
+  <!-- Twigs off primary branches -->
+  <path d="M 350,172 Q 332,155 318,145" fill="none" stroke="#d4a574" stroke-width="1.2" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 250,188 Q 238,172 225,162" fill="none" stroke="#d4a574" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+  <path d="M 480,170 Q 465,152 450,142" fill="none" stroke="#c6a0f6" stroke-width="1.2" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 660,170 Q 672,152 685,142" fill="none" stroke="#8ab4f8" stroke-width="1.2" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 780,178 Q 792,160 805,150" fill="none" stroke="#81c995" stroke-width="1.2" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 870,198 Q 882,182 895,172" fill="none" stroke="#81c995" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+  <path d="M 950,215 Q 962,200 978,192" fill="none" stroke="#f5a97f" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+  <path d="M 1020,230 Q 1032,218 1045,210" fill="none" stroke="#f5a97f" stroke-width="0.8" opacity="0.2" stroke-linecap="round"/>
+
+  <!-- ===== L4: SIX PILLAR LANDMARKS ===== -->
+
+  <!-- CHRONOS — Scroll Tower (x=100) -->
+  <g>
+    <circle cx="100" cy="260" r="55" fill="url(#chronosGlow)"/>
+    <circle cx="100" cy="260" r="28" fill="none" stroke="#e8d7c3" stroke-width="0.5" opacity="0.3"/>
+    <rect x="78" y="238" width="44" height="50" rx="3" fill="#d4a574" opacity="0.9"/>
+    <line x1="82" y1="250" x2="118" y2="250" stroke="#8b7355" stroke-width="0.6" opacity="0.6"/>
+    <line x1="82" y1="258" x2="118" y2="258" stroke="#8b7355" stroke-width="0.6" opacity="0.6"/>
+    <line x1="82" y1="266" x2="118" y2="266" stroke="#8b7355" stroke-width="0.6" opacity="0.6"/>
+    <line x1="82" y1="274" x2="118" y2="274" stroke="#8b7355" stroke-width="0.6" opacity="0.6"/>
+    <path d="M 82,238 Q 82,232 86,230 Q 90,228 94,230" fill="none" stroke="#d4a574" stroke-width="1.2"/>
+    <line x1="100" y1="238" x2="100" y2="222" stroke="#d4a574" stroke-width="2"/>
+    <line x1="100" y1="222" x2="89" y2="210" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="100" y1="222" x2="111" y2="210" stroke="#d4a574" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="89" cy="210" r="2" fill="#e8d7c3"/>
+    <circle cx="111" cy="210" r="2" fill="#e8d7c3"/>
+    <text x="100" y="302" font-family="monospace" font-size="8" fill="#d4a574" text-anchor="middle" opacity="0.7">CHRONOS</text>
+  </g>
+
+  <!-- OPERATUS — Gear Foundation (x=210) -->
+  <g>
+    <circle cx="210" cy="270" r="50" fill="url(#operGlow)"/>
+    <rect x="188" y="280" width="44" height="10" rx="1" fill="#6b7280"/>
+    <rect x="192" y="270" width="36" height="10" rx="1" fill="#838b95"/>
+    <rect x="196" y="260" width="28" height="10" rx="1" fill="#9ca3af"/>
+    <polygon points="221,250 216.5,247.3 217.8,242.2 212.7,243.5 210,239 207.3,243.5 202.2,242.2 203.5,247.3 199,250 203.5,252.7 202.2,257.8 207.3,256.5 210,261 212.7,256.5 217.8,257.8 216.5,252.7" fill="#9ca3af" stroke="#6b7280" stroke-width="0.6"/>
+    <circle cx="210" cy="250" r="3" fill="#6b7280"/>
+    <line x1="222" y1="250" x2="242" y2="250" stroke="#838b95" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="246" cy="250" r="2.5" fill="#22c55e" opacity="0.8"/>
+    <text x="210" y="302" font-family="monospace" font-size="8" fill="#9ca3af" text-anchor="middle" opacity="0.7">OPERATUS</text>
+  </g>
+
+  <!-- IMAGINARIUM — Prism Spire (x=370) -->
+  <g>
+    <circle cx="370" cy="255" r="55" fill="url(#imagGlow)"/>
+    <polygon points="388,252 379,267 361,267 352,252 361,237 379,237" fill="#c6a0f6" opacity="0.85" stroke="#9b6dd8" stroke-width="0.8"/>
+    <polygon points="382,252 376,262 364,262 358,252 364,242 376,242" fill="#e5d4ff" opacity="0.3"/>
+    <line x1="383" y1="240" x2="400" y2="222" stroke="#ff6b6b" stroke-width="0.8" opacity="0.5"/>
+    <line x1="385" y1="243" x2="405" y2="227" stroke="#ffa500" stroke-width="0.8" opacity="0.5"/>
+    <line x1="388" y1="247" x2="410" y2="233" stroke="#ffd700" stroke-width="0.8" opacity="0.5"/>
+    <line x1="389" y1="252" x2="412" y2="240" stroke="#22c55e" stroke-width="0.8" opacity="0.45"/>
+    <line x1="388" y1="256" x2="410" y2="248" stroke="#3b82f6" stroke-width="0.8" opacity="0.45"/>
+    <circle cx="370" cy="276" r="5" fill="none" stroke="#c6a0f6" stroke-width="0.8" opacity="0.6"/>
+    <line x1="370" y1="271" x2="370" y2="267" stroke="#c6a0f6" stroke-width="0.6" opacity="0.5"/>
+    <text x="370" y="302" font-family="monospace" font-size="8" fill="#c6a0f6" text-anchor="middle" opacity="0.7">IMAGINARIUM</text>
+  </g>
+
+  <!-- ARCHITECTUS — Column Temple (x=730) -->
+  <g>
+    <circle cx="730" cy="255" r="55" fill="url(#archGlow)"/>
+    <rect x="718" y="280" width="24" height="5" rx="1" fill="#5a8dd8"/>
+    <rect x="722" y="242" width="16" height="38" fill="#8ab4f8"/>
+    <line x1="726" y1="244" x2="726" y2="278" stroke="#5a8dd8" stroke-width="0.5" opacity="0.5"/>
+    <line x1="730" y1="244" x2="730" y2="278" stroke="#5a8dd8" stroke-width="0.5" opacity="0.5"/>
+    <line x1="734" y1="244" x2="734" y2="278" stroke="#5a8dd8" stroke-width="0.5" opacity="0.5"/>
+    <rect x="716" y="236" width="28" height="6" rx="1" fill="#8ab4f8" stroke="#5a8dd8" stroke-width="0.4"/>
+    <line x1="730" y1="230" x2="730" y2="212" stroke="#c8e0ff" stroke-width="1" opacity="0.5"/>
+    <line x1="730" y1="230" x2="718" y2="214" stroke="#c8e0ff" stroke-width="0.8" opacity="0.4"/>
+    <line x1="730" y1="230" x2="742" y2="214" stroke="#c8e0ff" stroke-width="0.8" opacity="0.4"/>
+    <rect x="746" y="225" width="8" height="8" fill="none" stroke="#c8e0ff" stroke-width="0.8" opacity="0.5" transform="rotate(45, 750, 229)"/>
+    <text x="730" y="302" font-family="monospace" font-size="8" fill="#8ab4f8" text-anchor="middle" opacity="0.7">ARCHITECTUS</text>
+  </g>
+
+  <!-- LUDUS — Game Board Pavilion (x=940) -->
+  <g>
+    <circle cx="940" cy="275" r="50" fill="url(#ludusGlow)"/>
+    <rect x="916" y="260" width="48" height="30" rx="5" fill="#5fa876" stroke="#2d4d3a" stroke-width="0.8"/>
+    <rect x="929" y="272" width="10" height="4" rx="0.5" fill="#81c995"/>
+    <rect x="932" y="269" width="4" height="10" rx="0.5" fill="#81c995"/>
+    <circle cx="954" cy="268" r="2.2" fill="#b8e6c9" opacity="0.8"/>
+    <circle cx="954" cy="278" r="2.2" fill="#b8e6c9" opacity="0.8"/>
+    <circle cx="949" cy="273" r="2.2" fill="#b8e6c9" opacity="0.8"/>
+    <circle cx="959" cy="273" r="2.2" fill="#b8e6c9" opacity="0.8"/>
+    <line x1="940" y1="260" x2="940" y2="248" stroke="#81c995" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="940" y1="248" x2="932" y2="240" stroke="#81c995" stroke-width="1" stroke-linecap="round"/>
+    <line x1="940" y1="248" x2="948" y2="240" stroke="#81c995" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="932" cy="240" r="1.5" fill="#b8e6c9" opacity="0.6"/>
+    <circle cx="948" cy="240" r="1.5" fill="#b8e6c9" opacity="0.6"/>
+    <text x="940" y="302" font-family="monospace" font-size="8" fill="#81c995" text-anchor="middle" opacity="0.7">LUDUS</text>
+  </g>
+
+  <!-- OCULUS — Eye Observatory (x=1090) -->
+  <g>
+    <circle cx="1090" cy="275" r="50" fill="url(#oculusGlow)"/>
+    <ellipse cx="1090" cy="275" rx="24" ry="14" fill="none" stroke="#f5a97f" stroke-width="1.2"/>
+    <ellipse cx="1090" cy="275" rx="22" ry="12" fill="#5f3d2d" opacity="0.4"/>
+    <circle cx="1090" cy="275" r="9" fill="#d88957" opacity="0.85"/>
+    <circle cx="1090" cy="275" r="4" fill="#3d2218"/>
+    <circle cx="1087" cy="272" r="1.8" fill="#fff5ed" opacity="0.6"/>
+    <circle cx="1070" cy="262" r="2" fill="#ffd4b8" opacity="0.5"/>
+    <circle cx="1110" cy="262" r="2" fill="#ffd4b8" opacity="0.5"/>
+    <circle cx="1090" cy="295" r="2" fill="#ffd4b8" opacity="0.5"/>
+    <text x="1090" y="302" font-family="monospace" font-size="8" fill="#f5a97f" text-anchor="middle" opacity="0.7">OCULUS</text>
+  </g>
+
+  <!-- ===== L6: FOREGROUND FRAME ===== -->
+  <!-- Left foreground branch -->
+  <path d="M 0,400 Q 25,360 45,340 Q 55,328 60,335 Q 50,355 30,400 Z" fill="#3a2a1a" opacity="0.7"/>
+  <path d="M 45,340 Q 55,320 65,310" fill="none" stroke="#3a2a1a" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M 55,325 Q 48,312 42,305" fill="none" stroke="#3a2a1a" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+
+  <!-- Right foreground branch -->
+  <path d="M 1200,400 Q 1175,360 1155,340 Q 1145,328 1140,335 Q 1150,355 1170,400 Z" fill="#3a2a1a" opacity="0.7"/>
+  <path d="M 1155,340 Q 1145,320 1135,310" fill="none" stroke="#3a2a1a" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M 1148,325 Q 1155,312 1160,305" fill="none" stroke="#3a2a1a" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+
+  <!-- Center-left small branch -->
+  <path d="M 450,400 Q 455,375 458,362 Q 460,355 462,362 Q 465,378 470,400 Z" fill="#3a2a1a" opacity="0.5"/>
+
+  <!-- Center-right small branch -->
+  <path d="M 740,400 Q 737,378 735,365 Q 734,358 732,365 Q 730,380 725,400 Z" fill="#3a2a1a" opacity="0.5"/>
+
+  <!-- ===== L8: ATMOSPHERIC OVERLAYS ===== -->
+  <!-- Bottom fog -->
+  <rect width="1200" height="400" fill="url(#fogBottom)"/>
+
+  <!-- Edge vignette -->
+  <rect width="1200" height="400" fill="url(#vignette)"/>
+
+  <!-- ===== L7: TITLE TEXT ===== -->
+  <text x="600" y="68" font-family="serif" font-size="56" fill="#f5e6d3" text-anchor="middle" letter-spacing="12">DENDROVIA</text>
+  <text x="600" y="92" font-family="monospace" font-size="13" fill="#f5e6d3" text-anchor="middle" opacity="0.45">Autogamification of Codebase Archaeologization</text>
+  <text x="600" y="110" font-family="monospace" font-size="9" fill="#f5e6d3" text-anchor="middle" opacity="0.25">six pillars // procedural distillation // dendritic worlds</text>
+
+</svg>

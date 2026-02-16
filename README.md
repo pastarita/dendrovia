@@ -1,285 +1,186 @@
-# 🌳 Dendrovia - Autogamification of Codebase Archaeologization
-
-> **The Vision:** Parse any codebase and generate a playable 3D game world where developers explore code structure as a Monument Valley-inspired dendritic landscape.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## The Paradigm Shift: Procedural Distillation
-
-Instead of shipping **heavy geometric assets**, we compile **AI-generated art into mathematical representations** (SDFs, shaders, noise functions) - creating infinite detail at minimal download size.
-
-```
-AI Art → Mathematical Distillation → Real-time Rendering
-```
-
-## The Six-Pillar Architecture
-
-Dendrovia is structured as a **cognitive architecture** where each pillar has a single, well-defined responsibility:
-
-```
-┌─────────────────────────────────────────────────────────┐
-│ BUILD PHASE (Runs once per codebase analysis)          │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  📜 CHRONOS (Data Source)                              │
-│    └─ Parses Git + AST → topology.json                 │
-│              ↓                                          │
-│  🎨 IMAGINARIUM (Compiler)                             │
-│    └─ AI + Distillation → shaders/*.glsl               │
-│              ↓                                          │
-│  💾 OPERATUS (Infrastructure)                          │
-│    └─ Builds manifest.json                             │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────┐
-│ RUNTIME PHASE (Browser execution)                      │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  🏛️ ARCHITECTUS (Render Engine)                        │
-│    └─ WebGPU raymarching + hybrid LOD                  │
-│              ↓                                          │
-│  🎮 LUDUS (Game Logic)                                 │
-│    └─ Turn-based combat, quests, spells               │
-│              ↓                                          │
-│  👁️ OCULUS (UI Layer)                                  │
-│    └─ HUD, Miller Columns, code reader                │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-```
-
-### Pillar Responsibilities
-
-| Pillar | Responsibility | Key Output |
-|--------|---------------|------------|
-| **CHRONOS** | Git + AST parsing | `topology.json` |
-| **IMAGINARIUM** | AI → Shader distillation | `shaders/*.glsl` |
-| **ARCHITECTUS** | 3D rendering (WebGPU) | Real-time world |
-| **LUDUS** | Game mechanics | Combat, quests |
-| **OCULUS** | UI overlays | HUD, code reader |
-| **OPERATUS** | Infrastructure | Asset loading |
-
-## Quick Start
-
-### Install Dependencies
-
-```bash
-# Using bun (recommended)
-bun install
-
-# Or using pnpm
-pnpm install
-```
-
-### Run the Proof of Concept
-
-```bash
-# Generate artifacts for one file (Thin Vertical Slice)
-bun run slice
-
-# Launch 3D viewer
-cd packages/proof-of-concept
-bun run dev
-```
-
-This will:
-1. Parse `package.json` from this repo
-2. Generate a procedural color palette
-3. Compile an SDF shader
-4. Launch a 3D viewer where you can click the branch to read the file
-
-## Project Structure
-
-```
-dendrovia/
-├── packages/
-│   ├── shared/              # Types, events, contracts
-│   ├── chronos/             # 📜 Git + AST parser
-│   ├── imaginarium/         # 🎨 AI → Shader compiler
-│   ├── architectus/         # 🏛️ R3F + WebGPU engine
-│   ├── ludus/               # 🎮 Game mechanics
-│   ├── oculus/              # 👁️ UI components
-│   ├── operatus/            # 💾 Infrastructure
-│   └── proof-of-concept/    # 🧪 Thin vertical slice
-├── turbo.json               # TurboRepo pipeline
-└── package.json             # Workspace config
-```
-
-## The Thin Vertical Slice
-
-Instead of building all six pillars horizontally, we **drill one feature through the entire stack** to force the APIs to mature:
-
-**Feature:** "Visualize One File"
-
-```
-CHRONOS: Parse package.json
-    ↓
-IMAGINARIUM: Generate color palette
-    ↓
-ARCHITECTUS: Render SDF branch
-    ↓
-LUDUS: Detect click event
-    ↓
-OCULUS: Show file contents
-```
-
-This proves the architecture works end-to-end.
-
-## Core Philosophies
-
-### 1. Cognitive Architecture
-
-> "Does this architectural separation allow two people to work on the project without speaking to each other? If yes, the interface is defined correctly."
-
-Each pillar communicates **only via the EventBus** at runtime:
-
-```typescript
-// ARCHITECTUS emits spatial event
-eventBus.emit(GameEvents.NODE_CLICKED, { nodeId, position });
-
-// LUDUS listens and responds
-eventBus.on(GameEvents.NODE_CLICKED, (data) => {
-  checkForEncounter(data.position);
-});
-```
-
-### 2. Build-Time vs Runtime
-
-**Build-Time (CHRONOS → IMAGINARIUM):**
-- Runs once per codebase
-- Outputs static artifacts (JSON, GLSL)
-- Deterministic (cacheable)
-
-**Runtime (ARCHITECTUS → LUDUS → OCULUS):**
-- Runs in browser
-- Event-driven architecture
-- Loads pre-generated artifacts
-
-### 3. Local-First Architecture
-
-The game **fully works offline**:
-- No server required for v1
-- Assets bundled (<1MB initial)
-- State persisted in OPFS
-- Multiplayer is **opt-in** (future)
-
-### 4. Hybrid Rendering
-
-**Macro-SDF, Micro-Mesh:**
-- SDF for **static dendrite** (infinite detail)
-- Instanced meshes for **dynamic elements** (bugs, particles)
-- Adaptive LOD (SDF far, mesh near)
-
-### 5. Diegetic Mechanics
-
-Spells are **developer actions**, not fantasy magic:
-
-- **Blame** → `git blame` (reveal enemy origin)
-- **Refactor** → Code cleanup (absorb tech debt)
-- **Debug** → Breakpoint inspection (reveal weaknesses)
-- **Patch** → Hotfix (quick heal)
-
-## Development Workflow
-
-### Terminal Setup (Pipeline Factory)
-
-```bash
-# Launch all six pillars in parallel
-bun run dev
-```
-
-This opens six terminal tabs:
-1. **CHRONOS** - Watching for new commits
-2. **IMAGINARIUM** - Hot-reloading shaders
-3. **ARCHITECTUS** - Vite dev server
-4. **LUDUS** - Test runner
-5. **OCULUS** - Storybook (UI components)
-6. **OPERATUS** - Asset server
-
-### Building for Production
-
-```bash
-# Build all packages
-bun run build
-
-# This executes the TurboRepo pipeline:
-# chronos#parse → imaginarium#distill → architectus#build
-```
-
-## Technical Stack
-
-- **Runtime:** Bun 1.0+
-- **Monorepo:** TurboRepo
-- **Rendering:** Three.js r171 (WebGPU)
-- **Framework:** React 18 + React Three Fiber
-- **State:** Zustand
-- **Parsing:** isomorphic-git, ts-morph
-- **Build:** Vite
-
-## Steering Heuristics
-
-Key decision-making principles:
-
-1. **CHRONOS:** "Reward the discovery of 'Why,' not just 'What.'"
-2. **IMAGINARIUM:** "Never block user entry on generation. Default Beautiful first."
-3. **ARCHITECTUS:** "If shader exceeds budget, bake to mesh (LOD)."
-4. **LUDUS:** "If a mechanic only makes numbers go up, cut it."
-5. **OCULUS:** "Text must always be orthogonal to camera when reading."
-6. **OPERATUS:** "Build as if networked, implement as local function call."
-
-## Implementation Phases
-
-- [x] **Phase 0:** Six-pillar monorepo setup
-- [x] **Phase 0.5:** Thin vertical slice (proof-of-concept)
-- [ ] **Phase 1:** CHRONOS - Git + AST parser
-- [ ] **Phase 2:** IMAGINARIUM - AI distillation pipeline
-- [ ] **Phase 3:** ARCHITECTUS - WebGPU rendering
-- [ ] **Phase 4:** LUDUS - Game mechanics
-- [ ] **Phase 5:** OCULUS - UI components
-- [ ] **Phase 6:** OPERATUS - Infrastructure
-- [ ] **Phase 7:** Integration & polish
-
-## Current Status: 10-15% Complete
-
-**What's Working:**
-- ✅ Six-pillar architecture scaffolded
-- ✅ Shared types and EventBus
-- ✅ Proof-of-concept (thin vertical slice)
-- ✅ Color palette generation (deterministic)
-
-**Next Steps:**
-1. Run the proof-of-concept (`bun run slice`)
-2. Implement CHRONOS Git parser
-3. Build IMAGINARIUM distillation engine
-4. Validate SDF performance benchmarks
-
-## Contributing
-
-Each pillar can be developed **independently** by different teams/agents:
-
-1. **Fork the repo**
-2. **Pick a pillar** (e.g., CHRONOS)
-3. **Read the pillar's README** (`packages/chronos/README.md`)
-4. **Respect the interface** (EventBus contracts in `packages/shared`)
-5. **Submit PR** when tests pass
-
-The architecture ensures you can work without blocking others.
-
-## License
-
-MIT - See LICENSE file
-
-## Vision
-
-**Goal:** Any developer can:
-1. Point Dendrovia at their GitHub repo
-2. Wait 30 seconds (parsing + generation)
-3. Explore their codebase as a 3D Monument Valley world
-4. Learn the history by playing quests
-5. Share their world with others (via seed URL)
-
-**Success Metric:** "I understand this codebase better after playing for 15 minutes than I would after reading docs for an hour."
+<p align="center">
+  <img src="assets/hero-banner.svg" width="800" alt="Dendrovia — Six-pillar architecture for codebase archaeologization" />
+</p>
+
+<h1 align="center">DENDROVIA</h1>
+
+<p align="center">
+  <em>Autogamification of Codebase Archaeologization</em>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-c77b3f" alt="License: MIT" /></a>
+  <img src="https://img.shields.io/badge/Runtime-Bun_1.0+-000000" alt="Runtime: Bun 1.0+" />
+  <img src="https://img.shields.io/badge/Monorepo-TurboRepo-ef4444" alt="Monorepo: TurboRepo" />
+  <img src="https://img.shields.io/badge/Rendering-WebGPU-3b82f6" alt="Rendering: WebGPU" />
+  <img src="https://img.shields.io/badge/Status-Alpha-22c55e" alt="Status: Alpha" />
+  <img src="https://img.shields.io/badge/TypeScript-5.7+-3178c6" alt="TypeScript: 5.7+" />
+</p>
 
 ---
 
-Built with 🌳 by the Dendrovia collective.
+## Quick Start
+
+```bash
+bun install
+bun run slice        # Parse a file → generate palette → render SDF branch
+bun run dev          # Launch dev mode (all packages)
+```
+
+This runs the **Thin Vertical Slice** — a single file parsed through the entire stack to prove the architecture end-to-end:
+
+```
+CHRONOS: Parse package.json → IMAGINARIUM: Generate palette → ARCHITECTUS: Render SDF
+    → LUDUS: Detect interaction → OCULUS: Show file contents
+```
+
+## What is Dendrovia?
+
+Dendrovia transforms Git repositories into explorable 3D RPG worlds. Point it at any codebase and it generates a Monument Valley-inspired landscape where:
+
+- **Git history** becomes geological strata you excavate
+- **Code structure** becomes navigable dendritic architecture
+- **Bugs** become creatures with stats derived from complexity
+- **Refactors** become healing spells, `git blame` becomes reconnaissance
+
+Instead of shipping heavy assets, Dendrovia **procedurally distills** AI-generated art into mathematical representations — SDFs, shaders, noise functions — creating infinite detail at minimal download size.
+
+## Six-Pillar Architecture
+
+<table>
+  <tr>
+    <td align="center" width="200">
+      <img src="assets/icons/medium/chronos.svg" width="60" alt="CHRONOS" /><br />
+      <strong>CHRONOS</strong><br />
+      <em>The Archaeologist</em><br />
+      Git + AST parsing
+    </td>
+    <td align="center" width="200">
+      <img src="assets/icons/medium/imaginarium.svg" width="60" alt="IMAGINARIUM" /><br />
+      <strong>IMAGINARIUM</strong><br />
+      <em>The Compiler</em><br />
+      Procedural distillation
+    </td>
+    <td align="center" width="200">
+      <img src="assets/icons/medium/operatus.svg" width="60" alt="OPERATUS" /><br />
+      <strong>OPERATUS</strong><br />
+      <em>The Infrastructure</em><br />
+      Asset loading + persistence
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="200">
+      <img src="assets/icons/medium/architectus.svg" width="60" alt="ARCHITECTUS" /><br />
+      <strong>ARCHITECTUS</strong><br />
+      <em>The Renderer</em><br />
+      WebGPU + SDF raymarching
+    </td>
+    <td align="center" width="200">
+      <img src="assets/icons/medium/ludus.svg" width="60" alt="LUDUS" /><br />
+      <strong>LUDUS</strong><br />
+      <em>The Mechanics</em><br />
+      Game logic + combat
+    </td>
+    <td align="center" width="200">
+      <img src="assets/icons/medium/oculus.svg" width="60" alt="OCULUS" /><br />
+      <strong>OCULUS</strong><br />
+      <em>The Interface</em><br />
+      UI + navigation
+    </td>
+  </tr>
+</table>
+
+### Build → Runtime Pipeline
+
+```mermaid
+flowchart LR
+    A["CHRONOS<br/>Parse"] --> B["IMAGINARIUM<br/>Distill"]
+    B --> C["OPERATUS<br/>Manifest"]
+    C --> D["ARCHITECTUS<br/>Render"]
+    D --> E["LUDUS<br/>Play"]
+    E --> F["OCULUS<br/>Navigate"]
+    style A fill:#c77b3f,stroke:#8b5e2f,color:#000000
+    style B fill:#A855F7,stroke:#7c3aed,color:#ffffff
+    style C fill:#1F2937,stroke:#111827,color:#ffffff
+    style D fill:#3B82F6,stroke:#2563eb,color:#ffffff
+    style E fill:#EF4444,stroke:#dc2626,color:#ffffff
+    style F fill:#22C55E,stroke:#16a34a,color:#000000
+```
+
+## Current Status
+
+| Pillar | Version | Status | Key Output |
+|--------|---------|--------|------------|
+| **CHRONOS** | v0.1.0 | Implemented | `topology.json` via isomorphic-git + ts-morph |
+| **IMAGINARIUM** | v0.1.0 | Active | Distillation, generation, cache, fallbacks |
+| **OPERATUS** | v0.3.0 | Production | OPFS cache, IndexedDB, Zustand persistence, SW |
+| **ARCHITECTUS** | v0.1.0 | Scaffold | R3F + Three.js r171 integration |
+| **LUDUS** | v0.1.0 | Scaffold | Zustand state machine, combat rules |
+| **OCULUS** | v0.1.0 | Component Library | TanStack Virtual, panel system |
+
+**Shared contracts** (`@dendrovia/shared`): Types, EventBus, schemas via Zod.
+
+## Tech Stack
+
+| Technology | Purpose | Version |
+|------------|---------|---------|
+| **Bun** | Runtime + Package Manager | 1.0+ |
+| **TurboRepo** | Build Orchestration | 2.7 |
+| **Three.js** | 3D Rendering | r171 |
+| **React** | UI Framework | 19 |
+| **Zustand** | State Management | 5 |
+| **TypeScript** | Language | 5.7+ |
+| **Next.js** | Application Framework | 16 |
+
+## How It Works
+
+### Core Principles
+
+1. **Cognitive Architecture** — Each pillar communicates only via the EventBus. Two teams can work without coordination if the interface contracts hold.
+2. **Build-Time vs Runtime** — CHRONOS and IMAGINARIUM run once per codebase, producing static artifacts (JSON, GLSL). ARCHITECTUS, LUDUS, and OCULUS consume them in the browser.
+3. **Local-First** — The game fully works offline. Initial payload under 1MB. State persisted in OPFS with IndexedDB fallback.
+4. **Hybrid Rendering** — SDF for static dendrites (infinite detail), instanced meshes for dynamic elements (creatures, particles), adaptive LOD.
+5. **Diegetic Mechanics** — Spells are developer actions: `git blame` reveals origins, `refactor` heals tech debt, `debug` exposes weaknesses.
+
+### Project Structure
+
+```
+dendrovia/
+├── apps/
+│   ├── dendrovia-quest/        # Main game application (Next.js)
+│   └── playground-*/           # Per-pillar playgrounds
+├── packages/
+│   ├── shared/                 # Types, events, contracts
+│   ├── chronos/                # Git + AST parser
+│   ├── imaginarium/            # Procedural distillation
+│   ├── architectus/            # R3F + WebGPU engine
+│   ├── ludus/                  # Game mechanics
+│   ├── oculus/                 # UI components
+│   ├── operatus/               # Infrastructure + persistence
+│   └── dendrovia-engine/       # 3D engine core
+├── assets/                     # SVG icons, design assets
+├── lib/                        # Heraldry, shared utilities
+├── turbo.json                  # TurboRepo pipeline
+└── package.json                # Workspace config
+```
+
+## Contributing
+
+Each pillar can be developed independently:
+
+1. **Fork the repo** and pick a pillar
+2. **Read the pillar's README** in `packages/{pillar}/`
+3. **Respect the interface** — EventBus contracts in `packages/shared`
+4. **Submit a PR** when tests pass
+
+See `docs/` for architecture guides, the design system, and pillar thematic schemas.
+
+## Docs
+
+- [Pillar Thematic Schema](docs/PILLAR_THEMATIC_SCHEMA.md) — Design DNA for all six pillars
+- [Pillar Insignia](docs/PILLAR_INSIGNIA_STRUCTURAL.md) — Structural icon specifications
+- [Symbol-Driven Design System](docs/SYMBOL_DRIVEN_DESIGN_SYSTEM.md) — Visual language architecture
+
+## License
+
+MIT — See [LICENSE](LICENSE)

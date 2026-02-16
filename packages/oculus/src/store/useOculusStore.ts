@@ -42,6 +42,20 @@ export interface CodeReaderState {
   error: string | null;
 }
 
+export interface StatusEffect {
+  effectId: string;
+  effectType: string;
+  remainingTurns: number;
+  appliedAt: number;
+}
+
+export interface LootDrop {
+  id: string;
+  monsterId: string;
+  items: Array<{ itemId: string; name: string }>;
+  droppedAt: number;
+}
+
 export interface OculusState {
   // HUD
   health: number;
@@ -65,6 +79,12 @@ export interface OculusState {
   // Combat
   battle: BattleState;
   playerSpells: Spell[];
+
+  // Status effects (buffs/debuffs)
+  statusEffects: StatusEffect[];
+
+  // Loot
+  lootDrops: LootDrop[];
 
   // Code navigation
   topology: FileTreeNode | null;
@@ -102,6 +122,14 @@ export interface OculusActions {
   startCombat: (enemy: Bug, playerSpells: Spell[]) => void;
   endCombat: () => void;
   addBattleLog: (message: string) => void;
+
+  // Status effects
+  addStatusEffect: (effect: StatusEffect) => void;
+  removeStatusEffect: (effectId: string) => void;
+
+  // Loot
+  addLootDrop: (drop: LootDrop) => void;
+  dismissLootDrop: (id: string) => void;
 
   // Code navigation
   setTopology: (tree: FileTreeNode) => void;
@@ -149,6 +177,8 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   battle: { active: false, enemy: null, log: [] },
   playerSpells: [],
+  statusEffects: [],
+  lootDrops: [],
 
   topology: null,
   hotspots: [],
@@ -228,6 +258,33 @@ export const useOculusStore = create<OculusStore>((set) => ({
       const log = [...s.battle.log, message];
       return { battle: { ...s.battle, log: log.length > 100 ? log.slice(-100) : log } };
     }),
+
+  addStatusEffect: (effect) =>
+    set((s) => {
+      const exists = s.statusEffects.findIndex((e) => e.effectId === effect.effectId);
+      if (exists >= 0) {
+        const updated = [...s.statusEffects];
+        updated[exists] = effect;
+        return { statusEffects: updated };
+      }
+      return { statusEffects: [...s.statusEffects, effect] };
+    }),
+
+  removeStatusEffect: (effectId) =>
+    set((s) => ({
+      statusEffects: s.statusEffects.filter((e) => e.effectId !== effectId),
+    })),
+
+  addLootDrop: (drop) =>
+    set((s) => {
+      const drops = [...s.lootDrops, drop];
+      return { lootDrops: drops.length > 5 ? drops.slice(-5) : drops };
+    }),
+
+  dismissLootDrop: (id) =>
+    set((s) => ({
+      lootDrops: s.lootDrops.filter((d) => d.id !== id),
+    })),
 
   setTopology: (tree) => set({ topology: tree }),
 

@@ -32,6 +32,15 @@ export { generateVariants } from './pipeline/VariantGenerator.js';
 export { generateManifest, type ManifestInput } from './pipeline/ManifestGenerator.js';
 export { readTopology } from './pipeline/TopologyReader.js';
 export { generateMockTopology } from './pipeline/MockTopology.js';
+export { distillSegments } from './pipeline/SegmentPipeline.js';
+
+// --- Story Arc ---
+export {
+  deriveStoryArc,
+  sliceSegments, type RawSegment,
+  mapMood,
+  assignPhases, computeTension, type PhaseAssignment,
+} from './storyarc/index.js';
 
 // --- Utilities ---
 export {

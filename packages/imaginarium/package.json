@@ -9,7 +9,11 @@
     "./distillation": "./src/distillation/index.ts",
     "./generation": "./src/generation/index.ts",
     "./cache": "./src/cache/DeterministicCache.ts",
-    "./fallbacks": "./src/fallback/index.ts"
+    "./fallbacks": "./src/fallback/index.ts",
+    "./utils/color": "./src/utils/color.ts",
+    "./utils/glsl": "./src/utils/glsl.ts",
+    "./mycology": "./src/mycology/index.ts",
+    "./storyarc": "./src/storyarc/index.ts"
   },
   "scripts": {
     "dev": "bun run src/index.ts --watch",

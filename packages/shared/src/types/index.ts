@@ -434,6 +434,12 @@ export interface AssetManifest {
   };
   /** Generated mesh assets, keyed by specimen/genus ID → file path */
   meshes?: Record<string, MeshManifestEntry>;
+  /** Story arc segment data */
+  storyArc?: {
+    arc: string;
+    segmentAssets: string;
+    segmentCount: number;
+  };
 }
 
 /**
@@ -610,4 +616,60 @@ export interface MycologyCatalogedEvent {
   specimenCount: number;
   networkEdgeCount: number;
   manifestPath: string;
+}
+
+/**
+ * STORY ARC TYPES
+ * (Narrative structure derived from code topology)
+ */
+
+export type StoryPhase = 'prologue' | 'rising' | 'climax' | 'falling' | 'epilogue';
+
+export type SegmentMood = 'serene' | 'tense' | 'chaotic' | 'triumphant' | 'mysterious';
+
+export interface SegmentMetrics {
+  fileCount: number;
+  totalLoc: number;
+  avgComplexity: number;
+  maxComplexity: number;
+  hotspotCount: number;
+  avgChurn: number;
+  dominantLanguage: string;
+  encounterDensity: number;
+}
+
+export interface StorySegment {
+  id: string;
+  label: string;
+  phase: StoryPhase;
+  mood: SegmentMood;
+  filePaths: string[];
+  treePath: string;
+  metrics: SegmentMetrics;
+  ordinal: number;
+}
+
+export interface StoryArc {
+  version: string;
+  seed: string;
+  segments: StorySegment[];
+  totalFiles: number;
+  derivedAt: string;
+  topologyHash: string;
+}
+
+export interface SegmentAssets {
+  segmentId: string;
+  palette: ProceduralPalette;
+  noise: NoiseFunction;
+  lsystem: LSystemRule;
+  shader: SDFShader;
+  specimenIds?: string[];
+}
+
+export interface SegmentPlacement {
+  segmentId: string;
+  nodePaths: string[];
+  centroid: [number, number, number];
+  radius: number;
 }

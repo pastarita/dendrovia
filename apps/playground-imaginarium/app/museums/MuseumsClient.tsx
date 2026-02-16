@@ -4,7 +4,7 @@ import { useState } from 'react';
 import PaletteExhibit from './components/PaletteExhibit';
 import ShaderExhibit from './components/ShaderExhibit';
 import PipelineExhibit from './components/PipelineExhibit';
-import MycologyExhibit from './components/MycologyExhibit';
+import MycologyExhibit, { type SpecimenData } from './components/MycologyExhibit';
 
 const TABS = [
   { id: 'palettes', label: 'Palettes' },
@@ -15,7 +15,7 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]['id'];
 
-export default function MuseumsClient() {
+export default function MuseumsClient({ specimens }: { specimens: SpecimenData[] }) {
   const [tab, setTab] = useState<TabId>('palettes');
 
   return (
@@ -56,7 +56,7 @@ export default function MuseumsClient() {
       {tab === 'palettes' && <PaletteExhibit />}
       {tab === 'shaders' && <ShaderExhibit />}
       {tab === 'pipeline' && <PipelineExhibit />}
-      {tab === 'mycology' && <MycologyExhibit />}
+      {tab === 'mycology' && <MycologyExhibit specimens={specimens} />}
     </div>
   );
 }

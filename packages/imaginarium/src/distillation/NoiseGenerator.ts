@@ -9,7 +9,12 @@
 import type { CodeTopology, NoiseFunction } from '@dendrovia/shared';
 import { hashString } from '../utils/hash.js';
 
-export function generate(topology: CodeTopology): NoiseFunction {
+export interface NoiseOverrides {
+  typeOverride?: NoiseFunction['type'];
+  octaveMultiplier?: number;
+}
+
+export function generate(topology: CodeTopology, overrides?: NoiseOverrides): NoiseFunction {
   const files = topology.files;
   const avgComplexity = files.length > 0
     ? files.reduce((sum, f) => sum + f.complexity, 0) / files.length
@@ -20,15 +25,23 @@ export function generate(topology: CodeTopology): NoiseFunction {
     ? hotspots.reduce((sum, h) => sum + h.churnRate, 0) / hotspots.length
     : 0;
 
-  // Map complexity to noise type
+  // Map complexity to noise type (overridable)
   let type: NoiseFunction['type'];
-  if (avgComplexity <= 4) type = 'simplex';
-  else if (avgComplexity <= 8) type = 'perlin';
-  else if (avgComplexity <= 15) type = 'fbm';
-  else type = 'worley';
+  if (overrides?.typeOverride) {
+    type = overrides.typeOverride;
+  } else if (avgComplexity <= 4) {
+    type = 'simplex';
+  } else if (avgComplexity <= 8) {
+    type = 'perlin';
+  } else if (avgComplexity <= 15) {
+    type = 'fbm';
+  } else {
+    type = 'worley';
+  }
 
-  // Octaves: more complex = more detail layers
-  const octaves = Math.max(1, Math.min(8, Math.ceil(avgComplexity / 3)));
+  // Octaves: more complex = more detail layers (overridable multiplier)
+  const octaveMultiplier = overrides?.octaveMultiplier ?? 1;
+  const octaves = Math.max(1, Math.min(8, Math.ceil(avgComplexity / 3 * octaveMultiplier)));
 
   // Frequency: higher churn = higher frequency (more "noise" in the code)
   const frequency = Math.max(0.5, Math.min(4.0, 1.0 + avgChurn * 0.1));

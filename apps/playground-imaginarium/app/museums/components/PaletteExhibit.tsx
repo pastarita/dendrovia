@@ -4,8 +4,8 @@ import { useState } from 'react';
 import {
   DEFAULT_PALETTES,
   LANGUAGE_HUES,
-  hexToOklch,
-} from '@dendrovia/imaginarium';
+} from '@dendrovia/imaginarium/fallbacks';
+import { hexToOklch } from '@dendrovia/imaginarium/utils/color';
 
 const SWATCH_KEYS = ['primary', 'secondary', 'accent', 'background', 'glow'] as const;
 

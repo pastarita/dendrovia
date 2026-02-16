@@ -6,7 +6,15 @@
  * Central landing page for the Dendrovia monorepo workspace.
  * The main 3D experience lives at / (root).
  * All other pillar playgrounds serve as GMZ-doc servers.
+ * Dev-only: links target localhost ports.
  */
+
+function devUrl(port: number, path = ''): string {
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return path || '/';
+  }
+  return `http://localhost:${port}${path}`;
+}
 
 const MAIN_APP = {
   name: 'QUEST',
@@ -87,7 +95,7 @@ export default function HubPage() {
             fontFamily: 'monospace',
           }}
         >
-          localhost:{MAIN_APP.port}
+          :{MAIN_APP.port}
         </div>
       </a>
 
@@ -131,7 +139,7 @@ export default function HubPage() {
         {PILLAR_SERVERS.map((p) => (
           <a
             key={p.port}
-            href={`http://localhost:${p.port}`}
+            href={devUrl(p.port)}
             style={{
               display: 'block',
               padding: '1.25rem',

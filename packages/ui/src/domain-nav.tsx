@@ -10,6 +10,7 @@ import {
   type DomainSlug,
 } from "./domain-registry";
 import { DomainIcon, PillarIcon } from "./icons";
+import { devUrl } from "./dev-urls";
 
 const STORAGE_KEY = "domainnav-expanded";
 
@@ -142,7 +143,7 @@ export function DomainNav({ currentPillar }: { currentPillar: string }) {
                       href={
                         isCurrent
                           ? d.path
-                          : `http://localhost:${p.port}${d.path}`
+                          : devUrl(p.port, d.path)
                       }
                       style={{
                         display: "flex",

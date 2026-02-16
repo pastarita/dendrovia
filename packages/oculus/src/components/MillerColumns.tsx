@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useOculusStore } from '../store/useOculusStore';
 import { useOculus } from '../OculusProvider';
-import type { FileTreeNode, Hotspot } from '@dendrovia/shared';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment } from '@dendrovia/shared';
 import { Panel } from './primitives/Panel';
 import { IconBadge } from './primitives/IconBadge';
 
@@ -41,6 +41,7 @@ function VirtualColumn({
   selectedIndex,
   onSelect,
   hotspotPaths,
+  deepwikiPaths,
   columnIndex,
   activeColumnIndex,
 }: {
@@ -48,6 +49,7 @@ function VirtualColumn({
   selectedIndex: number;
   onSelect: (index: number) => void;
   hotspotPaths: Set<string>;
+  deepwikiPaths: Set<string>;
   columnIndex: number;
   activeColumnIndex: number;
 }) {
@@ -120,6 +122,9 @@ function VirtualColumn({
                   {item.metadata.complexity}
                 </span>
               )}
+              {deepwikiPaths.has(item.path) && (
+                <span style={{ fontSize: 'var(--oculus-font-xs)' }} title="AI documentation available">{'\u{1F4D6}'}</span>
+              )}
               {item.type === 'directory' && item.children && (
                 <span style={{ color: 'var(--oculus-text-muted)', fontSize: 'var(--oculus-font-xs)' }}>&rsaquo;</span>
               )}
@@ -134,6 +139,7 @@ function VirtualColumn({
 export function MillerColumns() {
   const topology = useOculusStore((s) => s.topology);
   const hotspots = useOculusStore((s) => s.hotspots);
+  const deepwiki = useOculusStore((s) => s.deepwiki);
   const activePanel = useOculusStore((s) => s.activePanel);
   const togglePanel = useOculusStore((s) => s.togglePanel);
   const openCodeReader = useOculusStore((s) => s.openCodeReader);
@@ -145,6 +151,11 @@ export function MillerColumns() {
   const hotspotPaths = useMemo(
     () => new Set(hotspots.map((h: Hotspot) => h.path)),
     [hotspots]
+  );
+
+  const deepwikiPaths = useMemo(
+    () => new Set(deepwiki?.moduleDocumentation ? Object.keys(deepwiki.moduleDocumentation) : []),
+    [deepwiki]
   );
 
   // Build columns from selection state
@@ -355,6 +366,7 @@ export function MillerColumns() {
               selectedIndex={col.selectedIndex}
               onSelect={(idx) => handleSelect(i, idx)}
               hotspotPaths={hotspotPaths}
+              deepwikiPaths={deepwikiPaths}
               columnIndex={i}
               activeColumnIndex={activeColumn}
             />

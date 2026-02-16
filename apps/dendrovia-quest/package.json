@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3000",
+    "dev": "next dev --port 3010",
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@repo/ui": "*",
-    "@dendrovia/engine": "*",
     "@dendrovia/shared": "workspace:*",
     "@dendrovia/architectus": "workspace:*",
     "@dendrovia/ludus": "workspace:*",

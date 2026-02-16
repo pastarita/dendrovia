@@ -14,6 +14,7 @@ import type {
   FileTreeNode,
   Hotspot,
   HUDState,
+  DeepWikiEnrichment,
 } from '@dendrovia/shared';
 
 // ── Types ──────────────────────────────────────────────
@@ -71,6 +72,9 @@ export interface OculusState {
   codeReader: CodeReaderState;
   millerSelection: string[]; // selected path segments
 
+  // DeepWiki AI documentation
+  deepwiki: DeepWikiEnrichment | null;
+
   // Input coordination
   isUiHovered: boolean;
 
@@ -108,6 +112,9 @@ export interface OculusActions {
   setCodeLoading: (loading: boolean) => void;
   setCodeError: (error: string | null) => void;
   setMillerSelection: (selection: string[]) => void;
+
+  // DeepWiki
+  setDeepWiki: (deepwiki: DeepWikiEnrichment | null) => void;
 
   // Camera
   setCameraMode: (mode: CameraMode) => void;
@@ -147,6 +154,8 @@ export const useOculusStore = create<OculusStore>((set) => ({
   hotspots: [],
   codeReader: { filePath: null, content: null, language: 'typescript', loading: false, error: null },
   millerSelection: [],
+
+  deepwiki: null,
 
   isUiHovered: false,
 
@@ -258,6 +267,8 @@ export const useOculusStore = create<OculusStore>((set) => ({
     })),
 
   setMillerSelection: (selection) => set({ millerSelection: selection }),
+
+  setDeepWiki: (deepwiki) => set({ deepwiki }),
 
   setCameraMode: (mode) => set({ cameraMode: mode }),
 

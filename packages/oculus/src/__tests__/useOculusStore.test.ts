@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach } from 'bun:test';
 import { useOculusStore } from '../store/useOculusStore';
-import type { Quest, Bug, Spell } from '@dendrovia/shared';
+import type { Quest, Bug, Spell, DeepWikiEnrichment } from '@dendrovia/shared';
 
 function resetStore() {
   useOculusStore.setState({
@@ -26,6 +26,7 @@ function resetStore() {
     codeReader: { filePath: null, content: null, language: 'typescript', loading: false, error: null },
     millerSelection: [],
     isUiHovered: false,
+    deepwiki: null,
     playerPosition: [0, 0, 0],
     visitedNodes: [],
   });
@@ -287,6 +288,31 @@ describe('useOculusStore', () => {
     it('sets camera mode', () => {
       useOculusStore.getState().setCameraMode('player');
       expect(useOculusStore.getState().cameraMode).toBe('player');
+    });
+  });
+
+  describe('deepwiki', () => {
+    const mockDeepWiki: DeepWikiEnrichment = {
+      wikiUrl: 'https://deepwiki.example.com/repo',
+      overview: 'A sample repository for testing.',
+      moduleDocumentation: { 'src/main.ts': 'Entry point of the application.' },
+      fetchedAt: '2026-02-15T00:00:00Z',
+    };
+
+    it('stores deepwiki data', () => {
+      useOculusStore.getState().setDeepWiki(mockDeepWiki);
+      const state = useOculusStore.getState();
+      expect(state.deepwiki).not.toBeNull();
+      expect(state.deepwiki?.wikiUrl).toBe('https://deepwiki.example.com/repo');
+      expect(state.deepwiki?.overview).toBe('A sample repository for testing.');
+      expect(state.deepwiki?.moduleDocumentation?.['src/main.ts']).toBe('Entry point of the application.');
+    });
+
+    it('clears deepwiki data with null', () => {
+      useOculusStore.getState().setDeepWiki(mockDeepWiki);
+      expect(useOculusStore.getState().deepwiki).not.toBeNull();
+      useOculusStore.getState().setDeepWiki(null);
+      expect(useOculusStore.getState().deepwiki).toBeNull();
     });
   });
 });

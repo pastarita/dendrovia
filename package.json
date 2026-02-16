@@ -25,6 +25,8 @@
     "td:ludus": "turbo dev --filter=@dendrovia/playground-ludus",
     "td:oculus": "turbo dev --filter=@dendrovia/playground-oculus",
     "td:operatus": "turbo dev --filter=@dendrovia/playground-operatus",
+    "td:browser": "bun run scripts/workspace-launcher/brave-launcher.ts --wait",
+    "td:nobrowser": "bun run scripts/td-colorizer.ts --no-browser --concurrency=25 --filter='!dendrovia-quest'",
     "slice": "cd packages/proof-of-concept && bun run src/thin-slice.ts",
     "launch": "bun run scripts/launch-workspace.ts",
     "launch:dev": "bun run scripts/launch-workspace.ts --dev",

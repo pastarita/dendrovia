@@ -5,7 +5,7 @@
  * and hotspot line highlighting. Blurs background when open.
  */
 
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { useOculusStore } from '../store/useOculusStore';
 import { useCodeLoader } from '../hooks/useCodeLoader';
 import { Panel } from './primitives/Panel';
@@ -51,6 +51,9 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
   const activePanel = useOculusStore((s) => s.activePanel);
   const closeCodeReader = useOculusStore((s) => s.closeCodeReader);
   const hotspots = useOculusStore((s) => s.hotspots);
+  const deepwiki = useOculusStore((s) => s.deepwiki);
+
+  const [docsExpanded, setDocsExpanded] = useState(false);
 
   // Automatically fetch file content when filePath is set without content
   useCodeLoader(codeLoaderOptions);
@@ -76,6 +79,11 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activePanel, closeCodeReader]);
+
+  const deepwikiDoc = useMemo(
+    () => codeReader.filePath ? deepwiki?.moduleDocumentation?.[codeReader.filePath] : undefined,
+    [deepwiki, codeReader.filePath]
+  );
 
   if (activePanel !== 'code-reader' || !codeReader.filePath) return null;
 
@@ -137,6 +145,16 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
               )}
             </div>
           </div>
+          {deepwikiDoc && (
+            <button
+              className="oculus-button"
+              onClick={() => setDocsExpanded((v) => !v)}
+              aria-label={docsExpanded ? 'Collapse documentation' : 'Expand documentation'}
+              style={{ fontSize: 'var(--oculus-font-xs)' }}
+            >
+              {docsExpanded ? '\u{1F4D6} Docs' : '\u{1F4D6} Docs'}
+            </button>
+          )}
           <button
             className="oculus-button"
             onClick={closeCodeReader}
@@ -145,6 +163,27 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
             Close
           </button>
         </div>
+
+        {/* ── DeepWiki Documentation ──────────────── */}
+        {deepwikiDoc && docsExpanded && (
+          <div
+            style={{
+              padding: 'var(--oculus-space-sm) var(--oculus-space-lg)',
+              background: 'rgba(245, 169, 127, 0.03)',
+              borderBottom: '1px solid var(--oculus-border)',
+              maxHeight: 200,
+              overflowY: 'auto',
+              fontSize: 'var(--oculus-font-sm)',
+              whiteSpace: 'pre-wrap',
+              color: 'var(--oculus-text-muted)',
+              lineHeight: 1.5,
+            }}
+            role="region"
+            aria-label="AI documentation"
+          >
+            {deepwikiDoc}
+          </div>
+        )}
 
         {/* ── Code Content ───────────────────────── */}
         <div

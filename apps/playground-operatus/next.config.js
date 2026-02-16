@@ -6,13 +6,13 @@ const monorepoRoot = resolve(__dirname, '../..');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {
+    root: monorepoRoot,
+  },
   transpilePackages: [
     '@dendrovia/shared',
     '@dendrovia/operatus',
   ],
-  turbopack: {
-    root: monorepoRoot,
-  },
   webpack: (config) => {
     config.resolve.extensionAlias = {
       '.js': ['.ts', '.tsx', '.js'],

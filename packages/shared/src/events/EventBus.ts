@@ -9,7 +9,7 @@
  * defined correctly."
  */
 
-import type { FileTreeNode, Hotspot, DeepWikiEnrichment } from '../types/index.js';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets } from '../types/index.js';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
@@ -151,6 +151,11 @@ export const GameEvents = {
   SHADERS_COMPILED: 'shaders:compiled',
   PALETTE_GENERATED: 'palette:generated',
   MYCOLOGY_CATALOGED: 'mycology:cataloged',
+  STORY_ARC_DERIVED: 'storyarc:derived',
+  SEGMENT_DISTILLED: 'segment:distilled',
+
+  // ARCHITECTUS runtime — segment navigation
+  SEGMENT_ENTERED: 'segment:entered',
 
   // OPERATUS → All (Infrastructure events)
   ASSETS_LOADED: 'assets:loaded',
@@ -322,6 +327,22 @@ export interface TopologyGeneratedEvent {
   tree: FileTreeNode;
   hotspots: Hotspot[];
   deepwiki?: DeepWikiEnrichment;
+}
+
+export interface StoryArcDerivedEvent {
+  arc: StoryArc;
+  segmentCount: number;
+}
+
+export interface SegmentDistilledEvent {
+  segmentId: string;
+  assets: SegmentAssets;
+}
+
+export interface SegmentEnteredEvent {
+  segmentId: string;
+  phase: string;
+  mood: string;
 }
 
 // Global singleton (lazy initialization)

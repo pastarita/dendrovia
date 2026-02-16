@@ -260,9 +260,9 @@ async function main() {
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--input' && args[i + 1]) {
-      inputDir = args[++i];
+      inputDir = args[++i]!;
     } else if (args[i] === '--output' && args[i + 1]) {
-      outputPath = args[++i];
+      outputPath = args[++i]!;
     }
   }
 

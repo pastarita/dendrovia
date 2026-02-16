@@ -11,7 +11,7 @@
  */
 
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import { useGameStore, getGameSaveSnapshot } from './GameStore.js';
+import { useGameStore, getGameSaveSnapshot } from './GameStore';
 
 export interface AutoSaveConfig {
   /** Interval in ms between auto-saves (default: 30000 = 30s) */

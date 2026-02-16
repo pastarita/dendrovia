@@ -14,7 +14,7 @@
  */
 
 import type { Character, Quest, Item } from '@dendrovia/shared';
-import { useGameStore, waitForHydration } from './GameStore.js';
+import { useGameStore, waitForHydration } from './GameStore';
 
 // ── Types ────────────────────────────────────────────────────
 

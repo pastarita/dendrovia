@@ -27,14 +27,14 @@
  */
 
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import { CacheManager } from './cache/CacheManager.js';
-import { AssetLoader } from './loader/AssetLoader.js';
-import { CDNLoader, type CDNConfig } from './loader/CDNLoader.js';
-import { useGameStore, waitForHydration } from './persistence/GameStore.js';
-import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave.js';
-import { CrossTabSync, type CrossTabConfig, type TabRole } from './sync/CrossTabSync.js';
-import type { LoadProgress } from './loader/AssetLoader.js';
-import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth.js';
+import { CacheManager } from './cache/CacheManager';
+import { AssetLoader } from './loader/AssetLoader';
+import { CDNLoader, type CDNConfig } from './loader/CDNLoader';
+import { useGameStore, waitForHydration } from './persistence/GameStore';
+import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave';
+import { CrossTabSync, type CrossTabConfig, type TabRole } from './sync/CrossTabSync';
+import type { LoadProgress } from './loader/AssetLoader';
+import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth';
 
 export interface OperatusConfig {
   /** Base path for generated assets (default: '/generated') */

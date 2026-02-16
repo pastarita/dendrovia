@@ -18,7 +18,7 @@
 
 import { resolve, dirname } from 'path';
 import { stat } from 'fs/promises';
-import { ManifestGenerator } from './ManifestGenerator.js';
+import { ManifestGenerator } from './ManifestGenerator';
 
 // ── Resolve Paths ───────────────────────────────────────────────
 
@@ -32,9 +32,9 @@ function parseArgs(): { inputDir: string; outputPath: string } {
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--input' && args[i + 1]) {
-      inputDir = resolve(args[++i]);
+      inputDir = resolve(args[++i]!);
     } else if (args[i] === '--output' && args[i + 1]) {
-      outputPath = resolve(args[++i]);
+      outputPath = resolve(args[++i]!);
     }
   }
 

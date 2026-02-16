@@ -12,7 +12,7 @@
  *   - No Web Locks → all tabs are leaders (last-write-wins)
  */
 
-import { useGameStore } from '../persistence/GameStore.js';
+import { useGameStore } from '../persistence/GameStore';
 
 export interface CrossTabConfig {
   /** BroadcastChannel name (default: 'dendrovia-sync') */

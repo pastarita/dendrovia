@@ -7,8 +7,8 @@
  */
 
 // ── Initialization ───────────────────────────────────────────────
-export { initializeOperatus } from './init.js';
-export type { OperatusConfig, OperatusContext } from './init.js';
+export { initializeOperatus } from './init';
+export type { OperatusConfig, OperatusContext } from './init';
 
 // ── Cache layer ──────────────────────────────────────────────────
 export {
@@ -16,7 +16,7 @@ export {
   isOPFSSupported,
   IDBCache,
   CacheManager,
-} from './cache/index.js';
+} from './cache/index';
 export type {
   CacheEntry,
   CacheStats,
@@ -24,20 +24,20 @@ export type {
   CacheResult,
   StorageQuota,
   CacheEntryInfo,
-} from './cache/index.js';
+} from './cache/index';
 
 // ── Asset loaders ────────────────────────────────────────────────
 export {
   AssetLoader,
   AssetPriority,
   CDNLoader,
-} from './loader/index.js';
+} from './loader/index';
 export type {
   AssetDescriptor,
   LoadProgress,
   CDNConfig,
   DownloadProgress,
-} from './loader/index.js';
+} from './loader/index';
 
 // ── State persistence ────────────────────────────────────────────
 export {
@@ -53,7 +53,7 @@ export {
   getGameSaveSnapshot,
   AutoSave,
   StateAdapter,
-} from './persistence/index.js';
+} from './persistence/index';
 export type {
   PersistenceConfig,
   MigrationFn,
@@ -61,30 +61,30 @@ export type {
   GameStoreState,
   AutoSaveConfig,
   StateAdapterConfig,
-} from './persistence/index.js';
+} from './persistence/index';
 
 // ── Cross-tab sync ───────────────────────────────────────────────
-export { CrossTabSync } from './sync/index.js';
+export { CrossTabSync } from './sync/index';
 export type {
   CrossTabConfig,
   TabRole,
   TabStatus,
-} from './sync/index.js';
+} from './sync/index';
 
 // ── Performance monitoring ───────────────────────────────────────
-export { PerfMonitor, getPerfMonitor } from './perf/index.js';
+export { PerfMonitor, getPerfMonitor } from './perf/index';
 export type {
   PerfMetric,
   CacheMetrics,
   LoadingReport,
-} from './perf/index.js';
+} from './perf/index';
 
 // ── Service Worker registration ──────────────────────────────────
-export { registerServiceWorker, invalidateSWCache, precacheURLs } from './sw/index.js';
+export { registerServiceWorker, invalidateSWCache, precacheURLs } from './sw/index';
 export type {
   SWRegistrationConfig,
   SWController,
-} from './sw/index.js';
+} from './sw/index';
 
 // ── Manifest generation ──────────────────────────────────────────
 // ManifestGenerator uses Node APIs (crypto, fs) — import via subpath:
@@ -92,13 +92,13 @@ export type {
 export type {
   ManifestEntry,
   ManifestGeneratorConfig,
-} from './manifest/index.js';
+} from './manifest/index';
 
 // ── Multiplayer (stretch goal) ───────────────────────────────────
-export { MultiplayerClient } from './multiplayer/index.js';
+export { MultiplayerClient } from './multiplayer/index';
 export type {
   MultiplayerConfig,
   PlayerPresence,
   ConnectionState,
   MultiplayerMessage,
-} from './multiplayer/index.js';
+} from './multiplayer/index';

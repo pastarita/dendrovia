@@ -4,6 +4,10 @@
   "type": "module",
   "description": "The Renderer - WebGPU/R3F engine for procedural dendrites",
   "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./dendrite": "./src/dendrite/index.ts"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

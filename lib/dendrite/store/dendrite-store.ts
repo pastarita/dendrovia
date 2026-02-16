@@ -60,6 +60,8 @@ export function createDendriteStore(
         edges,
         fitViewTrigger: 0,
         phaseFilter: null,
+        selectedNodeId: null,
+        selectedEdgeId: null,
 
         setFixture: (id: string) =>
           set((state) => {
@@ -110,6 +112,24 @@ export function createDendriteStore(
           set((state) => {
             state.phaseFilter = phase;
             relayoutFromState(state);
+          }),
+
+        selectNode: (nodeId: string) =>
+          set((state) => {
+            state.selectedNodeId = nodeId;
+            state.selectedEdgeId = null;
+          }),
+
+        selectEdge: (edgeId: string) =>
+          set((state) => {
+            state.selectedEdgeId = edgeId;
+            state.selectedNodeId = null;
+          }),
+
+        clearSelection: () =>
+          set((state) => {
+            state.selectedNodeId = null;
+            state.selectedEdgeId = null;
           }),
 
         relayout: () =>

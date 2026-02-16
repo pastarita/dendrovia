@@ -28,6 +28,7 @@ function PhaseNodeInner({ data }: NodeProps) {
         fontSize: "0.8rem",
         fontWeight: 600,
         color: textColor,
+        cursor: hasChildren ? "pointer" : "default",
       }}
       title={data.description as string}
     >

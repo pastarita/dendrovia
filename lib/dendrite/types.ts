@@ -46,6 +46,37 @@ export interface SourceEdge {
   target: string;
   /** "pipeline-flow" = data flows between phases; "containment" = parent-child */
   relation: "pipeline-flow" | "containment";
+  /** Data type label displayed on pipeline-flow edges */
+  label?: string;
+  /** Boundary contract for pillar-to-pillar edges (L1) */
+  contracts?: BoundaryContract;
+}
+
+// ---------------------------------------------------------------------------
+// Boundary Contract Types (L1 — Contracts & Interfaces)
+// ---------------------------------------------------------------------------
+
+export interface BoundaryType {
+  name: string;
+  /** Package source, e.g. "@dendrovia/shared" */
+  source: string;
+  description: string;
+  fields?: string[];
+}
+
+export interface BoundaryEvent {
+  /** GameEvents constant name */
+  name: string;
+  /** Event key, e.g. "player:moved" */
+  key: string;
+  direction: "emit" | "consume";
+  payloadType?: string;
+}
+
+export interface BoundaryContract {
+  types: BoundaryType[];
+  events: BoundaryEvent[];
+  schema?: string;
 }
 
 export interface SourceDiagram {
@@ -100,6 +131,10 @@ export interface DendriteState {
   // Phase filter (null = show all)
   phaseFilter: string | null;
 
+  // Selection
+  selectedNodeId: string | null;
+  selectedEdgeId: string | null;
+
   // Actions
   setFixture: (id: string) => void;
   setDirection: (dir: LayoutDirection) => void;
@@ -108,6 +143,9 @@ export interface DendriteState {
   collapseAll: () => void;
   expandAll: () => void;
   setPhaseFilter: (phase: string | null) => void;
+  selectNode: (nodeId: string) => void;
+  selectEdge: (edgeId: string) => void;
+  clearSelection: () => void;
   relayout: () => void;
 
   // ReactFlow callbacks

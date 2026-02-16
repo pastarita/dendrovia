@@ -1,4 +1,5 @@
 import type { SourceDiagram } from "../types";
+import { BOUNDARY_CONTRACTS } from "../contracts";
 
 /**
  * Unified Dendrovia pipeline fixture — shows all 6 pillars
@@ -59,12 +60,12 @@ export const dendroviaFixture: SourceDiagram = {
   ],
   edges: [
     // Main pipeline flow: CHRONOS → IMAGINARIUM → ARCHITECTUS, then ARCHITECTUS feeds runtime pillars
-    { source: "dend-root", target: "dend-chronos", relation: "pipeline-flow" },
-    { source: "dend-chronos", target: "dend-imaginarium", relation: "pipeline-flow" },
-    { source: "dend-imaginarium", target: "dend-architectus", relation: "pipeline-flow" },
-    { source: "dend-architectus", target: "dend-ludus", relation: "pipeline-flow" },
-    { source: "dend-architectus", target: "dend-oculus", relation: "pipeline-flow" },
-    { source: "dend-architectus", target: "dend-operatus", relation: "pipeline-flow" },
+    { source: "dend-root", target: "dend-chronos", relation: "pipeline-flow", label: "Git Repository" },
+    { source: "dend-chronos", target: "dend-imaginarium", relation: "pipeline-flow", label: "CodeTopology", contracts: BOUNDARY_CONTRACTS["dend-chronos->dend-imaginarium"] },
+    { source: "dend-imaginarium", target: "dend-architectus", relation: "pipeline-flow", label: "Shaders + Palettes + Meshes", contracts: BOUNDARY_CONTRACTS["dend-imaginarium->dend-architectus"] },
+    { source: "dend-architectus", target: "dend-ludus", relation: "pipeline-flow", label: "Spatial Events", contracts: BOUNDARY_CONTRACTS["dend-architectus->dend-ludus"] },
+    { source: "dend-architectus", target: "dend-oculus", relation: "pipeline-flow", label: "World State", contracts: BOUNDARY_CONTRACTS["dend-architectus->dend-oculus"] },
+    { source: "dend-architectus", target: "dend-operatus", relation: "pipeline-flow", label: "Asset Manifest", contracts: BOUNDARY_CONTRACTS["dend-architectus->dend-operatus"] },
 
     // Containment for CHRONOS
     { source: "dend-chronos", target: "dend-chr-parse", relation: "containment" },

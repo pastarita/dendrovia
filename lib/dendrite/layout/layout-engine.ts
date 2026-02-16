@@ -107,7 +107,11 @@ function toFlowEdge(se: SourceEdge): Edge {
     source: se.source,
     target: se.target,
     type: "flowEdge",
-    data: { relation: se.relation },
+    data: {
+      relation: se.relation,
+      label: se.label,
+      contracts: se.contracts,
+    },
     animated: se.relation === "pipeline-flow",
   };
 }

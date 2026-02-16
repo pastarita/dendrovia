@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import {
   DEFAULT_SDFS,
-  countInstructions,
   type SDFTier,
-} from '@dendrovia/imaginarium';
+} from '@dendrovia/imaginarium/fallbacks';
+import { countInstructions } from '@dendrovia/imaginarium/utils/glsl';
 
 const TIER_ORDER: { tier: SDFTier; threshold: string }[] = [
   { tier: 'simple-trunk', threshold: '\u22643' },

@@ -1,0 +1,7 @@
+{
+  "type": "perlin",
+  "octaves": 8,
+  "frequency": 1.2,
+  "amplitude": 0.515836249209525,
+  "seed": 43092
+}

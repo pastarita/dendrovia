@@ -1,0 +1,753 @@
+{
+  "version": "1.0.0",
+  "files": [
+    {
+      "path": "__tests__/commit-classifier.test.ts",
+      "cyclomatic": 9,
+      "loc": 376,
+      "functions": []
+    },
+    {
+      "path": "__tests__/complexity-analyzer.test.ts",
+      "cyclomatic": 1,
+      "loc": 433,
+      "functions": [
+        {
+          "name": "createSourceFile",
+          "startLine": 13,
+          "endLine": 16,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 4,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "__tests__/contributor-profiler.test.ts",
+      "cyclomatic": 1,
+      "loc": 436,
+      "functions": [
+        {
+          "name": "makeCommit",
+          "startLine": 13,
+          "endLine": 31,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 19,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeCommitsOfType",
+          "startLine": 36,
+          "endLine": 47,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 12,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "__tests__/hotspot-detector.test.ts",
+      "cyclomatic": 7,
+      "loc": 313,
+      "functions": [
+        {
+          "name": "makeFile",
+          "startLine": 8,
+          "endLine": 22,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 15,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeCommit",
+          "startLine": 24,
+          "endLine": 42,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 19,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "__tests__/topology-builder.test.ts",
+      "cyclomatic": 1,
+      "loc": 258,
+      "functions": [
+        {
+          "name": "makeFile",
+          "startLine": 15,
+          "endLine": 25,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 11,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeCommit",
+          "startLine": 27,
+          "endLine": 40,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 14,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeTree",
+          "startLine": 42,
+          "endLine": 53,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 12,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeHotspot",
+          "startLine": 55,
+          "endLine": 57,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 3,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeCoupling",
+          "startLine": 59,
+          "endLine": 66,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 8,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeFunctionComplexity",
+          "startLine": 68,
+          "endLine": 80,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 13,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeContributor",
+          "startLine": 82,
+          "endLine": 104,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 23,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "makeInput",
+          "startLine": 106,
+          "endLine": 124,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 19,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "__tests__/tree-builder.test.ts",
+      "cyclomatic": 1,
+      "loc": 307,
+      "functions": [
+        {
+          "name": "makeFile",
+          "startLine": 12,
+          "endLine": 22,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 11,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/analyzer/ComplexityAnalyzer.ts",
+      "cyclomatic": 26,
+      "loc": 219,
+      "functions": [
+        {
+          "name": "analyzeFileComplexity",
+          "startLine": 68,
+          "endLine": 79,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 12,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "analyzeFunctionComplexities",
+          "startLine": 84,
+          "endLine": 142,
+          "complexity": {
+            "cyclomatic": 10,
+            "cognitive": 11,
+            "loc": 59,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "calculateCyclomatic",
+          "startLine": 147,
+          "endLine": 165,
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 5,
+            "loc": 19,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "calculateCognitive",
+          "startLine": 170,
+          "endLine": 209,
+          "complexity": {
+            "cyclomatic": 8,
+            "cognitive": 9,
+            "loc": 40,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "toDifficulty",
+          "startLine": 211,
+          "endLine": 218,
+          "complexity": {
+            "cyclomatic": 6,
+            "cognitive": 5,
+            "loc": 8,
+            "difficulty": "easy"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/analyzer/HotspotDetector.ts",
+      "cyclomatic": 21,
+      "loc": 140,
+      "functions": [
+        {
+          "name": "detectHotspots",
+          "startLine": 23,
+          "endLine": 82,
+          "complexity": {
+            "cyclomatic": 7,
+            "cognitive": 8,
+            "loc": 60,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "buildChurnMap",
+          "startLine": 87,
+          "endLine": 95,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 4,
+            "loc": 9,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "detectTemporalCouplings",
+          "startLine": 101,
+          "endLine": 139,
+          "complexity": {
+            "cyclomatic": 12,
+            "cognitive": 19,
+            "loc": 39,
+            "difficulty": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/builder/ContributorProfiler.ts",
+      "cyclomatic": 31,
+      "loc": 213,
+      "functions": [
+        {
+          "name": "profileContributors",
+          "startLine": 54,
+          "endLine": 73,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 4,
+            "loc": 20,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "buildProfile",
+          "startLine": 75,
+          "endLine": 133,
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 6,
+            "loc": 59,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "determineArchetype",
+          "startLine": 135,
+          "endLine": 156,
+          "complexity": {
+            "cyclomatic": 9,
+            "cognitive": 8,
+            "loc": 22,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "archetypeToClass",
+          "startLine": 158,
+          "endLine": 172,
+          "complexity": {
+            "cyclomatic": 9,
+            "cognitive": 1,
+            "loc": 15,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "determineTimeArchetype",
+          "startLine": 174,
+          "endLine": 179,
+          "complexity": {
+            "cyclomatic": 7,
+            "cognitive": 6,
+            "loc": 6,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "computeFacets",
+          "startLine": 181,
+          "endLine": 212,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 32,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/builder/TopologyBuilder.ts",
+      "cyclomatic": 10,
+      "loc": 198,
+      "functions": [
+        {
+          "name": "buildLanguageDistribution",
+          "startLine": 75,
+          "endLine": 100,
+          "complexity": {
+            "cyclomatic": 6,
+            "cognitive": 5,
+            "loc": 26,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "buildContributorSummary",
+          "startLine": 105,
+          "endLine": 117,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 13,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "buildTopology",
+          "startLine": 122,
+          "endLine": 171,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 50,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "writeOutputFiles",
+          "startLine": 176,
+          "endLine": 197,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 22,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/builder/TreeBuilder.ts",
+      "cyclomatic": 19,
+      "loc": 108,
+      "functions": [
+        {
+          "name": "buildFileTree",
+          "startLine": 11,
+          "endLine": 36,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 26,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "insertPath",
+          "startLine": 38,
+          "endLine": 73,
+          "complexity": {
+            "cyclomatic": 9,
+            "cognitive": 12,
+            "loc": 36,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "sortTree",
+          "startLine": 75,
+          "endLine": 88,
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 5,
+            "loc": 14,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "countFiles",
+          "startLine": 93,
+          "endLine": 97,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 5,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "countDirectories",
+          "startLine": 102,
+          "endLine": 107,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 6,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/classifier/CommitClassifier.ts",
+      "cyclomatic": 10,
+      "loc": 125,
+      "functions": [
+        {
+          "name": "classifyCommit",
+          "startLine": 65,
+          "endLine": 81,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 3,
+            "loc": 17,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "parseConventional",
+          "startLine": 83,
+          "endLine": 99,
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 4,
+            "loc": 17,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "matchKeywords",
+          "startLine": 101,
+          "endLine": 112,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 3,
+            "loc": 12,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "commitFlags",
+          "startLine": 117,
+          "endLine": 124,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 8,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/index.ts",
+      "cyclomatic": 1,
+      "loc": 102,
+      "functions": []
+    },
+    {
+      "path": "src/parse.ts",
+      "cyclomatic": 3,
+      "loc": 62,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 30,
+          "endLine": 56,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 27,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/parser/ASTParser.ts",
+      "cyclomatic": 14,
+      "loc": 222,
+      "functions": [
+        {
+          "name": "createProject",
+          "startLine": 62,
+          "endLine": 73,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 12,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "detectLanguage",
+          "startLine": 78,
+          "endLine": 81,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 4,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "canParse",
+          "startLine": 86,
+          "endLine": 89,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 4,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "parseFile",
+          "startLine": 94,
+          "endLine": 144,
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 4,
+            "loc": 51,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "parseFiles",
+          "startLine": 149,
+          "endLine": 168,
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 7,
+            "loc": 20,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "buildStubFile",
+          "startLine": 174,
+          "endLine": 211,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 3,
+            "loc": 38,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "simpleHash",
+          "startLine": 213,
+          "endLine": 221,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 9,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/parser/GitParser.ts",
+      "cyclomatic": 29,
+      "loc": 312,
+      "functions": [
+        {
+          "name": "parseGitHistory",
+          "startLine": 54,
+          "endLine": 60,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 7,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "extractRawCommits",
+          "startLine": 65,
+          "endLine": 103,
+          "complexity": {
+            "cyclomatic": 7,
+            "cognitive": 6,
+            "loc": 39,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "parseLogOutput",
+          "startLine": 105,
+          "endLine": 115,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 3,
+            "loc": 11,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "parseRecord",
+          "startLine": 117,
+          "endLine": 169,
+          "complexity": {
+            "cyclomatic": 10,
+            "cognitive": 18,
+            "loc": 53,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "toCommit",
+          "startLine": 171,
+          "endLine": 192,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 22,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "listFilesAtHead",
+          "startLine": 197,
+          "endLine": 212,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 16,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "getHeadHash",
+          "startLine": 217,
+          "endLine": 232,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 16,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "getFileChurnCounts",
+          "startLine": 237,
+          "endLine": 268,
+          "complexity": {
+            "cyclomatic": 6,
+            "cognitive": 6,
+            "loc": 32,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "extractRepositoryMetadata",
+          "startLine": 273,
+          "endLine": 311,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 39,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    }
+  ]
+}

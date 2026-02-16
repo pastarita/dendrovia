@@ -8,3 +8,4 @@ export * from './types/index';
 export * from './events/EventBus';
 export * from './contracts/index';
 export * from './schemas';
+export * from './magnitude';

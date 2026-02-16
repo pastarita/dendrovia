@@ -12,7 +12,7 @@ import type {
   SubstrateType,
   FungalGenus,
 } from './types';
-import { buildTaxonomy, buildFileContext, buildCoChurnMap, type FileContext } from './GenusMapper';
+import { buildTaxonomy, buildFileContext, buildCoChurnMap, type FileContext, type TopologyInvariants } from './GenusMapper';
 import { generateMorphology } from './MorphologyGenerator';
 import { generateLore } from './LoreGenerator';
 import { hashString } from '../utils/hash';
@@ -104,14 +104,18 @@ function deriveClusterSize(genus: FungalGenus, file: ParsedFile): number {
 // Public API
 // ---------------------------------------------------------------------------
 
-export function catalogize(topology: CodeTopology): FungalSpecimen[] {
+export function catalogize(
+  topology: CodeTopology,
+  coChurnMap?: Map<string, Set<string>>,
+  invariants?: TopologyInvariants,
+): FungalSpecimen[] {
   const filesToCatalog = topology.files.filter(shouldCatalog);
-  const coChurnMap = buildCoChurnMap(topology);
+  const resolvedCoChurn = coChurnMap ?? buildCoChurnMap(topology);
   const specimens: FungalSpecimen[] = [];
 
   for (let i = 0; i < filesToCatalog.length; i++) {
     const file = filesToCatalog[i]!;
-    const ctx = buildFileContext(file, topology, coChurnMap);
+    const ctx = buildFileContext(file, topology, resolvedCoChurn, invariants);
     const taxonomy = buildTaxonomy(file, ctx);
     const morphology = generateMorphology(file, ctx, taxonomy.genus);
     const lore = generateLore(file, ctx, taxonomy);

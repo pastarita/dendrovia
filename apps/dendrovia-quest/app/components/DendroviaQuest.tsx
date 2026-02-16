@@ -50,6 +50,14 @@ import {
 
 // ─── Configuration ────────────────────────────────────────────
 
+export interface WorldMeta {
+  name: string;
+  owner: string;
+  repo: string;
+  description: string;
+  tincture: { hex: string; name: string };
+}
+
 export interface DendroviaQuestProps {
   /** Path to CHRONOS topology JSON (optional) */
   topologyPath?: string;
@@ -65,6 +73,8 @@ export interface DendroviaQuestProps {
   characterClass?: CharacterClass;
   /** Character name (default: 'Explorer') */
   characterName?: string;
+  /** Metadata about the world being explored */
+  worldMeta?: WorldMeta;
   /** Children rendered inside the OCULUS provider, after HUD */
   children?: ReactNode;
 }
@@ -76,6 +86,17 @@ function UiHoverBridge() {
   useEffect(() => {
     useRendererStore.getState().setUiHovered(isUiHovered);
   }, [isUiHovered]);
+  return null;
+}
+
+// ─── Bridge ARCHITECTUS performance metrics → OCULUS store ──
+
+function PerformanceBridge() {
+  const fps = useRendererStore((s) => s.fps);
+  const qualityTier = useRendererStore((s) => s.qualityTier);
+  useEffect(() => {
+    useOculusStore.getState().setPerformance(fps, qualityTier);
+  }, [fps, qualityTier]);
   return null;
 }
 
@@ -137,6 +158,7 @@ export function DendroviaQuest({
   enableOculus = true,
   characterClass = 'dps',
   characterName = 'Explorer',
+  worldMeta,
   children,
 }: DendroviaQuestProps) {
   // ── Refs (persist across renders, no re-render on mutation) ──
@@ -157,6 +179,11 @@ export function DendroviaQuest({
     }
     return eventBusRef.current;
   }, []);
+
+  // ── Push worldMeta into OCULUS store ──
+  useEffect(() => {
+    useOculusStore.getState().setWorldMeta(worldMeta ?? null);
+  }, [worldMeta]);
 
   // ── Initialization pipeline ──
   useEffect(() => {
@@ -274,10 +301,10 @@ export function DendroviaQuest({
   }, [
     enableOperatus,
     enableLudus,
-    topologyPath,
-    manifestPath,
     characterClass,
     characterName,
+    topologyPath,
+    manifestPath,
     getOrCreateEventBus,
   ]);
 
@@ -304,6 +331,7 @@ export function DendroviaQuest({
       />
       {enableOculus && <HUD />}
       {enableOculus && <UiHoverBridge />}
+      {enableOculus && <PerformanceBridge />}
       {children}
     </div>
   );

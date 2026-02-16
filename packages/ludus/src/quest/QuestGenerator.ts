@@ -20,6 +20,11 @@ import type {
   Hotspot,
 } from '@dendrovia/shared';
 
+// ─── Quest Budget ───────────────────────────────────────────
+
+/** Hard cap on total quests to prevent unbounded generation */
+const MAX_QUESTS_DEFAULT = 100;
+
 // ─── Quest ID Generation ────────────────────────────────────
 
 let questIdCounter = 0;
@@ -108,14 +113,35 @@ function generateQuestDescription(type: Quest['type'], commit: ParsedCommit): st
   }
 }
 
+// ─── Sampling ───────────────────────────────────────────────
+
+/**
+ * Evenly sample `n` items from an array, preserving order.
+ * Picks items at regular intervals so the sample spans the full range.
+ */
+function sampleEvenly<T>(items: T[], n: number): T[] {
+  if (items.length <= n) return items;
+  const step = items.length / n;
+  const result: T[] = [];
+  for (let i = 0; i < n; i++) {
+    result.push(items[Math.floor(i * step)]);
+  }
+  return result;
+}
+
 // ─── Main Generation Functions ──────────────────────────────
 
 /** Generate a quest graph from a list of parsed commits */
-export function generateQuestGraph(commits: ParsedCommit[]): Quest[] {
+export function generateQuestGraph(
+  commits: ParsedCommit[],
+  maxQuests: number = MAX_QUESTS_DEFAULT,
+): Quest[] {
+  // Sample commits evenly across history for diverse coverage
+  const sampled = sampleEvenly(commits, maxQuests);
   const quests: Quest[] = [];
   let prevQuestId: string | null = null;
 
-  for (const commit of commits) {
+  for (const commit of sampled) {
     const type = inferQuestType(commit);
     const id = nextQuestId();
 
@@ -149,20 +175,28 @@ export function generateQuestGraph(commits: ParsedCommit[]): Quest[] {
 }
 
 /** Generate quests specifically from bug-fix commits */
-export function generateBugHuntQuests(commits: ParsedCommit[]): Quest[] {
+export function generateBugHuntQuests(
+  commits: ParsedCommit[],
+  maxQuests: number = MAX_QUESTS_DEFAULT,
+): Quest[] {
   const bugCommits = commits.filter(c => c.isBugFix);
-  return generateQuestGraph(bugCommits);
+  return generateQuestGraph(bugCommits, maxQuests);
 }
 
 /** Generate archaeology quests from old/high-complexity files */
 export function generateArchaeologyQuests(
   files: ParsedFile[],
   complexityThreshold: number = 15,
+  maxQuests: number = MAX_QUESTS_DEFAULT,
 ): Quest[] {
-  const complexFiles = files.filter(f => f.complexity > complexityThreshold);
+  // Sort by complexity desc so we get the most interesting files first
+  const complexFiles = files
+    .filter(f => f.complexity > complexityThreshold)
+    .sort((a, b) => b.complexity - a.complexity);
+  const sampled = sampleEvenly(complexFiles, maxQuests);
   const quests: Quest[] = [];
 
-  for (const file of complexFiles) {
+  for (const file of sampled) {
     const id = nextQuestId();
     const xp = Math.floor(50 + file.complexity * 5);
 
@@ -184,10 +218,16 @@ export function generateArchaeologyQuests(
 }
 
 /** Generate boss quests from hotspots */
-export function generateHotspotQuests(hotspots: Hotspot[]): Quest[] {
+export function generateHotspotQuests(
+  hotspots: Hotspot[],
+  maxQuests: number = MAX_QUESTS_DEFAULT,
+): Quest[] {
+  // Sort by risk desc so we get the most dangerous hotspots first
+  const sorted = [...hotspots].sort((a, b) => b.riskScore - a.riskScore);
+  const sampled = sampleEvenly(sorted, maxQuests);
   const quests: Quest[] = [];
 
-  for (const hotspot of hotspots) {
+  for (const hotspot of sampled) {
     const id = nextQuestId();
     const fileName = hotspot.path.split('/').pop() ?? hotspot.path;
     const xp = Math.floor(100 + hotspot.riskScore * 50);

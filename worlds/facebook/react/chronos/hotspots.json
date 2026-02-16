@@ -1,0 +1,523 @@
+{
+  "version": "1.0.0",
+  "hotspots": [
+    {
+      "path": "packages/react-devtools-shared/src/backend/fiber/renderer.js",
+      "churnRate": 12,
+      "complexity": 1521,
+      "riskScore": 1
+    },
+    {
+      "path": "packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js",
+      "churnRate": 9,
+      "complexity": 988,
+      "riskScore": 0.583
+    },
+    {
+      "path": "packages/react-server/src/ReactFlightServer.js",
+      "churnRate": 6,
+      "complexity": 937,
+      "riskScore": 0.467
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberCommitWork.js",
+      "churnRate": 5,
+      "complexity": 987,
+      "riskScore": 0.453
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberWorkLoop.js",
+      "churnRate": 4,
+      "complexity": 715,
+      "riskScore": 0.295
+    },
+    {
+      "path": "packages/react-server/src/ReactFizzServer.js",
+      "churnRate": 3,
+      "complexity": 742,
+      "riskScore": 0.264
+    },
+    {
+      "path": "packages/react-dom-bindings/src/server/ReactFizzConfigDOM.js",
+      "churnRate": 1,
+      "complexity": 1134,
+      "riskScore": 0.201
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberBeginWork.js",
+      "churnRate": 4,
+      "complexity": 456,
+      "riskScore": 0.188
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/Inference/InferMutationAliasingEffects.ts",
+      "churnRate": 3,
+      "complexity": 480,
+      "riskScore": 0.171
+    },
+    {
+      "path": "compiler/packages/snap/src/minimize.ts",
+      "churnRate": 4,
+      "complexity": 383,
+      "riskScore": 0.158
+    },
+    {
+      "path": "packages/react-dom-bindings/src/client/ReactDOMComponent.js",
+      "churnRate": 1,
+      "complexity": 833,
+      "riskScore": 0.148
+    },
+    {
+      "path": "packages/react-devtools-shared/src/devtools/store.js",
+      "churnRate": 6,
+      "complexity": 273,
+      "riskScore": 0.136
+    },
+    {
+      "path": "packages/react-client/src/ReactFlightClient.js",
+      "churnRate": 6,
+      "complexity": 252,
+      "riskScore": 0.126
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/HIR/BuildHIR.ts",
+      "churnRate": 2,
+      "complexity": 423,
+      "riskScore": 0.119
+    },
+    {
+      "path": "packages/eslint-plugin-react-hooks/src/rules/ExhaustiveDeps.ts",
+      "churnRate": 2,
+      "complexity": 408,
+      "riskScore": 0.115
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/CodegenReactiveFunction.ts",
+      "churnRate": 3,
+      "complexity": 324,
+      "riskScore": 0.115
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberHooks.js",
+      "churnRate": 2,
+      "complexity": 395,
+      "riskScore": 0.111
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/HIR/visitors.ts",
+      "churnRate": 3,
+      "complexity": 294,
+      "riskScore": 0.104
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactChildFiber.js",
+      "churnRate": 2,
+      "complexity": 364,
+      "riskScore": 0.103
+    },
+    {
+      "path": "scripts/bench/benchmarks/pe-class-components/benchmark.js",
+      "churnRate": 1,
+      "complexity": 499,
+      "riskScore": 0.089
+    },
+    {
+      "path": "scripts/bench/benchmarks/pe-functional-components/benchmark.js",
+      "churnRate": 1,
+      "complexity": 499,
+      "riskScore": 0.089
+    },
+    {
+      "path": "scripts/bench/benchmarks/pe-no-components/benchmark.js",
+      "churnRate": 1,
+      "complexity": 499,
+      "riskScore": 0.089
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/HIR/PrintHIR.ts",
+      "churnRate": 3,
+      "complexity": 216,
+      "riskScore": 0.077
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberApplyGesture.js",
+      "churnRate": 4,
+      "complexity": 185,
+      "riskScore": 0.076
+    },
+    {
+      "path": "packages/react-devtools-shared/src/utils.js",
+      "churnRate": 2,
+      "complexity": 231,
+      "riskScore": 0.065
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/Validation/ValidateExhaustiveDependencies.ts",
+      "churnRate": 3,
+      "complexity": 184,
+      "riskScore": 0.065
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/BuildReactiveFunction.ts",
+      "churnRate": 4,
+      "complexity": 143,
+      "riskScore": 0.059
+    },
+    {
+      "path": "packages/react-client/src/ReactFlightReplyClient.js",
+      "churnRate": 4,
+      "complexity": 141,
+      "riskScore": 0.058
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/Entrypoint/Program.ts",
+      "churnRate": 2,
+      "complexity": 206,
+      "riskScore": 0.058
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberCompleteWork.js",
+      "churnRate": 1,
+      "complexity": 310,
+      "riskScore": 0.055
+    },
+    {
+      "path": "packages/react-client/src/__tests__/ReactFlight-test.js",
+      "churnRate": 7,
+      "complexity": 102,
+      "riskScore": 0.054
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberLane.js",
+      "churnRate": 2,
+      "complexity": 188,
+      "riskScore": 0.053
+    },
+    {
+      "path": "flow-typed/environments/dom.js",
+      "churnRate": 2,
+      "complexity": 189,
+      "riskScore": 0.053
+    },
+    {
+      "path": "packages/react-dom/src/__tests__/ReactDOMFizzServer-test.js",
+      "churnRate": 4,
+      "complexity": 127,
+      "riskScore": 0.052
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/Validation/ValidateNoRefAccessInRender.ts",
+      "churnRate": 2,
+      "complexity": 183,
+      "riskScore": 0.052
+    },
+    {
+      "path": "packages/react-devtools-shared/src/devtools/views/Components/TreeContext.js",
+      "churnRate": 2,
+      "complexity": 177,
+      "riskScore": 0.05
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/TypeInference/InferTypes.ts",
+      "churnRate": 2,
+      "complexity": 170,
+      "riskScore": 0.048
+    },
+    {
+      "path": "packages/shared/ReactPerformanceTrackProperties.js",
+      "churnRate": 5,
+      "complexity": 101,
+      "riskScore": 0.046
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/Inference/InferMutationAliasingRanges.ts",
+      "churnRate": 2,
+      "complexity": 157,
+      "riskScore": 0.044
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/ReactiveScopes/PruneNonEscapingScopes.ts",
+      "churnRate": 2,
+      "complexity": 151,
+      "riskScore": 0.043
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberPerformanceTrack.js",
+      "churnRate": 1,
+      "complexity": 241,
+      "riskScore": 0.043
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberTreeReflection.js",
+      "churnRate": 3,
+      "complexity": 119,
+      "riskScore": 0.042
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/Optimization/ConstantPropagation.ts",
+      "churnRate": 2,
+      "complexity": 148,
+      "riskScore": 0.042
+    },
+    {
+      "path": "packages/react-reconciler/src/ReactFiberClassComponent.js",
+      "churnRate": 1,
+      "complexity": 238,
+      "riskScore": 0.042
+    },
+    {
+      "path": "packages/react-server-dom-parcel/src/server/ReactFlightDOMServerNode.js",
+      "churnRate": 4,
+      "complexity": 94,
+      "riskScore": 0.039
+    },
+    {
+      "path": "packages/react-server-dom-turbopack/src/server/ReactFlightDOMServerNode.js",
+      "churnRate": 4,
+      "complexity": 93,
+      "riskScore": 0.038
+    },
+    {
+      "path": "compiler/packages/babel-plugin-react-compiler/src/Validation/ValidateNoDerivedComputationsInEffects_exp.ts",
+      "churnRate": 2,
+      "complexity": 136,
+      "riskScore": 0.038
+    },
+    {
+      "path": "fixtures/legacy-jsx-runtimes/react-17/cjs/react-jsx-dev-runtime.development.js",
+      "churnRate": 1,
+      "complexity": 216,
+      "riskScore": 0.038
+    },
+    {
+      "path": "fixtures/legacy-jsx-runtimes/react-17/cjs/react-jsx-runtime.development.js",
+      "churnRate": 1,
+      "complexity": 216,
+      "riskScore": 0.038
+    },
+    {
+      "path": "packages/react-devtools-extensions/src/main/index.js",
+      "churnRate": 6,
+      "complexity": 70,
+      "riskScore": 0.035
+    }
+  ],
+  "temporalCouplings": [
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 10,
+      "strength": 0.9090909090909091
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "coChangeCount": 9,
+      "strength": 0.9
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "coChangeCount": 9,
+      "strength": 0.9
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "coChangeCount": 9,
+      "strength": 0.9
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 9,
+      "strength": 0.8181818181818182
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "coChangeCount": 8,
+      "strength": 0.8
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "coChangeCount": 8,
+      "strength": 0.8
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "coChangeCount": 8,
+      "strength": 0.8
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "coChangeCount": 8,
+      "strength": 0.7272727272727273
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "coChangeCount": 8,
+      "strength": 0.7272727272727273
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 8,
+      "strength": 0.7272727272727273
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "coChangeCount": 8,
+      "strength": 0.7272727272727273
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 8,
+      "strength": 0.7272727272727273
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "coChangeCount": 7,
+      "strength": 0.7
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "coChangeCount": 7,
+      "strength": 0.7
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "coChangeCount": 7,
+      "strength": 0.7
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "coChangeCount": 7,
+      "strength": 0.6363636363636364
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "coChangeCount": 6,
+      "strength": 0.6
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www-dynamic.js",
+      "coChangeCount": 6,
+      "strength": 0.6
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.native-fb.js",
+      "coChangeCount": 6,
+      "strength": 0.5454545454545454
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.www.js",
+      "coChangeCount": 6,
+      "strength": 0.5454545454545454
+    },
+    {
+      "fileA": "packages/shared/ReactFeatureFlags.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "coChangeCount": 5,
+      "strength": 0.5
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.native-oss.js",
+      "coChangeCount": 5,
+      "strength": 0.5
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "coChangeCount": 5,
+      "strength": 0.5
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.www.js",
+      "coChangeCount": 5,
+      "strength": 0.5
+    },
+    {
+      "fileA": "packages/shared/forks/ReactFeatureFlags.native-fb-dynamic.js",
+      "fileB": "packages/shared/forks/ReactFeatureFlags.test-renderer.js",
+      "coChangeCount": 5,
+      "strength": 0.45454545454545453
+    }
+  ]
+}

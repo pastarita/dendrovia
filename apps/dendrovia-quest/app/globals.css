@@ -1,3 +1,4 @@
+/* ── OCULUS Design System ─────────────────────────────────── */
 @import '@dendrovia/oculus/src/styles/tokens.css';
 @import '@dendrovia/oculus/src/styles/ornate-frame.css';
 @import '@dendrovia/oculus/src/styles/animations.css';
@@ -79,4 +80,3 @@ a {
   mix-blend-mode: overlay;
   pointer-events: none;
 }
-

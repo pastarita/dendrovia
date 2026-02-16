@@ -1,0 +1,159 @@
+{
+  "version": "1.0.0",
+  "files": [
+    {
+      "path": "scripts/auto-close-duplicates.ts",
+      "cyclomatic": 22,
+      "loc": 278,
+      "functions": [
+        {
+          "name": "githubRequest",
+          "startLine": 28,
+          "endLine": 47,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 3,
+            "loc": 20,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "extractDuplicateIssueNumber",
+          "startLine": 49,
+          "endLine": 63,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 15,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "closeIssueAsDuplicate",
+          "startLine": 66,
+          "endLine": 97,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 32,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "autoCloseDuplicates",
+          "startLine": 99,
+          "endLine": 272,
+          "complexity": {
+            "cyclomatic": 17,
+            "cognitive": 24,
+            "loc": 174,
+            "difficulty": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "path": "scripts/backfill-duplicate-comments.ts",
+      "cyclomatic": 26,
+      "loc": 213,
+      "functions": [
+        {
+          "name": "githubRequest",
+          "startLine": 26,
+          "endLine": 45,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 3,
+            "loc": 20,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "triggerDedupeWorkflow",
+          "startLine": 47,
+          "endLine": 70,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 24,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "backfillDuplicateComments",
+          "startLine": 72,
+          "endLine": 208,
+          "complexity": {
+            "cyclomatic": 22,
+            "cognitive": 35,
+            "loc": 137,
+            "difficulty": "hard"
+          }
+        }
+      ]
+    },
+    {
+      "path": "scripts/issue-lifecycle.ts",
+      "cyclomatic": 1,
+      "loc": 39,
+      "functions": []
+    },
+    {
+      "path": "scripts/lifecycle-comment.ts",
+      "cyclomatic": 9,
+      "loc": 54,
+      "functions": []
+    },
+    {
+      "path": "scripts/sweep.ts",
+      "cyclomatic": 33,
+      "loc": 152,
+      "functions": [
+        {
+          "name": "githubRequest",
+          "startLine": 15,
+          "endLine": 41,
+          "complexity": {
+            "cyclomatic": 6,
+            "cognitive": 6,
+            "loc": 27,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "markStale",
+          "startLine": 45,
+          "endLine": 93,
+          "complexity": {
+            "cyclomatic": 13,
+            "cognitive": 29,
+            "loc": 49,
+            "difficulty": "medium"
+          }
+        },
+        {
+          "name": "closeExpired",
+          "startLine": 95,
+          "endLine": 137,
+          "complexity": {
+            "cyclomatic": 11,
+            "cognitive": 28,
+            "loc": 43,
+            "difficulty": "medium"
+          }
+        },
+        {
+          "name": "CLOSE_MESSAGE",
+          "startLine": 10,
+          "endLine": 11,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 2,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    }
+  ]
+}

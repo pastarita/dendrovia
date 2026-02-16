@@ -1,0 +1,187 @@
+{
+  "version": "1.0.0",
+  "worlds": [
+    {
+      "slug": "facebook/react",
+      "name": "React",
+      "owner": "facebook",
+      "repo": "react",
+      "description": "A JavaScript library for building user interfaces",
+      "status": "playable",
+      "analyzedAt": "2026-02-16T00:35:14.742Z",
+      "headHash": "e8c6362678c8bc86a02b8444d2c3f597b3dc4e22",
+      "stats": {
+        "fileCount": 6996,
+        "commitCount": 100,
+        "hotspotCount": 50,
+        "languageCount": 9,
+        "contributorCount": 15,
+        "languages": [
+          {
+            "language": "Javascript",
+            "fileCount": 3897,
+            "percentage": 55.7
+          },
+          {
+            "language": "Markdown",
+            "fileCount": 1995,
+            "percentage": 28.5
+          },
+          {
+            "language": "Typescript",
+            "fileCount": 522,
+            "percentage": 7.5
+          },
+          {
+            "language": "Unknown",
+            "fileCount": 206,
+            "percentage": 2.9
+          },
+          {
+            "language": "Json",
+            "fileCount": 145,
+            "percentage": 2.1
+          },
+          {
+            "language": "Css",
+            "fileCount": 112,
+            "percentage": 1.6
+          },
+          {
+            "language": "Html",
+            "fileCount": 79,
+            "percentage": 1.1
+          },
+          {
+            "language": "Yaml",
+            "fileCount": 29,
+            "percentage": 0.4
+          },
+          {
+            "language": "Shell",
+            "fileCount": 11,
+            "percentage": 0.2
+          }
+        ]
+      },
+      "magnitude": {
+        "score": 14,
+        "tier": "city",
+        "symbol": "***"
+      },
+      "tincture": {
+        "hex": "#3B82F6",
+        "name": "Azure"
+      },
+      "framePillar": "architectus"
+    },
+    {
+      "slug": "anthropics/claude-code",
+      "name": "Claude Code",
+      "owner": "anthropics",
+      "repo": "claude-code",
+      "description": "An agentic coding tool by Anthropic",
+      "status": "playable",
+      "analyzedAt": "2026-02-16T18:05:53.614Z",
+      "headHash": "8c09097e8c2565c4c9c107cb9ad1cfcb87366368",
+      "stats": {
+        "fileCount": 182,
+        "commitCount": 173,
+        "hotspotCount": 50,
+        "languageCount": 7,
+        "contributorCount": 22,
+        "languages": [
+          {
+            "language": "Markdown",
+            "fileCount": 100,
+            "percentage": 54.9
+          },
+          {
+            "language": "Json",
+            "fileCount": 26,
+            "percentage": 14.3
+          },
+          {
+            "language": "Yaml",
+            "fileCount": 17,
+            "percentage": 9.3
+          },
+          {
+            "language": "Shell",
+            "fileCount": 16,
+            "percentage": 8.8
+          },
+          {
+            "language": "Python",
+            "fileCount": 12,
+            "percentage": 6.6
+          },
+          {
+            "language": "Unknown",
+            "fileCount": 6,
+            "percentage": 3.3
+          },
+          {
+            "language": "Typescript",
+            "fileCount": 5,
+            "percentage": 2.7
+          }
+        ]
+      },
+      "magnitude": {
+        "score": 12,
+        "tier": "town",
+        "symbol": "**"
+      },
+      "tincture": {
+        "hex": "#A855F7",
+        "name": "Purpure"
+      },
+      "framePillar": "imaginarium"
+    },
+    {
+      "slug": "dendrovia",
+      "name": "Dendrovia",
+      "owner": "dendrovia",
+      "repo": "dendrovia",
+      "description": "Autogamification of codebase archaeologization",
+      "status": "playable",
+      "analyzedAt": "2026-02-15T01:25:34.772Z",
+      "headHash": "c32e65b5c5a6c63aeb7012286cc087e5e3f40431",
+      "stats": {
+        "fileCount": 19,
+        "commitCount": 123,
+        "hotspotCount": 50,
+        "languageCount": 3,
+        "contributorCount": 1,
+        "languages": [
+          {
+            "language": "Typescript",
+            "fileCount": 16,
+            "percentage": 84.2
+          },
+          {
+            "language": "Json",
+            "fileCount": 2,
+            "percentage": 10.5
+          },
+          {
+            "language": "Markdown",
+            "fileCount": 1,
+            "percentage": 5.3
+          }
+        ]
+      },
+      "magnitude": {
+        "score": 10,
+        "tier": "town",
+        "symbol": "**"
+      },
+      "tincture": {
+        "hex": "#c77b3f",
+        "name": "Amber"
+      },
+      "framePillar": "chronos"
+    }
+  ]
+}

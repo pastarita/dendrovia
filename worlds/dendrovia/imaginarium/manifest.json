@@ -1,0 +1,411 @@
+{
+  "version": "1.0.0",
+  "shaders": {
+    "sdf-global-dd230229": "shaders/sdf-global-dd230229.glsl",
+    "sdf-lang-typescript-0a6b42ae": "shaders/sdf-lang-typescript-0a6b42ae.glsl",
+    "sdf-complexity-high-17a178ad": "shaders/sdf-complexity-high-17a178ad.glsl",
+    "sdf-structural-adf0d3f5": "shaders/sdf-structural-adf0d3f5.glsl",
+    "sdf-hotspot-18ff2ab6": "shaders/sdf-hotspot-18ff2ab6.glsl"
+  },
+  "palettes": {
+    "global": "palettes/global.json",
+    "typescript": "palettes/typescript.json",
+    "json": "palettes/json.json",
+    "markdown": "palettes/markdown.json"
+  },
+  "topology": "/Users/Patmac/denroot/CHRONOS/dendrovia/worlds/dendrovia/chronos/topology.json",
+  "checksum": "ec8308432e8b84ff93311b32b4445b3892aa404fcf537b4a2ce3362e7f218463",
+  "mycology": {
+    "specimens": "mycology/specimens.json",
+    "network": "mycology/network.json",
+    "assetDir": "mycology/svg",
+    "specimenCount": 19
+  },
+  "meshes": {
+    "8865e12f3fafea1967ec6e3b0d33161ddba2df05fd89bff963a216d02ba28e6b-cap": {
+      "path": "meshes/8865e12f3fafea1967ec6e3b0d33161ddba2df05fd89bff963a216d02ba28e6b-cap.json",
+      "hash": "2672a3fc2ed12d9c",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115503,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "8865e12f3fafea1967ec6e3b0d33161ddba2df05fd89bff963a216d02ba28e6b-stem": {
+      "path": "meshes/8865e12f3fafea1967ec6e3b0d33161ddba2df05fd89bff963a216d02ba28e6b-stem.json",
+      "hash": "d372557a3438b469",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6728,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "996c16f518aa681aba94f28850ad736064664a7333da95eeedf87766f9a0c3fd-cap": {
+      "path": "meshes/996c16f518aa681aba94f28850ad736064664a7333da95eeedf87766f9a0c3fd-cap.json",
+      "hash": "9ccb4a7576f9c9fb",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115786,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "996c16f518aa681aba94f28850ad736064664a7333da95eeedf87766f9a0c3fd-stem": {
+      "path": "meshes/996c16f518aa681aba94f28850ad736064664a7333da95eeedf87766f9a0c3fd-stem.json",
+      "hash": "c54990e4be2519f0",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6729,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "e0aa1bcb18c62162ede10400ed4e13515da602ad8c861b0d8f148a5d0d420ea0-cap": {
+      "path": "meshes/e0aa1bcb18c62162ede10400ed4e13515da602ad8c861b0d8f148a5d0d420ea0-cap.json",
+      "hash": "78faf0d175d10dbe",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115786,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "e0aa1bcb18c62162ede10400ed4e13515da602ad8c861b0d8f148a5d0d420ea0-stem": {
+      "path": "meshes/e0aa1bcb18c62162ede10400ed4e13515da602ad8c861b0d8f148a5d0d420ea0-stem.json",
+      "hash": "76edc9e5f69a9b8c",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6689,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "b93e516effc6ed92e93d12129a746be0efdcfef986512108920ea33d8624f5a7-cap": {
+      "path": "meshes/b93e516effc6ed92e93d12129a746be0efdcfef986512108920ea33d8624f5a7-cap.json",
+      "hash": "9d69a53f4a7b8266",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115525,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "b93e516effc6ed92e93d12129a746be0efdcfef986512108920ea33d8624f5a7-stem": {
+      "path": "meshes/b93e516effc6ed92e93d12129a746be0efdcfef986512108920ea33d8624f5a7-stem.json",
+      "hash": "b33d265277a2fc72",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6699,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "acd624c1837f7bbc751962f5fb7ffe9d09cf806f25b555af48ea435cab6bc514-cap": {
+      "path": "meshes/acd624c1837f7bbc751962f5fb7ffe9d09cf806f25b555af48ea435cab6bc514-cap.json",
+      "hash": "81c9cab2a9066b98",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115786,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "acd624c1837f7bbc751962f5fb7ffe9d09cf806f25b555af48ea435cab6bc514-stem": {
+      "path": "meshes/acd624c1837f7bbc751962f5fb7ffe9d09cf806f25b555af48ea435cab6bc514-stem.json",
+      "hash": "3b24463f77fea38c",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6694,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "aadeffb43210e4698503656176149be04ffe3f5a6f9051a1a8e16632da80b3b8-cap": {
+      "path": "meshes/aadeffb43210e4698503656176149be04ffe3f5a6f9051a1a8e16632da80b3b8-cap.json",
+      "hash": "95fe5006e0859a97",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115786,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "aadeffb43210e4698503656176149be04ffe3f5a6f9051a1a8e16632da80b3b8-stem": {
+      "path": "meshes/aadeffb43210e4698503656176149be04ffe3f5a6f9051a1a8e16632da80b3b8-stem.json",
+      "hash": "4b1b728d319fa462",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6714,
+      "tier": "enriched",
+      "genusId": "Tuber"
+    },
+    "bcb082501502e086e10b4045867cdf3f2953a13c25f4ad71b000ece77bbef1d0-cap": {
+      "path": "meshes/bcb082501502e086e10b4045867cdf3f2953a13c25f4ad71b000ece77bbef1d0-cap.json",
+      "hash": "e11c4712776dfee7",
+      "format": "indexed",
+      "vertices": 3185,
+      "faces": 6144,
+      "size": 469967,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "bcb082501502e086e10b4045867cdf3f2953a13c25f4ad71b000ece77bbef1d0-stem": {
+      "path": "meshes/bcb082501502e086e10b4045867cdf3f2953a13c25f4ad71b000ece77bbef1d0-stem.json",
+      "hash": "1cd1dee76db64eac",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6680,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "fb675696e84843b2a473db129e499a1e2ad31b6e69dbc69b63f2d9c9e502b7b0-cap": {
+      "path": "meshes/fb675696e84843b2a473db129e499a1e2ad31b6e69dbc69b63f2d9c9e502b7b0-cap.json",
+      "hash": "c42781173cc66fc1",
+      "format": "indexed",
+      "vertices": 3185,
+      "faces": 6144,
+      "size": 469933,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "fb675696e84843b2a473db129e499a1e2ad31b6e69dbc69b63f2d9c9e502b7b0-stem": {
+      "path": "meshes/fb675696e84843b2a473db129e499a1e2ad31b6e69dbc69b63f2d9c9e502b7b0-stem.json",
+      "hash": "9b83a1bd4cb5497c",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6707,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "b692436637496af8181cd21b4ee55a4907b7e056171abbcc5874ea39898c1adc-cap": {
+      "path": "meshes/b692436637496af8181cd21b4ee55a4907b7e056171abbcc5874ea39898c1adc-cap.json",
+      "hash": "351ce13d2ad46686",
+      "format": "indexed",
+      "vertices": 3185,
+      "faces": 6144,
+      "size": 470306,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "b692436637496af8181cd21b4ee55a4907b7e056171abbcc5874ea39898c1adc-stem": {
+      "path": "meshes/b692436637496af8181cd21b4ee55a4907b7e056171abbcc5874ea39898c1adc-stem.json",
+      "hash": "ec6d348c0608364a",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6697,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "e520bed780d50ebabd8bbe8acb95594c4afa727d2eee01451e4dd145ae30aca6-cap": {
+      "path": "meshes/e520bed780d50ebabd8bbe8acb95594c4afa727d2eee01451e4dd145ae30aca6-cap.json",
+      "hash": "6fd786bb5e434dba",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115485,
+      "tier": "enriched",
+      "genusId": "Agaricus"
+    },
+    "e520bed780d50ebabd8bbe8acb95594c4afa727d2eee01451e4dd145ae30aca6-stem": {
+      "path": "meshes/e520bed780d50ebabd8bbe8acb95594c4afa727d2eee01451e4dd145ae30aca6-stem.json",
+      "hash": "507621dd9a060d0d",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6714,
+      "tier": "enriched",
+      "genusId": "Agaricus"
+    },
+    "988b2cc9d0c454e1a67f1e6b303afc9eec162cf54518015fb0a260fdfe6bebea-cap": {
+      "path": "meshes/988b2cc9d0c454e1a67f1e6b303afc9eec162cf54518015fb0a260fdfe6bebea-cap.json",
+      "hash": "0f2362194a5d11a9",
+      "format": "indexed",
+      "vertices": 3185,
+      "faces": 6144,
+      "size": 470268,
+      "tier": "enriched",
+      "genusId": "Phallus"
+    },
+    "988b2cc9d0c454e1a67f1e6b303afc9eec162cf54518015fb0a260fdfe6bebea-stem": {
+      "path": "meshes/988b2cc9d0c454e1a67f1e6b303afc9eec162cf54518015fb0a260fdfe6bebea-stem.json",
+      "hash": "9e81af6f6ab7e3ca",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6697,
+      "tier": "enriched",
+      "genusId": "Phallus"
+    },
+    "e7e2fc10f699c6ab4b57406ac4cf6456058107e034138ab74067360c848f651d-cap": {
+      "path": "meshes/e7e2fc10f699c6ab4b57406ac4cf6456058107e034138ab74067360c848f651d-cap.json",
+      "hash": "079e66eaacab756c",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115485,
+      "tier": "enriched",
+      "genusId": "Agaricus"
+    },
+    "e7e2fc10f699c6ab4b57406ac4cf6456058107e034138ab74067360c848f651d-stem": {
+      "path": "meshes/e7e2fc10f699c6ab4b57406ac4cf6456058107e034138ab74067360c848f651d-stem.json",
+      "hash": "eb689ccd0e3c09db",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6719,
+      "tier": "enriched",
+      "genusId": "Agaricus"
+    },
+    "efea1419476889c184582de0bbd7e37de98ca679ae94cf5653179c372c6f4cbe-cap": {
+      "path": "meshes/efea1419476889c184582de0bbd7e37de98ca679ae94cf5653179c372c6f4cbe-cap.json",
+      "hash": "a7a62b471851be85",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 115790,
+      "tier": "enriched",
+      "genusId": "Amanita"
+    },
+    "efea1419476889c184582de0bbd7e37de98ca679ae94cf5653179c372c6f4cbe-stem": {
+      "path": "meshes/efea1419476889c184582de0bbd7e37de98ca679ae94cf5653179c372c6f4cbe-stem.json",
+      "hash": "b80c76c21b0e0fc6",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6726,
+      "tier": "enriched",
+      "genusId": "Amanita"
+    },
+    "c3ff67c319478245574ff5f6c3e33a194bfa0a3e82d6f5935ddbae04085ede4c-cap": {
+      "path": "meshes/c3ff67c319478245574ff5f6c3e33a194bfa0a3e82d6f5935ddbae04085ede4c-cap.json",
+      "hash": "7d33d3edfe1ee4b7",
+      "format": "indexed",
+      "vertices": 625,
+      "faces": 1152,
+      "size": 87267,
+      "tier": "enriched",
+      "genusId": "Agaricus"
+    },
+    "c3ff67c319478245574ff5f6c3e33a194bfa0a3e82d6f5935ddbae04085ede4c-stem": {
+      "path": "meshes/c3ff67c319478245574ff5f6c3e33a194bfa0a3e82d6f5935ddbae04085ede4c-stem.json",
+      "hash": "e08ae357e1441e1c",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6713,
+      "tier": "enriched",
+      "genusId": "Agaricus"
+    },
+    "dbd7fcab8205b3def4b688f8689b6ba76433feae0dc12af2e2291688ef8d95ba-cap": {
+      "path": "meshes/dbd7fcab8205b3def4b688f8689b6ba76433feae0dc12af2e2291688ef8d95ba-cap.json",
+      "hash": "5ed2827a31d3cbf0",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 117264,
+      "tier": "enriched",
+      "genusId": "Ganoderma"
+    },
+    "dbd7fcab8205b3def4b688f8689b6ba76433feae0dc12af2e2291688ef8d95ba-stem": {
+      "path": "meshes/dbd7fcab8205b3def4b688f8689b6ba76433feae0dc12af2e2291688ef8d95ba-stem.json",
+      "hash": "83d444f3923e801b",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6695,
+      "tier": "enriched",
+      "genusId": "Ganoderma"
+    },
+    "79fd4f38fe716cb4a3837b3b689300525b9fed5f788234e37de1576daf5cf6f3-cap": {
+      "path": "meshes/79fd4f38fe716cb4a3837b3b689300525b9fed5f788234e37de1576daf5cf6f3-cap.json",
+      "hash": "21ba4470df4970c1",
+      "format": "indexed",
+      "vertices": 3185,
+      "faces": 6144,
+      "size": 470306,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "79fd4f38fe716cb4a3837b3b689300525b9fed5f788234e37de1576daf5cf6f3-stem": {
+      "path": "meshes/79fd4f38fe716cb4a3837b3b689300525b9fed5f788234e37de1576daf5cf6f3-stem.json",
+      "hash": "aaf56de498c9948f",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6676,
+      "tier": "enriched",
+      "genusId": "Morchella"
+    },
+    "f407f9cefc0e3ea0e5ecddd8d42e3a07f065621ee700e378d19e85089f1b89f1-cap": {
+      "path": "meshes/f407f9cefc0e3ea0e5ecddd8d42e3a07f065621ee700e378d19e85089f1b89f1-cap.json",
+      "hash": "be53df439dc3a5b6",
+      "format": "indexed",
+      "vertices": 825,
+      "faces": 1536,
+      "size": 117818,
+      "tier": "enriched",
+      "genusId": "Ganoderma"
+    },
+    "f407f9cefc0e3ea0e5ecddd8d42e3a07f065621ee700e378d19e85089f1b89f1-stem": {
+      "path": "meshes/f407f9cefc0e3ea0e5ecddd8d42e3a07f065621ee700e378d19e85089f1b89f1-stem.json",
+      "hash": "b4c978949d327be3",
+      "format": "indexed",
+      "vertices": 51,
+      "faces": 64,
+      "size": 6578,
+      "tier": "enriched",
+      "genusId": "Ganoderma"
+    },
+    "abaa25c6ba79d4d7d7470ecd7d3c664a8a6c679ce1e23c1e13052e54185279ca-cap": {
+      "path": "meshes/abaa25c6ba79d4d7d7470ecd7d3c664a8a6c679ce1e23c1e13052e54185279ca-cap.json",
+      "hash": "0f9aabc697d0138b",
+      "format": "indexed",
+      "vertices": 425,
+      "faces": 768,
+      "size": 58841,
+      "tier": "enriched",
+      "genusId": "Mycena"
+    },
+    "abaa25c6ba79d4d7d7470ecd7d3c664a8a6c679ce1e23c1e13052e54185279ca-stem": {
+      "path": "meshes/abaa25c6ba79d4d7d7470ecd7d3c664a8a6c679ce1e23c1e13052e54185279ca-stem.json",
+      "hash": "21b71b5ecf9209eb",
+      "format": "indexed",
+      "vertices": 39,
+      "faces": 48,
+      "size": 5034,
+      "tier": "enriched",
+      "genusId": "Mycena"
+    },
+    "df05546f9e904d6592c9f8eb99265aabc7bd26b738e6e8e2c3ded0b8007b6172-cap": {
+      "path": "meshes/df05546f9e904d6592c9f8eb99265aabc7bd26b738e6e8e2c3ded0b8007b6172-cap.json",
+      "hash": "d4d378e0a69f51dc",
+      "format": "indexed",
+      "vertices": 425,
+      "faces": 768,
+      "size": 59102,
+      "tier": "enriched",
+      "genusId": "Mycena"
+    },
+    "df05546f9e904d6592c9f8eb99265aabc7bd26b738e6e8e2c3ded0b8007b6172-stem": {
+      "path": "meshes/df05546f9e904d6592c9f8eb99265aabc7bd26b738e6e8e2c3ded0b8007b6172-stem.json",
+      "hash": "eedaa84b1aa9a1ec",
+      "format": "indexed",
+      "vertices": 39,
+      "faces": 48,
+      "size": 5062,
+      "tier": "enriched",
+      "genusId": "Mycena"
+    }
+  },
+  "storyArc": {
+    "arc": "story-arc.json",
+    "segmentAssets": "segment-assets.json",
+    "segmentCount": 3
+  }
+}

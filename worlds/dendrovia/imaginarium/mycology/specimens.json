@@ -1,0 +1,1037 @@
+[
+  {
+    "id": "8865e12f3fafea1967ec6e3b0d33161ddba2df05fd89bff963a216d02ba28e6b",
+    "filePath": "__tests__/commit-classifier.test.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Boletales",
+      "family": "Boletaceae",
+      "genus": "Tuber",
+      "species": "tenualis"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.47000000000000003,
+      "gillAttachment": "adnate",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7776898956070579,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Tuber tenualis var. typescript",
+      "flavorText": "Hidden entirely beneath the surface, only the initiated know where to look.",
+      "codeInsight": "typescript module, 376 lines, cyclomatic complexity 9 (moderate)",
+      "codeSnippet": "export function commit-classifier.test(/* 9 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -40.18432914484796,
+        0,
+        1.130590785958535
+      ],
+      "hostTree": "__tests__",
+      "substrate": "subterranean",
+      "clusterSize": 1,
+      "rotation": 2.2642675566794614,
+      "scale": 0.962
+    },
+    "assets": {
+      "svgPath": "mycology/svg/8865e12f3fafea1967ec6e3b0d33161ddba2df05fd89bff963a216d02ba28e6b.svg",
+      "meshDataPath": "meshes/8865e12f3fafea1967ec6e3b0d33161ddba2df05fd89bff963a216d02ba28e6b-cap.json"
+    }
+  },
+  {
+    "id": "996c16f518aa681aba94f28850ad736064664a7333da95eeedf87766f9a0c3fd",
+    "filePath": "__tests__/complexity-analyzer.test.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Boletales",
+      "family": "Boletaceae",
+      "genus": "Tuber",
+      "species": "erythrosa"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.23,
+      "gillAttachment": "adnate",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7962021104297022,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Tuber erythrosa var. typescript",
+      "flavorText": "Hidden entirely beneath the surface, only the initiated know where to look.",
+      "codeInsight": "typescript module, 433 lines, cyclomatic complexity 1 (low)",
+      "codeSnippet": "export function complexity-analyzer.test(/* 1 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -10.919286653857563,
+        0,
+        10.503700261427893
+      ],
+      "hostTree": "__tests__",
+      "substrate": "subterranean",
+      "clusterSize": 1,
+      "rotation": 2.7169377933457564,
+      "scale": 0.93
+    },
+    "assets": {
+      "svgPath": "mycology/svg/996c16f518aa681aba94f28850ad736064664a7333da95eeedf87766f9a0c3fd.svg",
+      "meshDataPath": "meshes/996c16f518aa681aba94f28850ad736064664a7333da95eeedf87766f9a0c3fd-cap.json"
+    }
+  },
+  {
+    "id": "e0aa1bcb18c62162ede10400ed4e13515da602ad8c861b0d8f148a5d0d420ea0",
+    "filePath": "__tests__/contributor-profiler.test.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Boletales",
+      "family": "Boletaceae",
+      "genus": "Tuber",
+      "species": "nigriana"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.23,
+      "gillAttachment": "adnate",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7971076658888115,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Tuber nigriana var. typescript",
+      "flavorText": "Hidden entirely beneath the surface, only the initiated know where to look.",
+      "codeInsight": "typescript module, 436 lines, cyclomatic complexity 1 (low)",
+      "codeSnippet": "export function contributor-profiler.test(/* 1 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -17.66484172684736,
+        0,
+        10.491114926381785
+      ],
+      "hostTree": "__tests__",
+      "substrate": "subterranean",
+      "clusterSize": 1,
+      "rotation": 3.0562734637517806,
+      "scale": 1.052
+    },
+    "assets": {
+      "svgPath": "mycology/svg/e0aa1bcb18c62162ede10400ed4e13515da602ad8c861b0d8f148a5d0d420ea0.svg",
+      "meshDataPath": "meshes/e0aa1bcb18c62162ede10400ed4e13515da602ad8c861b0d8f148a5d0d420ea0-cap.json"
+    }
+  },
+  {
+    "id": "b93e516effc6ed92e93d12129a746be0efdcfef986512108920ea33d8624f5a7",
+    "filePath": "__tests__/hotspot-detector.test.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Boletales",
+      "family": "Boletaceae",
+      "genus": "Tuber",
+      "species": "quasioides"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.41000000000000003,
+      "gillAttachment": "adnate",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7536380769938744,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Tuber quasioides var. typescript",
+      "flavorText": "Prized for its hidden value, this subterranean treasure reveals nothing to the casual observer.",
+      "codeInsight": "typescript module, 313 lines, cyclomatic complexity 7 (low)",
+      "codeSnippet": "export function hotspot-detector.test(/* 7 branches */): void"
+    },
+    "placement": {
+      "position": [
+        4.568513638791564,
+        0,
+        -9.173744956118645
+      ],
+      "hostTree": "__tests__",
+      "substrate": "subterranean",
+      "clusterSize": 1,
+      "rotation": 5.942163846050363,
+      "scale": 0.9400000000000001
+    },
+    "assets": {
+      "svgPath": "mycology/svg/b93e516effc6ed92e93d12129a746be0efdcfef986512108920ea33d8624f5a7.svg",
+      "meshDataPath": "meshes/b93e516effc6ed92e93d12129a746be0efdcfef986512108920ea33d8624f5a7-cap.json"
+    }
+  },
+  {
+    "id": "acd624c1837f7bbc751962f5fb7ffe9d09cf806f25b555af48ea435cab6bc514",
+    "filePath": "__tests__/topology-builder.test.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Boletales",
+      "family": "Boletaceae",
+      "genus": "Tuber",
+      "species": "rubraria"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.23,
+      "gillAttachment": "adnate",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7282933868566595,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Tuber rubraria var. typescript",
+      "flavorText": "Prized for its hidden value, this subterranean treasure reveals nothing to the casual observer.",
+      "codeInsight": "typescript module, 258 lines, cyclomatic complexity 1 (low)",
+      "codeSnippet": "export function topology-builder.test(/* 1 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -17.68336785486684,
+        0,
+        15.826595035344962
+      ],
+      "hostTree": "__tests__",
+      "substrate": "subterranean",
+      "clusterSize": 1,
+      "rotation": 1.2807762630504629,
+      "scale": 0.912
+    },
+    "assets": {
+      "svgPath": "mycology/svg/acd624c1837f7bbc751962f5fb7ffe9d09cf806f25b555af48ea435cab6bc514.svg",
+      "meshDataPath": "meshes/acd624c1837f7bbc751962f5fb7ffe9d09cf806f25b555af48ea435cab6bc514-cap.json"
+    }
+  },
+  {
+    "id": "aadeffb43210e4698503656176149be04ffe3f5a6f9051a1a8e16632da80b3b8",
+    "filePath": "__tests__/tree-builder.test.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Boletales",
+      "family": "Boletaceae",
+      "genus": "Tuber",
+      "species": "glabrcarpa"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.23,
+      "gillAttachment": "adnate",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7510995313972889,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Tuber glabrcarpa var. typescript",
+      "flavorText": "Hidden entirely beneath the surface, only the initiated know where to look.",
+      "codeInsight": "typescript module, 307 lines, cyclomatic complexity 1 (low)",
+      "codeSnippet": "export function tree-builder.test(/* 1 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -6.295933152182069,
+        0,
+        -14.495641761827255
+      ],
+      "hostTree": "__tests__",
+      "substrate": "subterranean",
+      "clusterSize": 1,
+      "rotation": 1.8877733896185351,
+      "scale": 1.054
+    },
+    "assets": {
+      "svgPath": "mycology/svg/aadeffb43210e4698503656176149be04ffe3f5a6f9051a1a8e16632da80b3b8.svg",
+      "meshDataPath": "meshes/aadeffb43210e4698503656176149be04ffe3f5a6f9051a1a8e16632da80b3b8-cap.json"
+    }
+  },
+  {
+    "id": "bcb082501502e086e10b4045867cdf3f2953a13c25f4ad71b000ece77bbef1d0",
+    "filePath": "src/analyzer/ComplexityAnalyzer.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Morchella",
+      "species": "junctiana"
+    },
+    "morphology": {
+      "capShape": "umbonate",
+      "capWidth": 0.3,
+      "capHeight": 0.98,
+      "gillAttachment": "free",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7067988236001067,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "rare",
+      "title": "Morchella junctiana var. typescript",
+      "flavorText": "Its honeycomb cap conceals labyrinthine passages of extraordinary complexity.",
+      "codeInsight": "typescript module, 219 lines, cyclomatic complexity 26 (high)",
+      "codeSnippet": "export function ComplexityAnalyzer(/* 26 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -28.469926958148083,
+        0,
+        0.08018979721797138
+      ],
+      "hostTree": "src/analyzer",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 3.596283479290774,
+      "scale": 1.078
+    },
+    "assets": {
+      "svgPath": "mycology/svg/bcb082501502e086e10b4045867cdf3f2953a13c25f4ad71b000ece77bbef1d0.svg",
+      "meshDataPath": "meshes/bcb082501502e086e10b4045867cdf3f2953a13c25f4ad71b000ece77bbef1d0-cap.json"
+    }
+  },
+  {
+    "id": "fb675696e84843b2a473db129e499a1e2ad31b6e69dbc69b63f2d9c9e502b7b0",
+    "filePath": "src/analyzer/HotspotDetector.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Morchella",
+      "species": "xeroalis"
+    },
+    "morphology": {
+      "capShape": "umbonate",
+      "capWidth": 0.3,
+      "capHeight": 0.8300000000000001,
+      "gillAttachment": "free",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.6481166379040878,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "rare",
+      "title": "Morchella xeroalis var. typescript",
+      "flavorText": "Hollow inside, its pitted surface maps the intricate logic within.",
+      "codeInsight": "typescript module, 140 lines, cyclomatic complexity 21 (high)",
+      "codeSnippet": "export function HotspotDetector(/* 21 branches */): void"
+    },
+    "placement": {
+      "position": [
+        3.547474363711202,
+        0,
+        -21.50029450992369
+      ],
+      "hostTree": "src/analyzer",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 1.0172874062034671,
+      "scale": 0.8672000000000001
+    },
+    "assets": {
+      "svgPath": "mycology/svg/fb675696e84843b2a473db129e499a1e2ad31b6e69dbc69b63f2d9c9e502b7b0.svg",
+      "meshDataPath": "meshes/fb675696e84843b2a473db129e499a1e2ad31b6e69dbc69b63f2d9c9e502b7b0-cap.json"
+    }
+  },
+  {
+    "id": "b692436637496af8181cd21b4ee55a4907b7e056171abbcc5874ea39898c1adc",
+    "filePath": "src/builder/ContributorProfiler.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Morchella",
+      "species": "holoula"
+    },
+    "morphology": {
+      "capShape": "umbonate",
+      "capWidth": 0.3,
+      "capHeight": 1,
+      "gillAttachment": "adnexed",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7031554200205308,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "rare",
+      "title": "Morchella holoula var. typescript",
+      "flavorText": "Its honeycomb cap conceals labyrinthine passages of extraordinary complexity.",
+      "codeInsight": "typescript module, 213 lines, cyclomatic complexity 31 (high)",
+      "domainKnowledge": "Factory pattern — creates instances without exposing construction logic",
+      "codeSnippet": "export function ContributorProfiler(/* 31 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -7.21619497651677,
+        0,
+        10.17420582358773
+      ],
+      "hostTree": "src/builder",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 0.9670614947438163,
+      "scale": 0.932
+    },
+    "assets": {
+      "svgPath": "mycology/svg/b692436637496af8181cd21b4ee55a4907b7e056171abbcc5874ea39898c1adc.svg",
+      "meshDataPath": "meshes/b692436637496af8181cd21b4ee55a4907b7e056171abbcc5874ea39898c1adc-cap.json"
+    }
+  },
+  {
+    "id": "e520bed780d50ebabd8bbe8acb95594c4afa727d2eee01451e4dd145ae30aca6",
+    "filePath": "src/builder/TopologyBuilder.ts",
+    "taxonomy": {
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Agaricus",
+      "species": "infraina"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.5,
+      "gillAttachment": "adnexed",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.6935778745526918,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "common",
+      "title": "Agaricus infraina var. typescript",
+      "flavorText": "A common sight along well-trodden paths, this humble fungus quietly serves the forest.",
+      "codeInsight": "typescript module, 198 lines, cyclomatic complexity 10 (moderate)"
+    },
+    "placement": {
+      "position": [
+        -43.20610813282085,
+        0,
+        -0.07586614041070049
+      ],
+      "hostTree": "src/builder",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 6.090755216403393,
+      "scale": 0.7632000000000001
+    },
+    "assets": {
+      "svgPath": "mycology/svg/e520bed780d50ebabd8bbe8acb95594c4afa727d2eee01451e4dd145ae30aca6.svg",
+      "meshDataPath": "meshes/e520bed780d50ebabd8bbe8acb95594c4afa727d2eee01451e4dd145ae30aca6-cap.json"
+    }
+  },
+  {
+    "id": "988b2cc9d0c454e1a67f1e6b303afc9eec162cf54518015fb0a260fdfe6bebea",
+    "filePath": "src/builder/TreeBuilder.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Phallus",
+      "species": "zygoiana"
+    },
+    "morphology": {
+      "capShape": "umbonate",
+      "capWidth": 0.3,
+      "capHeight": 0.77,
+      "gillAttachment": "adnexed",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.6140806820148608,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Phallus zygoiana var. typescript",
+      "flavorText": "Its olive slime layer attracts attention from every passing process.",
+      "codeInsight": "typescript module, 108 lines, cyclomatic complexity 19 (high)",
+      "codeSnippet": "export function TreeBuilder(/* 19 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -34.64379845907991,
+        0,
+        -35.33904328607763
+      ],
+      "hostTree": "src/builder",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 1.5165767239524681,
+      "scale": 0.7488000000000001
+    },
+    "assets": {
+      "svgPath": "mycology/svg/988b2cc9d0c454e1a67f1e6b303afc9eec162cf54518015fb0a260fdfe6bebea.svg",
+      "meshDataPath": "meshes/988b2cc9d0c454e1a67f1e6b303afc9eec162cf54518015fb0a260fdfe6bebea-cap.json"
+    }
+  },
+  {
+    "id": "e7e2fc10f699c6ab4b57406ac4cf6456058107e034138ab74067360c848f651d",
+    "filePath": "src/classifier/CommitClassifier.ts",
+    "taxonomy": {
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Agaricus",
+      "species": "semiiana"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.5,
+      "gillAttachment": "free",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.6332531167874624,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "common",
+      "title": "Agaricus semiiana var. typescript",
+      "flavorText": "Its pink gills darken with age, faithfully processing what the forest requires.",
+      "codeInsight": "typescript module, 125 lines, cyclomatic complexity 10 (moderate)"
+    },
+    "placement": {
+      "position": [
+        -41.584906029142495,
+        0,
+        5.837145055806532
+      ],
+      "hostTree": "src/classifier",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 3.1990440527645494,
+      "scale": 0.7424000000000001
+    },
+    "assets": {
+      "svgPath": "mycology/svg/e7e2fc10f699c6ab4b57406ac4cf6456058107e034138ab74067360c848f651d.svg",
+      "meshDataPath": "meshes/e7e2fc10f699c6ab4b57406ac4cf6456058107e034138ab74067360c848f651d-cap.json"
+    }
+  },
+  {
+    "id": "efea1419476889c184582de0bbd7e37de98ca679ae94cf5653179c372c6f4cbe",
+    "filePath": "src/index.ts",
+    "taxonomy": {
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Amanitaceae",
+      "genus": "Amanita",
+      "species": "nigrensis"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.23,
+      "gillAttachment": "free",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.6065841219974086,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": true,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "common",
+      "title": "Amanita nigrensis var. typescript",
+      "flavorText": "Ancient spores drift from beneath its veil, carrying the scent of initialization.",
+      "codeInsight": "typescript module, 102 lines, cyclomatic complexity 1 (low), entry point"
+    },
+    "placement": {
+      "position": [
+        -21.57560657833594,
+        0,
+        -24.558418314152785
+      ],
+      "hostTree": "src",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 3.6956286193120333,
+      "scale": 0.8544
+    },
+    "assets": {
+      "svgPath": "mycology/svg/efea1419476889c184582de0bbd7e37de98ca679ae94cf5653179c372c6f4cbe.svg",
+      "meshDataPath": "meshes/efea1419476889c184582de0bbd7e37de98ca679ae94cf5653179c372c6f4cbe-cap.json"
+    }
+  },
+  {
+    "id": "c3ff67c319478245574ff5f6c3e33a194bfa0a3e82d6f5935ddbae04085ede4c",
+    "filePath": "src/parse.ts",
+    "taxonomy": {
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Agaricus",
+      "species": "digiosa"
+    },
+    "morphology": {
+      "capShape": "convex",
+      "capWidth": 0.3,
+      "capHeight": 0.29000000000000004,
+      "gillAttachment": "free",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.5412905736715341,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "small",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "common",
+      "title": "Agaricus digiosa var. typescript",
+      "flavorText": "A common sight along well-trodden paths, this humble fungus quietly serves the forest.",
+      "codeInsight": "typescript module, 62 lines, cyclomatic complexity 3 (low)"
+    },
+    "placement": {
+      "position": [
+        -8.175228813552382,
+        0,
+        15.06868013544376
+      ],
+      "hostTree": "src",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 0.4647447558041518,
+      "scale": 0.7376
+    },
+    "assets": {
+      "svgPath": "mycology/svg/c3ff67c319478245574ff5f6c3e33a194bfa0a3e82d6f5935ddbae04085ede4c.svg",
+      "meshDataPath": "meshes/c3ff67c319478245574ff5f6c3e33a194bfa0a3e82d6f5935ddbae04085ede4c-cap.json"
+    }
+  },
+  {
+    "id": "dbd7fcab8205b3def4b688f8689b6ba76433feae0dc12af2e2291688ef8d95ba",
+    "filePath": "src/parser/ASTParser.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Polyporales",
+      "family": "Polyporaceae",
+      "genus": "Ganoderma",
+      "species": "albiphila"
+    },
+    "morphology": {
+      "capShape": "plane",
+      "capWidth": 0.3,
+      "capHeight": 0.62,
+      "gillAttachment": "free",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7085832605772824,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "common",
+      "title": "Ganoderma albiphila var. typescript",
+      "flavorText": "Its polished surface reflects the stability of the foundation it protects.",
+      "codeInsight": "typescript module, 222 lines, cyclomatic complexity 14 (moderate)"
+    },
+    "placement": {
+      "position": [
+        19.00942008979633,
+        0,
+        8.385976720090351
+      ],
+      "hostTree": "src/parser",
+      "substrate": "bark",
+      "clusterSize": 1,
+      "rotation": 2.9489313039921163,
+      "scale": 1.002
+    },
+    "assets": {
+      "svgPath": "mycology/svg/dbd7fcab8205b3def4b688f8689b6ba76433feae0dc12af2e2291688ef8d95ba.svg",
+      "meshDataPath": "meshes/dbd7fcab8205b3def4b688f8689b6ba76433feae0dc12af2e2291688ef8d95ba-cap.json"
+    }
+  },
+  {
+    "id": "79fd4f38fe716cb4a3837b3b689300525b9fed5f788234e37de1576daf5cf6f3",
+    "filePath": "src/parser/GitParser.ts",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Agaricales",
+      "family": "Agaricaceae",
+      "genus": "Morchella",
+      "species": "zygoina"
+    },
+    "morphology": {
+      "capShape": "umbonate",
+      "capWidth": 0.3,
+      "capHeight": 1,
+      "gillAttachment": "free",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.7532183835329317,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "white",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#3275b4",
+      "gillColor": "#979bc4"
+    },
+    "lore": {
+      "tier": "rare",
+      "title": "Morchella zygoina var. typescript",
+      "flavorText": "Its honeycomb cap conceals labyrinthine passages of extraordinary complexity.",
+      "codeInsight": "typescript module, 312 lines, cyclomatic complexity 29 (high)",
+      "codeSnippet": "export function GitParser(/* 29 branches */): void"
+    },
+    "placement": {
+      "position": [
+        -12.966357644121212,
+        0,
+        31.046296828530892
+      ],
+      "hostTree": "src/parser",
+      "substrate": "soil",
+      "clusterSize": 1,
+      "rotation": 2.145550641238632,
+      "scale": 1.018
+    },
+    "assets": {
+      "svgPath": "mycology/svg/79fd4f38fe716cb4a3837b3b689300525b9fed5f788234e37de1576daf5cf6f3.svg",
+      "meshDataPath": "meshes/79fd4f38fe716cb4a3837b3b689300525b9fed5f788234e37de1576daf5cf6f3-cap.json"
+    }
+  },
+  {
+    "id": "f407f9cefc0e3ea0e5ecddd8d42e3a07f065621ee700e378d19e85089f1b89f1",
+    "filePath": "README.md",
+    "taxonomy": {
+      "division": "Ascomycota",
+      "class": "Eurotiomycetes",
+      "order": "Polyporales",
+      "family": "Polyporaceae",
+      "genus": "Ganoderma",
+      "species": "junctoides"
+    },
+    "morphology": {
+      "capShape": "plane",
+      "capWidth": 1,
+      "capHeight": 0.2,
+      "gillAttachment": "decurrent",
+      "gillCount": 24,
+      "stem": {
+        "height": 0.609130883467372,
+        "thickness": 1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "ochre",
+      "bioluminescence": "none",
+      "sizeClass": "medium",
+      "spots": false,
+      "scaleColor": "#00858d",
+      "gillColor": "#78a6bd"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Ganoderma junctoides var. markdown",
+      "flavorText": "Its polished surface reflects the stability of the foundation it protects.",
+      "codeInsight": "markdown module, 104 lines, cyclomatic complexity 0 (low), imported by 97 modules"
+    },
+    "placement": {
+      "position": [
+        -5.963209223398456,
+        0,
+        -18.36597189605709
+      ],
+      "substrate": "bark",
+      "clusterSize": 1,
+      "rotation": 4.111230268805682,
+      "scale": 0.7536
+    },
+    "assets": {
+      "svgPath": "mycology/svg/f407f9cefc0e3ea0e5ecddd8d42e3a07f065621ee700e378d19e85089f1b89f1.svg",
+      "meshDataPath": "meshes/f407f9cefc0e3ea0e5ecddd8d42e3a07f065621ee700e378d19e85089f1b89f1-cap.json"
+    }
+  },
+  {
+    "id": "abaa25c6ba79d4d7d7470ecd7d3c664a8a6c679ce1e23c1e13052e54185279ca",
+    "filePath": "package.json",
+    "taxonomy": {
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Mycenaceae",
+      "genus": "Mycena",
+      "species": "semicarpa"
+    },
+    "morphology": {
+      "capShape": "campanulate",
+      "capWidth": 1,
+      "capHeight": 0.2,
+      "gillAttachment": "decurrent",
+      "gillCount": 24,
+      "stem": {
+        "height": 0.4112329050960921,
+        "thickness": 1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "ochre",
+      "bioluminescence": "none",
+      "sizeClass": "tiny",
+      "spots": false,
+      "scaleColor": "#258651",
+      "gillColor": "#73aba3"
+    },
+    "lore": {
+      "tier": "uncommon",
+      "title": "Mycena semicarpa var. json",
+      "flavorText": "A tiny, translucent bell barely visible among the leaf litter, glowing faintly in darkness.",
+      "codeInsight": "json module, 23 lines, cyclomatic complexity 0 (low), imported by 104 modules"
+    },
+    "placement": {
+      "position": [
+        -5.469453570757396,
+        0,
+        0.6893146658147797
+      ],
+      "substrate": "leaf-litter",
+      "clusterSize": 5,
+      "rotation": 5.299092221717688,
+      "scale": 0.459
+    },
+    "assets": {
+      "svgPath": "mycology/svg/abaa25c6ba79d4d7d7470ecd7d3c664a8a6c679ce1e23c1e13052e54185279ca.svg",
+      "meshDataPath": "meshes/abaa25c6ba79d4d7d7470ecd7d3c664a8a6c679ce1e23c1e13052e54185279ca-cap.json"
+    }
+  },
+  {
+    "id": "df05546f9e904d6592c9f8eb99265aabc7bd26b738e6e8e2c3ded0b8007b6172",
+    "filePath": "tsconfig.json",
+    "taxonomy": {
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Mycenaceae",
+      "genus": "Mycena",
+      "species": "infraica"
+    },
+    "morphology": {
+      "capShape": "campanulate",
+      "capWidth": 0.3,
+      "capHeight": 0.2,
+      "gillAttachment": "adnexed",
+      "gillCount": 4,
+      "stem": {
+        "height": 0.36363636363636365,
+        "thickness": 0.1,
+        "bulbous": false,
+        "rooting": false,
+        "ringed": false
+      },
+      "sporePrintColor": "ochre",
+      "bioluminescence": "none",
+      "sizeClass": "tiny",
+      "spots": false,
+      "scaleColor": "#258651",
+      "gillColor": "#73aba3"
+    },
+    "lore": {
+      "tier": "common",
+      "title": "Mycena infraica var. json",
+      "flavorText": "A tiny, translucent bell barely visible among the leaf litter, glowing faintly in darkness.",
+      "codeInsight": "json module, 16 lines, cyclomatic complexity 0 (low)"
+    },
+    "placement": {
+      "position": [
+        -4.604207604781391,
+        0,
+        -17.232862965130916
+      ],
+      "substrate": "leaf-litter",
+      "clusterSize": 5,
+      "rotation": 2.3365210089483033,
+      "scale": 0.461
+    },
+    "assets": {
+      "svgPath": "mycology/svg/df05546f9e904d6592c9f8eb99265aabc7bd26b738e6e8e2c3ded0b8007b6172.svg",
+      "meshDataPath": "meshes/df05546f9e904d6592c9f8eb99265aabc7bd26b738e6e8e2c3ded0b8007b6172-cap.json"
+    }
+  }
+]

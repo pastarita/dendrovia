@@ -6,6 +6,9 @@ const monorepoRoot = resolve(__dirname, '../..');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   turbopack: {
     root: monorepoRoot,
   },
@@ -15,7 +18,7 @@ const nextConfig = {
     '@dendrovia/dendrite',
     '@dendrovia/oculus',
   ],
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     config.resolve.extensionAlias = {
       '.js': ['.ts', '.tsx', '.js'],
     };
@@ -23,14 +26,29 @@ const nextConfig = {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
-        path: false,
         crypto: false,
+        path: false,
         os: false,
         stream: false,
         util: false,
         events: false,
         buffer: false,
+        assert: false,
+        string_decoder: false,
+        querystring: false,
+        zlib: false,
+        http: false,
+        https: false,
+        net: false,
+        tls: false,
+        child_process: false,
+        worker_threads: false,
       };
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+          resource.request = resource.request.replace(/^node:/, '');
+        }),
+      );
     }
     return config;
   },

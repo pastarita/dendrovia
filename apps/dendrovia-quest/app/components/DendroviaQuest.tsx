@@ -90,12 +90,13 @@ function LoadingScreen({ message }: { message: string }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#0a0a0a',
         color: '#f5a97f',
         fontFamily: "var(--oculus-font-ui, 'Inter', -apple-system, sans-serif)",
+        position: 'relative',
       }}
     >
-      <div style={{ textAlign: 'center' }}>
+      <div className="shader-bg" />
+      <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <svg viewBox="0 0 32 32" width={48} height={48} style={{ marginBottom: '1rem', opacity: 0.9 }}>
           <circle cx="16" cy="16" r="15" fill="#1a1514" stroke="#4a3822" strokeWidth="1"/>
           <path d="M16 28L16 13" stroke="#f5e6d3" strokeWidth="2.5" strokeLinecap="round"/>

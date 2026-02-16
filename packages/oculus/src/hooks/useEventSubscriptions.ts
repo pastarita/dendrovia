@@ -25,6 +25,8 @@ import {
   type ItemUsedEvent,
   type CollisionDetectedEvent,
   type EncounterTriggeredEvent,
+  type StatusEffectEvent,
+  type LootDroppedEvent,
   type BugType,
 } from '@dendrovia/shared';
 import type { Bug } from '@dendrovia/shared';
@@ -224,6 +226,52 @@ export function useEventSubscriptions(eventBus: EventBus) {
             msg = `Encounter: ${data.type} — Severity ${data.severity}`;
           }
           store.getState().addBattleLog(msg);
+        }
+      )
+    );
+
+    // ── Status effect applied ──
+    unsubs.push(
+      eventBus.on<StatusEffectEvent>(
+        GameEvents.STATUS_EFFECT_APPLIED,
+        (data) => {
+          store.getState().addStatusEffect({
+            effectId: data.effectId,
+            effectType: data.effectType,
+            remainingTurns: data.remainingTurns,
+            appliedAt: Date.now(),
+          });
+          store.getState().addBattleLog(
+            `Status: ${data.effectType} applied (${data.remainingTurns} turns)`
+          );
+        }
+      )
+    );
+
+    // ── Status effect expired ──
+    unsubs.push(
+      eventBus.on<StatusEffectEvent>(
+        GameEvents.STATUS_EFFECT_EXPIRED,
+        (data) => {
+          store.getState().removeStatusEffect(data.effectId);
+          store.getState().addBattleLog(`Status: ${data.effectType} expired`);
+        }
+      )
+    );
+
+    // ── Loot dropped ──
+    unsubs.push(
+      eventBus.on<LootDroppedEvent>(
+        GameEvents.LOOT_DROPPED,
+        (data) => {
+          store.getState().addLootDrop({
+            id: `loot-${Date.now()}`,
+            monsterId: data.monsterId,
+            items: data.items,
+            droppedAt: Date.now(),
+          });
+          const names = data.items.map((i) => i.name).join(', ');
+          store.getState().addBattleLog(`Loot: ${names}`);
         }
       )
     );

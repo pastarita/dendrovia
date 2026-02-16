@@ -21,6 +21,8 @@ export type {
   CameraMode,
   BattleState,
   CodeReaderState,
+  StatusEffect,
+  LootDrop,
 } from './store/useOculusStore';
 
 // ── Components ───────────────────────────────────────
@@ -31,6 +33,8 @@ export { QuestLog } from './components/QuestLog';
 export { MillerColumns } from './components/MillerColumns';
 export { CodeReader } from './components/CodeReader';
 export type { CodeReaderProps } from './components/CodeReader';
+export { StatusEffectBar } from './components/StatusEffectBar';
+export { LootPanel } from './components/LootPanel';
 export { FalconModeOverlay } from './components/FalconModeOverlay';
 export { Billboard3D } from './components/Billboard3D';
 export type { Billboard3DProps } from './components/Billboard3D';

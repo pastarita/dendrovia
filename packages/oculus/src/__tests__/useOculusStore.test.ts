@@ -21,6 +21,8 @@ function resetStore() {
     activeQuest: null,
     battle: { active: false, enemy: null, log: [] },
     playerSpells: [],
+    statusEffects: [],
+    lootDrops: [],
     topology: null,
     hotspots: [],
     codeReader: { filePath: null, content: null, language: 'typescript', loading: false, error: null },
@@ -288,6 +290,112 @@ describe('useOculusStore', () => {
     it('sets camera mode', () => {
       useOculusStore.getState().setCameraMode('player');
       expect(useOculusStore.getState().cameraMode).toBe('player');
+    });
+  });
+
+  describe('status effects', () => {
+    it('adds a status effect', () => {
+      useOculusStore.getState().addStatusEffect({
+        effectId: 'eff-1',
+        effectType: 'poison',
+        remainingTurns: 3,
+        appliedAt: 1000,
+      });
+      const effects = useOculusStore.getState().statusEffects;
+      expect(effects).toHaveLength(1);
+      expect(effects[0].effectType).toBe('poison');
+    });
+
+    it('upserts same effectId (updates remainingTurns)', () => {
+      useOculusStore.getState().addStatusEffect({
+        effectId: 'eff-1',
+        effectType: 'poison',
+        remainingTurns: 3,
+        appliedAt: 1000,
+      });
+      useOculusStore.getState().addStatusEffect({
+        effectId: 'eff-1',
+        effectType: 'poison',
+        remainingTurns: 5,
+        appliedAt: 2000,
+      });
+      const effects = useOculusStore.getState().statusEffects;
+      expect(effects).toHaveLength(1);
+      expect(effects[0].remainingTurns).toBe(5);
+    });
+
+    it('removes a status effect', () => {
+      useOculusStore.getState().addStatusEffect({
+        effectId: 'eff-1',
+        effectType: 'poison',
+        remainingTurns: 3,
+        appliedAt: 1000,
+      });
+      useOculusStore.getState().removeStatusEffect('eff-1');
+      expect(useOculusStore.getState().statusEffects).toHaveLength(0);
+    });
+
+    it('multiple effects coexist', () => {
+      useOculusStore.getState().addStatusEffect({
+        effectId: 'eff-1',
+        effectType: 'poison',
+        remainingTurns: 3,
+        appliedAt: 1000,
+      });
+      useOculusStore.getState().addStatusEffect({
+        effectId: 'eff-2',
+        effectType: 'shield',
+        remainingTurns: 2,
+        appliedAt: 1000,
+      });
+      expect(useOculusStore.getState().statusEffects).toHaveLength(2);
+    });
+  });
+
+  describe('loot', () => {
+    it('adds a loot drop', () => {
+      useOculusStore.getState().addLootDrop({
+        id: 'loot-1',
+        monsterId: 'm1',
+        items: [{ itemId: 'i1', name: 'Sword' }],
+        droppedAt: 1000,
+      });
+      const drops = useOculusStore.getState().lootDrops;
+      expect(drops).toHaveLength(1);
+      expect(drops[0].items[0].name).toBe('Sword');
+    });
+
+    it('caps at 5 drops (oldest removed)', () => {
+      for (let i = 0; i < 7; i++) {
+        useOculusStore.getState().addLootDrop({
+          id: `loot-${i}`,
+          monsterId: `m${i}`,
+          items: [{ itemId: `i${i}`, name: `Item ${i}` }],
+          droppedAt: 1000 + i,
+        });
+      }
+      const drops = useOculusStore.getState().lootDrops;
+      expect(drops).toHaveLength(5);
+      expect(drops[0].id).toBe('loot-2');
+    });
+
+    it('dismisses by id', () => {
+      useOculusStore.getState().addLootDrop({
+        id: 'loot-1',
+        monsterId: 'm1',
+        items: [{ itemId: 'i1', name: 'Sword' }],
+        droppedAt: 1000,
+      });
+      useOculusStore.getState().addLootDrop({
+        id: 'loot-2',
+        monsterId: 'm2',
+        items: [{ itemId: 'i2', name: 'Shield' }],
+        droppedAt: 2000,
+      });
+      useOculusStore.getState().dismissLootDrop('loot-1');
+      const drops = useOculusStore.getState().lootDrops;
+      expect(drops).toHaveLength(1);
+      expect(drops[0].id).toBe('loot-2');
     });
   });
 

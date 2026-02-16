@@ -5,7 +5,7 @@
  * Bun-specific APIs (Bun.spawn, Bun.write, Bun.file) that require the Bun
  * runtime. Next.js API routes run on Node.js, so we bridge via subprocess.
  *
- * Parses stdout for progress markers and streams SSE events to the client.
+ * Parses stdout pino JSON lines and streams SSE events to the client.
  *
  * Body: { url: string }
  * Returns SSE stream with pipeline progress, then final result.
@@ -59,39 +59,42 @@ export async function POST(request: Request) {
           const trimmed = line.trim();
           if (!trimmed) continue;
 
-          // Parse progress markers from analyze.ts stdout
+          // Try pino JSON first (analyze.ts outputs structured JSON when piped)
+          try {
+            const json = JSON.parse(trimmed);
+            if (json.msg) {
+              if (json.msg.includes('Resolving')) {
+                send({ step: 'resolve', message: json.msg });
+              } else if (json.msg.includes('resolved')) {
+                repo = json.repo ?? json.repository ?? '';
+                send({ step: 'resolved', message: `Repository: ${repo}`, repo });
+              } else if (json.msg.includes('analysis complete')) {
+                outputDir = json.outputDir ?? '';
+                stats.fileCount = json.filesParsed ?? 0;
+                stats.commitCount = json.commits ?? 0;
+                stats.hotspotCount = json.hotspots ?? 0;
+                stats.contributorCount = json.contributors ?? 0;
+                stats.languageCount = json.languages ?? 0;
+                stats.duration = json.totalTime ?? '';
+                stats.deepwikiAvailable = json.deepwiki === 'enriched';
+              } else if (json.msg.includes('DeepWiki')) {
+                send({ step: 'deepwiki', message: json.msg });
+              } else if (json.msg.includes('registry')) {
+                send({ step: 'registry', message: json.msg });
+              } else {
+                send({ step: 'info', message: json.msg });
+              }
+            }
+            continue;
+          } catch {
+            // Not JSON — fall through to plaintext handling
+          }
+
+          // Plaintext fallback (banner lines, non-pino output)
           if (trimmed.startsWith('[resolve]')) {
             send({ step: 'resolve', message: trimmed.replace('[resolve] ', '') });
-          } else if (trimmed.startsWith('Repo:')) {
-            repo = trimmed.replace('Repo:', '').trim();
-            send({ step: 'resolved', message: `Repository: ${repo}`, repo });
-          } else if (/^\[\d\/6\]/.test(trimmed)) {
-            const match = trimmed.match(/^\[(\d)\/6\]\s*(.+)/);
-            if (match) {
-              send({ step: `step-${match[1]}`, message: match[2] });
-            }
-          } else if (trimmed.startsWith('[deepwiki]')) {
-            send({ step: 'deepwiki', message: trimmed.replace('[deepwiki] ', '') });
-          } else if (trimmed.startsWith('[registry]')) {
-            send({ step: 'registry', message: trimmed.replace('[registry] ', '') });
-          }
-          // Parse final summary stats
-          else if (trimmed.startsWith('Files parsed:')) {
-            stats.fileCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
-          } else if (trimmed.startsWith('Commits:') && !trimmed.includes('parsed')) {
-            stats.commitCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
-          } else if (trimmed.startsWith('Hotspots:')) {
-            stats.hotspotCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
-          } else if (trimmed.startsWith('Contributors:')) {
-            stats.contributorCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
-          } else if (trimmed.startsWith('Languages:')) {
-            stats.languageCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
-          } else if (trimmed.startsWith('Total time:')) {
-            stats.duration = parseFloat(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Output:')) {
             outputDir = trimmed.replace('Output:', '').trim();
-          } else if (trimmed.startsWith('DeepWiki:')) {
-            stats.deepwikiAvailable = trimmed.includes('enriched');
           }
         }
       });

@@ -1,6 +1,6 @@
 "use client";
 
-const ALL_PILLARS = [
+export const ALL_PILLARS = [
   { name: "ARCHITECTUS", port: 3011, emoji: "\u{1F3DB}\uFE0F", tincture: "Azure", hex: "#3B82F6" },
   { name: "CHRONOS", port: 3012, emoji: "\u{1F4DC}", tincture: "Amber", hex: "#c77b3f" },
   { name: "IMAGINARIUM", port: 3013, emoji: "\u{1F3A8}", tincture: "Purpure", hex: "#A855F7" },

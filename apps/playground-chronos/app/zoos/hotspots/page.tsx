@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { loadTopologyData } from "../../../lib/load-data";
+import { OrnateFrame } from "@dendrovia/oculus";
 
 export default async function HotspotsPage() {
   const data = await loadTopologyData();
@@ -15,7 +16,7 @@ export default async function HotspotsPage() {
         {hotspots.length} files ranked by risk (churn x complexity)
       </p>
 
-      <div style={{ marginTop: "1rem" }}>
+      <OrnateFrame pillar="chronos" variant="panel" style={{ marginTop: "1rem" }}>
         {hotspots.map((h, i) => {
           const riskPct = (h.riskScore / maxRisk) * 100;
           const riskColor =
@@ -81,7 +82,7 @@ export default async function HotspotsPage() {
             </div>
           );
         })}
-      </div>
+      </OrnateFrame>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { OrnateFrame } from "@dendrovia/oculus";
 
 interface CommitEntry {
   hash: string;
@@ -91,87 +92,91 @@ export function CommitList({ commits }: { commits: CommitEntry[] }) {
       </div>
 
       {/* Timeline */}
-      {grouped.map(([day, dayCommits]) => (
-        <div key={day} style={{ marginBottom: "1.5rem" }}>
-          <div style={{
-            fontSize: "0.8rem",
-            fontWeight: 600,
-            opacity: 0.5,
-            marginBottom: "0.5rem",
-            borderBottom: "1px solid #222",
-            paddingBottom: "0.25rem",
-          }}>
-            {day} ({dayCommits.length})
-          </div>
-          {dayCommits.map((c) => (
-            <div
-              key={c.hash}
-              style={{
-                padding: "0.6rem 0.75rem",
-                borderLeft: `3px solid ${TYPE_COLORS[c.type || "maintenance"] || "#444"}`,
-                marginBottom: "0.35rem",
-                background: "#111",
-                borderRadius: "0 6px 6px 0",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-                <code style={{ fontSize: "0.75rem", opacity: 0.5 }}>{c.hash.slice(0, 7)}</code>
-                <span style={{ fontSize: "0.85rem" }}>{c.message}</span>
-                {c.isBreaking && (
-                  <span style={{
-                    fontSize: "0.65rem",
-                    padding: "0.1rem 0.35rem",
-                    borderRadius: "4px",
-                    background: "#dc262633",
-                    color: "#ef4444",
-                    fontWeight: 700,
-                  }}>
-                    BREAKING
-                  </span>
-                )}
+      <OrnateFrame pillar="chronos" variant="panel">
+        <div className="oculus-scrollable">
+          {grouped.map(([day, dayCommits]) => (
+            <div key={day} style={{ marginBottom: "1.5rem" }}>
+              <div style={{
+                fontSize: "0.8rem",
+                fontWeight: 600,
+                opacity: 0.5,
+                marginBottom: "0.5rem",
+                borderBottom: "1px solid #222",
+                paddingBottom: "0.25rem",
+              }}>
+                {day} ({dayCommits.length})
               </div>
-              <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.35rem", flexWrap: "wrap" }}>
-                {c.type && (
-                  <span style={{
-                    fontSize: "0.7rem",
-                    padding: "0.1rem 0.4rem",
-                    borderRadius: "8px",
-                    background: `${TYPE_COLORS[c.type] || "#666"}22`,
-                    color: TYPE_COLORS[c.type] || "#666",
-                  }}>
-                    {c.type}
-                  </span>
-                )}
-                {c.scope && (
-                  <span style={{
-                    fontSize: "0.7rem",
-                    padding: "0.1rem 0.4rem",
-                    borderRadius: "8px",
-                    background: "#222",
-                    color: "#aaa",
-                  }}>
-                    {c.scope}
-                  </span>
-                )}
-                {c.confidence && (
-                  <span style={{
-                    fontSize: "0.65rem",
-                    padding: "0.1rem 0.35rem",
-                    borderRadius: "8px",
-                    border: "1px solid #333",
-                    opacity: c.confidence === "high" ? 1 : c.confidence === "medium" ? 0.7 : 0.4,
-                  }}>
-                    {c.confidence}
-                  </span>
-                )}
-                <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>
-                  {c.author} | +{c.insertions}/-{c.deletions} | {c.filesChanged.length} files
-                </span>
-              </div>
+              {dayCommits.map((c) => (
+                <div
+                  key={c.hash}
+                  style={{
+                    padding: "0.6rem 0.75rem",
+                    borderLeft: `3px solid ${TYPE_COLORS[c.type || "maintenance"] || "#444"}`,
+                    marginBottom: "0.35rem",
+                    background: "#111",
+                    borderRadius: "0 6px 6px 0",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                    <code style={{ fontSize: "0.75rem", opacity: 0.5 }}>{c.hash.slice(0, 7)}</code>
+                    <span style={{ fontSize: "0.85rem" }}>{c.message}</span>
+                    {c.isBreaking && (
+                      <span style={{
+                        fontSize: "0.65rem",
+                        padding: "0.1rem 0.35rem",
+                        borderRadius: "4px",
+                        background: "#dc262633",
+                        color: "#ef4444",
+                        fontWeight: 700,
+                      }}>
+                        BREAKING
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.35rem", flexWrap: "wrap" }}>
+                    {c.type && (
+                      <span style={{
+                        fontSize: "0.7rem",
+                        padding: "0.1rem 0.4rem",
+                        borderRadius: "8px",
+                        background: `${TYPE_COLORS[c.type] || "#666"}22`,
+                        color: TYPE_COLORS[c.type] || "#666",
+                      }}>
+                        {c.type}
+                      </span>
+                    )}
+                    {c.scope && (
+                      <span style={{
+                        fontSize: "0.7rem",
+                        padding: "0.1rem 0.4rem",
+                        borderRadius: "8px",
+                        background: "#222",
+                        color: "#aaa",
+                      }}>
+                        {c.scope}
+                      </span>
+                    )}
+                    {c.confidence && (
+                      <span style={{
+                        fontSize: "0.65rem",
+                        padding: "0.1rem 0.35rem",
+                        borderRadius: "8px",
+                        border: "1px solid #333",
+                        opacity: c.confidence === "high" ? 1 : c.confidence === "medium" ? 0.7 : 0.4,
+                      }}>
+                        {c.confidence}
+                      </span>
+                    )}
+                    <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>
+                      {c.author} | +{c.insertions}/-{c.deletions} | {c.filesChanged.length} files
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
-      ))}
+      </OrnateFrame>
     </div>
   );
 }

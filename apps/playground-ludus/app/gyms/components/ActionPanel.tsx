@@ -2,6 +2,7 @@
 
 import type { AvailableActions } from '@dendrovia/ludus';
 import { getSpell } from '@dendrovia/ludus';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 interface ActionPanelProps {
   actions: AvailableActions;
@@ -30,7 +31,7 @@ const btnDisabled: React.CSSProperties = {
 
 export default function ActionPanel({ actions, onAttack, onSpell, onDefend, disabled }: ActionPanelProps): React.JSX.Element {
   return (
-    <div style={{ padding: '1rem', border: '1px solid #222', borderRadius: '8px', background: '#111' }}>
+    <OrnateFrame pillar="ludus" variant="compact">
       <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
         Actions
       </div>
@@ -73,6 +74,6 @@ export default function ActionPanel({ actions, onAttack, onSpell, onDefend, disa
           </div>
         </div>
       )}
-    </div>
+    </OrnateFrame>
   );
 }

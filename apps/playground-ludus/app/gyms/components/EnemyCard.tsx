@@ -1,7 +1,7 @@
 'use client';
 
 import type { Monster } from '@dendrovia/shared';
-import StatBar from './StatBar';
+import { OrnateFrame, ProgressBar, StatLabel, IconBadge } from '@dendrovia/oculus';
 
 interface EnemyCardProps {
   enemy: Monster;
@@ -25,7 +25,7 @@ const ELEMENT_COLORS: Record<string, string> = {
 
 export default function EnemyCard({ enemy }: EnemyCardProps): React.JSX.Element {
   return (
-    <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111', flex: 1 }}>
+    <OrnateFrame pillar="ludus" variant="panel" style={{ flex: 1 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
         <div>
           <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>{enemy.name}</div>
@@ -47,32 +47,22 @@ export default function EnemyCard({ enemy }: EnemyCardProps): React.JSX.Element 
         </div>
       </div>
 
-      <StatBar label="HP" current={enemy.stats.health} max={enemy.stats.maxHealth} color="#F97316" />
+      <StatLabel label="HP" value={`${enemy.stats.health}/${enemy.stats.maxHealth}`} color="#F97316" />
+      <ProgressBar value={enemy.stats.health} max={enemy.stats.maxHealth} variant="custom" color="#F97316" flash />
 
-      <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.75rem', marginTop: '0.5rem', opacity: 0.6 }}>
-        <span>ATK {enemy.stats.attack}</span>
-        <span>DEF {enemy.stats.defense}</span>
-        <span>SPD {enemy.stats.speed}</span>
+      <div style={{ marginTop: 'var(--oculus-space-sm)' }}>
+        <StatLabel label="ATK" value={enemy.stats.attack} />
+        <StatLabel label="DEF" value={enemy.stats.defense} />
+        <StatLabel label="SPD" value={enemy.stats.speed} />
       </div>
 
       {enemy.statusEffects.length > 0 && (
-        <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+        <div style={{ marginTop: 'var(--oculus-space-sm)', display: 'flex', gap: 'var(--oculus-space-xs)', flexWrap: 'wrap' }}>
           {enemy.statusEffects.map((fx, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: '0.7rem',
-                padding: '0.15rem 0.4rem',
-                borderRadius: '3px',
-                background: '#5f1e1e',
-                border: '1px solid #333',
-              }}
-            >
-              {fx.name} ({fx.remainingTurns}t)
-            </span>
+            <IconBadge key={i} icon={'\u2726'} label={`${fx.name} (${fx.remainingTurns}t)`} color="#EF4444" size="sm" />
           ))}
         </div>
       )}
-    </div>
+    </OrnateFrame>
   );
 }

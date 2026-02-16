@@ -1,5 +1,6 @@
 'use client';
 
+import { OrnateFrame } from '@dendrovia/oculus';
 import { PIPELINE_STAGES } from '../museum-fixtures';
 
 export default function PipelineExhibit() {
@@ -21,11 +22,10 @@ export default function PipelineExhibit() {
           )}
 
           {/* Stage card */}
-          <div
+          <OrnateFrame
+            pillar="imaginarium"
+            variant="compact"
             style={{
-              border: '1px solid #333',
-              borderRadius: '8px',
-              padding: '1rem 1.25rem',
               background: '#111',
             }}
           >
@@ -73,7 +73,7 @@ export default function PipelineExhibit() {
             <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.5 }}>
               {stage.description}
             </p>
-          </div>
+          </OrnateFrame>
         </div>
       ))}
     </div>

@@ -8,6 +8,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -196,14 +197,10 @@ export default function AnalyzeClient() {
   }, []);
 
   return (
+    <OrnateFrame pillar="chronos" variant="modal" style={{ background: '#111' }}>
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Input Form */}
-      <div style={{
-        padding: '1.5rem',
-        border: '1px solid #333',
-        borderRadius: '8px',
-        background: '#111',
-      }}>
+      <div>
         <label style={{ display: 'block', fontSize: '0.85rem', opacity: 0.6, marginBottom: '0.5rem' }}>
           GitHub Repository URL or owner/repo
         </label>
@@ -423,5 +420,6 @@ export default function AnalyzeClient() {
         </div>
       )}
     </div>
+    </OrnateFrame>
   );
 }

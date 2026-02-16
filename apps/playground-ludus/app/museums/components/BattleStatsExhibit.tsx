@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { createCharacter, createMonster, createRngState, simulateBattle, createBattleStatistics } from '@dendrovia/ludus';
 import type { BattleStatistics } from '@dendrovia/ludus';
 import type { CharacterClass, BugType } from '@dendrovia/shared';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const CLASSES: CharacterClass[] = ['tank', 'healer', 'dps'];
 const BUG_TYPES: BugType[] = ['null-pointer', 'memory-leak', 'race-condition', 'off-by-one'];
@@ -67,12 +68,11 @@ export default function BattleStatsExhibit(): React.JSX.Element {
       {/* Stat Descriptions Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
         {STAT_DESCRIPTIONS.map(stat => (
-          <div
+          <OrnateFrame
             key={stat.key}
+            pillar="ludus"
+            variant="compact"
             style={{
-              padding: '0.75rem 1rem',
-              border: '1px solid #222',
-              borderRadius: '8px',
               background: '#111',
             }}
           >
@@ -92,7 +92,7 @@ export default function BattleStatsExhibit(): React.JSX.Element {
             <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)', opacity: 0.4 }}>
               {stat.key}: {blankStats[stat.key] === Infinity ? 'Infinity' : blankStats[stat.key]}
             </div>
-          </div>
+          </OrnateFrame>
         ))}
       </div>
 
@@ -140,7 +140,7 @@ export default function BattleStatsExhibit(): React.JSX.Element {
       </div>
 
       {sampleResult && (
-        <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111' }}>
+        <OrnateFrame pillar="ludus" variant="compact" style={{ background: '#111' }}>
           <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
             {playerClass} (Lv{playerLevel}) vs {bugType} (S{severity})
           </div>
@@ -154,7 +154,7 @@ export default function BattleStatsExhibit(): React.JSX.Element {
             <div><span style={{ opacity: 0.5 }}>Turns:</span> {sampleResult.turns}</div>
             <div><span style={{ opacity: 0.5 }}>Player HP:</span> {sampleResult.playerHPRemaining}</div>
           </div>
-        </div>
+        </OrnateFrame>
       )}
     </div>
   );

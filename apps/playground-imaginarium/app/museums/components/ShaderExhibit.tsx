@@ -6,6 +6,7 @@ import {
   type SDFTier,
 } from '@dendrovia/imaginarium/fallbacks';
 import { countInstructions } from '@dendrovia/imaginarium/utils/glsl';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const TIER_ORDER: { tier: SDFTier; threshold: string }[] = [
   { tier: 'simple-trunk', threshold: '\u22643' },
@@ -94,13 +95,11 @@ export default function ShaderExhibit() {
         const isExpanded = expandedTier === tier;
 
         return (
-          <div
+          <OrnateFrame
             key={tier}
+            pillar="imaginarium"
+            variant="panel"
             style={{
-              border: isExpanded
-                ? '1px solid var(--pillar-accent)'
-                : '1px solid #333',
-              borderRadius: '8px',
               background: '#111',
               overflow: 'hidden',
             }}
@@ -181,7 +180,7 @@ export default function ShaderExhibit() {
                 {highlightGlsl(source.trim())}
               </pre>
             )}
-          </div>
+          </OrnateFrame>
         );
       })}
     </div>

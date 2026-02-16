@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { loadTopologyData } from "../../../lib/load-data";
 import type { RepositoryMetadata } from "@dendrovia/shared";
+import { OrnateFrame } from "@dendrovia/oculus";
 
 export default async function OverviewPage() {
   const data = await loadTopologyData();
@@ -44,10 +45,10 @@ export default async function OverviewPage() {
               ["HEAD", repo.headHash?.slice(0, 8)],
               ["Analyzed", new Date(repo.analyzedAt).toLocaleString()],
             ] as [string, string | number][]).map(([label, value]) => (
-              <div key={label} style={{ padding: "0.75rem", border: "1px solid #222", borderRadius: "6px" }}>
+              <OrnateFrame key={label} pillar="chronos" variant="compact">
                 <div style={{ fontSize: "0.7rem", textTransform: "uppercase", opacity: 0.4 }}>{label}</div>
                 <div style={{ fontSize: "1.1rem", fontWeight: 600, marginTop: "0.25rem" }}>{value}</div>
-              </div>
+              </OrnateFrame>
             ))}
           </div>
         ) : (
@@ -68,33 +69,35 @@ export default async function OverviewPage() {
           Language Distribution
         </h2>
         {langDist.length > 0 ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            {langDist.map((lang) => (
-              <div key={lang.language} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <span style={{ width: "100px", fontSize: "0.85rem", fontWeight: 500, textAlign: "right" }}>
-                  {lang.language}
-                </span>
-                <div style={{ flex: 1, height: "20px", background: "#1a1a1a", borderRadius: "4px", overflow: "hidden" }}>
-                  <div style={{
-                    width: `${(lang.percentage / maxLangPct) * 100}%`,
-                    height: "100%",
-                    background: "#c77b3f",
-                    borderRadius: "4px",
-                    minWidth: "2px",
-                  }} />
+          <OrnateFrame pillar="chronos" variant="panel">
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              {langDist.map((lang) => (
+                <div key={lang.language} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <span style={{ width: "100px", fontSize: "0.85rem", fontWeight: 500, textAlign: "right" }}>
+                    {lang.language}
+                  </span>
+                  <div style={{ flex: 1, height: "20px", background: "#1a1a1a", borderRadius: "4px", overflow: "hidden" }}>
+                    <div style={{
+                      width: `${(lang.percentage / maxLangPct) * 100}%`,
+                      height: "100%",
+                      background: "#c77b3f",
+                      borderRadius: "4px",
+                      minWidth: "2px",
+                    }} />
+                  </div>
+                  <span style={{ width: "60px", fontSize: "0.8rem", opacity: 0.6, textAlign: "right" }}>
+                    {lang.percentage}%
+                  </span>
+                  <span style={{ width: "60px", fontSize: "0.75rem", opacity: 0.4, textAlign: "right" }}>
+                    {lang.fileCount} files
+                  </span>
+                  <span style={{ width: "80px", fontSize: "0.75rem", opacity: 0.4, textAlign: "right" }}>
+                    {lang.locTotal.toLocaleString()} LOC
+                  </span>
                 </div>
-                <span style={{ width: "60px", fontSize: "0.8rem", opacity: 0.6, textAlign: "right" }}>
-                  {lang.percentage}%
-                </span>
-                <span style={{ width: "60px", fontSize: "0.75rem", opacity: 0.4, textAlign: "right" }}>
-                  {lang.fileCount} files
-                </span>
-                <span style={{ width: "80px", fontSize: "0.75rem", opacity: 0.4, textAlign: "right" }}>
-                  {lang.locTotal.toLocaleString()} LOC
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </OrnateFrame>
         ) : (
           <div style={{ opacity: 0.4 }}>No language distribution data available</div>
         )}
@@ -108,14 +111,14 @@ export default async function OverviewPage() {
         {contribSummary ? (
           <div>
             <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-              <div style={{ padding: "0.75rem", border: "1px solid #222", borderRadius: "6px", flex: 1 }}>
+              <OrnateFrame pillar="chronos" variant="compact" style={{ flex: 1 }}>
                 <div style={{ fontSize: "0.7rem", textTransform: "uppercase", opacity: 0.4 }}>Total</div>
                 <div style={{ fontSize: "1.3rem", fontWeight: 700, marginTop: "0.25rem" }}>{contribSummary.totalContributors}</div>
-              </div>
-              <div style={{ padding: "0.75rem", border: "1px solid #222", borderRadius: "6px", flex: 2 }}>
+              </OrnateFrame>
+              <OrnateFrame pillar="chronos" variant="compact" style={{ flex: 2 }}>
                 <div style={{ fontSize: "0.7rem", textTransform: "uppercase", opacity: 0.4 }}>Top Contributor</div>
                 <div style={{ fontSize: "1.1rem", fontWeight: 600, marginTop: "0.25rem" }}>{contribSummary.topContributor}</div>
-              </div>
+              </OrnateFrame>
             </div>
             <h3 style={{ fontSize: "0.85rem", fontWeight: 600, opacity: 0.6, marginBottom: "0.5rem" }}>Archetype Distribution</h3>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { OrnateFrame } from '@dendrovia/oculus';
 import { EventLog } from './components/EventLog';
 import { EventFilters } from './components/EventFilters';
 import { EventEmitter } from './components/EventEmitter';
@@ -142,7 +143,9 @@ export function EventStreamClient() {
         onTextFilterChange={setTextFilter}
         onClear={() => setEntries([])}
       />
-      <EventLog entries={filtered} onSelect={setSelectedEntry} />
+      <OrnateFrame pillar="operatus" variant="panel">
+        <EventLog entries={filtered} onSelect={setSelectedEntry} />
+      </OrnateFrame>
 
       {selectedEntry && (
         <EventPayloadModal entry={selectedEntry} onClose={() => setSelectedEntry(null)} />

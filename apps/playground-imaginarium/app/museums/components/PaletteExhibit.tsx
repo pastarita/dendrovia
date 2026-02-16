@@ -6,6 +6,7 @@ import {
   LANGUAGE_HUES,
 } from '@dendrovia/imaginarium/fallbacks';
 import { hexToOklch } from '@dendrovia/imaginarium/utils/color';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const SWATCH_KEYS = ['primary', 'secondary', 'accent', 'background', 'glow'] as const;
 
@@ -35,15 +36,12 @@ export default function PaletteExhibit() {
           const isSelected = selectedLanguage === lang;
 
           return (
-            <div
+            <OrnateFrame
               key={lang}
+              pillar="imaginarium"
+              variant="panel"
               onClick={() => setSelectedLanguage(isSelected ? null : lang)}
               style={{
-                padding: '1rem',
-                border: isSelected
-                  ? '2px solid var(--pillar-accent)'
-                  : '1px solid #333',
-                borderRadius: '8px',
                 cursor: 'pointer',
                 transition: 'border-color 0.2s',
                 background: '#111',
@@ -125,7 +123,7 @@ export default function PaletteExhibit() {
                   </span>
                 ))}
               </div>
-            </div>
+            </OrnateFrame>
           );
         })}
       </div>

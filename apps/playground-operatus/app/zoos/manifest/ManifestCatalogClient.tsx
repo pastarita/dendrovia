@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { OrnateFrame } from '@dendrovia/oculus';
 import type { AssetManifest } from '@dendrovia/shared';
 import { ManifestHeader } from './components/ManifestHeader';
 import { ShaderEntries } from './components/ShaderEntries';
@@ -113,10 +114,22 @@ export function ManifestCatalogClient() {
       )}
 
       <ManifestHeader manifest={manifest} />
-      <ShaderEntries shaders={manifest.shaders} />
-      <PaletteEntries palettes={manifest.palettes} />
-      {manifest.meshes && <MeshEntries meshes={manifest.meshes} />}
-      {manifest.mycology && <MycologySection mycology={manifest.mycology} />}
+      <OrnateFrame pillar="operatus" variant="panel">
+        <ShaderEntries shaders={manifest.shaders} />
+      </OrnateFrame>
+      <OrnateFrame pillar="operatus" variant="panel">
+        <PaletteEntries palettes={manifest.palettes} />
+      </OrnateFrame>
+      {manifest.meshes && (
+        <OrnateFrame pillar="operatus" variant="panel">
+          <MeshEntries meshes={manifest.meshes} />
+        </OrnateFrame>
+      )}
+      {manifest.mycology && (
+        <OrnateFrame pillar="operatus" variant="panel">
+          <MycologySection mycology={manifest.mycology} />
+        </OrnateFrame>
+      )}
     </div>
   );
 }

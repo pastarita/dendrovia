@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 type OperatusMod = typeof import('@dendrovia/operatus');
 
@@ -23,7 +24,7 @@ export function SaveSlotList({ mod, refreshKey }: { mod: OperatusMod; refreshKey
   };
 
   return (
-    <div style={{ padding: "1rem 1.25rem", border: "1px solid #222", borderRadius: "8px" }}>
+    <OrnateFrame pillar="operatus" variant="compact">
       <h3 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.75rem" }}>
         Save Slots ({slots.length})
       </h3>
@@ -81,6 +82,6 @@ export function SaveSlotList({ mod, refreshKey }: { mod: OperatusMod; refreshKey
           ))}
         </div>
       )}
-    </div>
+    </OrnateFrame>
   );
 }

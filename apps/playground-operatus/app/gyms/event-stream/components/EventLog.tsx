@@ -57,12 +57,11 @@ export function EventLog({
       <div
         ref={containerRef}
         onScroll={handleScroll}
+        className="oculus-scrollable"
         style={{
           maxHeight: "400px",
           overflow: "auto",
           background: "#0d0d0d",
-          border: "1px solid #222",
-          borderRadius: "8px",
           fontFamily: "var(--font-geist-mono)",
           fontSize: "0.8rem",
         }}

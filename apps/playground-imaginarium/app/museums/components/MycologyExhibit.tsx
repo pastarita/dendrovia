@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const TIER_COLORS: Record<string, string> = {
   common: '#888',
@@ -50,15 +51,12 @@ export default function MycologyExhibit({ specimens }: { specimens: SpecimenData
         {specimens.map((spec, i) => {
           const isSelected = selectedIndex === i;
           return (
-            <div
+            <OrnateFrame
               key={spec.path}
+              pillar="imaginarium"
+              variant="panel"
               onClick={() => setSelectedIndex(isSelected ? null : i)}
               style={{
-                padding: '1rem',
-                border: isSelected
-                  ? '2px solid var(--pillar-accent)'
-                  : '1px solid #333',
-                borderRadius: '8px',
                 cursor: 'pointer',
                 transition: 'border-color 0.2s',
                 background: '#111',
@@ -124,7 +122,7 @@ export default function MycologyExhibit({ specimens }: { specimens: SpecimenData
               >
                 {spec.flavorText}
               </p>
-            </div>
+            </OrnateFrame>
           );
         })}
       </div>

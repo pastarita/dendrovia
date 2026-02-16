@@ -1,5 +1,7 @@
 'use client';
 
+import { OrnateFrame } from '@dendrovia/oculus';
+
 interface Preset {
   name: string;
   axiom: string;
@@ -76,10 +78,8 @@ export function ParameterPanel({
   stats, fps, error,
 }: ParameterPanelProps) {
   return (
-    <div style={{
+    <OrnateFrame pillar="architectus" variant="panel" style={{
       width: 300,
-      padding: '1rem',
-      borderRight: '1px solid #333',
       overflowY: 'auto',
       flexShrink: 0,
       background: '#111',
@@ -213,6 +213,6 @@ export function ParameterPanel({
           </>
         )}
       </div>
-    </div>
+    </OrnateFrame>
   );
 }

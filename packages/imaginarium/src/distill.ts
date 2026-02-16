@@ -12,7 +12,7 @@
  */
 
 import { join, resolve } from 'path';
-import { distill } from './pipeline/DistillationPipeline.js';
+import { distill } from './pipeline/DistillationPipeline';
 import { chronosGenerated, imaginariumGenerated } from '@dendrovia/shared/paths';
 import { createLogger } from '@dendrovia/shared/logger';
 

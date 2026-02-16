@@ -12,16 +12,16 @@
  * from the same morphological parameters (ProfileGeometry/CylinderGeometry).
  */
 
-import type { HalfEdgeMesh, FlatMeshData } from './HalfEdgeMesh.js';
-import { buildFromProfile, buildFromCylinder, toFlatArrays } from './HalfEdgeMesh.js';
-import type { MeshOp } from './pipeline.js';
+import type { HalfEdgeMesh, FlatMeshData } from './HalfEdgeMesh';
+import { buildFromProfile, buildFromCylinder, toFlatArrays } from './HalfEdgeMesh';
+import type { MeshOp } from './pipeline';
 
 // Re-import the existing MeshGenerator types
 import type {
   ProfileGeometry,
   CylinderGeometry,
   MushroomMeshData,
-} from '../mycology/assets/MeshGenerator.js';
+} from '../mycology/assets/MeshGenerator';
 
 // ---------------------------------------------------------------------------
 // ProfileGeometry → HalfEdgeMesh

@@ -7,8 +7,8 @@
  */
 
 import React from 'react';
-import type { FungalSpecimen } from '../types.js';
-import { generateSvg } from './SvgTemplates.js';
+import type { FungalSpecimen } from '../types';
+import { generateSvg } from './SvgTemplates';
 
 export interface MushroomSpriteProps {
   specimen: FungalSpecimen;

@@ -15,10 +15,10 @@ import type {
   BioluminescenceLevel,
   SizeClass,
   FungalGenus,
-} from './types.js';
-import type { FileContext } from './GenusMapper.js';
-import { oklchToHex } from '../utils/color.js';
-import { getLanguageHue } from '../fallback/DefaultPalettes.js';
+} from './types';
+import type { FileContext } from './GenusMapper';
+import { oklchToHex } from '../utils/color';
+import { getLanguageHue } from '../fallback/DefaultPalettes';
 
 // ---------------------------------------------------------------------------
 // Cap Shape <- complexity profile

@@ -7,9 +7,9 @@
  */
 
 import type { ParsedFile, Hotspot, CodeTopology } from '@dendrovia/shared';
-import type { MushroomLore, LoreTier, FungalGenus, FungalTaxonomy } from './types.js';
-import type { FileContext } from './GenusMapper.js';
-import { hashString } from '../utils/hash.js';
+import type { MushroomLore, LoreTier, FungalGenus, FungalTaxonomy } from './types';
+import type { FileContext } from './GenusMapper';
+import { hashString } from '../utils/hash';
 
 // ---------------------------------------------------------------------------
 // Tier assignment
@@ -153,7 +153,7 @@ function generateFlavorText(genus: FungalGenus, file: ParsedFile): string {
   // Deterministic selection based on file path hash
   const hash = hashString(file.path);
   const idx = parseInt(hash.slice(0, 4), 16) % templates.length;
-  return templates[idx];
+  return templates[idx]!;
 }
 
 // ---------------------------------------------------------------------------

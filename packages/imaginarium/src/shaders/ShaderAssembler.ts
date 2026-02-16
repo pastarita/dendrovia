@@ -6,8 +6,8 @@
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import type { ProceduralPalette } from '@dendrovia/shared';
-import { glslVec3FromHex, glslUniform } from '../utils/glsl.js';
-import { validateGLSL, countInstructions } from '../utils/glsl.js';
+import { glslVec3FromHex, glslUniform } from '../utils/glsl';
+import { validateGLSL, countInstructions } from '../utils/glsl';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

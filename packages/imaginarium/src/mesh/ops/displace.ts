@@ -6,9 +6,9 @@
  * thicken, custom GhPython normal displacement scripts.
  */
 
-import type { HalfEdgeMesh } from '../HalfEdgeMesh.js';
-import { vertexNeighbors } from '../HalfEdgeMesh.js';
-import type { MeshOp } from '../pipeline.js';
+import type { HalfEdgeMesh } from '../HalfEdgeMesh';
+import { vertexNeighbors } from '../HalfEdgeMesh';
+import type { MeshOp } from '../pipeline';
 
 // ---------------------------------------------------------------------------
 // Vertex normal computation (area-weighted)
@@ -19,37 +19,37 @@ function computeVertexNormals(mesh: HalfEdgeMesh): [number, number, number][] {
 
   for (const face of mesh.faces) {
     const he0 = face.halfedge;
-    const he1 = mesh.halfedges[he0].next;
-    const he2 = mesh.halfedges[he1].next;
+    const he1 = mesh.halfedges[he0]!.next;
+    const he2 = mesh.halfedges[he1]!.next;
 
     // Get 3 vertex indices from the face loop
     const vis: number[] = [];
     let he = he0;
     for (let i = 0; i < 3; i++) {
-      vis.push(mesh.halfedges[he].vertex);
-      he = mesh.halfedges[he].next;
+      vis.push(mesh.halfedges[he]!.vertex);
+      he = mesh.halfedges[he]!.next;
     }
     // vis[0], vis[1], vis[2] — but we need the "from" of he0 as well
     // The face vertices in order: prev(he0).vertex, he0.vertex, he1.vertex
-    const v0 = mesh.halfedges[mesh.halfedges[he0].prev].vertex;
-    const v1 = mesh.halfedges[he0].vertex;
-    const v2 = mesh.halfedges[he1].vertex;
+    const v0 = mesh.halfedges[mesh.halfedges[he0]!.prev]!.vertex;
+    const v1 = mesh.halfedges[he0]!.vertex;
+    const v2 = mesh.halfedges[he1]!.vertex;
 
-    const ax = mesh.vertices[v1].x - mesh.vertices[v0].x;
-    const ay = mesh.vertices[v1].y - mesh.vertices[v0].y;
-    const az = mesh.vertices[v1].z - mesh.vertices[v0].z;
-    const bx = mesh.vertices[v2].x - mesh.vertices[v0].x;
-    const by = mesh.vertices[v2].y - mesh.vertices[v0].y;
-    const bz = mesh.vertices[v2].z - mesh.vertices[v0].z;
+    const ax = mesh.vertices[v1]!.x - mesh.vertices[v0]!.x;
+    const ay = mesh.vertices[v1]!.y - mesh.vertices[v0]!.y;
+    const az = mesh.vertices[v1]!.z - mesh.vertices[v0]!.z;
+    const bx = mesh.vertices[v2]!.x - mesh.vertices[v0]!.x;
+    const by = mesh.vertices[v2]!.y - mesh.vertices[v0]!.y;
+    const bz = mesh.vertices[v2]!.z - mesh.vertices[v0]!.z;
 
     const nx = ay * bz - az * by;
     const ny = az * bx - ax * bz;
     const nz = ax * by - ay * bx;
 
     for (const vi of [v0, v1, v2]) {
-      normals[vi][0] += nx;
-      normals[vi][1] += ny;
-      normals[vi][2] += nz;
+      normals[vi]![0] += nx;
+      normals[vi]![1] += ny;
+      normals[vi]![2] += nz;
     }
   }
 
@@ -81,9 +81,9 @@ export function displaceNormal(amount: number): MeshOp {
     const normals = computeVertexNormals(mesh);
     const newVertices = mesh.vertices.map((v, i) => ({
       ...v,
-      x: v.x + normals[i][0] * amount,
-      y: v.y + normals[i][1] * amount,
-      z: v.z + normals[i][2] * amount,
+      x: v.x + normals[i]![0] * amount,
+      y: v.y + normals[i]![1] * amount,
+      z: v.z + normals[i]![2] * amount,
     }));
     return {
       vertices: newVertices,
@@ -109,9 +109,9 @@ export function displaceByFunction(
       const amount = fn(v.x, v.y, v.z);
       return {
         ...v,
-        x: v.x + normals[i][0] * amount,
-        y: v.y + normals[i][1] * amount,
-        z: v.z + normals[i][2] * amount,
+        x: v.x + normals[i]![0] * amount,
+        y: v.y + normals[i]![1] * amount,
+        z: v.z + normals[i]![2] * amount,
       };
     });
     return {
@@ -140,9 +140,9 @@ export function displaceByField(
       const amount = (field[i] ?? 0) * scale;
       return {
         ...v,
-        x: v.x + normals[i][0] * amount,
-        y: v.y + normals[i][1] * amount,
-        z: v.z + normals[i][2] * amount,
+        x: v.x + normals[i]![0] * amount,
+        y: v.y + normals[i]![1] * amount,
+        z: v.z + normals[i]![2] * amount,
       };
     });
     return {

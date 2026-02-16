@@ -4,7 +4,7 @@
 
 import { basename } from 'path';
 import type { AssetManifest, SDFShader, ProceduralPalette, MeshManifestEntry } from '@dendrovia/shared';
-import { hashString } from '../utils/hash.js';
+import { hashString } from '../utils/hash';
 
 export interface ManifestInput {
   shaders: Array<{ id: string; path: string }>;

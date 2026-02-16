@@ -8,7 +8,7 @@ import { existsSync } from 'fs';
 import type { CodeTopology } from '@dendrovia/shared';
 import { validateTopology } from '@dendrovia/shared/schemas';
 import { createLogger } from '@dendrovia/shared/logger';
-import { generateMockTopology } from './MockTopology.js';
+import { generateMockTopology } from './MockTopology';
 
 const log = createLogger('IMAGINARIUM', 'topology-reader');
 

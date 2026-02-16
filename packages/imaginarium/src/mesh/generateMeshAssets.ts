@@ -15,13 +15,13 @@
 import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import type { MeshManifestEntry } from '@dendrovia/shared';
-import type { FungalSpecimen } from '../mycology/types.js';
-import { generateMeshData } from '../mycology/assets/MeshGenerator.js';
-import { applyPipelineToProfile, applyPipelineToCylinder } from './adapters.js';
-import { serialize } from './serialize.js';
-import { buildFromIndexed } from './HalfEdgeMesh.js';
-import { genusPipeline, STEM_PIPELINE } from './genusPipelines.js';
-import { hashString } from '../utils/hash.js';
+import type { FungalSpecimen } from '../mycology/types';
+import { generateMeshData } from '../mycology/assets/MeshGenerator';
+import { applyPipelineToProfile, applyPipelineToCylinder } from './adapters';
+import { serialize } from './serialize';
+import { buildFromIndexed } from './HalfEdgeMesh';
+import { genusPipeline, STEM_PIPELINE } from './genusPipelines';
+import { hashString } from '../utils/hash';
 
 // ---------------------------------------------------------------------------
 // Result types

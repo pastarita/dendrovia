@@ -76,6 +76,14 @@
   --oculus-z-overlay: 100;
   --oculus-z-modal: 200;
 
+  /* ── Ornate Frame ───────────────────────────────── */
+  --oculus-frame-corner-modal: 32px;
+  --oculus-frame-corner-panel: 24px;
+  --oculus-frame-corner-compact: 16px;
+  --oculus-frame-corner-tooltip: 8px;
+  --oculus-frame-stroke: 1.5px;
+  --oculus-frame-glow-size: 20px;
+
   /* ── Breakpoints (used via media queries) ─────── */
   /* Desktop: > 1024px (default) */
   /* Tablet:  768px - 1024px */

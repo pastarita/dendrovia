@@ -1,0 +1,112 @@
+/**
+ * OrnateFrame — Layout, animations, and responsive rules
+ */
+
+/* ── Layout ──────────────────────────────────────────── */
+
+.ornate-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.ornate-frame__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+}
+
+.ornate-frame__header {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--oculus-space-sm);
+  padding: var(--oculus-space-md) var(--oculus-space-lg);
+  border-bottom: 1px solid var(--oculus-border);
+  font-family: var(--oculus-font-ui);
+  font-size: var(--oculus-font-lg);
+  color: var(--oculus-text);
+}
+
+.ornate-frame__header-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.ornate-frame__content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Variant: modal ──────────────────────────────────── */
+
+.ornate-frame--modal .ornate-frame__content {
+  padding: 20px;
+}
+
+.ornate-frame--modal .ornate-frame__svg {
+  animation: oculus-frame-glow-pulse 3s ease-in-out infinite;
+}
+
+/* ── Variant: panel ──────────────────────────────────── */
+
+.ornate-frame--panel .ornate-frame__content {
+  padding: 16px;
+}
+
+/* ── Variant: compact ────────────────────────────────── */
+
+.ornate-frame--compact .ornate-frame__content {
+  padding: 12px;
+}
+
+/* ── Variant: tooltip ────────────────────────────────── */
+
+.ornate-frame--tooltip .ornate-frame__content {
+  padding: 8px;
+}
+
+/* ── Glow pulse animation ────────────────────────────── */
+
+@keyframes oculus-frame-glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 var(--oculus-frame-glow-size) var(--frame-glow, var(--oculus-glow)));
+  }
+  50% {
+    filter: drop-shadow(0 0 calc(var(--oculus-frame-glow-size) * 2) var(--frame-glow, var(--oculus-glow)));
+  }
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .ornate-frame--modal .ornate-frame__content {
+    padding: 14px;
+  }
+
+  .ornate-frame--panel .ornate-frame__content {
+    padding: 12px;
+  }
+
+  .ornate-frame--compact .ornate-frame__content {
+    padding: 8px;
+  }
+}
+
+/* ── Accessibility ───────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .ornate-frame--modal .ornate-frame__svg {
+    animation: none;
+    filter: drop-shadow(0 0 var(--oculus-frame-glow-size) var(--frame-glow, var(--oculus-glow)));
+  }
+}

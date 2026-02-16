@@ -7,6 +7,12 @@ const PAGES = [
     desc: "Animated flow diagram of the OPERATUS pipeline with live event overlay",
     icon: "🔄",
   },
+  {
+    name: "Cross-Pillar Map",
+    href: "/museums/cross-pillar",
+    desc: "OPERATUS in the six-pillar architecture — data flows, subsystems, and event contracts",
+    icon: "🔀",
+  },
 ];
 
 export default function MuseumsPage() {

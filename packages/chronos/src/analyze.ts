@@ -17,7 +17,10 @@ import { runPipeline } from './pipeline.js';
 import { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher.js';
 import { enrichTopology } from './enrichment/TopologyEnricher.js';
 import { writeOutputFiles } from './builder/TopologyBuilder.js';
+import { createLogger } from '@dendrovia/shared/logger';
 import type { RegistryEntry } from './resolver/index.js';
+
+const log = createLogger('CHRONOS', 'analyze');
 
 // ── Argument parsing ─────────────────────────────────────────────────────────
 
@@ -30,7 +33,7 @@ const input = positionalArgs[0];
 const outputOverride = positionalArgs[1];
 
 if (!input) {
-  console.error('Usage: bun run analyze <github-url-or-owner/repo> [output-dir] [--no-deepwiki] [--emit-events]');
+  log.fatal('Usage: bun run analyze <github-url-or-owner/repo> [output-dir] [--no-deepwiki] [--emit-events]');
   process.exit(1);
 }
 
@@ -39,13 +42,12 @@ if (!input) {
 async function main() {
   const t0 = performance.now();
 
-  console.log('='.repeat(60));
-  console.log('  CHRONOS — Analyze External Repository');
-  console.log('='.repeat(60));
-  console.log();
+  process.stdout.write('='.repeat(60) + '\n');
+  process.stdout.write('  CHRONOS — Analyze External Repository\n');
+  process.stdout.write('='.repeat(60) + '\n\n');
 
   // ── Step 1: Resolve repo ────────────────────────────────────────────────
-  console.log('[resolve] Resolving repository...');
+  log.info('Resolving repository');
   const resolved = await resolveRepo(input);
 
   const isRemote = !resolved.isLocal;
@@ -53,10 +55,7 @@ async function main() {
     ? `${resolved.owner}/${resolved.repo}`
     : basename(resolved.localPath);
 
-  console.log(`  Repo:   ${displayName}`);
-  console.log(`  Path:   ${resolved.localPath}`);
-  console.log(`  Source: ${isRemote ? 'GitHub (cached)' : 'local'}`);
-  console.log();
+  log.info({ repo: displayName, path: resolved.localPath, source: isRemote ? 'GitHub (cached)' : 'local' }, 'Repository resolved');
 
   // ── Step 2: Determine output directory ──────────────────────────────────
   let outputDir: string;
@@ -79,27 +78,24 @@ async function main() {
   let deepwikiAvailable = false;
 
   if (!noDeepwiki && isRemote) {
-    console.log('[deepwiki] Fetching DeepWiki enrichment...');
+    log.info('Fetching DeepWiki enrichment');
     try {
       const enrichment = await fetchDeepWikiEnrichment(resolved.owner, resolved.repo);
       if (enrichment) {
         const enriched = enrichTopology(result.output, enrichment);
-        // Re-write output files with enriched data
         await writeOutputFiles(enriched, outputDir);
         deepwikiAvailable = true;
-        console.log(`  Overview: ${enrichment.overview ? 'available' : 'none'}`);
-        console.log(`  Topics:   ${enrichment.topics?.length ?? 0}`);
-        console.log();
+        log.info({ overview: enrichment.overview ? 'available' : 'none', topics: enrichment.topics?.length ?? 0 }, 'DeepWiki enrichment applied');
       } else {
-        console.log('  Not available for this repo (skipping)\n');
+        log.info('DeepWiki not available for this repo (skipping)');
       }
     } catch (err) {
-      console.log(`  DeepWiki fetch failed (non-fatal): ${err instanceof Error ? err.message : err}\n`);
+      log.warn({ err }, 'DeepWiki fetch failed (non-fatal)');
     }
   } else if (!noDeepwiki && !isRemote) {
-    console.log('[deepwiki] Skipped (local repos not supported)\n');
+    log.info('DeepWiki skipped (local repos not supported)');
   } else {
-    console.log('[deepwiki] Skipped (--no-deepwiki)\n');
+    log.info('DeepWiki skipped (--no-deepwiki)');
   }
 
   // ── Step 5: Update registry ─────────────────────────────────────────────
@@ -120,29 +116,30 @@ async function main() {
       status: 'complete',
     };
     upsertRegistryEntry(entry);
-    console.log('[registry] Updated ~/.chronos/registry.json');
+    log.info('Updated ~/.chronos/registry.json');
   }
 
   // ── Summary ─────────────────────────────────────────────────────────────
   const totalTime = ((performance.now() - t0) / 1000).toFixed(2);
 
-  console.log();
-  console.log('='.repeat(60));
-  console.log('  CHRONOS Analysis Complete');
-  console.log('='.repeat(60));
-  console.log(`  Repository:     ${displayName}`);
-  console.log(`  Files parsed:   ${result.stats.fileCount}`);
-  console.log(`  Commits:        ${result.stats.commitCount}`);
-  console.log(`  Hotspots:       ${result.stats.hotspotCount}`);
-  console.log(`  Contributors:   ${result.stats.contributorCount}`);
-  console.log(`  Languages:      ${result.stats.languageCount}`);
-  console.log(`  DeepWiki:       ${deepwikiAvailable ? 'enriched' : 'none'}`);
-  console.log(`  Total time:     ${totalTime}s`);
-  console.log(`  Output:         ${outputDir}`);
-  console.log();
+  process.stdout.write('\n' + '='.repeat(60) + '\n');
+  process.stdout.write('  CHRONOS Analysis Complete\n');
+  process.stdout.write('='.repeat(60) + '\n');
+
+  log.info({
+    repository: displayName,
+    filesParsed: result.stats.fileCount,
+    commits: result.stats.commitCount,
+    hotspots: result.stats.hotspotCount,
+    contributors: result.stats.contributorCount,
+    languages: result.stats.languageCount,
+    deepwiki: deepwikiAvailable ? 'enriched' : 'none',
+    totalTime: `${totalTime}s`,
+    outputDir,
+  }, 'CHRONOS analysis complete');
 }
 
 main().catch(err => {
-  console.error('CHRONOS analyze failed:', err);
+  log.fatal(err, 'CHRONOS analyze failed');
   process.exit(1);
 });

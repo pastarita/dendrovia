@@ -20,6 +20,9 @@ import { resolve } from 'path';
 import { stat } from 'fs/promises';
 import { ManifestGenerator } from './ManifestGenerator.js';
 import { imaginariumGenerated } from '@dendrovia/shared/paths';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('OPERATUS', 'manifest-gen');
 
 // ── Resolve Paths ───────────────────────────────────────────────
 
@@ -49,20 +52,17 @@ function parseArgs(): { inputDir: string; outputPath: string } {
 async function main() {
   const { inputDir, outputPath } = parseArgs();
 
-  console.log('[OPERATUS] Manifest generation starting...');
-  console.log(`  Input:  ${inputDir}`);
-  console.log(`  Output: ${outputPath}`);
+  log.info({ inputDir, outputPath }, 'Manifest generation starting');
 
   // Verify the input directory exists
   try {
     const dirStat = await stat(inputDir);
     if (!dirStat.isDirectory()) {
-      console.error(`[OPERATUS] Error: "${inputDir}" is not a directory.`);
+      log.error({ inputDir }, 'Input path is not a directory');
       process.exit(1);
     }
   } catch {
-    console.error(`[OPERATUS] Error: Input directory "${inputDir}" does not exist.`);
-    console.error('  Ensure imaginarium#distill has run first.');
+    log.error({ inputDir }, 'Input directory does not exist. Ensure imaginarium#distill has run first.');
     process.exit(1);
   }
 
@@ -78,17 +78,18 @@ async function main() {
   const paletteCount = Object.keys(manifest.palettes).length;
   const totalSize = entries.reduce((sum, e) => sum + e.size, 0);
 
-  console.log('[OPERATUS] Manifest generated successfully.');
-  console.log(`  Assets:   ${entries.length}`);
-  console.log(`  Shaders:  ${shaderCount}`);
-  console.log(`  Palettes: ${paletteCount}`);
-  console.log(`  Topology: ${manifest.topology || 'none'}`);
-  console.log(`  Size:     ${(totalSize / 1024).toFixed(1)} KB total`);
-  console.log(`  Checksum: ${manifest.checksum}`);
-  console.log(`  Written:  ${outputPath}`);
+  log.info({
+    assets: entries.length,
+    shaders: shaderCount,
+    palettes: paletteCount,
+    topology: manifest.topology || 'none',
+    sizeKB: (totalSize / 1024).toFixed(1),
+    checksum: manifest.checksum,
+    outputPath,
+  }, 'Manifest generated successfully');
 }
 
 main().catch((err) => {
-  console.error('[OPERATUS] Manifest generation failed:', err);
+  log.fatal(err, 'Manifest generation failed');
   process.exit(1);
 });

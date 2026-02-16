@@ -5,6 +5,10 @@
  * Call `registerServiceWorker()` during app initialization.
  */
 
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('OPERATUS', 'sw');
+
 export interface SWRegistrationConfig {
   /** Path to the service worker script (default: '/sw.js') */
   swPath?: string;
@@ -92,7 +96,7 @@ export async function registerServiceWorker(
     });
 
   } catch (err) {
-    console.warn('[OPERATUS] Service worker registration failed:', err);
+    log.warn({ err }, 'Service worker registration failed');
   }
 
   return controller;

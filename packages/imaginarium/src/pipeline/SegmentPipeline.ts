@@ -16,6 +16,9 @@ import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import type { CodeTopology, StoryArc, SegmentAssets, SegmentMood } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('IMAGINARIUM', 'segment-pipeline');
 import { extractPalette, type PaletteOverrides } from '../distillation/ColorExtractor.js';
 import { generate as generateNoise, type NoiseOverrides } from '../distillation/NoiseGenerator.js';
 import { compile as compileLSystem, type LSystemOverrides } from '../distillation/LSystemCompiler.js';
@@ -127,7 +130,7 @@ export async function distillSegments(
         assets,
       });
     } catch (e) {
-      console.log(`[IMAGINARIUM]   Segment ${segment.id}: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+      log.info({ segmentId: segment.id, err: e instanceof Error ? e.message : 'unknown error' }, 'Segment skipped');
     }
   }
 

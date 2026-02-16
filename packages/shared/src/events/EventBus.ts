@@ -10,10 +10,13 @@
  */
 
 import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets } from '../types/index.js';
+import { createLogger } from '../logger.js';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
 type AnyEventHandler = (event: string, data?: any) => void | Promise<void>;
+
+const log = createLogger('shared', 'event-bus');
 
 export class EventBus {
   private handlers = new Map<string, Set<EventHandler>>();
@@ -55,7 +58,7 @@ export class EventBus {
    */
   async emit<T = any>(event: string, data?: T): Promise<void> {
     if (this.debug) {
-      console.log(`[EventBus] ${event}`, data);
+      log.debug({ event, data }, 'Event emitted');
     }
 
     const handlers = this.handlers.get(event);

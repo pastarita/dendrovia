@@ -8,8 +8,11 @@
  *   - Per-asset timing breakdown
  *
  * No-ops gracefully when Performance API is unavailable.
- * Zero external dependencies.
  */
+
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('OPERATUS', 'perf');
 
 export interface PerfMetric {
   name: string;
@@ -194,28 +197,16 @@ export class PerfMonitor {
   async logReport(opfsAvailable: boolean): Promise<void> {
     const report = await this.generateReport(opfsAvailable);
 
-    console.group('[OPERATUS] Performance Report');
-    console.log(`Total load time: ${report.totalLoadTime.toFixed(1)}ms`);
-    console.log(`Cache: ${report.cache.hits} hits / ${report.cache.misses} misses (${(report.cache.hitRate * 100).toFixed(1)}% hit rate)`);
-    console.log(`OPFS: ${report.opfsAvailable ? 'active' : 'fallback to IDB'}`);
-
-    if (report.storageUsage !== null) {
-      const kb = (report.storageUsage / 1024).toFixed(1);
-      console.log(`Storage: ${kb} KB used`);
-    }
-
-    if (report.assets.length > 0) {
-      console.group('Asset timing (slowest first)');
-      for (const asset of report.assets.slice(0, 10)) {
-        console.log(`${asset.name}: ${asset.duration.toFixed(1)}ms`);
-      }
-      if (report.assets.length > 10) {
-        console.log(`... and ${report.assets.length - 10} more`);
-      }
-      console.groupEnd();
-    }
-
-    console.groupEnd();
+    log.info({
+      totalLoadTimeMs: report.totalLoadTime.toFixed(1),
+      cacheHits: report.cache.hits,
+      cacheMisses: report.cache.misses,
+      cacheHitRate: (report.cache.hitRate * 100).toFixed(1) + '%',
+      opfs: report.opfsAvailable ? 'active' : 'fallback to IDB',
+      storageKB: report.storageUsage !== null ? (report.storageUsage / 1024).toFixed(1) : null,
+      assetCount: report.assetCount,
+      slowestAssets: report.assets.slice(0, 10).map(a => ({ name: a.name, durationMs: a.duration.toFixed(1) })),
+    }, 'Performance report');
   }
 
   // ── Reset ──────────────────────────────────────────────────────

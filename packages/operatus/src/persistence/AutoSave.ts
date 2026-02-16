@@ -11,7 +11,10 @@
  */
 
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import { useGameStore, getGameSaveSnapshot } from './GameStore.js';
+
+const log = createLogger('OPERATUS', 'autosave');
 
 export interface AutoSaveConfig {
   /** Interval in ms between auto-saves (default: 30000 = 30s) */
@@ -119,7 +122,7 @@ export class AutoSave {
         timestamp: Date.now(),
       }).catch(() => {});
     } catch (err) {
-      console.warn(`[OPERATUS] Auto-save (${trigger}) failed:`, err);
+      log.warn({ trigger, err }, 'Auto-save failed');
     }
   }
 

@@ -10,6 +10,7 @@ import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import type { CodeTopology, ProceduralPalette, SDFShader, NoiseFunction, LSystemRule, StoryArc, SegmentAssets } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import { validatePalette } from '@dendrovia/shared/schemas';
 import { readTopology } from './TopologyReader.js';
 import { generateVariants } from './VariantGenerator.js';
@@ -27,6 +28,8 @@ import { distillSegments } from './SegmentPipeline.js';
 import type { FungalSpecimen } from '../mycology/types.js';
 import type { MeshManifestEntry } from '@dendrovia/shared';
 
+const log = createLogger('IMAGINARIUM', 'pipeline');
+
 export interface PipelineResult {
   palettes: Array<{ id: string; palette: ProceduralPalette; path: string }>;
   shaders: Array<{ id: string; shader: SDFShader; path: string }>;
@@ -43,7 +46,7 @@ export async function distill(
   const startTime = performance.now();
   const eventBus = getEventBus();
 
-  console.log('[IMAGINARIUM] Starting distillation pipeline...');
+  log.info('Starting distillation pipeline');
 
   // Ensure output directories
   const dirs = ['palettes', 'shaders', 'noise', 'lsystems'];
@@ -54,7 +57,7 @@ export async function distill(
 
   // 1. Read topology (falls back to mock if missing)
   const topology = await readTopology(topologyPath);
-  console.log(`[IMAGINARIUM]   Files: ${topology.files.length}, Hotspots: ${topology.hotspots.length}`);
+  log.info({ files: topology.files.length, hotspots: topology.hotspots.length }, 'Topology loaded');
 
   // 2. Init cache
   const cache = new DeterministicCache(outputDir);
@@ -98,27 +101,27 @@ export async function distill(
   }
 
   await eventBus.emit(GameEvents.PALETTE_GENERATED, globalPalette);
-  console.log(`[IMAGINARIUM]   Palettes: ${paletteResults.length}`);
+  log.info({ count: paletteResults.length }, 'Palettes generated');
 
   // 4. Compile L-system
   const lsystem = compileLSystem(topology);
   const lsystemPath = join(outputDir, 'lsystems', 'global.json');
   await Bun.write(lsystemPath, JSON.stringify(lsystem, null, 2));
-  console.log(`[IMAGINARIUM]   L-System: iterations=${lsystem.iterations}, angle=${lsystem.angle}`);
+  log.info({ iterations: lsystem.iterations, angle: lsystem.angle }, 'L-System compiled');
 
   // 5. Generate noise config
   const noise = generateNoise(topology);
   const noisePath = join(outputDir, 'noise', 'global.json');
   await Bun.write(noisePath, JSON.stringify(noise, null, 2));
-  console.log(`[IMAGINARIUM]   Noise: type=${noise.type}, octaves=${noise.octaves}`);
+  log.info({ type: noise.type, octaves: noise.octaves }, 'Noise config generated');
 
   // 6. Optional AI art generation
   const artResult = await generateArt(topology);
   if (artResult.image) {
     await Bun.write(join(outputDir, 'art.png'), artResult.image);
-    console.log(`[IMAGINARIUM]   Art: generated via ${artResult.provider}`);
+    log.info({ provider: artResult.provider }, 'Art generated');
   } else {
-    console.log(`[IMAGINARIUM]   Art: skipped (procedural pipeline only)`);
+    log.info('Art skipped (procedural pipeline only)');
   }
 
   // 7. Generate shader variants (up to 5)
@@ -132,7 +135,7 @@ export async function distill(
   }
 
   await eventBus.emit(GameEvents.SHADERS_COMPILED, { shaders });
-  console.log(`[IMAGINARIUM]   Shaders: ${shaderResults.length} variants`);
+  log.info({ variants: shaderResults.length }, 'Shaders compiled');
 
   // 7.5. Story arc derivation and per-segment distillation
   let storyArcData: { arc: StoryArc; segmentAssets: SegmentAssets[] } | undefined;
@@ -150,9 +153,9 @@ export async function distill(
       arc: storyArc,
       segmentCount: storyArc.segments.length,
     });
-    console.log(`[IMAGINARIUM]   Story Arc: ${storyArc.segments.length} segments`);
+    log.info({ segments: storyArc.segments.length }, 'Story arc derived');
   } catch (e) {
-    console.log(`[IMAGINARIUM]   Story Arc: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+    log.info({ err: e instanceof Error ? e.message : 'unknown error' }, 'Story arc skipped');
   }
 
   // 8. Mycology catalogization
@@ -170,9 +173,9 @@ export async function distill(
       networkEdgeCount: mycologyManifest.networkEdgeCount,
       manifestPath: 'mycology/manifest.json',
     });
-    console.log(`[IMAGINARIUM]   Mycology: ${mycologyManifest.specimenCount} specimens, ${mycologyManifest.networkEdgeCount} network edges`);
+    log.info({ specimens: mycologyManifest.specimenCount, networkEdges: mycologyManifest.networkEdgeCount }, 'Mycology catalogized');
   } catch (e) {
-    console.log(`[IMAGINARIUM]   Mycology: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+    log.info({ err: e instanceof Error ? e.message : 'unknown error' }, 'Mycology skipped');
   }
 
   // 8.5. Mesh generation (enriched half-edge meshes for each specimen)
@@ -189,12 +192,12 @@ export async function distill(
       const specimensOutPath = join(outputDir, mycologyData.specimens);
       await Bun.write(specimensOutPath, JSON.stringify(specimens, null, 2));
 
-      console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.successCount} specimens, ${meshResult.stats.totalVertices} total vertices (${meshResult.stats.durationMs}ms)`);
+      log.info({ specimens: meshResult.stats.successCount, totalVertices: meshResult.stats.totalVertices, durationMs: meshResult.stats.durationMs }, 'Meshes generated');
       if (meshResult.stats.failCount > 0) {
-        console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.failCount} specimens failed (fallback to SVG)`);
+        log.warn({ failCount: meshResult.stats.failCount }, 'Some mesh specimens failed (fallback to SVG)');
       }
     } catch (e) {
-      console.log(`[IMAGINARIUM]   Meshes: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+      log.info({ err: e instanceof Error ? e.message : 'unknown error' }, 'Meshes skipped');
     }
   }
 
@@ -218,7 +221,7 @@ export async function distill(
   await Bun.write(manifestPath, JSON.stringify(manifest, null, 2));
 
   const durationMs = Math.round(performance.now() - startTime);
-  console.log(`[IMAGINARIUM] Distillation complete in ${durationMs}ms`);
+  log.info({ durationMs }, 'Distillation complete');
 
   return {
     palettes: paletteResults,

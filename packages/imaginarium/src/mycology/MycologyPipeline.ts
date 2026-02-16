@@ -10,7 +10,10 @@
 import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import type { CodeTopology } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import type { MycologyManifest, FungalSpecimen, MycelialNetwork, FungalGenus } from './types.js';
+
+const log = createLogger('IMAGINARIUM', 'mycology');
 import { catalogize } from './SpecimenCatalog.js';
 import { buildNetwork } from './MycelialNetwork.js';
 import { buildCoChurnMap, buildFileContext, classifyGenus } from './GenusMapper.js';
@@ -20,7 +23,7 @@ export async function distillMycology(
   topology: CodeTopology,
   outputDir: string,
 ): Promise<MycologyManifest> {
-  console.log('[MYCOLOGY] Starting mycology catalogization...');
+  log.info('Starting mycology catalogization');
 
   // Ensure output directories
   const mycologyDir = join(outputDir, 'mycology');
@@ -32,7 +35,7 @@ export async function distillMycology(
 
   // 1. Catalogize specimens
   const specimens = catalogize(topology);
-  console.log(`[MYCOLOGY]   Specimens: ${specimens.length}`);
+  log.info({ count: specimens.length }, 'Specimens catalogized');
 
   // 2. Build genus map for network construction
   const coChurnMap = buildCoChurnMap(topology);
@@ -44,7 +47,7 @@ export async function distillMycology(
 
   // 3. Build mycelial network
   const network = buildNetwork(topology, genusMap);
-  console.log(`[MYCOLOGY]   Network: ${network.edges.length} edges, ${network.hubNodes.length} hubs`);
+  log.info({ edges: network.edges.length, hubs: network.hubNodes.length }, 'Network built');
 
   // 4. Generate SVG assets
   let svgCount = 0;
@@ -59,7 +62,7 @@ export async function distillMycology(
       // Skip failed SVG generation silently
     }
   }
-  console.log(`[MYCOLOGY]   SVGs: ${svgCount} generated`);
+  log.info({ count: svgCount }, 'SVGs generated');
 
   // 5. Write specimens catalog
   const specimensPath = join(mycologyDir, 'specimens.json');
@@ -84,6 +87,6 @@ export async function distillMycology(
   const manifestPath = join(mycologyDir, 'manifest.json');
   await Bun.write(manifestPath, JSON.stringify(manifest, null, 2));
 
-  console.log('[MYCOLOGY] Catalogization complete.');
+  log.info('Catalogization complete');
   return manifest;
 }

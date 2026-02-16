@@ -58,7 +58,7 @@ export default function RootLayout({
               <span>🎨</span>
               <span style={{ color: "var(--pillar-accent)" }}>IMAGINARIUM</span>
             </a>
-            <div style={{ fontSize: "0.75rem", opacity: 0.5 }}>:3012 · Purpure</div>
+            <div style={{ fontSize: "0.75rem", opacity: 0.5 }}>:3013 · Purpure</div>
 
             <div>
               <div style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.4, marginBottom: "0.5rem" }}>
@@ -95,10 +95,10 @@ export default function RootLayout({
 
             <div style={{ marginTop: "auto" }}>
               <a
-                href="http://localhost:3000"
+                href="http://localhost:3010"
                 style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem", borderRadius: "4px", fontSize: "0.85rem", border: "1px solid #333" }}
               >
-                🌳 Dendrovia Quest <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:3000</span>
+                🌳 Dendrovia Quest <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:3010</span>
               </a>
             </div>
           </nav>

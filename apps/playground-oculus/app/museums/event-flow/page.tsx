@@ -25,10 +25,10 @@ const EVENTS: EventInfo[] = [
   { name: 'PLAYER_MOVED', key: 'player:moved', emitter: 'ARCHITECTUS', subscribers: ['LUDUS', 'OCULUS'], payload: 'PlayerMovedEvent { position, branchId, velocity }', oculusHandled: true },
   { name: 'BRANCH_ENTERED', key: 'branch:entered', emitter: 'ARCHITECTUS', subscribers: ['LUDUS'], payload: 'BranchEnteredEvent { branchId, filePath, depth }', oculusHandled: false },
   { name: 'NODE_CLICKED', key: 'node:clicked', emitter: 'ARCHITECTUS', subscribers: ['LUDUS', 'OCULUS'], payload: 'NodeClickedEvent { nodeId, filePath, position }', oculusHandled: true },
-  { name: 'COLLISION_DETECTED', key: 'collision:detected', emitter: 'ARCHITECTUS', subscribers: ['LUDUS'], payload: '{ entityA, entityB, point }', oculusHandled: false },
+  { name: 'COLLISION_DETECTED', key: 'collision:detected', emitter: 'ARCHITECTUS', subscribers: ['LUDUS', 'OCULUS'], payload: 'CollisionDetectedEvent { entityId, collidedWith, position }', oculusHandled: true },
 
   // LUDUS → ARCHITECTUS
-  { name: 'ENCOUNTER_TRIGGERED', key: 'encounter:triggered', emitter: 'LUDUS', subscribers: ['ARCHITECTUS'], payload: 'EncounterTriggeredEvent { type, severity, position }', oculusHandled: false },
+  { name: 'ENCOUNTER_TRIGGERED', key: 'encounter:triggered', emitter: 'LUDUS', subscribers: ['ARCHITECTUS', 'OCULUS'], payload: 'EncounterTriggeredEvent { type, severity, position }', oculusHandled: true },
   { name: 'DAMAGE_DEALT', key: 'damage:dealt', emitter: 'LUDUS', subscribers: ['ARCHITECTUS', 'OCULUS'], payload: 'DamageDealtEvent { attackerId, targetId, damage, isCritical, element }', oculusHandled: true },
 
   // LUDUS → OCULUS
@@ -50,11 +50,11 @@ const EVENTS: EventInfo[] = [
 
   // OCULUS → LUDUS
   { name: 'SPELL_CAST', key: 'spell:cast', emitter: 'OCULUS', subscribers: ['LUDUS'], payload: 'SpellCastEvent { spellId, targetId?, casterId }', oculusHandled: false },
-  { name: 'ITEM_USED', key: 'item:used', emitter: 'OCULUS', subscribers: ['LUDUS'], payload: '{ itemId, targetId }', oculusHandled: false },
+  { name: 'ITEM_USED', key: 'item:used', emitter: 'OCULUS', subscribers: ['LUDUS', 'OCULUS'], payload: 'ItemUsedEvent { itemId, characterId? }', oculusHandled: true },
 
   // CHRONOS → IMAGINARIUM
   { name: 'PARSE_COMPLETE', key: 'parse:complete', emitter: 'CHRONOS', subscribers: ['IMAGINARIUM'], payload: '{ topology, fileCount, commitCount }', oculusHandled: false },
-  { name: 'TOPOLOGY_GENERATED', key: 'topology:generated', emitter: 'CHRONOS', subscribers: ['OCULUS', 'ARCHITECTUS'], payload: 'TopologyGeneratedEvent { tree, hotspots }', oculusHandled: true },
+  { name: 'TOPOLOGY_GENERATED', key: 'topology:generated', emitter: 'CHRONOS', subscribers: ['OCULUS', 'ARCHITECTUS'], payload: 'TopologyGeneratedEvent { tree, hotspots, deepwiki? }', oculusHandled: true },
 
   // IMAGINARIUM → ARCHITECTUS
   { name: 'SHADERS_COMPILED', key: 'shaders:compiled', emitter: 'IMAGINARIUM', subscribers: ['ARCHITECTUS'], payload: '{ shaderIds[] }', oculusHandled: false },

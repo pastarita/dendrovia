@@ -1,6 +1,13 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Workspace packages export raw TypeScript — Next.js must transpile them.
+  turbopack: {
+    root: path.resolve(__dirname, '../..'),
+  },
   transpilePackages: [
     '@dendrovia/shared',
     '@dendrovia/architectus',

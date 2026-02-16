@@ -6,20 +6,20 @@ const monorepoRoot = resolve(__dirname, '../..');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: [
-    '@dendrovia/shared',
-    '@dendrovia/ludus',
-  ],
   turbopack: {
     root: monorepoRoot,
   },
+  transpilePackages: [
+    '@dendrovia/shared',
+    '@dendrovia/ludus',
+    '@dendrovia/operatus',
+  ],
   webpack: (config) => {
     config.resolve.extensionAlias = {
       '.js': ['.ts', '.tsx', '.js'],
     };
     return config;
   },
-  // Disable turbopack for dev to use webpack which handles .js→.ts resolution
 };
 
 export default nextConfig;

@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import type { FileTreeNode, ProceduralPalette, Hotspot, LSystemRule } from '@dendrovia/shared';
 import { useRendererStore } from './store/useRendererStore';
-import { loadGeneratedAssets } from './loader/AssetBridge';
+import { loadGeneratedAssets, type CacheableAssetLoader } from './loader/AssetBridge';
 import { detectGPU } from './renderer/detectGPU';
 import { DendriteWorld } from './components/DendriteWorld';
 import { CameraRig } from './components/CameraRig';
@@ -32,6 +32,8 @@ interface AppProps {
   hotspots?: Hotspot[];
   /** Path to IMAGINARIUM manifest.json (triggers asset loading when provided) */
   manifestPath?: string;
+  /** OPERATUS AssetLoader for cached loading (optional — direct fetch when omitted) */
+  assetLoader?: CacheableAssetLoader | null;
 }
 
 // Default "beautiful fallback" palette (Tron-inspired)
@@ -82,7 +84,7 @@ const DEMO_TOPOLOGY: FileTreeNode = {
   ],
 };
 
-export function App({ topology, palette, hotspots, manifestPath }: AppProps = {}) {
+export function App({ topology, palette, hotspots, manifestPath, assetLoader }: AppProps = {}) {
   const quality = useRendererStore((s) => s.quality);
   const setQualityTier = useRendererStore((s) => s.setQualityTier);
   const setGpuBackend = useRendererStore((s) => s.setGpuBackend);
@@ -125,13 +127,13 @@ export function App({ topology, palette, hotspots, manifestPath }: AppProps = {}
     if (!manifestPath) return;
     let cancelled = false;
 
-    loadGeneratedAssets(manifestPath).then((assets) => {
+    loadGeneratedAssets(manifestPath, { assetLoader: assetLoader ?? undefined }).then((assets) => {
       if (cancelled || !assets) return;
       setGeneratedAssets(assets);
     });
 
     return () => { cancelled = true; };
-  }, [manifestPath, setGeneratedAssets]);
+  }, [manifestPath, assetLoader, setGeneratedAssets]);
 
   // Toggle camera mode with 'C' key
   const handleKeyDown = useCallback((e: KeyboardEvent) => {

@@ -9,7 +9,7 @@
  * defined correctly."
  */
 
-import type { FileTreeNode, Hotspot } from '../types/index.js';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment } from '../types/index.js';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
@@ -259,6 +259,7 @@ export interface CollisionDetectedEvent {
 export interface TopologyGeneratedEvent {
   tree: FileTreeNode;
   hotspots: Hotspot[];
+  deepwiki?: DeepWikiEnrichment;
 }
 
 // Global singleton (lazy initialization)

@@ -14,7 +14,7 @@ Opens iTerm2/Ghostty windows for the 6 pillar checkouts at `/denroot/{PILLAR}/de
 **Commands:** `bun run launch`, `bun run launch:dev`, `bun run launch --ghostty`
 
 ### Axis 2: Playground Dev Servers (new `td` system)
-Runs `turbo dev` inside the ARCHITECTUS monorepo to start Next.js playground apps on ports 3010-3015 (plus quest at 3000). This system is about **process orchestration** — spinning up dev servers and managing their lifecycle.
+Runs `turbo dev` inside the ARCHITECTUS monorepo to start Next.js playground apps on ports 3010-3016 (Quest at 3010, playgrounds at 3011-3016). This system is about **process orchestration** — spinning up dev servers and managing their lifecycle.
 
 **Commands:** `bun run td`, `bun run td:play`, `bun run td:architectus`, etc.
 
@@ -56,12 +56,13 @@ td:operatus        ...
 | App | Port | Package | Filter |
 |-----|------|---------|--------|
 | dendrovia-quest | 3000 | `dendrovia-quest` | `--filter=dendrovia-quest` |
-| ARCHITECTUS | 3010 | `@dendrovia/playground-architectus` | `--filter=@dendrovia/playground-architectus` |
-| CHRONOS | 3011 | `@dendrovia/playground-chronos` | `--filter=@dendrovia/playground-chronos` |
-| IMAGINARIUM | 3012 | `@dendrovia/playground-imaginarium` | `--filter=@dendrovia/playground-imaginarium` |
-| LUDUS | 3013 | `@dendrovia/playground-ludus` | `--filter=@dendrovia/playground-ludus` |
-| OCULUS | 3014 | `@dendrovia/playground-oculus` | `--filter=@dendrovia/playground-oculus` |
-| OPERATUS | 3015 | `@dendrovia/playground-operatus` | `--filter=@dendrovia/playground-operatus` |
+| Quest (Hub) | 3010 | `dendrovia-quest` | `--filter=dendrovia-quest` |
+| ARCHITECTUS | 3011 | `@dendrovia/playground-architectus` | `--filter=@dendrovia/playground-architectus` |
+| CHRONOS | 3012 | `@dendrovia/playground-chronos` | `--filter=@dendrovia/playground-chronos` |
+| IMAGINARIUM | 3013 | `@dendrovia/playground-imaginarium` | `--filter=@dendrovia/playground-imaginarium` |
+| LUDUS | 3014 | `@dendrovia/playground-ludus` | `--filter=@dendrovia/playground-ludus` |
+| OCULUS | 3015 | `@dendrovia/playground-oculus` | `--filter=@dendrovia/playground-oculus` |
+| OPERATUS | 3016 | `@dendrovia/playground-operatus` | `--filter=@dendrovia/playground-operatus` |
 
 ---
 
@@ -106,7 +107,7 @@ interface PortStatus {
   port: number;
   occupied: boolean;
   pid?: number;
-  command?: string;        // e.g., "next dev --port 3010"
+  command?: string;        // e.g., "next dev --port 3011"
   pillar?: string;         // resolved from port map
   healthy?: boolean;       // HTTP health check passed
   stale?: boolean;         // process exists but not responding
@@ -122,13 +123,13 @@ interface PortStatus {
 **Pre-flight report:**
 ```
 Port Scan:
-  :3000  ● quest         (pid 12345, healthy)
-  :3010  ○ architectus   (available)
-  :3011  ○ chronos       (available)
-  :3012  ● imaginarium   (pid 12348, healthy)
-  :3013  ○ ludus         (available)
-  :3014  ○ oculus        (available)
-  :3015  ○ operatus      (available)
+  :3010  ● quest         (pid 12345, healthy)
+  :3011  ○ architectus   (available)
+  :3012  ○ chronos       (available)
+  :3013  ● imaginarium   (pid 12348, healthy)
+  :3014  ○ ludus         (available)
+  :3015  ○ oculus        (available)
+  :3016  ○ operatus      (available)
 
 Action: Start architectus, chronos, ludus, oculus, operatus
 Skip: quest (already running), imaginarium (already running)
@@ -207,8 +208,8 @@ interface BrowserConfig {
 ```
 
 **Implementation:**
-- `open http://localhost:3010` (macOS default browser)
-- `open -a "Google Chrome" --args --new-tab http://localhost:3010` (Chrome-specific)
+- `open http://localhost:3011` (macOS default browser)
+- `open -a "Google Chrome" --args --new-tab http://localhost:3011` (Chrome-specific)
 - Only open tabs for *newly started* servers, not already-running ones
 - Optional: Create Chrome tab group named "Dendrovia Playgrounds"
 
@@ -223,15 +224,16 @@ A persistent view of what's running.
 Dendrovia Dev Status
 ─────────────────────────────────────
 
-  🏛️ ARCHITECTUS  :3010  ● running  (pid 12345, 2m uptime)
-  📜 CHRONOS      :3011  ● running  (pid 12346, 2m uptime)
-  🎨 IMAGINARIUM  :3012  ● running  (pid 12347, 2m uptime)
-  🎮 LUDUS        :3013  ○ stopped
-  👁️ OCULUS       :3014  ○ stopped
-  💾 OPERATUS     :3015  ○ stopped
-  🌳 QUEST        :3000  ● running  (pid 12340, 15m uptime)
+  🌳 QUEST        :3010  ● running  (pid 12344, 2m uptime)
+  🏛️ ARCHITECTUS  :3011  ● running  (pid 12345, 2m uptime)
+  📜 CHRONOS      :3012  ● running  (pid 12346, 2m uptime)
+  🎨 IMAGINARIUM  :3013  ● running  (pid 12347, 2m uptime)
+  🎮 LUDUS        :3014  ○ stopped
+  👁️ OCULUS       :3015  ○ stopped
+  💾 OPERATUS     :3016  ○ stopped
+  🌳 QUEST        :3010  ● running  (pid 12340, 15m uptime)
 
-  Running: 4/7  │  Ports: 3000,3010-3012 active
+  Running: 4/7  │  Ports: 3010-3013 active
 ```
 
 **Watch mode** (`bun run td:status --watch`):
@@ -248,7 +250,7 @@ bun run td:smart [options]
 
 Options:
   --pillars, -p <names>    Which playgrounds to start (default: all 6)
-  --quest                  Also start quest (:3000)
+  --quest                  Also start quest (:3010)
   --open-browser, -b       Open browser tabs for started servers
   --status                 Show current status and exit
   --watch                  Watch mode (continuous status)
@@ -308,7 +310,7 @@ The `pillar-registry.ts` should be extended to include playground ports:
 ```typescript
 export interface Pillar {
   // ... existing fields
-  playgroundPort?: number;      // 3010-3015
+  playgroundPort?: number;      // 3010-3016
   playgroundPackage?: string;   // @dendrovia/playground-architectus
 }
 ```

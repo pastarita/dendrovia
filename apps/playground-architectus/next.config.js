@@ -8,6 +8,10 @@ const monorepoRoot = resolve(__dirname, '../..');
 const nextConfig = {
   turbopack: {
     root: monorepoRoot,
+    resolveAlias: {
+      fs: './lib/node-stub.js',
+      crypto: './lib/node-stub.js',
+    },
   },
   transpilePackages: [
     '@dendrovia/shared',

@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "specimenCount": 173,
+  "networkEdgeCount": 2779,
+  "specimens": "mycology/specimens.json",
+  "network": "mycology/network.json",
+  "assetDir": "mycology/svg",
+  "meshDir": "mycology/meshes",
+  "generatedAt": 1771266178310
+}

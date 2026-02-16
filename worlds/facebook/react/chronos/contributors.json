@@ -1,0 +1,385 @@
+{
+  "version": "1.0.0",
+  "contributors": [
+    {
+      "name": "Sebastian \"Sebbie\" Silbermann",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 39,
+      "firstCommit": "2026-01-16T12:08:28.000Z",
+      "lastCommit": "2026-02-12T16:48:02.000Z",
+      "uniqueFilesTouched": 133,
+      "peakHour": 10,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 25,
+        "bug-fix": 5,
+        "test": 3,
+        "refactor": 2,
+        "performance": 4
+      },
+      "facets": {
+        "energy": 100,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 21,
+        "breadth": 68,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Ricky",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 14,
+      "firstCommit": "2026-01-17T17:46:05.000Z",
+      "lastCommit": "2026-02-11T16:20:51.000Z",
+      "uniqueFilesTouched": 95,
+      "peakHour": 13,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 4,
+        "feature": 4,
+        "bug-fix": 2,
+        "test": 1,
+        "chore": 1,
+        "revert": 1,
+        "refactor": 1
+      },
+      "facets": {
+        "energy": 100,
+        "discipline": 0,
+        "creativity": 29,
+        "protectiveness": 21,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Joseph Savona",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 14,
+      "firstCommit": "2026-01-21T20:49:15.000Z",
+      "lastCommit": "2026-02-04T15:09:28.000Z",
+      "uniqueFilesTouched": 247,
+      "peakHour": 13,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 10,
+        "bug-fix": 2,
+        "feature": 2
+      },
+      "facets": {
+        "energy": 100,
+        "discipline": 0,
+        "creativity": 14,
+        "protectiveness": 14,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Ruslan Lesiutin",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "dawn",
+      "characterClass": "dps",
+      "commitCount": 8,
+      "firstCommit": "2026-01-23T10:46:30.000Z",
+      "lastCommit": "2026-02-13T15:33:22.000Z",
+      "uniqueFilesTouched": 29,
+      "peakHour": 5,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 5,
+        "bug-fix": 2,
+        "refactor": 1
+      },
+      "facets": {
+        "energy": 60,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 25,
+        "breadth": 73,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Sebastian Markbåge",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "twilight",
+      "characterClass": "dps",
+      "commitCount": 7,
+      "firstCommit": "2026-01-20T00:26:09.000Z",
+      "lastCommit": "2026-01-21T13:33:35.000Z",
+      "uniqueFilesTouched": 14,
+      "peakHour": 19,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 5,
+        "feature": 1,
+        "refactor": 1
+      },
+      "facets": {
+        "energy": 53,
+        "discipline": 0,
+        "creativity": 14,
+        "protectiveness": 0,
+        "breadth": 40,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Jack Pope",
+      "email": "",
+      "archetype": "striker",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 5,
+      "firstCommit": "2026-01-16T21:39:25.000Z",
+      "lastCommit": "2026-02-11T15:03:36.000Z",
+      "uniqueFilesTouched": 27,
+      "peakHour": 14,
+      "topCommitType": "feature",
+      "typeDistribution": {
+        "refactor": 1,
+        "feature": 3,
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 38,
+        "discipline": 0,
+        "creativity": 60,
+        "protectiveness": 20,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Hendrik Liebau",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 5,
+      "firstCommit": "2026-01-16T17:42:09.000Z",
+      "lastCommit": "2026-02-09T18:19:32.000Z",
+      "uniqueFilesTouched": 38,
+      "peakHour": 13,
+      "topCommitType": "feature",
+      "typeDistribution": {
+        "feature": 2,
+        "bug-fix": 2,
+        "maintenance": 1
+      },
+      "facets": {
+        "energy": 38,
+        "discipline": 0,
+        "creativity": 40,
+        "protectiveness": 40,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Azat S.",
+      "email": "",
+      "archetype": "striker",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2026-02-13T18:26:01.000Z",
+      "lastCommit": "2026-02-13T18:26:01.000Z",
+      "uniqueFilesTouched": 8,
+      "peakHour": 13,
+      "topCommitType": "feature",
+      "typeDistribution": {
+        "feature": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 100,
+        "protectiveness": 0,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Jimmy Lai",
+      "email": "",
+      "archetype": "healer",
+      "timeArchetype": "daylight",
+      "characterClass": "healer",
+      "commitCount": 1,
+      "firstCommit": "2026-02-08T19:14:15.000Z",
+      "lastCommit": "2026-02-08T19:14:15.000Z",
+      "uniqueFilesTouched": 3,
+      "peakHour": 14,
+      "topCommitType": "bug-fix",
+      "typeDistribution": {
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 100,
+        "breadth": 60,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Jorge Cabiedes",
+      "email": "",
+      "archetype": "healer",
+      "timeArchetype": "daylight",
+      "characterClass": "healer",
+      "commitCount": 1,
+      "firstCommit": "2026-02-04T16:24:24.000Z",
+      "lastCommit": "2026-02-04T16:24:24.000Z",
+      "uniqueFilesTouched": 2,
+      "peakHour": 11,
+      "topCommitType": "bug-fix",
+      "typeDistribution": {
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 100,
+        "breadth": 40,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Anton Chesnokov",
+      "email": "",
+      "archetype": "healer",
+      "timeArchetype": "daylight",
+      "characterClass": "healer",
+      "commitCount": 1,
+      "firstCommit": "2026-02-04T16:07:17.000Z",
+      "lastCommit": "2026-02-04T16:07:17.000Z",
+      "uniqueFilesTouched": 3,
+      "peakHour": 11,
+      "topCommitType": "bug-fix",
+      "typeDistribution": {
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 100,
+        "breadth": 60,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Janka Uryga",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2026-02-03T14:29:51.000Z",
+      "lastCommit": "2026-02-03T14:29:51.000Z",
+      "uniqueFilesTouched": 15,
+      "peakHour": 9,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Nathan",
+      "email": "",
+      "archetype": "healer",
+      "timeArchetype": "daylight",
+      "characterClass": "healer",
+      "commitCount": 1,
+      "firstCommit": "2026-01-30T16:37:19.000Z",
+      "lastCommit": "2026-01-30T16:37:19.000Z",
+      "uniqueFilesTouched": 229,
+      "peakHour": 11,
+      "topCommitType": "bug-fix",
+      "typeDistribution": {
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 100,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Jan Olaf Martin",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2026-01-28T18:15:33.000Z",
+      "lastCommit": "2026-01-28T18:15:33.000Z",
+      "uniqueFilesTouched": 8,
+      "peakHour": 13,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Josh Story",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "midnight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2026-01-16T03:05:23.000Z",
+      "lastCommit": "2026-01-16T03:05:23.000Z",
+      "uniqueFilesTouched": 6958,
+      "peakHour": 22,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 1
+      },
+      "facets": {
+        "energy": 8,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    }
+  ]
+}

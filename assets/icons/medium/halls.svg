@@ -1,0 +1,52 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- HALLS MEDIUM: Great hall corridor with perspective depth and branching passages -->
+
+  <!-- === CORRIDOR VOID: Deep background floor plane === -->
+  <polygon points="50,18 15,95 85,95" fill="#4a3822"/>
+
+  <!-- === LEFT WALL === -->
+  <polygon points="5,10 50,18 15,95 5,95" fill="#d4a574"/>
+  <line x1="5" y1="45" x2="30" y2="55" stroke="#8b7355" stroke-width="0.8" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- === RIGHT WALL === -->
+  <polygon points="95,10 50,18 85,95 95,95" fill="#d4a574" opacity="0.85"/>
+  <line x1="95" y1="45" x2="70" y2="55" stroke="#8b7355" stroke-width="0.8" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- === FLOOR PERSPECTIVE LINES (stratification) === -->
+  <line x1="50" y1="18" x2="25" y2="95" stroke="#8b7355" stroke-width="0.7" opacity="0.4" stroke-linecap="round"/>
+  <line x1="50" y1="18" x2="50" y2="95" stroke="#8b7355" stroke-width="0.6" opacity="0.35" stroke-linecap="round"/>
+  <line x1="50" y1="18" x2="75" y2="95" stroke="#8b7355" stroke-width="0.7" opacity="0.4" stroke-linecap="round"/>
+  <!-- Horizontal stratification band -->
+  <line x1="26" y1="65" x2="74" y2="65" stroke="#4a3822" stroke-width="0.7" opacity="0.35" stroke-linecap="round"/>
+
+  <!-- === LEFT ALCOVE ARCHWAYS === -->
+  <path d="M8,60 Q8,50 15,50 L15,66 L8,66 Z" fill="#4a3822" opacity="0.8"/>
+  <path d="M13,38 Q13,33 17,33 L17,42 L13,42 Z" fill="#4a3822" opacity="0.7"/>
+
+  <!-- === RIGHT ALCOVE ARCHWAY === -->
+  <path d="M92,56 Q92,46 86,46 L86,62 L92,62 Z" fill="#4a3822" opacity="0.75"/>
+
+  <!-- === Y-FORK BRANCHING at far end (THE key motif) === -->
+  <polygon points="50,18 42,11 38,18 44,26" fill="#4a3822" opacity="0.9"/>
+  <polygon points="50,18 58,11 62,18 56,26" fill="#4a3822" opacity="0.9"/>
+  <!-- Central pier divider -->
+  <polygon points="48,20 50,11 52,20" fill="#d4a574"/>
+
+  <!-- === TORCH LIGHT SOURCES (warm amber glow on walls) === -->
+  <circle cx="11" cy="54" r="2.5" fill="#f5ead6" opacity="0.6"/>
+  <circle cx="89" cy="50" r="2.5" fill="#f5ead6" opacity="0.55"/>
+
+  <!-- === WAYFINDING NODES (bioluminescent blue at junctions) === -->
+  <!-- Vanishing point central node -->
+  <circle cx="50" cy="18" r="2.5" fill="#7fa9f5"/>
+  <!-- Left branch node -->
+  <circle cx="41" cy="13" r="1.5" fill="#7fa9f5" opacity="0.7"/>
+  <!-- Right branch node -->
+  <circle cx="59" cy="13" r="1.5" fill="#7fa9f5" opacity="0.7"/>
+  <!-- Mid-corridor floor node -->
+  <circle cx="50" cy="55" r="1.8" fill="#7fa9f5" opacity="0.5"/>
+
+  <!-- === LAVENDER SPATIAL ACCENTS (mystical corridor depth) === -->
+  <circle cx="43" cy="15" r="4" fill="#c4b5fd" opacity="0.15"/>
+  <circle cx="57" cy="15" r="4" fill="#c4b5fd" opacity="0.15"/>
+</svg>

@@ -8,6 +8,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  outputFileTracingIncludes: {
+    '/*': ['../../worlds/**/*', '../../turbo.json'],
+  },
   turbopack: {
     root: path.resolve(__dirname, '../..'),
   },

@@ -16,7 +16,7 @@ import type { MycologyManifest, FungalSpecimen, MycelialNetwork, FungalGenus } f
 const log = createLogger('IMAGINARIUM', 'mycology');
 import { catalogize } from './SpecimenCatalog';
 import { buildNetwork } from './MycelialNetwork';
-import { buildCoChurnMap, buildFileContext, classifyGenus } from './GenusMapper';
+import { buildCoChurnMap, buildFileContext, classifyGenus, precomputeInvariants } from './GenusMapper';
 import { generateSvg } from './assets/SvgTemplates';
 
 export async function distillMycology(
@@ -33,15 +33,18 @@ export async function distillMycology(
     if (!existsSync(d)) mkdirSync(d, { recursive: true });
   }
 
-  // 1. Catalogize specimens
-  const specimens = catalogize(topology);
+  // Pre-compute shared invariants + co-churn once (avoids O(F²) and duplicate work)
+  const invariants = precomputeInvariants(topology);
+  const coChurnMap = buildCoChurnMap(topology);
+
+  // 1. Catalogize specimens (reuses shared co-churn + invariants)
+  const specimens = catalogize(topology, coChurnMap, invariants);
   log.info({ count: specimens.length }, 'Specimens catalogized');
 
-  // 2. Build genus map for network construction
-  const coChurnMap = buildCoChurnMap(topology);
+  // 2. Build genus map for network construction (reuses shared co-churn + invariants)
   const genusMap = new Map<string, FungalGenus>();
   for (const file of topology.files) {
-    const ctx = buildFileContext(file, topology, coChurnMap);
+    const ctx = buildFileContext(file, topology, coChurnMap, invariants);
     genusMap.set(file.path, classifyGenus(file, ctx));
   }
 

@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "seed": "78afa588d39647b5",
+  "segments": [
+    {
+      "id": "seg-edd4803a",
+      "label": "root",
+      "phase": "prologue",
+      "mood": "serene",
+      "filePaths": [
+        "package.json",
+        "README.md",
+        "tsconfig.json"
+      ],
+      "treePath": "",
+      "metrics": {
+        "fileCount": 3,
+        "totalLoc": 143,
+        "avgComplexity": 0,
+        "maxComplexity": 0,
+        "hotspotCount": 0,
+        "avgChurn": 0,
+        "dominantLanguage": "json",
+        "encounterDensity": 0
+      },
+      "ordinal": 0
+    },
+    {
+      "id": "seg-f2d5decd",
+      "label": "__tests__",
+      "phase": "falling",
+      "mood": "serene",
+      "filePaths": [
+        "__tests__/commit-classifier.test.ts",
+        "__tests__/complexity-analyzer.test.ts",
+        "__tests__/contributor-profiler.test.ts",
+        "__tests__/hotspot-detector.test.ts",
+        "__tests__/topology-builder.test.ts",
+        "__tests__/tree-builder.test.ts"
+      ],
+      "treePath": "__tests__",
+      "metrics": {
+        "fileCount": 6,
+        "totalLoc": 2123,
+        "avgComplexity": 3.3333333333333335,
+        "maxComplexity": 9,
+        "hotspotCount": 0,
+        "avgChurn": 0,
+        "dominantLanguage": "typescript",
+        "encounterDensity": 0
+      },
+      "ordinal": 1
+    },
+    {
+      "id": "seg-4d7c7fb3",
+      "label": "src",
+      "phase": "climax",
+      "mood": "triumphant",
+      "filePaths": [
+        "src/analyzer/ComplexityAnalyzer.ts",
+        "src/analyzer/HotspotDetector.ts",
+        "src/builder/ContributorProfiler.ts",
+        "src/builder/TopologyBuilder.ts",
+        "src/builder/TreeBuilder.ts",
+        "src/classifier/CommitClassifier.ts",
+        "src/parser/ASTParser.ts",
+        "src/parser/GitParser.ts",
+        "src/index.ts",
+        "src/parse.ts"
+      ],
+      "treePath": "src",
+      "metrics": {
+        "fileCount": 10,
+        "totalLoc": 1701,
+        "avgComplexity": 16.4,
+        "maxComplexity": 31,
+        "hotspotCount": 0,
+        "avgChurn": 0,
+        "dominantLanguage": "typescript",
+        "encounterDensity": 0
+      },
+      "ordinal": 2
+    }
+  ],
+  "totalFiles": 19,
+  "derivedAt": "2026-02-16T18:23:13.136Z",
+  "topologyHash": "78afa588d39647b535e4423ba76233c62ac9339daffc262e421a940c48f36d44"
+}

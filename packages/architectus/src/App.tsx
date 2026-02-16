@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState, useCallback } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import type { FileTreeNode, ProceduralPalette, Hotspot, LSystemRule } from '@dendrovia/shared';
@@ -89,11 +89,6 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
   const setQualityTier = useRendererStore((s) => s.setQualityTier);
   const setGpuBackend = useRendererStore((s) => s.setGpuBackend);
   const setLoading = useRendererStore((s) => s.setLoading);
-  const cameraMode = useRendererStore((s) => s.cameraMode);
-  const setCameraMode = useRendererStore((s) => s.setCameraMode);
-  const fps = useRendererStore((s) => s.fps);
-  const selectedNodeId = useRendererStore((s) => s.selectedNodeId);
-  const qualityTier = useRendererStore((s) => s.qualityTier);
   const generatedAssets = useRendererStore((s) => s.generatedAssets);
   const setGeneratedAssets = useRendererStore((s) => s.setGeneratedAssets);
   const sdfBackdrop = useRendererStore((s) => s.sdfBackdrop);
@@ -136,21 +131,6 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
 
     return () => { cancelled = true; };
   }, [manifestPath, assetLoader, setGeneratedAssets]);
-
-  // Toggle camera mode with 'C' key, SDF backdrop with 'S' key
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'c' || e.key === 'C') {
-      setCameraMode(cameraMode === 'falcon' ? 'player' : 'falcon');
-    }
-    if (e.key === 's' || e.key === 'S') {
-      toggleSdfBackdrop();
-    }
-  }, [cameraMode, setCameraMode, toggleSdfBackdrop]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
 
   if (!gpuReady) {
     return (
@@ -218,46 +198,6 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
         {/* Debug grid (dev mode only) */}
         <gridHelper args={[40, 40, '#1a1a2e', '#0a0a1e']} />
       </Canvas>
-
-      {/* HUD overlay — top-left */}
-      <div style={{
-        position: 'absolute',
-        top: 16,
-        left: 16,
-        color: activePalette.glow,
-        fontFamily: "'Courier New', monospace",
-        fontSize: '0.75rem',
-        pointerEvents: 'none',
-        textShadow: `0 0 8px ${activePalette.glow}40`,
-      }}>
-        <div style={{ opacity: 0.8 }}>ARCHITECTUS v0.1.0</div>
-        <div style={{ opacity: 0.5, marginTop: 4 }}>
-          Mode: {cameraMode.toUpperCase()} | [C] Toggle | SDF: {sdfBackdrop ? 'ON' : 'OFF'} [S]
-        </div>
-        <div style={{ opacity: 0.4, marginTop: 2 }}>
-          {fps > 0 ? `${fps} FPS` : '...'} | {qualityTier.toUpperCase()}
-        </div>
-      </div>
-
-      {/* Selected node info — bottom-left */}
-      {selectedNodeId && (
-        <div style={{
-          position: 'absolute',
-          bottom: 16,
-          left: 16,
-          color: activePalette.accent,
-          fontFamily: "'Courier New', monospace",
-          fontSize: '0.8rem',
-          pointerEvents: 'none',
-          textShadow: `0 0 8px ${activePalette.accent}40`,
-          background: `${activePalette.background}cc`,
-          padding: '8px 12px',
-          borderLeft: `2px solid ${activePalette.accent}`,
-        }}>
-          <div style={{ opacity: 0.6, fontSize: '0.65rem', marginBottom: 2 }}>SELECTED</div>
-          <div>{selectedNodeId}</div>
-        </div>
-      )}
     </div>
   );
 }

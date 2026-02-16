@@ -9,6 +9,8 @@ import {
   type PillarName,
   type DomainSlug,
 } from "./domain-registry";
+import { DomainIcon, PillarIcon } from "./icons";
+import { devUrl } from "./dev-urls";
 
 const STORAGE_KEY = "domainnav-expanded";
 
@@ -111,7 +113,7 @@ export function DomainNav({ currentPillar }: { currentPillar: string }) {
                 fontWeight: isHero ? 600 : 400,
               }}
             >
-              <span>{d.icon}</span>
+              <DomainIcon domain={d.slug} size={18} />
               <span>{d.name}</span>
               {isHero && (
                 <span
@@ -141,7 +143,7 @@ export function DomainNav({ currentPillar }: { currentPillar: string }) {
                       href={
                         isCurrent
                           ? d.path
-                          : `http://localhost:${p.port}${d.path}`
+                          : devUrl(p.port, d.path)
                       }
                       style={{
                         display: "flex",
@@ -158,7 +160,7 @@ export function DomainNav({ currentPillar }: { currentPillar: string }) {
                         fontWeight: isCurrent ? 600 : 400,
                       }}
                     >
-                      <span style={{ fontSize: "0.75rem" }}>{p.emoji}</span>
+                      <PillarIcon pillar={p.name} size={14} />
                       <span>{p.name}</span>
                       {isTopForDomain && !isCurrent && (
                         <span style={{ fontSize: "0.6rem", opacity: 0.6 }}>

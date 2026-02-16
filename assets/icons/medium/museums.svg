@@ -1,0 +1,51 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- MUSEUMS MEDIUM: Exhibition hall with display pedestals and framed art -->
+
+  <!-- === BACK WALL: Stratified backdrop (2 layers for depth) === -->
+  <rect x="14" y="18" width="72" height="64" rx="2" fill="#4a3822"/>
+  <rect x="16" y="20" width="68" height="60" rx="1.5" fill="#4a3822" opacity="0.7" stroke="#8b7355" stroke-width="0.5"/>
+
+  <!-- === CLASSICAL ARCH: Two pillars with connecting arch === -->
+  <!-- Pillars -->
+  <rect x="16" y="28" width="8" height="52" fill="#8b7355"/>
+  <rect x="76" y="28" width="8" height="52" fill="#8b7355"/>
+  <!-- Pillar highlight faces -->
+  <rect x="17" y="28" width="3" height="52" fill="#d4a574" opacity="0.45"/>
+  <rect x="77" y="28" width="3" height="52" fill="#d4a574" opacity="0.45"/>
+  <!-- Arch span -->
+  <path d="M24,28 Q50,6 76,28" fill="none" stroke="#d4a574" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- === Y-FORK KEYSTONE: Dendritic motif at arch apex === -->
+  <line x1="50" y1="11" x2="50" y2="19" stroke="#8b7355" stroke-width="2" stroke-linecap="round"/>
+  <line x1="50" y1="11" x2="43" y2="4" stroke="#8b7355" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="50" y1="11" x2="57" y2="4" stroke="#8b7355" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Branch tip nodes + keystone node -->
+  <circle cx="43" cy="4" r="2" fill="#7fa9f5" opacity="0.7"/>
+  <circle cx="57" cy="4" r="2" fill="#7fa9f5" opacity="0.7"/>
+  <circle cx="50" cy="11" r="2.5" fill="#d4a574" stroke="#8b7355" stroke-width="1"/>
+
+  <!-- === EXHIBITION SPOTLIGHT: Golden ambient glow (central) === -->
+  <circle cx="50" cy="23" r="8" fill="#ffd43b" opacity="0.1"/>
+
+  <!-- === FRAMED ARTWORK: On back wall center === -->
+  <rect x="40" y="34" width="20" height="15" rx="1" fill="#8b7355"/>
+  <rect x="42" y="36" width="16" height="11" fill="#f5ead6" opacity="0.5"/>
+  <path d="M42,47 L48,40 L52,43 L58,38 L58,47 Z" fill="#d4a574" opacity="0.55"/>
+
+  <!-- === FLOOR: Ground plane with perspective === -->
+  <rect x="14" y="78" width="72" height="6" fill="#8b7355"/>
+  <line x1="14" y1="78" x2="86" y2="78" stroke="#d4a574" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- === DISPLAY PEDESTALS: 3 tiered heights (Y-arrangement) === -->
+  <!-- Left pedestal (short) + artifact sphere -->
+  <rect x="28" y="66" width="8" height="12" rx="0.8" fill="#d4a574"/>
+  <circle cx="32" cy="63.5" r="2.5" fill="#7fa9f5" opacity="0.55"/>
+
+  <!-- Center pedestal (tall) + golden exhibit -->
+  <rect x="45" y="58" width="10" height="20" rx="0.8" fill="#d4a574"/>
+  <path d="M47,56 L49,51 L51,51 L53,56 Z" fill="#ffd43b" opacity="0.7"/>
+
+  <!-- Right pedestal (medium) + info node -->
+  <rect x="64" y="62" width="8" height="16" rx="0.8" fill="#d4a574"/>
+  <circle cx="68" cy="59" r="2.8" fill="#7fa9f5" opacity="0.5"/>
+</svg>

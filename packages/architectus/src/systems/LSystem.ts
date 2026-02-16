@@ -141,7 +141,7 @@ export class LSystem {
     hotspots: Hotspot[] = [],
     baseSeed = 42
   ): LSystem {
-    const seed = hashString(tree.path) + baseSeed;
+    const seed = hashString(tree.path ?? '') + baseSeed;
     const rng = mulberry32(seed);
 
     // Build axiom from directory structure (G = structural, F = organic tips)

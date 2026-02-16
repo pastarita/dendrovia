@@ -19,6 +19,9 @@ import type {
   FungalFamily,
 } from './types';
 
+// Commits touching more files than this are mass refactors — skip for co-churn
+export const MAX_COCHURN_COMMIT_FILES = 100;
+
 // ---------------------------------------------------------------------------
 // Genus scoring criteria
 // ---------------------------------------------------------------------------
@@ -359,6 +362,58 @@ function deriveFamily(genus: FungalGenus): FungalFamily {
 }
 
 // ---------------------------------------------------------------------------
+// Pre-computed topology invariants (avoids O(F²) recomputation)
+// ---------------------------------------------------------------------------
+
+export interface TopologyInvariants {
+  hotspotMap: Map<string, Hotspot>;
+  newestTimestamp: number;
+  avgComplexity: number;
+  maxLoc: number;
+  commitCountMap: Map<string, number>;
+  dirSiblingsMap: Map<string, ParsedFile[]>;
+}
+
+export function precomputeInvariants(topology: CodeTopology): TopologyInvariants {
+  // Hotspot lookup — O(H) build, O(1) per query
+  const hotspotMap = new Map<string, Hotspot>();
+  for (const h of topology.hotspots) {
+    hotspotMap.set(h.path, h);
+  }
+
+  // Newest timestamp — single pass
+  let newestTimestamp = 0;
+  let totalComplexity = 0;
+  let maxLoc = 0;
+  const dirSiblingsMap = new Map<string, ParsedFile[]>();
+
+  for (const f of topology.files) {
+    const ts = new Date(f.lastModified).getTime();
+    if (ts > newestTimestamp) newestTimestamp = ts;
+    totalComplexity += f.complexity;
+    if (f.loc > maxLoc) maxLoc = f.loc;
+
+    const dir = f.path.split('/').slice(0, -1).join('/');
+    if (!dirSiblingsMap.has(dir)) dirSiblingsMap.set(dir, []);
+    dirSiblingsMap.get(dir)!.push(f);
+  }
+
+  const avgComplexity = topology.files.length > 0
+    ? totalComplexity / topology.files.length
+    : 0;
+
+  // Commit count per file — O(C * avg_files_per_commit) build, O(1) per query
+  const commitCountMap = new Map<string, number>();
+  for (const c of topology.commits) {
+    for (const path of c.filesChanged) {
+      commitCountMap.set(path, (commitCountMap.get(path) ?? 0) + 1);
+    }
+  }
+
+  return { hotspotMap, newestTimestamp, avgComplexity, maxLoc, commitCountMap, dirSiblingsMap };
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -366,12 +421,21 @@ export function buildFileContext(
   file: ParsedFile,
   topology: CodeTopology,
   coChurnMap: Map<string, Set<string>>,
+  invariants?: TopologyInvariants,
 ): FileContext {
-  const hotspot = topology.hotspots.find(h => h.path === file.path);
-  const newestFile = topology.files.reduce((a, b) =>
-    new Date(a.lastModified).getTime() > new Date(b.lastModified).getTime() ? a : b
-  );
-  const fileAge = new Date(newestFile.lastModified).getTime() - new Date(file.lastModified).getTime();
+  // Use pre-computed invariants when available, fall back to per-call computation
+  const hotspot = invariants
+    ? invariants.hotspotMap.get(file.path)
+    : topology.hotspots.find(h => h.path === file.path);
+
+  const newestTimestamp = invariants
+    ? invariants.newestTimestamp
+    : topology.files.reduce((best, f) => {
+        const ts = new Date(f.lastModified).getTime();
+        return ts > best ? ts : best;
+      }, 0);
+
+  const fileAge = newestTimestamp - new Date(file.lastModified).getTime();
 
   // Count co-churn connections as proxy for import relationships
   const connections = coChurnMap.get(file.path);
@@ -379,19 +443,30 @@ export function buildFileContext(
 
   // Estimate dependency count from directory siblings
   const dir = file.path.split('/').slice(0, -1).join('/');
-  const siblings = topology.files.filter(f => {
-    const fDir = f.path.split('/').slice(0, -1).join('/');
-    return fDir === dir && f.path !== file.path;
-  });
-  const dependencyCount = Math.min(siblings.length, 10);
+  let siblingCount: number;
+  if (invariants) {
+    const dirFiles = invariants.dirSiblingsMap.get(dir);
+    siblingCount = dirFiles ? dirFiles.length - 1 : 0; // -1 to exclude self
+  } else {
+    siblingCount = topology.files.filter(f => {
+      const fDir = f.path.split('/').slice(0, -1).join('/');
+      return fDir === dir && f.path !== file.path;
+    }).length;
+  }
+  const dependencyCount = Math.min(siblingCount, 10);
 
   // Count commits touching this file
-  const commitCount = topology.commits.filter(c =>
-    c.filesChanged.includes(file.path)
-  ).length;
+  const commitCount = invariants
+    ? (invariants.commitCountMap.get(file.path) ?? 0)
+    : topology.commits.filter(c => c.filesChanged.includes(file.path)).length;
 
-  const avgComplexity = topology.files.reduce((s, f) => s + f.complexity, 0) / topology.files.length;
-  const maxLoc = Math.max(...topology.files.map(f => f.loc));
+  const avgComplexity = invariants
+    ? invariants.avgComplexity
+    : topology.files.reduce((s, f) => s + f.complexity, 0) / topology.files.length;
+
+  const maxLoc = invariants
+    ? invariants.maxLoc
+    : Math.max(...topology.files.map(f => f.loc));
 
   return {
     isEntryPoint: ENTRY_POINT_PATTERNS.test(file.path),
@@ -446,6 +521,8 @@ export function buildCoChurnMap(topology: CodeTopology): Map<string, Set<string>
 
   for (const commit of topology.commits) {
     const changed = commit.filesChanged;
+    // Skip mega-commits — mass refactors provide no useful co-churn signal
+    if (changed.length > MAX_COCHURN_COMMIT_FILES) continue;
     for (let i = 0; i < changed.length; i++) {
       const ci = changed[i]!;
       for (let j = i + 1; j < changed.length; j++) {

@@ -18,6 +18,8 @@ import { BattleUI } from './BattleUI';
 import { StatusEffectBar } from './StatusEffectBar';
 import { LootPanel } from './LootPanel';
 import { FalconModeOverlay } from './FalconModeOverlay';
+import { WorldHeader } from './WorldHeader';
+import { NavigationBar } from './NavigationBar';
 
 export function HUD() {
   const health = useOculusStore((s) => s.health);
@@ -30,8 +32,9 @@ export function HUD() {
 
   return (
     <div className="oculus-hud" role="status" aria-label="Game HUD">
-      {/* ── Top-Left: Player Stats ──────────────────── */}
+      {/* ── Top-Left: World Header + Player Stats ─────── */}
       <div className="oculus-corner oculus-corner--top-left">
+        <WorldHeader />
         <Panel compact aria-label="Player stats">
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--oculus-space-sm)', marginBottom: 'var(--oculus-space-sm)' }}>
             <IconBadge
@@ -77,8 +80,9 @@ export function HUD() {
         <QuestLog />
       </div>
 
-      {/* ── Bottom-Right: Controls Legend ──────────── */}
+      {/* ── Bottom-Right: Navigation + Controls Legend ── */}
       <div className="oculus-corner oculus-corner--bottom-right">
+        <NavigationBar />
         <Panel compact aria-label="Controls">
           <div className="oculus-heading">Controls</div>
           <div style={{ fontSize: 'var(--oculus-font-xs)', lineHeight: 1.8, color: 'var(--oculus-text-muted)' }}>

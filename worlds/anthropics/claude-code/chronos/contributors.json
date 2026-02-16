@@ -1,0 +1,555 @@
+{
+  "version": "1.0.0",
+  "contributors": [
+    {
+      "name": "GitHub Actions",
+      "email": "",
+      "archetype": "guardian",
+      "timeArchetype": "twilight",
+      "characterClass": "tank",
+      "commitCount": 95,
+      "firstCommit": "2025-11-14T19:28:50.000Z",
+      "lastCommit": "2026-02-13T20:01:23.000Z",
+      "uniqueFilesTouched": 1,
+      "peakHour": 18,
+      "topCommitType": "chore",
+      "typeDistribution": {
+        "chore": 95
+      },
+      "facets": {
+        "energy": 100,
+        "discipline": 100,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 0,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Franklin Volcic",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "twilight",
+      "characterClass": "dps",
+      "commitCount": 20,
+      "firstCommit": "2025-12-06T01:05:54.000Z",
+      "lastCommit": "2026-02-11T21:42:06.000Z",
+      "uniqueFilesTouched": 2,
+      "peakHour": 18,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "docs": 2,
+        "merge": 5,
+        "maintenance": 4,
+        "bug-fix": 5,
+        "revert": 1,
+        "refactor": 1,
+        "test": 1,
+        "feature": 1
+      },
+      "facets": {
+        "energy": 100,
+        "discipline": 10,
+        "creativity": 5,
+        "protectiveness": 30,
+        "breadth": 2,
+        "collaboration": 50
+      }
+    },
+    {
+      "name": "JB",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 8,
+      "firstCommit": "2026-01-14T18:12:00.000Z",
+      "lastCommit": "2026-01-14T23:12:25.000Z",
+      "uniqueFilesTouched": 3,
+      "peakHour": 14,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 4,
+        "chore": 3,
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 51,
+        "discipline": 50,
+        "creativity": 0,
+        "protectiveness": 13,
+        "breadth": 8,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "ant-kurt",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "midnight",
+      "characterClass": "dps",
+      "commitCount": 6,
+      "firstCommit": "2026-01-12T19:38:56.000Z",
+      "lastCommit": "2026-02-02T19:35:31.000Z",
+      "uniqueFilesTouched": 2,
+      "peakHour": 1,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 4,
+        "maintenance": 2
+      },
+      "facets": {
+        "energy": 38,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 7,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "Thariq Shihipar",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "twilight",
+      "characterClass": "dps",
+      "commitCount": 6,
+      "firstCommit": "2025-11-12T01:31:51.000Z",
+      "lastCommit": "2026-01-08T00:16:58.000Z",
+      "uniqueFilesTouched": 76,
+      "peakHour": 19,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 3,
+        "maintenance": 1,
+        "feature": 2
+      },
+      "facets": {
+        "energy": 38,
+        "discipline": 33,
+        "creativity": 33,
+        "protectiveness": 0,
+        "breadth": 100,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "Chris Lloyd",
+      "email": "",
+      "archetype": "healer",
+      "timeArchetype": "midnight",
+      "characterClass": "healer",
+      "commitCount": 5,
+      "firstCommit": "2026-02-12T06:34:23.000Z",
+      "lastCommit": "2026-02-14T03:39:10.000Z",
+      "uniqueFilesTouched": 7,
+      "peakHour": 1,
+      "topCommitType": "bug-fix",
+      "typeDistribution": {
+        "docs": 1,
+        "bug-fix": 3,
+        "merge": 1
+      },
+      "facets": {
+        "energy": 32,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 60,
+        "breadth": 28,
+        "collaboration": 40
+      }
+    },
+    {
+      "name": "Kurt Carpenter",
+      "email": "",
+      "archetype": "guardian",
+      "timeArchetype": "twilight",
+      "characterClass": "tank",
+      "commitCount": 5,
+      "firstCommit": "2026-01-10T02:24:29.000Z",
+      "lastCommit": "2026-01-31T00:59:39.000Z",
+      "uniqueFilesTouched": 9,
+      "peakHour": 19,
+      "topCommitType": "chore",
+      "typeDistribution": {
+        "chore": 3,
+        "docs": 2
+      },
+      "facets": {
+        "energy": 32,
+        "discipline": 80,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 36,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Daisy S. Hollman",
+      "email": "",
+      "archetype": "striker",
+      "timeArchetype": "dawn",
+      "characterClass": "dps",
+      "commitCount": 5,
+      "firstCommit": "2025-11-16T21:53:45.000Z",
+      "lastCommit": "2025-11-18T06:54:12.000Z",
+      "uniqueFilesTouched": 91,
+      "peakHour": 6,
+      "topCommitType": "feature",
+      "typeDistribution": {
+        "merge": 2,
+        "feature": 3
+      },
+      "facets": {
+        "energy": 32,
+        "discipline": 60,
+        "creativity": 60,
+        "protectiveness": 0,
+        "breadth": 100,
+        "collaboration": 80
+      }
+    },
+    {
+      "name": "kashyap murali",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "twilight",
+      "characterClass": "dps",
+      "commitCount": 3,
+      "firstCommit": "2025-12-11T22:42:30.000Z",
+      "lastCommit": "2026-02-11T22:26:35.000Z",
+      "uniqueFilesTouched": 0,
+      "peakHour": 17,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 3
+      },
+      "facets": {
+        "energy": 19,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 0,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "Boris Cherny",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 3,
+      "firstCommit": "2026-01-07T03:16:31.000Z",
+      "lastCommit": "2026-01-07T20:31:21.000Z",
+      "uniqueFilesTouched": 3,
+      "peakHour": 15,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 1,
+        "maintenance": 1,
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 19,
+        "discipline": 33,
+        "creativity": 0,
+        "protectiveness": 33,
+        "breadth": 20,
+        "collaboration": 67
+      }
+    },
+    {
+      "name": "David Dworken",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 2,
+      "firstCommit": "2026-01-07T15:57:56.000Z",
+      "lastCommit": "2026-01-07T16:03:50.000Z",
+      "uniqueFilesTouched": 1,
+      "peakHour": 10,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 1,
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 13,
+        "discipline": 50,
+        "creativity": 0,
+        "protectiveness": 50,
+        "breadth": 10,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "Anthony Morris",
+      "email": "",
+      "archetype": "healer",
+      "timeArchetype": "midnight",
+      "characterClass": "healer",
+      "commitCount": 2,
+      "firstCommit": "2026-01-05T07:27:48.000Z",
+      "lastCommit": "2026-01-06T21:46:09.000Z",
+      "uniqueFilesTouched": 3,
+      "peakHour": 2,
+      "topCommitType": "bug-fix",
+      "typeDistribution": {
+        "bug-fix": 2
+      },
+      "facets": {
+        "energy": 13,
+        "discipline": 100,
+        "creativity": 0,
+        "protectiveness": 100,
+        "breadth": 30,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Claude",
+      "email": "",
+      "archetype": "sage",
+      "timeArchetype": "daylight",
+      "characterClass": "healer",
+      "commitCount": 2,
+      "firstCommit": "2025-12-11T22:40:32.000Z",
+      "lastCommit": "2025-12-15T17:50:32.000Z",
+      "uniqueFilesTouched": 2,
+      "peakHour": 12,
+      "topCommitType": "docs",
+      "typeDistribution": {
+        "docs": 1,
+        "maintenance": 1
+      },
+      "facets": {
+        "energy": 13,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 20,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Stephen Grider",
+      "email": "",
+      "archetype": "artificer",
+      "timeArchetype": "twilight",
+      "characterClass": "tank",
+      "commitCount": 2,
+      "firstCommit": "2025-11-25T22:00:24.000Z",
+      "lastCommit": "2025-11-25T22:36:50.000Z",
+      "uniqueFilesTouched": 2,
+      "peakHour": 17,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 1,
+        "chore": 1
+      },
+      "facets": {
+        "energy": 13,
+        "discipline": 50,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 20,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "William Hu",
+      "email": "",
+      "archetype": "berserker",
+      "timeArchetype": "midnight",
+      "characterClass": "dps",
+      "commitCount": 2,
+      "firstCommit": "2025-11-24T07:24:09.000Z",
+      "lastCommit": "2025-11-24T19:05:28.000Z",
+      "uniqueFilesTouched": 6,
+      "peakHour": 2,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 1,
+        "breaking-change": 1
+      },
+      "facets": {
+        "energy": 13,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 60,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "sarahdeaton",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2026-01-06T19:23:17.000Z",
+      "lastCommit": "2026-01-06T19:23:17.000Z",
+      "uniqueFilesTouched": 0,
+      "peakHour": 14,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 1
+      },
+      "facets": {
+        "energy": 6,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 0,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "Sarah Deaton",
+      "email": "",
+      "archetype": "sage",
+      "timeArchetype": "daylight",
+      "characterClass": "healer",
+      "commitCount": 1,
+      "firstCommit": "2026-01-06T14:47:41.000Z",
+      "lastCommit": "2026-01-06T14:47:41.000Z",
+      "uniqueFilesTouched": 1,
+      "peakHour": 9,
+      "topCommitType": "docs",
+      "typeDistribution": {
+        "docs": 1
+      },
+      "facets": {
+        "energy": 6,
+        "discipline": 100,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 20,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Nelson Auner",
+      "email": "",
+      "archetype": "healer",
+      "timeArchetype": "dawn",
+      "characterClass": "healer",
+      "commitCount": 1,
+      "firstCommit": "2026-01-06T13:26:23.000Z",
+      "lastCommit": "2026-01-06T13:26:23.000Z",
+      "uniqueFilesTouched": 1,
+      "peakHour": 8,
+      "topCommitType": "bug-fix",
+      "typeDistribution": {
+        "bug-fix": 1
+      },
+      "facets": {
+        "energy": 6,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 100,
+        "breadth": 20,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Ashwin Bhat",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "twilight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2025-12-02T23:19:09.000Z",
+      "lastCommit": "2025-12-02T23:19:09.000Z",
+      "uniqueFilesTouched": 2,
+      "peakHour": 18,
+      "topCommitType": "revert",
+      "typeDistribution": {
+        "revert": 1
+      },
+      "facets": {
+        "energy": 6,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 40,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Steve M",
+      "email": "",
+      "archetype": "sage",
+      "timeArchetype": "midnight",
+      "characterClass": "healer",
+      "commitCount": 1,
+      "firstCommit": "2025-11-21T09:39:58.000Z",
+      "lastCommit": "2025-11-21T09:39:58.000Z",
+      "uniqueFilesTouched": 1,
+      "peakHour": 4,
+      "topCommitType": "docs",
+      "typeDistribution": {
+        "docs": 1
+      },
+      "facets": {
+        "energy": 6,
+        "discipline": 100,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 20,
+        "collaboration": 0
+      }
+    },
+    {
+      "name": "Wanghong Yuan",
+      "email": "",
+      "archetype": "adventurer",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2025-11-12T16:50:03.000Z",
+      "lastCommit": "2025-11-12T16:50:03.000Z",
+      "uniqueFilesTouched": 0,
+      "peakHour": 11,
+      "topCommitType": "merge",
+      "typeDistribution": {
+        "merge": 1
+      },
+      "facets": {
+        "energy": 6,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 0,
+        "collaboration": 100
+      }
+    },
+    {
+      "name": "Wanghong Yuan MacBook",
+      "email": "",
+      "archetype": "ranger",
+      "timeArchetype": "daylight",
+      "characterClass": "dps",
+      "commitCount": 1,
+      "firstCommit": "2025-11-12T16:43:01.000Z",
+      "lastCommit": "2025-11-12T16:43:01.000Z",
+      "uniqueFilesTouched": 75,
+      "peakHour": 11,
+      "topCommitType": "maintenance",
+      "typeDistribution": {
+        "maintenance": 1
+      },
+      "facets": {
+        "energy": 6,
+        "discipline": 0,
+        "creativity": 0,
+        "protectiveness": 0,
+        "breadth": 100,
+        "collaboration": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "type": "fbm",
+  "octaves": 2,
+  "frequency": 1.26,
+  "amplitude": 1,
+  "seed": 62966
+}

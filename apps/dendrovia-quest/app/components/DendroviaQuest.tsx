@@ -57,6 +57,14 @@ import {
 
 // ─── Configuration ────────────────────────────────────────────
 
+export interface WorldMeta {
+  name: string;
+  owner: string;
+  repo: string;
+  description: string;
+  tincture: { hex: string; name: string };
+}
+
 export interface DendroviaQuestProps {
   /** Path to CHRONOS topology JSON (optional) */
   topologyPath?: string;
@@ -72,6 +80,8 @@ export interface DendroviaQuestProps {
   characterClass?: CharacterClass;
   /** Character name (default: 'Explorer') */
   characterName?: string;
+  /** Metadata about the world being explored */
+  worldMeta?: WorldMeta;
   /** Children rendered inside the OCULUS provider, after HUD */
   children?: ReactNode;
 }
@@ -86,6 +96,17 @@ function UiHoverBridge() {
   return null;
 }
 
+// ─── Bridge ARCHITECTUS performance metrics → OCULUS store ──
+
+function PerformanceBridge() {
+  const fps = useRendererStore((s) => s.fps);
+  const qualityTier = useRendererStore((s) => s.qualityTier);
+  useEffect(() => {
+    useOculusStore.getState().setPerformance(fps, qualityTier);
+  }, [fps, qualityTier]);
+  return null;
+}
+
 // ─── Loading Screen ───────────────────────────────────────────
 
 function LoadingScreen({ message }: { message: string }) {
@@ -97,12 +118,13 @@ function LoadingScreen({ message }: { message: string }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#0a0a0a',
         color: '#f5a97f',
         fontFamily: "var(--oculus-font-ui, 'Inter', -apple-system, sans-serif)",
+        position: 'relative',
       }}
     >
-      <div style={{ textAlign: 'center' }}>
+      <div className="shader-bg" />
+      <div style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <svg viewBox="0 0 32 32" width={48} height={48} style={{ marginBottom: '1rem', opacity: 0.9 }}>
           <circle cx="16" cy="16" r="15" fill="#1a1514" stroke="#4a3822" strokeWidth="1"/>
           <path d="M16 28L16 13" stroke="#f5e6d3" strokeWidth="2.5" strokeLinecap="round"/>
@@ -143,6 +165,7 @@ export function DendroviaQuest({
   enableOculus = true,
   characterClass = 'dps',
   characterName = 'Explorer',
+  worldMeta,
   children,
 }: DendroviaQuestProps) {
   // ── Onboarding ──
@@ -166,6 +189,11 @@ export function DendroviaQuest({
     }
     return eventBusRef.current;
   }, []);
+
+  // ── Push worldMeta into OCULUS store ──
+  useEffect(() => {
+    useOculusStore.getState().setWorldMeta(worldMeta ?? null);
+  }, [worldMeta]);
 
   // ── Initialization pipeline ──
   useEffect(() => {
@@ -283,10 +311,10 @@ export function DendroviaQuest({
   }, [
     enableOperatus,
     enableLudus,
-    topologyPath,
-    manifestPath,
     characterClass,
     characterName,
+    topologyPath,
+    manifestPath,
     getOrCreateEventBus,
   ]);
 
@@ -313,6 +341,7 @@ export function DendroviaQuest({
       />
       {enableOculus && <HUD />}
       {enableOculus && <UiHoverBridge />}
+      {enableOculus && <PerformanceBridge />}
       {enableOculus && onboarding.phase === 'exploring' && (
         <OnboardingHints onboarding={onboarding} />
       )}

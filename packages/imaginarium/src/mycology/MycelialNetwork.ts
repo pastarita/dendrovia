@@ -17,6 +17,7 @@ import type {
   FungalGenus,
 } from './types';
 import { hashString } from '../utils/hash';
+import { MAX_COCHURN_COMMIT_FILES } from './GenusMapper';
 
 // ---------------------------------------------------------------------------
 // Connection type derivation
@@ -105,6 +106,8 @@ export function buildNetwork(
   const coChurnFreq = new Map<string, number>();
   for (const commit of topology.commits) {
     const changed = commit.filesChanged.filter(p => fileMap.has(p));
+    // Skip mega-commits — mass refactors provide no useful co-churn signal
+    if (changed.length > MAX_COCHURN_COMMIT_FILES) continue;
     for (let i = 0; i < changed.length; i++) {
       for (let j = i + 1; j < changed.length; j++) {
         const key = [changed[i], changed[j]].sort().join('|');

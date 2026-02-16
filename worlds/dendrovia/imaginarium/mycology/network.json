@@ -1,0 +1,213 @@
+{
+  "nodes": [
+    {
+      "id": "__tests__/commit-classifier.test.ts",
+      "genus": "Tuber",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "__tests__/complexity-analyzer.test.ts",
+      "genus": "Tuber",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "__tests__/contributor-profiler.test.ts",
+      "genus": "Tuber",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "__tests__/hotspot-detector.test.ts",
+      "genus": "Tuber",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "__tests__/topology-builder.test.ts",
+      "genus": "Tuber",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "__tests__/tree-builder.test.ts",
+      "genus": "Tuber",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/analyzer/ComplexityAnalyzer.ts",
+      "genus": "Morchella",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/analyzer/HotspotDetector.ts",
+      "genus": "Morchella",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/builder/ContributorProfiler.ts",
+      "genus": "Morchella",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/builder/TopologyBuilder.ts",
+      "genus": "Agaricus",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/builder/TreeBuilder.ts",
+      "genus": "Phallus",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/classifier/CommitClassifier.ts",
+      "genus": "Agaricus",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/index.ts",
+      "genus": "Amanita",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/parse.ts",
+      "genus": "Agaricus",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/parser/ASTParser.ts",
+      "genus": "Ganoderma",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "src/parser/GitParser.ts",
+      "genus": "Morchella",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "README.md",
+      "genus": "Ganoderma",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "package.json",
+      "genus": "Mycena",
+      "connections": 0,
+      "isHub": false
+    },
+    {
+      "id": "tsconfig.json",
+      "genus": "Mycena",
+      "connections": 0,
+      "isHub": false
+    }
+  ],
+  "edges": [],
+  "clusters": [
+    {
+      "id": "__tests__",
+      "nodeIds": [
+        "__tests__/commit-classifier.test.ts",
+        "__tests__/complexity-analyzer.test.ts",
+        "__tests__/contributor-profiler.test.ts",
+        "__tests__/hotspot-detector.test.ts",
+        "__tests__/topology-builder.test.ts",
+        "__tests__/tree-builder.test.ts"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "src/analyzer",
+      "nodeIds": [
+        "src/analyzer/ComplexityAnalyzer.ts",
+        "src/analyzer/HotspotDetector.ts"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "src/builder",
+      "nodeIds": [
+        "src/builder/ContributorProfiler.ts",
+        "src/builder/TopologyBuilder.ts",
+        "src/builder/TreeBuilder.ts"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "src/classifier",
+      "nodeIds": [
+        "src/classifier/CommitClassifier.ts"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "src",
+      "nodeIds": [
+        "src/index.ts",
+        "src/parse.ts"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "src/parser",
+      "nodeIds": [
+        "src/parser/ASTParser.ts",
+        "src/parser/GitParser.ts"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "README.md",
+      "nodeIds": [
+        "README.md"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "package.json",
+      "nodeIds": [
+        "package.json"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    },
+    {
+      "id": "tsconfig.json",
+      "nodeIds": [
+        "tsconfig.json"
+      ],
+      "internalEdges": 0,
+      "externalEdges": 0,
+      "density": 0
+    }
+  ],
+  "hubNodes": []
+}

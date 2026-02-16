@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { PillarNav } from "@repo/ui/pillar-nav";
 import { DomainNav } from "@repo/ui/domain-nav";
+import { PillarIcon } from "@repo/ui/icons";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -41,7 +42,7 @@ export default function RootLayout({
             }}
           >
             <a href="/" style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "1.25rem", fontWeight: 700 }}>
-              <span>🎮</span>
+              <PillarIcon pillar="LUDUS" size={24} />
               <span style={{ color: "var(--pillar-accent)" }}>LUDUS</span>
             </a>
             <div style={{ fontSize: "0.75rem", opacity: 0.5 }}>:3014 · Gules</div>

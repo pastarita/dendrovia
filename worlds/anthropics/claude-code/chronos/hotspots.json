@@ -1,0 +1,325 @@
+{
+  "version": "1.0.0",
+  "hotspots": [
+    {
+      "path": "scripts/sweep.ts",
+      "churnRate": 4,
+      "complexity": 33,
+      "riskScore": 0.349
+    },
+    {
+      "path": "scripts/backfill-duplicate-comments.ts",
+      "churnRate": 3,
+      "complexity": 26,
+      "riskScore": 0.237
+    },
+    {
+      "path": "scripts/auto-close-duplicates.ts",
+      "churnRate": 3,
+      "complexity": 22,
+      "riskScore": 0.2
+    },
+    {
+      "path": "scripts/lifecycle-comment.ts",
+      "churnRate": 1,
+      "complexity": 9,
+      "riskScore": 0.041
+    },
+    {
+      "path": "scripts/issue-lifecycle.ts",
+      "churnRate": 1,
+      "complexity": 1,
+      "riskScore": 0.005
+    },
+    {
+      "path": ".github/workflows/issue-lifecycle-comment.yml",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "CHANGELOG.md",
+      "churnRate": 100,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".github/workflows/claude-issue-triage.yml",
+      "churnRate": 10,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".github/workflows/stale-issue-manager.yml",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".github/workflows/sweep.yml",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/code-review/commands/code-review.md",
+      "churnRate": 18,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "examples/settings/settings-strict.json",
+      "churnRate": 3,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "examples/settings/settings-bash-sandbox.json",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "examples/settings/README.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "examples/settings/settings-lax.json",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".github/workflows/claude-dedupe-issues.yml",
+      "churnRate": 9,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".github/workflows/oncall-triage.yml",
+      "churnRate": 9,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "README.md",
+      "churnRate": 6,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".github/workflows/claude.yml",
+      "churnRate": 4,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".claude-plugin/marketplace.json",
+      "churnRate": 10,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "scripts/comment-on-duplicates.sh",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".claude/commands/dedupe.md",
+      "churnRate": 4,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/ralph-wiggum/commands/ralph-loop.md",
+      "churnRate": 3,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/ralph-wiggum/commands/cancel-ralph.md",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/ralph-wiggum/scripts/setup-ralph-loop.sh",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/code-review/README.md",
+      "churnRate": 4,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": ".github/workflows/remove-autoclose-label.yml",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/README.md",
+      "churnRate": 5,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/claude-opus-4-5-migration/.claude-plugin/plugin.json",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/claude-opus-4-5-migration/README.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/claude-opus-4-5-migration/skills/claude-opus-4-5-migration/SKILL.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/claude-opus-4-5-migration/skills/claude-opus-4-5-migration/references/effort.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/claude-opus-4-5-migration/skills/claude-opus-4-5-migration/references/prompt-snippets.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/README.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/agents/agent-creator.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/agents/plugin-validator.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/agents/skill-reviewer.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/commands/create-plugin.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/agent-development/SKILL.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/agent-development/examples/agent-creation-prompt.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/agent-development/examples/complete-agent-examples.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/agent-development/references/agent-creation-system-prompt.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/agent-development/references/system-prompt-design.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/agent-development/references/triggering-examples.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/agent-development/scripts/validate-agent.sh",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/command-development/README.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/command-development/SKILL.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/command-development/examples/plugin-commands.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/command-development/examples/simple-commands.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "plugins/plugin-dev/skills/command-development/references/advanced-workflows.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    }
+  ],
+  "temporalCouplings": [
+    {
+      "fileA": ".github/workflows/claude-dedupe-issues.yml",
+      "fileB": ".github/workflows/oncall-triage.yml",
+      "coChangeCount": 6,
+      "strength": 0.6666666666666666
+    },
+    {
+      "fileA": ".github/workflows/claude-dedupe-issues.yml",
+      "fileB": ".github/workflows/claude-issue-triage.yml",
+      "coChangeCount": 6,
+      "strength": 0.6
+    },
+    {
+      "fileA": ".github/workflows/claude-issue-triage.yml",
+      "fileB": ".github/workflows/oncall-triage.yml",
+      "coChangeCount": 6,
+      "strength": 0.6
+    }
+  ]
+}

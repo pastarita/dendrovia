@@ -53,6 +53,7 @@ export function FalconModeOverlay() {
         display: 'flex',
         gap: 'var(--oculus-space-md)',
         pointerEvents: 'none',
+        zIndex: 'var(--oculus-z-hud)',
         animation: 'oculus-fade-in var(--oculus-transition-slow)',
       }}
       role="status"

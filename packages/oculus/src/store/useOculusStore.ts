@@ -95,6 +95,19 @@ export interface OculusState {
   // DeepWiki AI documentation
   deepwiki: DeepWikiEnrichment | null;
 
+  // World metadata
+  worldMeta: {
+    name: string;
+    owner: string;
+    repo: string;
+    description: string;
+    tincture: { hex: string; name: string };
+  } | null;
+
+  // Performance (bridged from ARCHITECTUS)
+  fps: number;
+  qualityTier: string;
+
   // Input coordination
   isUiHovered: boolean;
 
@@ -147,6 +160,12 @@ export interface OculusActions {
   // Camera
   setCameraMode: (mode: CameraMode) => void;
 
+  // World metadata
+  setWorldMeta: (meta: OculusState['worldMeta']) => void;
+
+  // Performance
+  setPerformance: (fps: number, qualityTier: string) => void;
+
   // Input coordination
   setUiHovered: (hovered: boolean) => void;
 
@@ -186,6 +205,10 @@ export const useOculusStore = create<OculusStore>((set) => ({
   millerSelection: [],
 
   deepwiki: null,
+
+  worldMeta: null,
+  fps: 0,
+  qualityTier: 'medium',
 
   isUiHovered: false,
 
@@ -328,6 +351,10 @@ export const useOculusStore = create<OculusStore>((set) => ({
   setDeepWiki: (deepwiki) => set({ deepwiki }),
 
   setCameraMode: (mode) => set({ cameraMode: mode }),
+
+  setWorldMeta: (meta) => set({ worldMeta: meta }),
+
+  setPerformance: (fps, qualityTier) => set({ fps, qualityTier }),
 
   setUiHovered: (hovered) => set({ isUiHovered: hovered }),
 

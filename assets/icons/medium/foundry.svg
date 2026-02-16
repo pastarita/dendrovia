@@ -1,0 +1,65 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- FOUNDRY MEDIUM: Design forge with anvil, hammer, and quality inspection elements -->
+
+  <defs>
+    <!-- Anvil base gradient: warm amber -> earthy dark -->
+    <linearGradient id="fy-anvil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a574"/>
+      <stop offset="60%" stop-color="#8b7355"/>
+      <stop offset="100%" stop-color="#4a3822"/>
+    </linearGradient>
+    <!-- Forge heat glow: radial from strike point -->
+    <radialGradient id="fy-heat" cx="50%" cy="40%" r="35%">
+      <stop offset="0%" stop-color="#ff6b6b" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#ff6b6b" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ff6b6b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- === LAYER 1: FORGE HEAT GLOW (subsurface radiance) === -->
+  <circle cx="50" cy="44" r="30" fill="url(#fy-heat)"/>
+
+  <!-- === LAYER 2: ANVIL BODY === -->
+  <!-- Anvil face (top working surface) -->
+  <rect x="28" y="48" width="44" height="8" rx="1.5" fill="#d4a574"/>
+  <!-- Anvil horn (left tapered projection) -->
+  <polygon points="28,48 28,56 14,53 14,51" fill="#d4a574"/>
+  <!-- Anvil waist (narrower middle section) -->
+  <rect x="34" y="56" width="32" height="6" fill="#8b7355"/>
+  <!-- Anvil base: Y-fork split legs -->
+  <path d="M34,62 L30,74 L40,74 L42,62 Z" fill="url(#fy-anvil)"/>
+  <path d="M58,62 L60,74 L70,74 L66,62 Z" fill="url(#fy-anvil)"/>
+  <!-- Base crossbar connecting the Y-fork legs -->
+  <rect x="38" y="70" width="24" height="4" rx="1" fill="#4a3822"/>
+  <!-- Anvil face highlight -->
+  <rect x="30" y="49" width="40" height="2.5" rx="1" fill="#f5ead6" opacity="0.3"/>
+
+  <!-- === LAYER 3: HAMMER (diagonal, resting above anvil) === -->
+  <!-- Handle -->
+  <line x1="62" y1="20" x2="44" y2="42" stroke="#8b7355" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Hammer head -->
+  <rect x="56" y="14" width="16" height="10" rx="2" fill="#d4a574" transform="rotate(-35, 64, 19)"/>
+
+  <!-- === LAYER 4: SPARKS (Y-fork branching from strike point) === -->
+  <!-- Trunk up from strike point, then Y-fork -->
+  <line x1="48" y1="48" x2="48" y2="40" stroke="#ff6b6b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+  <line x1="48" y1="40" x2="40" y2="32" stroke="#ff6b6b" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+  <line x1="48" y1="40" x2="54" y2="30" stroke="#ff6b6b" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+  <!-- Ember nodes -->
+  <circle cx="38" cy="30" r="1.8" fill="#ff6b6b" opacity="0.75"/>
+  <circle cx="55" cy="28" r="1.5" fill="#ff6b6b" opacity="0.65"/>
+  <circle cx="44" cy="35" r="1" fill="#d4a574" opacity="0.6"/>
+
+  <!-- === LAYER 5: MOLTEN DROPLETS (below anvil base) === -->
+  <circle cx="42" cy="78" r="1.5" fill="#ff6b6b" opacity="0.55"/>
+  <circle cx="58" cy="78" r="1.2" fill="#ff6b6b" opacity="0.45"/>
+
+  <!-- === LAYER 6: QUALITY INSPECTION (blue accent) === -->
+  <!-- Checkmark (quality pass indicator, top-right) -->
+  <polyline points="78,14 82,19 90,8" fill="none" stroke="#7fa9f5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+  <!-- Inspection ring around checkmark -->
+  <circle cx="84" cy="13" r="8" fill="none" stroke="#7fa9f5" stroke-width="1" opacity="0.3"/>
+  <!-- Flanking inspection nodes (circular motif) -->
+  <circle cx="14" cy="52" r="2.5" fill="#7fa9f5" opacity="0.5"/>
+  <circle cx="86" cy="52" r="2.5" fill="#7fa9f5" opacity="0.5"/>
+</svg>

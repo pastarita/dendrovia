@@ -4,6 +4,7 @@ const PAGES = [
   { name: "Primitives Gallery", href: "/zoos/primitives", desc: "Panel, ProgressBar, IconBadge, StatLabel, Tooltip with interactive controls" },
   { name: "View Components", href: "/zoos/views", desc: "HUD, Minimap, QuestLog, BattleUI, CodeReader, MillerColumns with mock data" },
   { name: "Compositions", href: "/zoos/compositions", desc: "Full HUD layout with all corners populated, combat and exploration modes" },
+  { name: "Ornate Frames", href: "/zoos/frames", desc: "Every OrnateFrame pillar \u00d7 variant with upstream data specimens from @dendrovia/shared" },
 ];
 
 export default function ZoosPage() {

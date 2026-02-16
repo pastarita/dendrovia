@@ -197,6 +197,83 @@ export function collectManifest(report: ManifestHealthReport | null): RuntimeNod
   };
 }
 
+export function collectStatePersistence(): RuntimeNodeState {
+  let hasData = false;
+  try {
+    hasData = typeof localStorage !== 'undefined' && localStorage.getItem('dendrovia-save') !== null;
+  } catch {
+    // localStorage unavailable (SSR or privacy mode)
+  }
+  return {
+    nodeId: 'op-state-persist',
+    health: hasData ? 'healthy' : 'idle',
+    metrics: [
+      { key: 'saved', value: hasData ? 'yes' : 'no' },
+    ],
+    actions: [],
+    lastUpdated: now(),
+  };
+}
+
+export function collectStateAdapter(gameStoreExists: boolean): RuntimeNodeState {
+  return {
+    nodeId: 'op-state-adapter',
+    health: gameStoreExists ? 'healthy' : 'idle',
+    metrics: [
+      { key: 'wired', value: gameStoreExists ? 'yes' : 'no' },
+    ],
+    actions: [],
+    lastUpdated: now(),
+  };
+}
+
+export function collectMultiplayerClient(): RuntimeNodeState {
+  const wsAvailable = typeof WebSocket !== 'undefined';
+  return {
+    nodeId: 'op-multiplayer',
+    health: 'idle',
+    metrics: [
+      { key: 'status', value: 'not connected' },
+      { key: 'websocket', value: wsAvailable ? 'available' : 'unavailable' },
+    ],
+    actions: [],
+    lastUpdated: now(),
+  };
+}
+
+export async function collectServiceWorker(): Promise<RuntimeNodeState> {
+  let registered = false;
+  try {
+    if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+      const reg = await navigator.serviceWorker.getRegistration();
+      registered = reg !== undefined;
+    }
+  } catch {
+    // SW API unavailable
+  }
+  return {
+    nodeId: 'op-sw',
+    health: registered ? 'healthy' : 'idle',
+    metrics: [
+      { key: 'registered', value: registered ? 'yes' : 'no' },
+    ],
+    actions: [],
+    lastUpdated: now(),
+  };
+}
+
+export function collectGenerate(): RuntimeNodeState {
+  return {
+    nodeId: 'op-generate',
+    health: 'idle',
+    metrics: [
+      { key: 'status', value: 'build-time only' },
+    ],
+    actions: [],
+    lastUpdated: now(),
+  };
+}
+
 /**
  * Aggregate phase health from child node states.
  * Worst-child health wins.

@@ -12,7 +12,7 @@
 
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { createLogger } from '@dendrovia/shared/logger';
-import { useGameStore, getGameSaveSnapshot } from './GameStore.js';
+import { useGameStore, getGameSaveSnapshot } from './GameStore';
 
 const log = createLogger('OPERATUS', 'autosave');
 

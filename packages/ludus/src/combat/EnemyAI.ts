@@ -12,7 +12,7 @@
  */
 
 import type { Action, Monster, Character, BattleState, RngState } from '@dendrovia/shared';
-import { rngNext, rngChance } from '../utils/SeededRandom.js';
+import { rngNext, rngChance } from '../utils/SeededRandom';
 
 export interface EnemyDecision {
   action: Action;

@@ -7,7 +7,7 @@
  */
 
 import type { CodeTopology, FileTreeNode, LSystemRule } from '@dendrovia/shared';
-import { hashString } from '../utils/hash.js';
+import { hashString } from '../utils/hash';
 
 const MAX_ITERATIONS = 5;
 const BASE_ANGLE = 25;

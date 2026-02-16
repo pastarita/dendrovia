@@ -10,7 +10,7 @@
  *   const result = pipeline(baseMesh);
  */
 
-import type { HalfEdgeMesh } from './HalfEdgeMesh.js';
+import type { HalfEdgeMesh } from './HalfEdgeMesh';
 import { createLogger } from '@dendrovia/shared/logger';
 
 const meshLog = createLogger('IMAGINARIUM', 'mesh-pipeline');

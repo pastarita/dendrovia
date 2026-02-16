@@ -11,12 +11,12 @@
  *   Tier 3 (3 genera):  custom per-genus pipelines
  */
 
-import type { FungalGenus } from '../mycology/types.js';
-import type { MeshOp } from './pipeline.js';
-import { pipe } from './pipeline.js';
-import { subdivide } from './ops/subdivide.js';
-import { smooth } from './ops/smooth.js';
-import { displaceByNoise, displaceNormal } from './ops/displace.js';
+import type { FungalGenus } from '../mycology/types';
+import type { MeshOp } from './pipeline';
+import { pipe } from './pipeline';
+import { subdivide } from './ops/subdivide';
+import { smooth } from './ops/smooth';
+import { displaceByNoise, displaceNormal } from './ops/displace';
 
 // ---------------------------------------------------------------------------
 // Default fallback pipeline (unknown genera)

@@ -40,8 +40,8 @@ import {
   type LevelUpEvent,
   type ItemUsedEvent,
 } from '@dendrovia/shared';
-import { type GameStore, type GameState } from '../state/GameStore.js';
-import { initBattle, executeTurn } from '../combat/TurnBasedEngine.js';
+import { type GameStore, type GameState } from '../state/GameStore';
+import { initBattle, executeTurn } from '../combat/TurnBasedEngine';
 import {
   checkEncounter,
   createEncounterState,
@@ -51,26 +51,26 @@ import {
   type EncounterState,
   type EncounterConfig,
   DEFAULT_CONFIG,
-} from '../encounter/EncounterSystem.js';
+} from '../encounter/EncounterSystem';
 import {
   resolveBattleRewards,
   applyBattleRewards,
   updateBattleStatistics,
   createBattleStatistics,
   type BattleStatistics,
-} from '../progression/ProgressionSystem.js';
+} from '../progression/ProgressionSystem';
 import {
   completeQuest,
   startQuest,
   getQuestsByStatus,
-} from '../quest/QuestGenerator.js';
+} from '../quest/QuestGenerator';
 import {
   useItem as useItemFromInventory,
   resolveLootToInventory,
   createInventory,
   type Inventory,
-} from '../inventory/InventorySystem.js';
-import { createRngState } from '../utils/SeededRandom.js';
+} from '../inventory/InventorySystem';
+import { createRngState } from '../utils/SeededRandom';
 
 // ─── Game Session ───────────────────────────────────────────
 

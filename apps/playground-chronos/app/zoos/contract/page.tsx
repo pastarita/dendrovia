@@ -93,7 +93,7 @@ export default async function ContractPage() {
     });
 
     if (Array.isArray(ld) && ld.length > 0) {
-      const sample = ld[0];
+      const sample = ld[0]!;
       checks.push({
         name: "languageDistribution[0] shape",
         group: "Enrichment",
@@ -179,7 +179,7 @@ export default async function ContractPage() {
   // --- Contributor checks ---
   const contributors = data.contributors?.contributors;
   if (contributors && contributors.length > 0) {
-    const c0 = contributors[0];
+    const c0 = contributors[0]!;
     checks.push({
       name: "contributors[0].archetype",
       group: "Contributors",

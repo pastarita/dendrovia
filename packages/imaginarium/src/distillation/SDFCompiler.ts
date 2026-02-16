@@ -12,12 +12,12 @@
  */
 
 import type { CodeTopology, ProceduralPalette, SDFShader, LSystemRule, NoiseFunction } from '@dendrovia/shared';
-import { interpret, type TurtleSegment } from './TurtleInterpreter.js';
-import { expandLSystem } from './LSystemCompiler.js';
-import { assembleShader, buildColorParameters } from '../shaders/ShaderAssembler.js';
-import { getDefaultSDF } from '../fallback/DefaultSDFs.js';
-import { hashString } from '../utils/hash.js';
-import { glslFloat } from '../utils/glsl.js';
+import { interpret, type TurtleSegment } from './TurtleInterpreter';
+import { expandLSystem } from './LSystemCompiler';
+import { assembleShader, buildColorParameters } from '../shaders/ShaderAssembler';
+import { getDefaultSDF } from '../fallback/DefaultSDFs';
+import { hashString } from '../utils/hash';
+import { glslFloat } from '../utils/glsl';
 
 const INSTRUCTION_BUDGET = 100;
 const INSTRUCTIONS_PER_SEGMENT = 5; // sdCapsule ≈ 5 instructions
@@ -116,7 +116,7 @@ float scene(vec3 p) {
   lines.push('');
 
   // First segment
-  const s0 = segments[0];
+  const s0 = segments[0]!;
   const p0 = formatPoint(s0);
   if (s0.isHotspot) {
     lines.push(`  vec3 tp = opTwist(p, 0.3);`);
@@ -127,7 +127,7 @@ float scene(vec3 p) {
 
   // Remaining segments
   for (let i = 1; i < segments.length; i++) {
-    const seg = segments[i];
+    const seg = segments[i]!;
     const pts = formatPoint(seg);
     const k = glslFloat(Math.max(0.1, 0.35 - seg.depth * 0.05));
 

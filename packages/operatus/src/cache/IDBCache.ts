@@ -8,7 +8,7 @@
  * Same interface as OPFSCache for seamless fallback.
  */
 
-import type { CacheEntry, CacheStats } from './OPFSCache.js';
+import type { CacheEntry, CacheStats } from './OPFSCache';
 
 const DB_NAME = 'dendrovia-cache';
 const STORE_NAME = 'assets';

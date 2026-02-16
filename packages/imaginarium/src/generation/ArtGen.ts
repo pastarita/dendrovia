@@ -6,9 +6,9 @@
  */
 
 import type { CodeTopology } from '@dendrovia/shared';
-import { buildPrompt } from './PromptBuilder.js';
-import { hashString } from '../utils/hash.js';
-import { DeterministicCache } from '../cache/DeterministicCache.js';
+import { buildPrompt } from './PromptBuilder';
+import { hashString } from '../utils/hash';
+import { DeterministicCache } from '../cache/DeterministicCache';
 
 export type ArtProvider = 'stability' | 'flux' | 'local' | 'skip';
 
@@ -98,7 +98,7 @@ async function callStabilityAPI(prompt: string, seed: number): Promise<Uint8Arra
   const data = await response.json() as { artifacts: Array<{ base64: string }> };
   if (!data.artifacts?.[0]) return null;
 
-  return Uint8Array.from(atob(data.artifacts[0].base64), c => c.charCodeAt(0));
+  return Uint8Array.from(atob(data.artifacts[0]!.base64), c => c.charCodeAt(0));
 }
 
 async function callFluxAPI(prompt: string, seed: number): Promise<Uint8Array | null> {

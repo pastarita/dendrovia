@@ -13,7 +13,7 @@
  * All fetched assets are cached locally so repeat loads are instant.
  */
 
-import { CacheManager } from '../cache/CacheManager.js';
+import { CacheManager } from '../cache/CacheManager';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 
 export interface CDNConfig {

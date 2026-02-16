@@ -7,9 +7,9 @@
  * Boundary vertices are optionally pinned to prevent mesh shrinkage.
  */
 
-import type { HalfEdgeMesh } from '../HalfEdgeMesh.js';
-import { vertexNeighbors, isBoundaryVertex } from '../HalfEdgeMesh.js';
-import type { MeshOp } from '../pipeline.js';
+import type { HalfEdgeMesh } from '../HalfEdgeMesh';
+import { vertexNeighbors, isBoundaryVertex } from '../HalfEdgeMesh';
+import type { MeshOp } from '../pipeline';
 
 /**
  * Perform one iteration of Laplacian smoothing.
@@ -37,9 +37,9 @@ export function laplacianSmoothOnce(
     // Compute centroid of neighbors
     let cx = 0, cy = 0, cz = 0;
     for (const ni of neighbors) {
-      cx += mesh.vertices[ni].x;
-      cy += mesh.vertices[ni].y;
-      cz += mesh.vertices[ni].z;
+      cx += mesh.vertices[ni]!.x;
+      cy += mesh.vertices[ni]!.y;
+      cz += mesh.vertices[ni]!.z;
     }
     cx /= neighbors.length;
     cy /= neighbors.length;

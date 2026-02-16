@@ -19,9 +19,9 @@ export async function detectGPU(): Promise<GPUCapabilities> {
   const deviceMemoryGB = (navigator as any).deviceMemory ?? 4;
 
   // Try WebGPU first
-  if (navigator.gpu) {
+  if ('gpu' in navigator && (navigator as any).gpu) {
     try {
-      const adapter = await navigator.gpu.requestAdapter({
+      const adapter = await (navigator as any).gpu.requestAdapter({
         powerPreference: 'high-performance',
       });
 

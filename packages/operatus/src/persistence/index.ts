@@ -6,14 +6,14 @@ export {
   exportSave,
   importSave,
   SAVE_VERSION,
-} from './StatePersistence.js';
-export type { PersistenceConfig, MigrationFn, SaveSlot } from './StatePersistence.js';
+} from './StatePersistence';
+export type { PersistenceConfig, MigrationFn, SaveSlot } from './StatePersistence';
 
-export { useGameStore, waitForHydration, getGameSaveSnapshot } from './GameStore.js';
-export type { GameStoreState } from './GameStore.js';
+export { useGameStore, waitForHydration, getGameSaveSnapshot } from './GameStore';
+export type { GameStoreState } from './GameStore';
 
-export { AutoSave } from './AutoSave.js';
-export type { AutoSaveConfig } from './AutoSave.js';
+export { AutoSave } from './AutoSave';
+export type { AutoSaveConfig } from './AutoSave';
 
-export { StateAdapter } from './StateAdapter.js';
-export type { StateAdapterConfig } from './StateAdapter.js';
+export { StateAdapter } from './StateAdapter';
+export type { StateAdapterConfig } from './StateAdapter';

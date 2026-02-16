@@ -77,17 +77,17 @@ export async function POST(request: Request) {
           }
           // Parse final summary stats
           else if (trimmed.startsWith('Files parsed:')) {
-            stats.fileCount = parseInt(trimmed.split(':')[1]) || 0;
+            stats.fileCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Commits:') && !trimmed.includes('parsed')) {
-            stats.commitCount = parseInt(trimmed.split(':')[1]) || 0;
+            stats.commitCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Hotspots:')) {
-            stats.hotspotCount = parseInt(trimmed.split(':')[1]) || 0;
+            stats.hotspotCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Contributors:')) {
-            stats.contributorCount = parseInt(trimmed.split(':')[1]) || 0;
+            stats.contributorCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Languages:')) {
-            stats.languageCount = parseInt(trimmed.split(':')[1]) || 0;
+            stats.languageCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Total time:')) {
-            stats.duration = parseFloat(trimmed.split(':')[1]) || 0;
+            stats.duration = parseFloat(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Output:')) {
             outputDir = trimmed.replace('Output:', '').trim();
           } else if (trimmed.startsWith('DeepWiki:')) {

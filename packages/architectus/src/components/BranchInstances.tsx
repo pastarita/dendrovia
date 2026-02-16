@@ -63,7 +63,7 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
     if (!mesh || branches.length === 0) return;
 
     for (let i = 0; i < branches.length; i++) {
-      const branch = branches[i];
+      const branch = branches[i]!;
 
       // Direction from start to end
       _direction.subVectors(branch.end, branch.start);

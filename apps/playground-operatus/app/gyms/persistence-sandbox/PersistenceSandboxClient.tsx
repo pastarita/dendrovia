@@ -111,7 +111,7 @@ function StateModifier({ mod, onModify }: { mod: OperatusMod; onModify: () => vo
         </button>
         <button
           onClick={() => {
-            store.getState().addItem({ id: `item-${Date.now()}`, name: 'Debug Potion', type: 'consumable', rarity: 'common', value: 10, effect: 'Restores 50 HP' });
+            store.getState().addItem({ id: `item-${Date.now()}`, name: 'Debug Potion', description: 'A debug potion for testing', type: 'consumable', effect: { type: 'heal-hp', value: 50 } });
             onModify();
           }}
           style={btnStyle}

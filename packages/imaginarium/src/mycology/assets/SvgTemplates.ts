@@ -5,7 +5,7 @@
  * Each SVG is ~2-5KB, valid XML, and ready for inline rendering.
  */
 
-import type { MushroomMorphology, FungalGenus, CapShape, FungalSpecimen } from '../types.js';
+import type { MushroomMorphology, FungalGenus, CapShape, FungalSpecimen } from '../types';
 
 // ---------------------------------------------------------------------------
 // SVG generation constants

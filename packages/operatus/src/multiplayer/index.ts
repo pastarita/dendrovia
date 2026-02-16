@@ -1,7 +1,7 @@
-export { MultiplayerClient } from './MultiplayerClient.js';
+export { MultiplayerClient } from './MultiplayerClient';
 export type {
   MultiplayerConfig,
   PlayerPresence,
   ConnectionState,
   MultiplayerMessage,
-} from './MultiplayerClient.js';
+} from './MultiplayerClient';

@@ -15,8 +15,8 @@
  * If deserialize fails, consumers fall back to the next tier.
  */
 
-import type { HalfEdgeMesh, FlatMeshData } from './HalfEdgeMesh.js';
-import { toFlatArrays, buildFromIndexed, halfedgeFrom } from './HalfEdgeMesh.js';
+import type { HalfEdgeMesh, FlatMeshData, HEVertex } from './HalfEdgeMesh';
+import { toFlatArrays, buildFromIndexed, halfedgeFrom } from './HalfEdgeMesh';
 import type { SerializedMeshData, MeshFormat } from '@dendrovia/shared';
 
 // ---------------------------------------------------------------------------
@@ -98,13 +98,13 @@ export function deserializeToHalfEdge(data: unknown): HalfEdgeMesh | null {
 
     // If topology is present, reconstruct directly (fast path)
     if (d.topology) {
-      const vertices = [];
+      const vertices: HEVertex[] = [];
       for (let i = 0; i < d.vertexCount; i++) {
         vertices.push({
-          x: d.positions[i * 3],
-          y: d.positions[i * 3 + 1],
-          z: d.positions[i * 3 + 2],
-          halfedge: d.topology.vertexHalfedges[i],
+          x: d.positions[i * 3]!,
+          y: d.positions[i * 3 + 1]!,
+          z: d.positions[i * 3 + 2]!,
+          halfedge: d.topology.vertexHalfedges[i]!,
         });
       }
 

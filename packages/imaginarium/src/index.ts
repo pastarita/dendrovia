@@ -6,33 +6,33 @@
  */
 
 // --- Distillation ---
-export { extractPalette, extractFilePalette } from './distillation/ColorExtractor.js';
-export { compile as compileSDF, type SDFCompileConfig } from './distillation/SDFCompiler.js';
-export { compile as compileLSystem, expandLSystem } from './distillation/LSystemCompiler.js';
-export { generate as generateNoise } from './distillation/NoiseGenerator.js';
-export { interpret as interpretTurtle, type TurtleSegment } from './distillation/TurtleInterpreter.js';
+export { extractPalette, extractFilePalette } from './distillation/ColorExtractor';
+export { compile as compileSDF, type SDFCompileConfig } from './distillation/SDFCompiler';
+export { compile as compileLSystem, expandLSystem } from './distillation/LSystemCompiler';
+export { generate as generateNoise } from './distillation/NoiseGenerator';
+export { interpret as interpretTurtle, type TurtleSegment } from './distillation/TurtleInterpreter';
 
 // --- Generation ---
-export { generate as generateArt, type ArtGenResult, type ArtGenOptions, type ArtProvider } from './generation/ArtGen.js';
-export { buildPrompt } from './generation/PromptBuilder.js';
+export { generate as generateArt, type ArtGenResult, type ArtGenOptions, type ArtProvider } from './generation/ArtGen';
+export { buildPrompt } from './generation/PromptBuilder';
 
 // --- Shader Assembly ---
-export { assembleShader, buildColorParameters, type AssemblerConfig, type AssembledShader } from './shaders/ShaderAssembler.js';
+export { assembleShader, buildColorParameters, type AssemblerConfig, type AssembledShader } from './shaders/ShaderAssembler';
 
 // --- Cache ---
-export { DeterministicCache } from './cache/DeterministicCache.js';
+export { DeterministicCache } from './cache/DeterministicCache';
 
 // --- Fallbacks ---
-export { DEFAULT_PALETTES, getDefaultPalette, getLanguageHue, LANGUAGE_HUES } from './fallback/DefaultPalettes.js';
-export { DEFAULT_SDFS, getDefaultSDF, type SDFTier } from './fallback/DefaultSDFs.js';
+export { DEFAULT_PALETTES, getDefaultPalette, getLanguageHue, LANGUAGE_HUES } from './fallback/DefaultPalettes';
+export { DEFAULT_SDFS, getDefaultSDF, type SDFTier } from './fallback/DefaultSDFs';
 
 // --- Pipeline ---
-export { distill } from './pipeline/DistillationPipeline.js';
-export { generateVariants } from './pipeline/VariantGenerator.js';
-export { generateManifest, type ManifestInput } from './pipeline/ManifestGenerator.js';
-export { readTopology } from './pipeline/TopologyReader.js';
-export { generateMockTopology } from './pipeline/MockTopology.js';
-export { distillSegments } from './pipeline/SegmentPipeline.js';
+export { distill } from './pipeline/DistillationPipeline';
+export { generateVariants } from './pipeline/VariantGenerator';
+export { generateManifest, type ManifestInput } from './pipeline/ManifestGenerator';
+export { readTopology } from './pipeline/TopologyReader';
+export { generateMockTopology } from './pipeline/MockTopology';
+export { distillSegments } from './pipeline/SegmentPipeline';
 
 // --- Story Arc ---
 export {
@@ -40,19 +40,19 @@ export {
   sliceSegments, type RawSegment,
   mapMood,
   assignPhases, computeTension, type PhaseAssignment,
-} from './storyarc/index.js';
+} from './storyarc/index';
 
 // --- Utilities ---
 export {
   rgbToOklch, oklchToRgb, oklchToHex, hexToRgb, rgbToHex, hexToOklch,
   harmonize, colorTemperature, blendColors, hslToHex,
   type OklchColor, type RgbColor, type HarmonyScheme,
-} from './utils/color.js';
-export { hashString, hashObject, hashFiles } from './utils/hash.js';
+} from './utils/color';
+export { hashString, hashObject, hashFiles } from './utils/hash';
 export {
   glslFloat, glslVec3, glslVec3FromHex, glslUniform, glslFunction,
   validateGLSL, countInstructions, type GLSLValidationResult,
-} from './utils/glsl.js';
+} from './utils/glsl';
 
 // --- Mycology ---
 export {
@@ -74,14 +74,14 @@ export {
   generateMeshData,
   // TSX
   MushroomSprite,
-} from './mycology/index.js';
+} from './mycology/index';
 export type {
   FungalSpecimen, FungalTaxonomy, FungalGenus,
   MushroomMorphology, MushroomLore, MycelialNetwork,
   MycologyManifest, MycologyCatalogedEvent,
   MushroomMeshData, MushroomSpriteProps,
   FileContext,
-} from './mycology/index.js';
+} from './mycology/index';
 
 // --- Mesh Pipeline ---
 export {
@@ -105,9 +105,9 @@ export {
   genusPipeline, DEFAULT_PIPELINE, STEM_PIPELINE,
   // Mesh asset generation
   generateMeshAssets,
-} from './mesh/index.js';
+} from './mesh/index';
 export type {
   HEVertex, HEHalfEdge, HEFace, HalfEdgeMesh, FlatMeshData,
   MeshOp, AsyncMeshOp, PipelineStep, SerializeOptions,
   MeshGenerationResult, MeshGenerationStats,
-} from './mesh/index.js';
+} from './mesh/index';

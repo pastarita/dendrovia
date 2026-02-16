@@ -22,7 +22,7 @@ import type {
 } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { validateManifest } from '@dendrovia/shared/schemas';
-import { CacheManager } from '../cache/CacheManager.js';
+import { CacheManager } from '../cache/CacheManager';
 
 export enum AssetPriority {
   CRITICAL = 0,
@@ -300,7 +300,7 @@ export class AssetLoader {
         return;
       }
 
-      const asset = assets[idx++];
+      const asset = assets[idx++]!;
       this.loadAsset(asset).then(() => {
         if (this.onProgress) {
           this.onProgress({

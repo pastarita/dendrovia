@@ -5,7 +5,7 @@
 
 import { join } from 'path';
 import { existsSync, mkdirSync, rmSync } from 'fs';
-import { hashObject, hashString } from '../utils/hash.js';
+import { hashObject, hashString } from '../utils/hash';
 
 interface CacheEntry<T> {
   inputHash: string;

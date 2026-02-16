@@ -326,7 +326,6 @@ export function ComponentGallery() {
               maxDistance={100}
             />
 
-            {/* @ts-expect-error React 18/19 type mismatch across workspace packages */}
             <Suspense fallback={null}>
               <PreviewScene selectedId={selectedId} />
             </Suspense>

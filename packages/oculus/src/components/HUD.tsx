@@ -17,6 +17,7 @@ import { QuestLog } from './QuestLog';
 import { BattleUI } from './BattleUI';
 import { StatusEffectBar } from './StatusEffectBar';
 import { LootPanel } from './LootPanel';
+import { FalconModeOverlay } from './FalconModeOverlay';
 import { WorldHeader } from './WorldHeader';
 import { NavigationBar } from './NavigationBar';
 
@@ -100,6 +101,9 @@ export function HUD() {
           <BattleUI />
         </div>
       )}
+
+      {/* ── Bottom-Center: Falcon Mode Stats ──────────── */}
+      <FalconModeOverlay />
 
       {/* ── Bottom-Center: Loot Notifications ────────── */}
       <div style={{

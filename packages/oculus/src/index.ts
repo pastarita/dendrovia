@@ -40,6 +40,10 @@ export { WorldHeader } from './components/WorldHeader';
 export { NavigationBar } from './components/NavigationBar';
 export { Billboard3D } from './components/Billboard3D';
 export type { Billboard3DProps } from './components/Billboard3D';
+export { WelcomeScreen } from './components/WelcomeScreen';
+export type { WelcomeScreenProps } from './components/WelcomeScreen';
+export { OnboardingHints } from './components/OnboardingHints';
+export type { OnboardingHintsProps } from './components/OnboardingHints';
 
 // ── Primitives ───────────────────────────────────────
 export {
@@ -76,3 +80,9 @@ export { useEventSubscriptions } from './hooks/useEventSubscriptions';
 export { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 export { useCodeLoader } from './hooks/useCodeLoader';
 export type { CodeLoaderOptions } from './hooks/useCodeLoader';
+export { useOnboarding } from './hooks/useOnboarding';
+export type {
+  OnboardingPhase,
+  OnboardingState,
+  UseOnboardingReturn,
+} from './hooks/useOnboarding';

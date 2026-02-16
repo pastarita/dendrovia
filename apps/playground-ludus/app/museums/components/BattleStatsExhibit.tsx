@@ -3,6 +3,21 @@
 import { useState, useMemo } from 'react';
 import { createCharacter, createMonster, createRngState, simulateBattle, createBattleStatistics } from '@dendrovia/ludus';
 import type { BattleStatistics } from '@dendrovia/ludus';
+import type { CharacterClass, BugType } from '@dendrovia/shared';
+
+const CLASSES: CharacterClass[] = ['tank', 'healer', 'dps'];
+const BUG_TYPES: BugType[] = ['null-pointer', 'memory-leak', 'race-condition', 'off-by-one'];
+const SEVERITIES: (1 | 2 | 3 | 4 | 5)[] = [1, 2, 3, 4, 5];
+const LEVELS = [1, 3, 5, 7, 10, 15, 20];
+
+const selectStyle: React.CSSProperties = {
+  padding: '0.4rem 0.5rem',
+  borderRadius: '4px',
+  border: '1px solid #333',
+  background: '#1a1a1a',
+  color: '#ededed',
+  fontSize: '0.85rem',
+};
 
 const STAT_DESCRIPTIONS: Array<{ key: keyof BattleStatistics; label: string; category: string; description: string }> = [
   { key: 'totalBattles', label: 'Total Battles', category: 'Meta', description: 'Total number of battles fought' },
@@ -27,15 +42,19 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default function BattleStatsExhibit() {
+  const [playerClass, setPlayerClass] = useState<CharacterClass>('tank');
+  const [playerLevel, setPlayerLevel] = useState(5);
+  const [bugType, setBugType] = useState<BugType>('null-pointer');
+  const [severity, setSeverity] = useState<1 | 2 | 3 | 4 | 5>(2);
   const [simulated, setSimulated] = useState(false);
 
   const sampleResult = useMemo(() => {
     if (!simulated) return null;
-    const player = createCharacter('tank', 'Test Tank', 5);
+    const player = createCharacter(playerClass, `Test ${playerClass}`, playerLevel);
     const rng = createRngState(42);
-    const [monster] = createMonster('null-pointer', 2, 0, rng);
+    const [monster] = createMonster(bugType, severity, 0, rng);
     return simulateBattle(player, monster, 42);
-  }, [simulated]);
+  }, [simulated, playerClass, playerLevel, bugType, severity]);
 
   const blankStats = createBattleStatistics();
 
@@ -77,28 +96,53 @@ export default function BattleStatsExhibit() {
         ))}
       </div>
 
-      {/* Simulate */}
-      <button
-        onClick={() => setSimulated(true)}
-        style={{
-          padding: '0.4rem 1rem',
-          borderRadius: '4px',
-          border: '1px solid var(--pillar-accent)',
-          background: simulated ? '#222' : 'transparent',
-          color: 'var(--pillar-accent)',
-          cursor: 'pointer',
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          marginBottom: '1rem',
-        }}
-      >
-        Simulate Sample Battle
-      </button>
+      {/* Controls */}
+      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '1rem' }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Class</div>
+          <select value={playerClass} onChange={e => { setPlayerClass(e.target.value as CharacterClass); setSimulated(false); }} style={selectStyle}>
+            {CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Level</div>
+          <select value={playerLevel} onChange={e => { setPlayerLevel(Number(e.target.value)); setSimulated(false); }} style={selectStyle}>
+            {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Bug Type</div>
+          <select value={bugType} onChange={e => { setBugType(e.target.value as BugType); setSimulated(false); }} style={selectStyle}>
+            {BUG_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Severity</div>
+          <select value={severity} onChange={e => { setSeverity(Number(e.target.value) as 1 | 2 | 3 | 4 | 5); setSimulated(false); }} style={selectStyle}>
+            {SEVERITIES.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+        <button
+          onClick={() => setSimulated(true)}
+          style={{
+            padding: '0.4rem 1rem',
+            borderRadius: '4px',
+            border: '1px solid var(--pillar-accent)',
+            background: simulated ? '#222' : 'transparent',
+            color: 'var(--pillar-accent)',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+          }}
+        >
+          Simulate Battle
+        </button>
+      </div>
 
       {sampleResult && (
         <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111' }}>
           <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
-            Sample Battle: Tank (Lv5) vs NullPointerException (S2)
+            {playerClass} (Lv{playerLevel}) vs {bugType} (S{severity})
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', fontFamily: 'var(--font-geist-mono)', fontSize: '0.8rem' }}>
             <div>

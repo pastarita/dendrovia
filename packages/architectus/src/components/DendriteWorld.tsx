@@ -1,11 +1,11 @@
 import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
 import type { FileTreeNode, Hotspot, ProceduralPalette, LSystemRule } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { BranchEnteredEvent } from '@dendrovia/shared';
 import { LSystem } from '../systems/LSystem';
-import { TurtleInterpreter, type NodeMarker } from '../systems/TurtleInterpreter';
+import { TurtleInterpreter } from '../systems/TurtleInterpreter';
+import { SpatialIndex } from '../systems/SpatialIndex';
 import { BranchInstances } from './BranchInstances';
 import { NodeInstances } from './NodeInstances';
 import { MushroomInstances } from './MushroomInstances';
@@ -51,33 +51,20 @@ function deriveBranchId(path: string): string {
  * camera is closest to. When the branch changes, emits BRANCH_ENTERED
  * and updates the store's playerBranchId.
  *
- * Checks every ~10 frames to avoid per-frame overhead.
+ * Uses SpatialIndex for O(1) average-case proximity queries instead of
+ * the previous O(n) linear scan. Checks every ~10 frames.
  */
-function BranchTracker({ nodes }: { nodes: NodeMarker[] }) {
+function BranchTracker({ spatialIndex }: { spatialIndex: SpatialIndex }) {
   const { camera } = useThree();
   const frameCounter = useRef(0);
-  const _pos = useRef(new THREE.Vector3());
 
   useFrame(() => {
     frameCounter.current += 1;
     // Only check every 10 frames (~6 times/sec at 60fps)
     if (frameCounter.current % 10 !== 0) return;
-    if (nodes.length === 0) return;
+    if (spatialIndex.nodeCount === 0) return;
 
-    // Find the closest node to the camera
-    let closestDist = Infinity;
-    let closestNode: NodeMarker | null = null;
-    _pos.current.copy(camera.position);
-
-    for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i]!;
-      const d = _pos.current.distanceToSquared(node.position);
-      if (d < closestDist) {
-        closestDist = d;
-        closestNode = node;
-      }
-    }
-
+    const closestNode = spatialIndex.nearestNode(camera.position);
     if (!closestNode) return;
 
     const newBranchId = deriveBranchId(closestNode.path);
@@ -112,6 +99,13 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     return interpreter.interpret(turtleString);
   }, [topology, hotspots, lsystemOverride]);
 
+  // Build spatial index from geometry (memoized — rebuilds only when tree changes)
+  const spatialIndex = useMemo(() => {
+    const index = new SpatialIndex();
+    index.rebuild(treeGeometry.nodes, treeGeometry.branches, treeGeometry.boundingBox);
+    return index;
+  }, [treeGeometry]);
+
   // Resolve mushroom rendering data from generated assets.
   // Both specimens and meshes must be present to render mushroom instances.
   const mushroomSpecimens = generatedAssets?.mycology?.specimens ?? null;
@@ -134,8 +128,8 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
         />
       )}
 
-      {/* Branch proximity tracker — emits BRANCH_ENTERED events */}
-      <BranchTracker nodes={treeGeometry.nodes} />
+      {/* Branch proximity tracker — emits BRANCH_ENTERED events (O(1) via SpatialIndex) */}
+      <BranchTracker spatialIndex={spatialIndex} />
 
       {/* Branch geometry — instanced cylinders */}
       <BranchInstances

@@ -10,6 +10,7 @@ import { CameraRig } from './components/CameraRig';
 import { Lighting } from './components/Lighting';
 import { PostProcessing } from './components/PostProcessing';
 import { PerformanceMonitor } from './components/PerformanceMonitor';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 /**
  * ARCHITECTUS APP
@@ -158,46 +159,48 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <Canvas
-        dpr={quality.dpr}
-        gl={{
-          antialias: true,
-          powerPreference: 'high-performance',
-          alpha: false,
-        }}
-        style={{ background: activePalette.background }}
-      >
-        <PerspectiveCamera
-          makeDefault
-          position={[10, 14, -16]}
-          fov={60}
-          near={0.1}
-          far={500}
-        />
-
-        {/* Adaptive quality from R3F/drei */}
-        <AdaptiveDpr pixelated />
-        <AdaptiveEvents />
-
-        <Suspense fallback={null}>
-          {/* Scene contents */}
-          <Lighting />
-          <CameraRig />
-          <DendriteWorld
-            topology={activeTopology}
-            hotspots={hotspots}
-            palette={activePalette}
-            lsystemOverride={activeLSystem}
+      <ErrorBoundary background={activePalette.background} accent={activePalette.glow}>
+        <Canvas
+          dpr={quality.dpr}
+          gl={{
+            antialias: true,
+            powerPreference: 'high-performance',
+            alpha: false,
+          }}
+          style={{ background: activePalette.background }}
+        >
+          <PerspectiveCamera
+            makeDefault
+            position={[10, 14, -16]}
+            fov={60}
+            near={0.1}
+            far={500}
           />
-          <PostProcessing />
-        </Suspense>
 
-        {/* Performance tracking (no visual output) */}
-        <PerformanceMonitor />
+          {/* Adaptive quality from R3F/drei */}
+          <AdaptiveDpr pixelated />
+          <AdaptiveEvents />
 
-        {/* Debug grid (dev mode only) */}
-        <gridHelper args={[40, 40, '#1a1a2e', '#0a0a1e']} />
-      </Canvas>
+          <Suspense fallback={null}>
+            {/* Scene contents */}
+            <Lighting />
+            <CameraRig />
+            <DendriteWorld
+              topology={activeTopology}
+              hotspots={hotspots}
+              palette={activePalette}
+              lsystemOverride={activeLSystem}
+            />
+            <PostProcessing />
+          </Suspense>
+
+          {/* Performance tracking (no visual output) */}
+          <PerformanceMonitor />
+
+          {/* Debug grid (dev mode only) */}
+          <gridHelper args={[40, 40, '#1a1a2e', '#0a0a1e']} />
+        </Canvas>
+      </ErrorBoundary>
     </div>
   );
 }

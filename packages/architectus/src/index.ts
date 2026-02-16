@@ -24,7 +24,9 @@ export { PerformanceMonitor } from './components/PerformanceMonitor';
 // Systems
 export { LSystem } from './systems/LSystem';
 export { TurtleInterpreter } from './systems/TurtleInterpreter';
+export { SpatialIndex } from './systems/SpatialIndex';
 export type { BranchSegment, NodeMarker, TreeGeometry, TurtleState } from './systems/TurtleInterpreter';
+export type { NearestSegmentResult } from './systems/SpatialIndex';
 export type { QualityTier } from './store/useRendererStore';
 
 // Loader — IMAGINARIUM asset bridge

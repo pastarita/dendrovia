@@ -153,9 +153,9 @@ export async function distill(
       arc: storyArc,
       segmentCount: storyArc.segments.length,
     });
-    console.log(`[IMAGINARIUM]   Story Arc: ${storyArc.segments.length} segments`);
+    log.info({ segments: storyArc.segments.length }, 'Story arc derived');
   } catch (e) {
-    console.log(`[IMAGINARIUM]   Story Arc: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+    log.info({ err: e instanceof Error ? e.message : 'unknown error' }, 'Story arc skipped');
   }
 
   // 8. Mycology catalogization

@@ -127,10 +127,10 @@ export async function initializeOperatus(
     // Validate manifest structure
     manifestHealthReport = validateManifestStructure(manifest);
     if (manifestHealthReport.stalenessDays > 7) {
-      console.warn(`[OPERATUS] Manifest is ${manifestHealthReport.stalenessDays} days old — consider regenerating`);
+      log.warn({ stalenessDays: manifestHealthReport.stalenessDays }, 'Manifest is stale — consider regenerating');
     }
     if (!manifestHealthReport.valid) {
-      console.warn('[OPERATUS] Manifest validation errors:', manifestHealthReport.errors);
+      log.warn({ errors: manifestHealthReport.errors }, 'Manifest validation errors');
     }
   } catch {
     // Manifest not available (e.g., first run, dev mode)

@@ -79,7 +79,7 @@ function VirtualColumn({
     >
       <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
         {virtualizer.getVirtualItems().map((vItem) => {
-          const item = items[vItem.index];
+          const item = items[vItem.index]!;
           const isSelected = vItem.index === selectedIndex;
           const isHotspot = hotspotPaths.has(item.path);
 
@@ -168,12 +168,13 @@ export function MillerColumns() {
 
     for (let i = 0; i < millerSelection.length && i < 2; i++) {
       const selectedPath = millerSelection[i];
-      const parentItems = cols[i].items;
+      const col = cols[i]!;
+      const parentItems = col.items;
       const selectedIdx = parentItems.findIndex((item) => item.path === selectedPath);
-      cols[i].selectedIndex = selectedIdx;
+      col.selectedIndex = selectedIdx;
 
       if (selectedIdx >= 0) {
-        const selectedNode = parentItems[selectedIdx];
+        const selectedNode = parentItems[selectedIdx]!;
         if (selectedNode.children && selectedNode.children.length > 0) {
           cols.push({ items: selectedNode.children, selectedIndex: -1 });
         }
@@ -184,9 +185,10 @@ export function MillerColumns() {
     if (millerSelection.length > 0 && cols.length > millerSelection.length) {
       const lastSelPath = millerSelection[millerSelection.length - 1];
       if (lastSelPath) {
-        const lastColItems = cols[cols.length - 1].items;
+        const lastCol = cols[cols.length - 1]!;
+        const lastColItems = lastCol.items;
         const idx = lastColItems.findIndex((item) => item.path === lastSelPath);
-        if (idx >= 0) cols[cols.length - 1].selectedIndex = idx;
+        if (idx >= 0) lastCol.selectedIndex = idx;
       }
     }
 
@@ -251,7 +253,7 @@ export function MillerColumns() {
           e.preventDefault();
           if (activeColumn < columns.length - 1) {
             setActiveColumn(activeColumn + 1);
-            if (columns[activeColumn + 1].items.length > 0) {
+            if (columns[activeColumn + 1]!.items.length > 0) {
               handleSelect(activeColumn + 1, 0);
             }
           }

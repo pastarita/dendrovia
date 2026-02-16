@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { ALL_PILLARS } from "./pillar-nav";
 import {
   ALL_DOMAINS,
@@ -17,8 +17,14 @@ function readExpanded(): string | null {
 }
 
 export function DomainNav({ currentPillar }: { currentPillar: string }) {
-  const [expanded, setExpandedRaw] = useState<string | null>(() => readExpanded());
+  const [expanded, setExpandedRaw] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+
+  // Restore from sessionStorage after hydration to avoid SSR mismatch
+  useEffect(() => {
+    const stored = readExpanded();
+    if (stored) setExpandedRaw(stored);
+  }, []);
 
   const setExpanded = useCallback((v: string | null) => {
     setExpandedRaw(v);

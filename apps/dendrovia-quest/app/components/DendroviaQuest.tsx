@@ -75,6 +75,8 @@ export interface DendroviaQuestProps {
   characterName?: string;
   /** Metadata about the world being explored */
   worldMeta?: WorldMeta;
+  /** Character class for LUDUS session (default: 'dps') */
+  characterClass?: CharacterClass;
   /** Children rendered inside the OCULUS provider, after HUD */
   children?: ReactNode;
 }
@@ -159,6 +161,7 @@ export function DendroviaQuest({
   characterClass = 'dps',
   characterName = 'Explorer',
   worldMeta,
+  characterClass = 'dps',
   children,
 }: DendroviaQuestProps) {
   // ── Refs (persist across renders, no re-render on mutation) ──
@@ -301,6 +304,7 @@ export function DendroviaQuest({
   }, [
     enableOperatus,
     enableLudus,
+    characterClass,
     topologyPath,
     manifestPath,
     characterClass,

@@ -12,13 +12,19 @@ import { hashString } from '../utils/hash.js';
 const MAX_ITERATIONS = 5;
 const BASE_ANGLE = 25;
 
-export function compile(topology: CodeTopology): LSystemRule {
+export interface LSystemOverrides {
+  angleMultiplier?: number;
+  iterationOffset?: number;
+}
+
+export function compile(topology: CodeTopology, overrides?: LSystemOverrides): LSystemRule {
   const tree = topology.tree;
   const hotspotPaths = new Set((topology.hotspots ?? []).map(h => h.path));
 
   // Compute max depth
   const maxDepth = computeDepth(tree);
-  const iterations = Math.min(maxDepth, MAX_ITERATIONS);
+  const iterationOffset = overrides?.iterationOffset ?? 0;
+  const iterations = Math.max(1, Math.min(maxDepth + iterationOffset, MAX_ITERATIONS));
 
   // Build rules from tree structure
   const rules: Record<string, string> = {};
@@ -39,7 +45,8 @@ export function compile(topology: CodeTopology): LSystemRule {
   rules['H'] = 'FF[+&F][-^F]';
 
   // Angle narrows with depth — computed at interpretation time via the angle parameter
-  const angle = BASE_ANGLE;
+  const angleMultiplier = overrides?.angleMultiplier ?? 1;
+  const angle = Math.round(BASE_ANGLE * angleMultiplier);
 
   // Seed-based determinism
   const seed = hashString(JSON.stringify({ tree: tree.name, files: topology.files.length }));

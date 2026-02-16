@@ -22,7 +22,7 @@ import { useEffect, useRef, useState, useCallback, type ReactNode } from 'react'
 // ── Shared ────────────────────────────────────────────────────
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { EventBus, TopologyGeneratedEvent } from '@dendrovia/shared';
-import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit } from '@dendrovia/shared';
+import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit, CharacterClass } from '@dendrovia/shared';
 
 // ── ARCHITECTUS (3D renderer) ─────────────────────────────────
 import { App as ArchitectusApp, useRendererStore } from '@dendrovia/architectus';
@@ -61,6 +61,10 @@ export interface DendroviaQuestProps {
   enableLudus?: boolean;
   /** Enable OCULUS HUD overlay (default: true) */
   enableOculus?: boolean;
+  /** Character class for LUDUS (default: 'dps') */
+  characterClass?: CharacterClass;
+  /** Character name (default: 'Explorer') */
+  characterName?: string;
   /** Children rendered inside the OCULUS provider, after HUD */
   children?: ReactNode;
 }
@@ -107,6 +111,8 @@ export function DendroviaQuest({
   enableOperatus = false,
   enableLudus = true,
   enableOculus = true,
+  characterClass = 'dps',
+  characterName = 'Explorer',
   children,
 }: DendroviaQuestProps) {
   // ── Refs (persist across renders, no re-render on mutation) ──
@@ -180,7 +186,7 @@ export function DendroviaQuest({
         try {
           setInitMessage('Generating quests from git history...');
 
-          const character = createCharacter('dps', 'Explorer', 1);
+          const character = createCharacter(characterClass, characterName, 1);
 
           // Generate quests from real CHRONOS data
           const commitQuests = generateQuestGraph(chronosCommits);
@@ -246,6 +252,8 @@ export function DendroviaQuest({
     enableLudus,
     topologyPath,
     manifestPath,
+    characterClass,
+    characterName,
     getOrCreateEventBus,
   ]);
 

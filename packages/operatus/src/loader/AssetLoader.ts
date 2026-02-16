@@ -443,4 +443,14 @@ export class AssetLoader {
   get cacheManager(): CacheManager {
     return this.cache;
   }
+
+  /** Number of assets loaded in this session */
+  get loadedCount(): number {
+    return this.loadedAssets.size;
+  }
+
+  /** Whether a manifest has been loaded */
+  get manifestLoaded(): boolean {
+    return this.manifest !== null;
+  }
 }

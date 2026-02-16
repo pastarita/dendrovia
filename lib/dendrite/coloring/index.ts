@@ -4,12 +4,13 @@
 
 import type { ColorMode, SourceNode } from "../types";
 import type { ColorPair, ColorResolver } from "./modes";
-import { statusResolver, domainResolver, fidelityResolver } from "./modes";
+import { statusResolver, domainResolver, fidelityResolver, runtimeResolver, resolveRuntimeColor } from "./modes";
 
 const COLOR_REGISTRY: Record<ColorMode, ColorResolver> = {
   status: statusResolver,
   domain: domainResolver,
   fidelity: fidelityResolver,
+  runtime: runtimeResolver,
 };
 
 export function resolveNodeColor(mode: ColorMode, node: SourceNode): ColorPair {
@@ -17,4 +18,4 @@ export function resolveNodeColor(mode: ColorMode, node: SourceNode): ColorPair {
 }
 
 export type { ColorPair, ColorResolver };
-export { statusResolver, domainResolver, fidelityResolver };
+export { statusResolver, domainResolver, fidelityResolver, runtimeResolver, resolveRuntimeColor };

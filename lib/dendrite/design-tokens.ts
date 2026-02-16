@@ -5,7 +5,7 @@
  * consistent with playground CSS vars.
  */
 
-import type { PillarDomain, NodeStatus } from "./types";
+import type { PillarDomain, NodeStatus, RuntimeHealth } from "./types";
 
 // ---------------------------------------------------------------------------
 // Base Palette
@@ -79,3 +79,14 @@ export const FIDELITY_COLORS = {
   phase:   { fill: "#2a4a6b", text: "#ffffff" },
   section: { fill: "#1a2a3b", text: "#ededed" },
 } as const;
+
+// ---------------------------------------------------------------------------
+// Runtime Health Colors
+// ---------------------------------------------------------------------------
+
+export const RUNTIME_HEALTH_COLORS: Record<RuntimeHealth, { fill: string; text: string }> = {
+  healthy:  { fill: "#166534", text: "#ffffff" },
+  degraded: { fill: "#854d0e", text: "#ffffff" },
+  error:    { fill: "#7f1d1d", text: "#ffffff" },
+  idle:     { fill: "#1a1d24", text: "#6b7280" },
+};

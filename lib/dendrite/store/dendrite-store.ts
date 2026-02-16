@@ -17,6 +17,7 @@ import type {
   SourceDiagram,
   LayoutDirection,
   ColorMode,
+  RuntimeHealth,
 } from "../types";
 import { buildDendriteLayout } from "../layout/layout-engine";
 import { collapseAllIds } from "../layout/collapse-manager";
@@ -30,7 +31,8 @@ function relayoutFromState(state: DendriteState): void {
     state.collapseState.collapsed,
     state.direction,
     state.colorMode,
-    state.phaseFilter
+    state.phaseFilter,
+    state.runtimeHealthMap ?? undefined
   );
 
   state.nodes = nodes;
@@ -62,6 +64,7 @@ export function createDendriteStore(
         phaseFilter: null,
         selectedNodeId: null,
         selectedEdgeId: null,
+        runtimeHealthMap: null,
 
         setFixture: (id: string) =>
           set((state) => {
@@ -130,6 +133,14 @@ export function createDendriteStore(
           set((state) => {
             state.selectedNodeId = null;
             state.selectedEdgeId = null;
+          }),
+
+        setRuntimeHealthMap: (map: Map<string, RuntimeHealth> | null) =>
+          set((state) => {
+            state.runtimeHealthMap = map;
+            if (state.colorMode === "runtime") {
+              relayoutFromState(state);
+            }
           }),
 
         relayout: () =>

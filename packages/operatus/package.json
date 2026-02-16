@@ -13,7 +13,8 @@
     "./perf": "./src/perf/index.ts",
     "./manifest": "./src/manifest/index.ts",
     "./sw": "./src/sw/index.ts",
-    "./multiplayer": "./src/multiplayer/index.ts"
+    "./multiplayer": "./src/multiplayer/index.ts",
+    "./dendrite": "./src/dendrite/index.ts"
   },
   "scripts": {
     "dev": "tsc --watch --noEmit",

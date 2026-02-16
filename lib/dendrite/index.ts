@@ -20,10 +20,15 @@ export type {
   BoundaryType,
   BoundaryEvent,
   BoundaryContract,
+  RuntimeHealth,
+  RuntimeMetric,
+  NodeAction,
+  RuntimeNodeState,
+  RuntimeEvent,
 } from "./types";
 
 // Design tokens
-export { DT, PILLAR_COLORS, STATUS_COLORS, FIDELITY_COLORS } from "./design-tokens";
+export { DT, PILLAR_COLORS, STATUS_COLORS, FIDELITY_COLORS, RUNTIME_HEALTH_COLORS } from "./design-tokens";
 
 // Coloring
 export { resolveNodeColor } from "./coloring";
@@ -34,6 +39,8 @@ export { getHiddenNodeIds, getVisibleNodes, getCollapsibleIds, collapseAllIds } 
 
 // Store
 export { createDendriteStore } from "./store/dendrite-store";
+export { createRuntimeStore } from "./store/runtime-store";
+export type { RuntimeStoreState } from "./store/runtime-store";
 
 // Components
 export { DendriteCanvas } from "./canvas/DendriteCanvas";
@@ -42,8 +49,8 @@ export { DendriteToolbar } from "./toolbar/DendriteToolbar";
 export type { DendriteToolbarProps } from "./toolbar/DendriteToolbar";
 
 // Panels
-export { ColorLegend, NodeDetailPanel, ContractDetailPanel } from "./panels";
-export type { ColorLegendProps, NodeDetailPanelProps, ContractDetailPanelProps } from "./panels";
+export { ColorLegend, NodeDetailPanel, ContractDetailPanel, LiveMetricsSection } from "./panels";
+export type { ColorLegendProps, NodeDetailPanelProps, ContractDetailPanelProps, LiveMetricsSectionProps } from "./panels";
 
 // Contracts
 export { BOUNDARY_CONTRACTS } from "./contracts";

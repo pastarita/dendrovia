@@ -36,6 +36,8 @@ export interface LoadingReport {
   opfsAvailable: boolean;
   /** Number of assets loaded */
   assetCount: number;
+  /** Manifest health report (null if no manifest loaded) */
+  manifestHealth: import('../manifest/ManifestHealth.js').ManifestHealthReport | null;
 }
 
 const hasPerformance = typeof performance !== 'undefined' && typeof performance.mark === 'function';
@@ -168,7 +170,10 @@ export class PerfMonitor {
   /**
    * Generate a complete loading performance report.
    */
-  async generateReport(opfsAvailable: boolean): Promise<LoadingReport> {
+  async generateReport(
+    opfsAvailable: boolean,
+    manifestHealth?: import('../manifest/ManifestHealth.js').ManifestHealthReport | null,
+  ): Promise<LoadingReport> {
     const timings = this.getAssetTimings();
     const initTiming = timings.find((t) => t.name === 'init');
 
@@ -179,6 +184,7 @@ export class PerfMonitor {
       storageUsage: await this.getStorageUsage(),
       opfsAvailable,
       assetCount: timings.filter((t) => t.name.startsWith('asset:')).length,
+      manifestHealth: manifestHealth ?? null,
     };
   }
 

@@ -3,6 +3,7 @@
 import type { StoreApi } from "zustand";
 import { useStore } from "zustand";
 import type { DendriteState, LayoutDirection, ColorMode } from "../types";
+import type { RuntimeStoreState } from "../store/runtime-store";
 import { DT, PILLAR_COLORS } from "../design-tokens";
 import type { PillarDomain } from "../types";
 
@@ -69,9 +70,11 @@ export interface DendriteToolbarProps {
   store: StoreApi<DendriteState>;
   /** Which fixture IDs are available (for fixture switching buttons) */
   availableFixtures: string[];
+  /** Optional runtime store for connection status indicator */
+  runtimeStore?: StoreApi<RuntimeStoreState>;
 }
 
-export function DendriteToolbar({ store, availableFixtures }: DendriteToolbarProps) {
+export function DendriteToolbar({ store, availableFixtures, runtimeStore }: DendriteToolbarProps) {
   const direction = useStore(store, (s) => s.direction);
   const colorMode = useStore(store, (s) => s.colorMode);
   const activeFixtureId = useStore(store, (s) => s.activeFixtureId);
@@ -84,6 +87,9 @@ export function DendriteToolbar({ store, availableFixtures }: DendriteToolbarPro
   const collapseAll = useStore(store, (s) => s.collapseAll);
   const expandAll = useStore(store, (s) => s.expandAll);
   const setPhaseFilter = useStore(store, (s) => s.setPhaseFilter);
+  const runtimeConnected = runtimeStore
+    ? useStore(runtimeStore, (s) => s.connected)
+    : false;
 
   // Get phase nodes for the active fixture
   const activeDiagram = fixtures[activeFixtureId];
@@ -109,7 +115,7 @@ export function DendriteToolbar({ store, availableFixtures }: DendriteToolbarPro
 
       {/* Color mode */}
       <span style={{ fontWeight: 600 }}>Color:</span>
-      {(["status", "domain", "fidelity"] as ColorMode[]).map((m) => (
+      {(["status", "domain", "fidelity", "runtime"] as ColorMode[]).map((m) => (
         <button
           key={m}
           style={activeBtn(colorMode === m)}
@@ -179,6 +185,23 @@ export function DendriteToolbar({ store, availableFixtures }: DendriteToolbarPro
               {p.label}
             </button>
           ))}
+        </>
+      )}
+
+      {/* Connection status */}
+      {runtimeStore && (
+        <>
+          <div style={sepStyle} />
+          <span
+            title={runtimeConnected ? "Bridge connected" : "Bridge disconnected"}
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              backgroundColor: runtimeConnected ? "#22c55e" : DT.textDim,
+              flexShrink: 0,
+            }}
+          />
         </>
       )}
     </div>

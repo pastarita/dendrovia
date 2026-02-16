@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { DEFAULT_BALANCE_CONFIG, EASY_CONFIG, HARD_CONFIG, simulateMatchup } from '@dendrovia/ludus';
 import type { CharacterClass, BugType } from '@dendrovia/shared';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const CLASSES: CharacterClass[] = ['tank', 'healer', 'dps'];
 const BUG_TYPES: BugType[] = ['null-pointer', 'memory-leak', 'race-condition', 'off-by-one'];
@@ -81,7 +82,7 @@ export default function BalanceExhibit(): React.JSX.Element {
       </div>
 
       {/* Config Comparison Table */}
-      <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111', marginBottom: '1.5rem', overflowX: 'auto' }}>
+      <OrnateFrame pillar="ludus" variant="panel" style={{ background: '#111', marginBottom: '1.5rem', overflowX: 'auto' }}>
         <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>Config Comparison</div>
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>
           <thead>
@@ -121,7 +122,7 @@ export default function BalanceExhibit(): React.JSX.Element {
             ))}
           </tbody>
         </table>
-      </div>
+      </OrnateFrame>
 
       {/* Matchup Controls */}
       <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '1rem' }}>
@@ -169,7 +170,7 @@ export default function BalanceExhibit(): React.JSX.Element {
       </div>
 
       {matchupResult && (
-        <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111', marginBottom: '1.5rem' }}>
+        <OrnateFrame pillar="ludus" variant="panel" style={{ background: '#111', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
             {playerClass} Lv{playerLevel} vs {bugType} S{severity} (100 trials each)
           </div>
@@ -187,11 +188,11 @@ export default function BalanceExhibit(): React.JSX.Element {
               </div>
             ))}
           </div>
-        </div>
+        </OrnateFrame>
       )}
 
       {/* Balance Flags */}
-      <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111', marginBottom: '1rem' }}>
+      <OrnateFrame pillar="ludus" variant="panel" style={{ background: '#111', marginBottom: '1rem' }}>
         <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Balance Flags</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem', fontSize: '0.8rem' }}>
           <div><span style={{ color: FLAG_COLORS['ok'], fontWeight: 700 }}>ok</span> — Win rate 30-80%</div>
@@ -199,7 +200,7 @@ export default function BalanceExhibit(): React.JSX.Element {
           <div><span style={{ color: FLAG_COLORS['too-hard'], fontWeight: 700 }}>too-hard</span> — Win rate &lt;30%</div>
           <div><span style={{ color: FLAG_COLORS['draw-heavy'], fontWeight: 700 }}>draw-heavy</span> — Draw rate &gt;10%</div>
         </div>
-      </div>
+      </OrnateFrame>
 
       <div style={{ fontSize: '0.8rem', opacity: 0.5 }}>
         For full interactive balance simulation, visit <a href="/gyms/balance" style={{ color: 'var(--pillar-accent)' }}>/gyms/balance</a>

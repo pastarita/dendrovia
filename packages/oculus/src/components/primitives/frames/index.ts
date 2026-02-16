@@ -20,6 +20,8 @@ export const FRAME_ORNAMENTS: Record<PillarId, FrameOrnamentSet> = {
 };
 
 export { PILLAR_PALETTES } from './palettes';
+export { FRAME_REGISTRY, VARIANT_SPECS, PILLAR_SPECS } from './registry';
+export type { VariantSpec, PillarSpec } from './registry';
 export type {
   PillarId,
   FrameVariant,

@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { createMonster, createRngState } from '@dendrovia/ludus';
 import type { BugType } from '@dendrovia/shared';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const BUG_TYPES: BugType[] = ['null-pointer', 'memory-leak', 'race-condition', 'off-by-one'];
 const SEVERITIES: (1 | 2 | 3 | 4 | 5)[] = [1, 2, 3, 4, 5];
@@ -45,12 +46,11 @@ export default function MonsterBestiary(): React.JSX.Element {
             const monster = monsters[`${type}-${sev}`];
             if (!monster) return <div key={sev} />;
             return (
-              <div
+              <OrnateFrame
                 key={sev}
+                pillar="ludus"
+                variant="compact"
                 style={{
-                  padding: '0.75rem',
-                  border: '1px solid #222',
-                  borderRadius: '6px',
                   background: '#111',
                   fontSize: '0.75rem',
                 }}
@@ -65,7 +65,7 @@ export default function MonsterBestiary(): React.JSX.Element {
                   <div>SPD {monster.stats.speed}</div>
                   <div style={{ color: '#22C55E' }}>XP {monster.xpReward}</div>
                 </div>
-              </div>
+              </OrnateFrame>
             );
           })}
         </div>

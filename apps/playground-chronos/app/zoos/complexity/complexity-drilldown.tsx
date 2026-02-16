@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { OrnateFrame } from "@dendrovia/oculus";
 
 interface FunctionEntry {
   name: string;
@@ -55,6 +56,7 @@ export function ComplexityDrilldown({ files }: { files: FileEntry[] }) {
         }}
       />
 
+      <OrnateFrame pillar="chronos" variant="panel">
       {sorted.slice(0, 100).map((f) => (
         <div key={f.path} style={{ marginBottom: "0.25rem" }}>
           <div
@@ -150,6 +152,7 @@ export function ComplexityDrilldown({ files }: { files: FileEntry[] }) {
           )}
         </div>
       ))}
+      </OrnateFrame>
 
       {sorted.length > 100 && (
         <div style={{ textAlign: "center", opacity: 0.4, marginTop: "0.75rem", fontSize: "0.8rem" }}>

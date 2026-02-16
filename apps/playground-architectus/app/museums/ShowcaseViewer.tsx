@@ -10,6 +10,7 @@ import {
   PerformanceMonitor,
   useRendererStore,
 } from '@dendrovia/architectus';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 class R3FErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };
@@ -28,7 +29,7 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
   const selectedNodeId = useRendererStore((s) => s.selectedNodeId);
 
   return (
-    <div style={{
+    <OrnateFrame pillar="architectus" variant="modal" style={{
       position: 'fixed',
       inset: 0,
       zIndex: 100,
@@ -174,6 +175,6 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
           )}
         </div>
       </div>
-    </div>
+    </OrnateFrame>
   );
 }

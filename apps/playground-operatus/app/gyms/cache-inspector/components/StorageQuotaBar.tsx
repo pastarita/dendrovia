@@ -1,5 +1,7 @@
 'use client';
 
+import { OrnateFrame } from '@dendrovia/oculus';
+
 type StorageQuota = import('@dendrovia/operatus').StorageQuota;
 
 function formatBytes(bytes: number): string {
@@ -11,7 +13,7 @@ function formatBytes(bytes: number): string {
 
 export function StorageQuotaBar({ quota, opfsActive }: { quota: StorageQuota | null; opfsActive: boolean }) {
   return (
-    <div style={{ padding: "1rem 1.25rem", border: "1px solid #222", borderRadius: "8px" }}>
+    <OrnateFrame pillar="operatus" variant="compact">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
         <span style={{ fontSize: "0.85rem", fontWeight: 500 }}>Storage Quota</span>
         <span style={{
@@ -49,6 +51,6 @@ export function StorageQuotaBar({ quota, opfsActive }: { quota: StorageQuota | n
       ) : (
         <div style={{ fontSize: "0.8rem", opacity: 0.4 }}>StorageManager API not available</div>
       )}
-    </div>
+    </OrnateFrame>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { OrnateFrame } from '@dendrovia/oculus';
 import type { Stage } from '../AssetLifecycleClient';
 
 export function StageDetail({
@@ -10,13 +11,7 @@ export function StageDetail({
   onClose: () => void;
 }) {
   return (
-    <div style={{
-      marginTop: "1.5rem",
-      padding: "1.25rem",
-      border: "1px solid #222",
-      borderRadius: "8px",
-      position: "relative",
-    }}>
+    <OrnateFrame pillar="operatus" variant="panel" style={{ marginTop: "1.5rem", position: "relative" }}>
       <button
         onClick={onClose}
         style={{
@@ -65,6 +60,6 @@ export function StageDetail({
           {stage.api}
         </code>
       </div>
-    </div>
+    </OrnateFrame>
   );
 }

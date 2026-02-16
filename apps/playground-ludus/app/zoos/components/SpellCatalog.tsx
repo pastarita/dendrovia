@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { getAllSpells } from '@dendrovia/ludus';
 import type { Element } from '@dendrovia/shared';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const ELEMENTS: (Element | 'all')[] = ['all', 'fire', 'water', 'earth', 'air', 'none'];
 const EFFECT_TYPES = ['all', 'damage', 'heal', 'shield', 'buff', 'debuff', 'dot', 'aoe-damage', 'cleanse', 'taunt', 'revive'];
@@ -52,7 +53,7 @@ export default function SpellCatalog(): React.JSX.Element {
         <span style={{ fontSize: '0.75rem', opacity: 0.4, marginLeft: 'auto' }}>{filtered.length} spells</span>
       </div>
 
-      <div style={{ overflowX: 'auto' }}>
+      <OrnateFrame pillar="ludus" variant="panel" style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid #333' }}>
@@ -81,7 +82,7 @@ export default function SpellCatalog(): React.JSX.Element {
             ))}
           </tbody>
         </table>
-      </div>
+      </OrnateFrame>
     </div>
   );
 }

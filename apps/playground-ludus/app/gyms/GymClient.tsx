@@ -19,7 +19,7 @@ import EnemyCard from './components/EnemyCard';
 import ActionPanel from './components/ActionPanel';
 import BattleLog from './components/BattleLog';
 import MockEventPanel from './components/MockEventPanel';
-import StatBar from './components/StatBar';
+import { OrnateFrame, ProgressBar, StatLabel } from '@dendrovia/oculus';
 import { useGamePersistence } from './hooks/useGamePersistence';
 
 const CLASS_OPTIONS: { value: CharacterClass; label: string }[] = [
@@ -179,7 +179,7 @@ export default function GymClient(): React.JSX.Element {
         /* ─── SETUP PHASE ─── */
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
           {/* Character Setup */}
-          <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111' }}>
+          <OrnateFrame pillar="ludus" variant="panel">
             <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>Character</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Name</label>
@@ -199,18 +199,20 @@ export default function GymClient(): React.JSX.Element {
 
             <div style={{ marginTop: '0.75rem', fontSize: '0.8rem', opacity: 0.6 }}>
               <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>Preview Stats</div>
-              <StatBar label="HP" current={previewStats.maxHealth} max={previewStats.maxHealth} color="#EF4444" />
-              <StatBar label="MP" current={previewStats.maxMana} max={previewStats.maxMana} color="#3B82F6" />
-              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                <span>ATK {previewStats.attack}</span>
-                <span>DEF {previewStats.defense}</span>
-                <span>SPD {previewStats.speed}</span>
+              <ProgressBar value={previewStats.maxHealth} max={previewStats.maxHealth} variant="health" showLabel label={`HP ${previewStats.maxHealth}/${previewStats.maxHealth}`} />
+              <div style={{ marginTop: 'var(--oculus-space-xs)' }}>
+                <ProgressBar value={previewStats.maxMana} max={previewStats.maxMana} variant="mana" showLabel label={`MP ${previewStats.maxMana}/${previewStats.maxMana}`} />
+              </div>
+              <div style={{ marginTop: 'var(--oculus-space-xs)' }}>
+                <StatLabel label="ATK" value={previewStats.attack} />
+                <StatLabel label="DEF" value={previewStats.defense} />
+                <StatLabel label="SPD" value={previewStats.speed} />
               </div>
             </div>
-          </div>
+          </OrnateFrame>
 
           {/* Enemy Setup */}
-          <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111' }}>
+          <OrnateFrame pillar="ludus" variant="panel">
             <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>Enemy</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Bug Type</label>
@@ -226,50 +228,43 @@ export default function GymClient(): React.JSX.Element {
 
             <div style={{ marginTop: '0.75rem', fontSize: '0.8rem', opacity: 0.6 }}>
               <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>Preview: {previewMonster.name}</div>
-              <StatBar label="HP" current={previewMonster.stats.maxHealth} max={previewMonster.stats.maxHealth} color="#F97316" />
-              <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                <span>ATK {previewMonster.stats.attack}</span>
-                <span>DEF {previewMonster.stats.defense}</span>
-                <span>SPD {previewMonster.stats.speed}</span>
-                <span>XP {previewMonster.xpReward}</span>
+              <ProgressBar value={previewMonster.stats.maxHealth} max={previewMonster.stats.maxHealth} variant="custom" color="#F97316" showLabel label={`HP ${previewMonster.stats.maxHealth}/${previewMonster.stats.maxHealth}`} />
+              <div style={{ marginTop: 'var(--oculus-space-xs)' }}>
+                <StatLabel label="ATK" value={previewMonster.stats.attack} />
+                <StatLabel label="DEF" value={previewMonster.stats.defense} />
+                <StatLabel label="SPD" value={previewMonster.stats.speed} />
+                <StatLabel label="XP" value={previewMonster.xpReward} color="#ffe66d" />
               </div>
             </div>
-          </div>
+          </OrnateFrame>
 
           {/* Saved Character Banner */}
           {hydrated && savedCharacter && (
-            <div style={{
-              gridColumn: '1 / -1',
-              padding: '0.75rem 1rem',
-              border: '1px solid #2563EB',
-              borderRadius: '8px',
-              background: '#111827',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-              <div>
-                <div style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '0.15rem' }}>Saved Character</div>
-                <div style={{ fontSize: '0.9rem' }}>
-                  {savedCharacter.name} — Lv {savedCharacter.level} {savedCharacter.class}
+            <OrnateFrame pillar="ludus" variant="compact" style={{ gridColumn: '1 / -1' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '0.15rem' }}>Saved Character</div>
+                  <div style={{ fontSize: '0.9rem' }}>
+                    {savedCharacter.name} — Lv {savedCharacter.level} {savedCharacter.class}
+                  </div>
                 </div>
+                <button
+                  onClick={handleLoad}
+                  style={{
+                    padding: '0.4rem 0.75rem',
+                    borderRadius: '4px',
+                    border: '1px solid #2563EB',
+                    background: 'transparent',
+                    color: '#3B82F6',
+                    cursor: 'pointer',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                  }}
+                >
+                  Load
+                </button>
               </div>
-              <button
-                onClick={handleLoad}
-                style={{
-                  padding: '0.4rem 0.75rem',
-                  borderRadius: '4px',
-                  border: '1px solid #2563EB',
-                  background: 'transparent',
-                  color: '#3B82F6',
-                  cursor: 'pointer',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                }}
-              >
-                Load
-              </button>
-            </div>
+            </OrnateFrame>
           )}
 
           {/* Start Button */}
@@ -325,73 +320,72 @@ export default function GymClient(): React.JSX.Element {
 
           {/* Result Overlay */}
           {isTerminal && (
-            <div
-              style={{
-                padding: '1.5rem',
-                border: `2px solid ${battleState.phase.type === 'VICTORY' ? '#22C55E' : '#EF4444'}`,
-                borderRadius: '8px',
-                background: '#111',
-                textAlign: 'center',
-              }}
+            <OrnateFrame
+              pillar="ludus"
+              variant="modal"
+              header={
+                <span style={{ color: battleState.phase.type === 'VICTORY' ? '#22C55E' : '#EF4444' }}>
+                  {battleState.phase.type === 'VICTORY' ? 'VICTORY' : 'DEFEAT'}
+                </span>
+              }
             >
-              <div style={{ fontSize: '1.5rem', fontWeight: 700, color: battleState.phase.type === 'VICTORY' ? '#22C55E' : '#EF4444' }}>
-                {battleState.phase.type === 'VICTORY' ? 'VICTORY' : 'DEFEAT'}
-              </div>
-              <div style={{ fontSize: '0.85rem', opacity: 0.6, marginTop: '0.5rem' }}>
-                Completed in {battleState.turn} turns
-                {battleState.phase.type === 'VICTORY' && battleState.phase.xpGained != null && (
-                  <span> — {battleState.phase.xpGained} XP earned</span>
-                )}
-              </div>
-              <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <button
-                  onClick={resetBattle}
-                  style={{
-                    padding: '0.5rem 1.25rem',
-                    borderRadius: '6px',
-                    border: '1px solid #333',
-                    background: '#1a1a1a',
-                    color: '#ededed',
-                    cursor: 'pointer',
-                    fontSize: '0.85rem',
-                  }}
-                >
-                  New Battle
-                </button>
-                <button
-                  onClick={startBattle}
-                  style={{
-                    padding: '0.5rem 1.25rem',
-                    borderRadius: '6px',
-                    border: '1px solid var(--pillar-accent)',
-                    background: 'transparent',
-                    color: 'var(--pillar-accent)',
-                    cursor: 'pointer',
-                    fontSize: '0.85rem',
-                  }}
-                >
-                  Rematch (same seed)
-                </button>
-                {battleState.phase.type === 'VICTORY' && (
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '0.85rem', opacity: 0.6 }}>
+                  Completed in {battleState.turn} turns
+                  {battleState.phase.type === 'VICTORY' && battleState.phase.xpGained != null && (
+                    <span> — {battleState.phase.xpGained} XP earned</span>
+                  )}
+                </div>
+                <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                   <button
-                    onClick={handleSave}
-                    disabled={saveStatus === 'Saving...'}
+                    onClick={resetBattle}
                     style={{
                       padding: '0.5rem 1.25rem',
                       borderRadius: '6px',
-                      border: '1px solid #22C55E',
-                      background: 'transparent',
-                      color: '#22C55E',
-                      cursor: saveStatus === 'Saving...' ? 'wait' : 'pointer',
+                      border: '1px solid #333',
+                      background: '#1a1a1a',
+                      color: '#ededed',
+                      cursor: 'pointer',
                       fontSize: '0.85rem',
-                      opacity: saveStatus === 'Saving...' ? 0.5 : 1,
                     }}
                   >
-                    {saveStatus ?? 'Save Character'}
+                    New Battle
                   </button>
-                )}
+                  <button
+                    onClick={startBattle}
+                    style={{
+                      padding: '0.5rem 1.25rem',
+                      borderRadius: '6px',
+                      border: '1px solid var(--pillar-accent)',
+                      background: 'transparent',
+                      color: 'var(--pillar-accent)',
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                    }}
+                  >
+                    Rematch (same seed)
+                  </button>
+                  {battleState.phase.type === 'VICTORY' && (
+                    <button
+                      onClick={handleSave}
+                      disabled={saveStatus === 'Saving...'}
+                      style={{
+                        padding: '0.5rem 1.25rem',
+                        borderRadius: '6px',
+                        border: '1px solid #22C55E',
+                        background: 'transparent',
+                        color: '#22C55E',
+                        cursor: saveStatus === 'Saving...' ? 'wait' : 'pointer',
+                        fontSize: '0.85rem',
+                        opacity: saveStatus === 'Saving...' ? 0.5 : 1,
+                      }}
+                    >
+                      {saveStatus ?? 'Save Character'}
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            </OrnateFrame>
           )}
 
           {/* Actions */}

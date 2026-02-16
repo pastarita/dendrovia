@@ -1,5 +1,6 @@
 'use client';
 
+import { OrnateFrame } from '@dendrovia/oculus';
 import type { EventEntry } from '../EventStreamClient';
 
 export function EventPayloadModal({
@@ -25,18 +26,19 @@ export function EventPayloadModal({
         zIndex: 100,
       }}
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
+      <OrnateFrame
+        pillar="operatus"
+        variant="modal"
         style={{
           background: "#111",
-          border: "1px solid #333",
-          borderRadius: "8px",
-          padding: "1.5rem",
           maxWidth: "600px",
           width: "90%",
           maxHeight: "80vh",
           overflow: "auto",
         }}
+      >
+      <div
+        onClick={(e) => e.stopPropagation()}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
           <div>
@@ -76,6 +78,7 @@ export function EventPayloadModal({
           {entry.payload != null ? JSON.stringify(entry.payload, null, 2) : '(no payload)'}
         </pre>
       </div>
+      </OrnateFrame>
     </div>
   );
 }

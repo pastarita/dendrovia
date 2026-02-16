@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { OrnateFrame } from '@dendrovia/oculus';
 import { StorageQuotaBar } from './components/StorageQuotaBar';
 import { CacheEntryTable } from './components/CacheEntryTable';
 import { CacheActionToolbar } from './components/CacheActionToolbar';
@@ -67,15 +68,19 @@ export function CacheInspectorClient() {
       <StorageQuotaBar quota={quota} opfsActive={opfsActive} />
 
       {/* Stats summary */}
-      <div style={{ display: "flex", gap: "2rem", fontSize: "0.85rem" }}>
-        <Stat label="Memory entries" value={String(memoryCount)} />
-        <Stat label="Persistent entries" value={String(persistentCount)} />
-        <Stat label="Total size" value={formatBytes(totalBytes)} />
-        {oldest && <Stat label="Oldest entry" value={timeAgo(oldest)} />}
-      </div>
+      <OrnateFrame pillar="operatus" variant="compact">
+        <div style={{ display: "flex", gap: "2rem", fontSize: "0.85rem" }}>
+          <Stat label="Memory entries" value={String(memoryCount)} />
+          <Stat label="Persistent entries" value={String(persistentCount)} />
+          <Stat label="Total size" value={formatBytes(totalBytes)} />
+          {oldest && <Stat label="Oldest entry" value={timeAgo(oldest)} />}
+        </div>
+      </OrnateFrame>
 
       <CacheActionToolbar cache={cache} onRefresh={refresh} />
-      <CacheEntryTable entries={entries} cache={cache} onRefresh={refresh} />
+      <OrnateFrame pillar="operatus" variant="panel">
+        <CacheEntryTable entries={entries} cache={cache} onRefresh={refresh} />
+      </OrnateFrame>
     </div>
   );
 }

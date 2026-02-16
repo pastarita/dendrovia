@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { BASE_STATS, GROWTH_RATES, computeStatsAtLevel, createCharacter, getSpell } from '@dendrovia/ludus';
 import type { CharacterClass } from '@dendrovia/shared';
+import { OrnateFrame } from '@dendrovia/oculus';
 
 const CLASSES: CharacterClass[] = ['tank', 'healer', 'dps'];
 const KEY_LEVELS = [1, 10, 20, 30];
@@ -43,7 +44,7 @@ export default function ClassGuideHall(): React.JSX.Element {
   return (
     <div style={{ display: 'grid', gap: '1.5rem' }}>
       {/* Side-by-side Stat Comparison */}
-      <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111' }}>
+      <OrnateFrame pillar="ludus" variant="panel" style={{ background: '#111' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Stat Comparison at Key Levels</h3>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ borderCollapse: 'collapse', width: '100%' }}>
@@ -79,16 +80,15 @@ export default function ClassGuideHall(): React.JSX.Element {
             </tbody>
           </table>
         </div>
-      </div>
+      </OrnateFrame>
 
       {/* Individual Class Cards */}
       {classData.map(cd => (
-        <div
+        <OrnateFrame
           key={cd.cls}
+          pillar="ludus"
+          variant="panel"
           style={{
-            padding: '1.25rem',
-            border: '1px solid #222',
-            borderRadius: '8px',
             background: '#111',
             borderLeft: `3px solid ${cd.meta.color}`,
           }}
@@ -124,7 +124,7 @@ export default function ClassGuideHall(): React.JSX.Element {
               </div>
             ))}
           </div>
-        </div>
+        </OrnateFrame>
       ))}
     </div>
   );

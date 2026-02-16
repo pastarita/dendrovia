@@ -32,7 +32,7 @@ interface ContributorProfile {
   commitCount: number;
   firstCommit: string;
   lastCommit: string;
-  filesOwned: number;
+  uniqueFilesTouched: number;
   peakHour: number;
   typeDistribution: Record<string, number>;
   facets: Record<string, number>;

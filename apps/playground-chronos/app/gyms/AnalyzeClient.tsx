@@ -165,7 +165,7 @@ export default function AnalyzeClient() {
           const match = line.match(/^data:\s*(.+)$/);
           if (!match) continue;
           try {
-            const step: PipelineStep = JSON.parse(match[1]);
+            const step: PipelineStep = JSON.parse(match[1] ?? '{}');
             if (step.step === 'error') {
               setError(step.message);
             } else if (step.step === 'complete') {

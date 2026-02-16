@@ -118,19 +118,19 @@ export default function CrossPillarPage() {
           <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>Build-to-Runtime Pipeline</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem', background: '#111', borderRadius: 8, border: '1px solid #222' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
-              <PillarBadge p={PILLARS[0]} active={selected === 'CHRONOS'} onClick={() => setSelected('CHRONOS')} />
+              <PillarBadge p={PILLARS[0]!} active={selected === 'CHRONOS'} onClick={() => setSelected('CHRONOS')} />
               <Arrow />
-              <PillarBadge p={PILLARS[1]} active={selected === 'IMAGINARIUM'} onClick={() => setSelected('IMAGINARIUM')} />
+              <PillarBadge p={PILLARS[1]!} active={selected === 'IMAGINARIUM'} onClick={() => setSelected('IMAGINARIUM')} />
               <Arrow />
-              <PillarBadge p={PILLARS[2]} active={selected === 'ARCHITECTUS'} onClick={() => setSelected('ARCHITECTUS')} />
+              <PillarBadge p={PILLARS[2]!} active={selected === 'ARCHITECTUS'} onClick={() => setSelected('ARCHITECTUS')} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', paddingLeft: '40%' }}>
               <span style={{ opacity: 0.3, fontSize: '1.2rem' }}>|</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center' }}>
-              <PillarBadge p={PILLARS[3]} active={selected === 'LUDUS'} onClick={() => setSelected('LUDUS')} />
-              <PillarBadge p={PILLARS[4]} active={selected === 'OCULUS'} onClick={() => setSelected('OCULUS')} />
-              <PillarBadge p={PILLARS[5]} active={selected === 'OPERATUS'} onClick={() => setSelected('OPERATUS')} />
+              <PillarBadge p={PILLARS[3]!} active={selected === 'LUDUS'} onClick={() => setSelected('LUDUS')} />
+              <PillarBadge p={PILLARS[4]!} active={selected === 'OCULUS'} onClick={() => setSelected('OCULUS')} />
+              <PillarBadge p={PILLARS[5]!} active={selected === 'OPERATUS'} onClick={() => setSelected('OPERATUS')} />
             </div>
           </div>
 

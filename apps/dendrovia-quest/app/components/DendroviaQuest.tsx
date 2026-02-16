@@ -91,13 +91,36 @@ function LoadingScreen({ message }: { message: string }) {
         alignItems: 'center',
         justifyContent: 'center',
         background: '#0a0a0a',
-        color: '#00ffcc',
-        fontFamily: "'Courier New', monospace",
+        color: '#f5a97f',
+        fontFamily: "var(--oculus-font-ui, 'Inter', -apple-system, sans-serif)",
       }}
     >
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>DENDROVIA</div>
-        <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{message}</div>
+        <svg viewBox="0 0 32 32" width={48} height={48} style={{ marginBottom: '1rem', opacity: 0.9 }}>
+          <circle cx="16" cy="16" r="15" fill="#1a1514" stroke="#4a3822" strokeWidth="1"/>
+          <path d="M16 28L16 13" stroke="#f5e6d3" strokeWidth="2.5" strokeLinecap="round"/>
+          <path d="M16 13Q11 9 6 5" stroke="#c77b3f" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+          <path d="M16 13Q12 11 8 8" stroke="#6b7280" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+          <path d="M16 13Q14 8 12 4" stroke="#A855F7" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+          <path d="M16 13Q18 8 20 4" stroke="#3B82F6" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+          <path d="M16 13Q20 11 24 8" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+          <path d="M16 13Q21 9 26 5" stroke="#22C55E" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+          <circle cx="6" cy="5" r="1.5" fill="#c77b3f"/>
+          <circle cx="8" cy="8" r="1.5" fill="#6b7280"/>
+          <circle cx="12" cy="4" r="1.5" fill="#A855F7"/>
+          <circle cx="20" cy="4" r="1.5" fill="#3B82F6"/>
+          <circle cx="24" cy="8" r="1.5" fill="#EF4444"/>
+          <circle cx="26" cy="5" r="1.5" fill="#22C55E"/>
+          <path d="M16 28Q14 30 13 29" stroke="#4a3822" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+          <path d="M16 28Q18 30 19 29" stroke="#4a3822" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+        </svg>
+        <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem', letterSpacing: '0.15em' }}>DENDROVIA</div>
+        <div style={{ fontSize: '0.8rem', color: '#a0a0a0' }}>{message}</div>
+        <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: '1.5rem' }}>
+          {['#c77b3f', '#6b7280', '#A855F7', '#3B82F6', '#EF4444', '#22C55E'].map((c, i) => (
+            <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: c, opacity: 0.7 }} />
+          ))}
+        </div>
       </div>
     </div>
   );

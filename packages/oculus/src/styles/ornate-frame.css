@@ -50,7 +50,7 @@
 /* ── Variant: modal ──────────────────────────────────── */
 
 .ornate-frame--modal .ornate-frame__content {
-  padding: 20px;
+  padding: var(--oc-space-10);
 }
 
 .ornate-frame--modal .ornate-frame__svg {
@@ -60,19 +60,19 @@
 /* ── Variant: panel ──────────────────────────────────── */
 
 .ornate-frame--panel .ornate-frame__content {
-  padding: 16px;
+  padding: var(--oc-space-8);
 }
 
 /* ── Variant: compact ────────────────────────────────── */
 
 .ornate-frame--compact .ornate-frame__content {
-  padding: 12px;
+  padding: var(--oc-space-6);
 }
 
 /* ── Variant: tooltip ────────────────────────────────── */
 
 .ornate-frame--tooltip .ornate-frame__content {
-  padding: 8px;
+  padding: var(--oc-space-4);
 }
 
 /* ── Glow pulse animation ────────────────────────────── */
@@ -90,15 +90,15 @@
 
 @media (max-width: 768px) {
   .ornate-frame--modal .ornate-frame__content {
-    padding: 14px;
+    padding: var(--oc-space-7);
   }
 
   .ornate-frame--panel .ornate-frame__content {
-    padding: 12px;
+    padding: var(--oc-space-6);
   }
 
   .ornate-frame--compact .ornate-frame__content {
-    padding: 8px;
+    padding: var(--oc-space-4);
   }
 }
 

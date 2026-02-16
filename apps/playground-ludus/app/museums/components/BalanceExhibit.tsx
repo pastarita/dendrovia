@@ -1,7 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { DEFAULT_BALANCE_CONFIG, EASY_CONFIG, HARD_CONFIG, simulateMatchup } from '@dendrovia/ludus';
+import type { CharacterClass, BugType } from '@dendrovia/shared';
+
+const CLASSES: CharacterClass[] = ['tank', 'healer', 'dps'];
+const BUG_TYPES: BugType[] = ['null-pointer', 'memory-leak', 'race-condition', 'off-by-one'];
+const SEVERITIES: (1 | 2 | 3 | 4 | 5)[] = [1, 2, 3, 4, 5];
+const LEVELS = [1, 3, 5, 7, 10, 15, 20];
 
 const CONFIGS = [
   { key: 'default', label: 'DEFAULT', config: DEFAULT_BALANCE_CONFIG },
@@ -25,6 +31,15 @@ function getNestedValue(obj: any, path: string): any {
   return path.split('.').reduce((o, k) => o?.[k], obj);
 }
 
+const selectStyle: React.CSSProperties = {
+  padding: '0.4rem 0.5rem',
+  borderRadius: '4px',
+  border: '1px solid #333',
+  background: '#1a1a1a',
+  color: '#ededed',
+  fontSize: '0.85rem',
+};
+
 const FLAG_COLORS: Record<string, string> = {
   ok: '#22C55E',
   'too-easy': '#3B82F6',
@@ -33,21 +48,25 @@ const FLAG_COLORS: Record<string, string> = {
 };
 
 export default function BalanceExhibit() {
+  const [playerClass, setPlayerClass] = useState<CharacterClass>('tank');
+  const [playerLevel, setPlayerLevel] = useState(10);
+  const [bugType, setBugType] = useState<BugType>('null-pointer');
+  const [severity, setSeverity] = useState<1 | 2 | 3 | 4 | 5>(3);
   const [matchupResult, setMatchupResult] = useState<Array<{ config: string; winRate: number; avgTurns: number; flag: string }> | null>(null);
   const [running, setRunning] = useState(false);
 
   const runQuickMatchup = () => {
     setRunning(true);
-    // Use setTimeout so the UI updates before the sync computation
     setTimeout(() => {
+      const simConfig = {
+        trials: 100,
+        maxTurns: 100,
+        lowWinThreshold: 0.30,
+        highWinThreshold: 0.80,
+        baseSeed: 12345,
+      };
       const results = CONFIGS.map(c => {
-        const result = simulateMatchup('tank', 10, 'null-pointer', 3, 0, {
-          trials: 100,
-          maxTurns: 100,
-          lowWinThreshold: 0.30,
-          highWinThreshold: 0.80,
-          baseSeed: 12345,
-        });
+        const result = simulateMatchup(playerClass, playerLevel, bugType, severity, 0, simConfig);
         return { config: c.label, winRate: result.winRate, avgTurns: result.avgTurns, flag: result.flag };
       });
       setMatchupResult(results);
@@ -104,29 +123,56 @@ export default function BalanceExhibit() {
         </table>
       </div>
 
-      {/* Quick Matchup */}
-      <button
-        onClick={runQuickMatchup}
-        disabled={running}
-        style={{
-          padding: '0.4rem 1rem',
-          borderRadius: '4px',
-          border: '1px solid var(--pillar-accent)',
-          background: matchupResult ? '#222' : 'transparent',
-          color: 'var(--pillar-accent)',
-          cursor: running ? 'not-allowed' : 'pointer',
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          marginBottom: '1rem',
-          opacity: running ? 0.3 : 1,
-        }}
-      >
-        {running ? 'Simulating...' : 'Quick Matchup (Tank Lv10 vs NullPointer S3)'}
-      </button>
+      {/* Matchup Controls */}
+      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '1rem' }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Class</div>
+          <select value={playerClass} onChange={e => setPlayerClass(e.target.value as CharacterClass)} style={selectStyle}>
+            {CLASSES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Level</div>
+          <select value={playerLevel} onChange={e => setPlayerLevel(Number(e.target.value))} style={selectStyle}>
+            {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Bug Type</div>
+          <select value={bugType} onChange={e => setBugType(e.target.value as BugType)} style={selectStyle}>
+            {BUG_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.25rem' }}>Severity</div>
+          <select value={severity} onChange={e => setSeverity(Number(e.target.value) as 1 | 2 | 3 | 4 | 5)} style={selectStyle}>
+            {SEVERITIES.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+        <button
+          onClick={runQuickMatchup}
+          disabled={running}
+          style={{
+            padding: '0.4rem 1rem',
+            borderRadius: '4px',
+            border: '1px solid var(--pillar-accent)',
+            background: matchupResult ? '#222' : 'transparent',
+            color: 'var(--pillar-accent)',
+            cursor: running ? 'not-allowed' : 'pointer',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            opacity: running ? 0.3 : 1,
+          }}
+        >
+          {running ? 'Simulating...' : 'Run Matchup'}
+        </button>
+      </div>
 
       {matchupResult && (
         <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111', marginBottom: '1.5rem' }}>
-          <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Quick Matchup Results (100 trials each)</div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+            {playerClass} Lv{playerLevel} vs {bugType} S{severity} (100 trials each)
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
             {matchupResult.map(r => (
               <div key={r.config} style={{ padding: '0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#1a1a1a' }}>

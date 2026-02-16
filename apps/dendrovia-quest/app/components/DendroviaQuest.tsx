@@ -28,7 +28,14 @@ import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit, CharacterClass } 
 import { App as ArchitectusApp, useRendererStore } from '@dendrovia/architectus';
 
 // ── OCULUS (UI layer) ─────────────────────────────────────────
-import { OculusProvider, HUD, useOculusStore } from '@dendrovia/oculus';
+import {
+  OculusProvider,
+  HUD,
+  useOculusStore,
+  WelcomeScreen,
+  OnboardingHints,
+  useOnboarding,
+} from '@dendrovia/oculus';
 
 // ── LUDUS (game logic) ────────────────────────────────────────
 import {
@@ -138,6 +145,9 @@ export function DendroviaQuest({
   characterName = 'Explorer',
   children,
 }: DendroviaQuestProps) {
+  // ── Onboarding ──
+  const onboarding = useOnboarding();
+
   // ── Refs (persist across renders, no re-render on mutation) ──
   const eventBusRef = useRef<EventBus | null>(null);
   const gameSessionRef = useRef<GameSession | null>(null);
@@ -303,6 +313,12 @@ export function DendroviaQuest({
       />
       {enableOculus && <HUD />}
       {enableOculus && <UiHoverBridge />}
+      {enableOculus && onboarding.phase === 'exploring' && (
+        <OnboardingHints onboarding={onboarding} />
+      )}
+      {onboarding.phase === 'welcome' && (
+        <WelcomeScreen onEnter={onboarding.dismissWelcome} />
+      )}
       {children}
     </div>
   );

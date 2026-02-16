@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { DendroviaQuest } from './components/DendroviaQuest';
+import { ParticleBackground } from './components/ParticleBackground';
 import type { CharacterClass } from '@dendrovia/shared';
 
 // ─── Types ──────────────────────────────────────────────────
@@ -817,7 +818,7 @@ function Pipeline({
           <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
             <div style={{ fontSize: '1.2rem', letterSpacing: '0.3em', color: T.parchment }}>PIPELINE</div>
             <div style={{ fontSize: '0.6rem', color: T.stone, letterSpacing: '0.15em', marginTop: 4 }}>
-              CHRONOS → IMAGINARIUM
+              CHRONOS &rarr; IMAGINARIUM
             </div>
           </div>
 
@@ -957,6 +958,7 @@ export default function Home() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      <ParticleBackground />
       <DendroviaQuest
         topologyPath={
           result?.topologyDir

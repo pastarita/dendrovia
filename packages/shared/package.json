@@ -7,12 +7,17 @@
     ".": "./src/index.ts",
     "./types": "./src/types/index.ts",
     "./events": "./src/events/EventBus.ts",
-    "./contracts": "./src/contracts/index.ts"
+    "./contracts": "./src/contracts/index.ts",
+    "./paths": "./src/paths.ts",
+    "./schemas": "./src/schemas.ts"
   },
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
     "test": "bun test"
+  },
+  "dependencies": {
+    "zod": "^3.24"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

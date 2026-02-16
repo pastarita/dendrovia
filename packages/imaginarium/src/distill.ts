@@ -13,17 +13,17 @@
 
 import { join, resolve } from 'path';
 import { distill } from './pipeline/DistillationPipeline.js';
+import { chronosGenerated, imaginariumGenerated } from '@dendrovia/shared/paths';
 
 const args = process.argv.slice(2);
-const packageDir = resolve(import.meta.dir, '..');
 
 const topologyPath = args[0]
   ? resolve(args[0])
-  : join(packageDir, '..', 'chronos', 'generated', 'topology.json');
+  : join(chronosGenerated(), 'topology.json');
 
 const outputDir = args[1]
   ? resolve(args[1])
-  : join(packageDir, 'generated');
+  : imaginariumGenerated();
 
 console.log('========================================');
 console.log(' IMAGINARIUM - The Compiler');

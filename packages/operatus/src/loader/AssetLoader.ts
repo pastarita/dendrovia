@@ -21,6 +21,7 @@ import type {
   SerializedMeshData,
 } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { validateManifest } from '@dendrovia/shared/schemas';
 import { CacheManager } from '../cache/CacheManager.js';
 
 export enum AssetPriority {
@@ -85,10 +86,10 @@ export class AssetLoader {
     const cached = await this.cache.get('manifest.json');
     if (cached) {
       try {
-        this.manifest = JSON.parse(cached.data) as AssetManifest;
+        this.manifest = validateManifest(JSON.parse(cached.data)) as AssetManifest;
         return this.manifest;
       } catch {
-        // Corrupted cache entry, fetch fresh
+        // Corrupted or invalid cache entry, fetch fresh
       }
     }
 
@@ -98,7 +99,7 @@ export class AssetLoader {
     }
 
     const text = await response.text();
-    this.manifest = JSON.parse(text) as AssetManifest;
+    this.manifest = validateManifest(JSON.parse(text)) as AssetManifest;
 
     // Cache the manifest
     await this.cache.set('manifest.json', text, this.manifest.checksum);

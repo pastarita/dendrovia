@@ -10,6 +10,7 @@
  */
 
 import { join } from 'path';
+import { validateTopology } from '@dendrovia/shared/schemas';
 import type {
   CodeTopology,
   ParsedFile,
@@ -178,6 +179,9 @@ export async function writeOutputFiles(
   outputDir: string,
 ): Promise<string[]> {
   const written: string[] = [];
+
+  // Validate topology against the contract before writing
+  validateTopology(output.topology);
 
   const files: [string, unknown][] = [
     ['topology.json', output.topology],

@@ -10,6 +10,7 @@ import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import type { CodeTopology, ProceduralPalette, SDFShader, NoiseFunction, LSystemRule, StoryArc, SegmentAssets } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { validatePalette } from '@dendrovia/shared/schemas';
 import { readTopology } from './TopologyReader.js';
 import { generateVariants } from './VariantGenerator.js';
 import { generateManifest, type ManifestInput } from './ManifestGenerator.js';
@@ -72,6 +73,9 @@ export async function distill(
     .map(([lang]) => lang);
 
   const paletteResults: PipelineResult['palettes'] = [];
+
+  // Validate palette against contract before writing
+  validatePalette(globalPalette);
 
   // Write global palette
   const globalPalettePath = join(outputDir, 'palettes', 'global.json');

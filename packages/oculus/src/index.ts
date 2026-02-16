@@ -43,6 +43,10 @@ export {
   StatLabel,
   Tooltip,
   OrnateFrame,
+  PILLAR_PALETTES,
+  FRAME_REGISTRY,
+  VARIANT_SPECS,
+  PILLAR_SPECS,
 } from './components/primitives';
 export type {
   PanelProps,
@@ -55,6 +59,9 @@ export type {
   PillarId,
   FrameVariant,
   PillarPalette,
+  FrameOrnamentSet,
+  VariantSpec,
+  PillarSpec,
 } from './components/primitives';
 
 // ── Hooks ────────────────────────────────────────────

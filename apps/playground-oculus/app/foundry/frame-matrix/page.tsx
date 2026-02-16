@@ -2,23 +2,11 @@
 
 import { Fragment } from 'react';
 import Link from 'next/link';
-import { OrnateFrame, type PillarId, type FrameVariant } from '@dendrovia/oculus';
+import { OrnateFrame, FRAME_REGISTRY, type FrameVariant } from '@dendrovia/oculus';
 
-const VARIANTS: { id: FrameVariant; label: string; desc: string }[] = [
-  { id: 'modal', label: 'Modal', desc: 'Largest — corner ornaments + edge ornaments + glow' },
-  { id: 'panel', label: 'Panel', desc: 'Standard — corner ornaments + edge ornaments' },
-  { id: 'compact', label: 'Compact', desc: 'Tight — small corners, no edges' },
-  { id: 'tooltip', label: 'Tooltip', desc: 'Minimal — tiny corners, no edges' },
-];
-
-const PILLARS: { id: PillarId; name: string; emoji: string; color: string; tincture: string }[] = [
-  { id: 'chronos', name: 'CHRONOS', emoji: '📜', color: '#c77b3f', tincture: 'Amber' },
-  { id: 'imaginarium', name: 'IMAGINARIUM', emoji: '🎨', color: '#A855F7', tincture: 'Purpure' },
-  { id: 'architectus', name: 'ARCHITECTUS', emoji: '🏛️', color: '#3B82F6', tincture: 'Azure' },
-  { id: 'ludus', name: 'LUDUS', emoji: '🎮', color: '#EF4444', tincture: 'Gules' },
-  { id: 'oculus', name: 'OCULUS', emoji: '👁️', color: '#22C55E', tincture: 'Vert' },
-  { id: 'operatus', name: 'OPERATUS', emoji: '💾', color: '#1F2937', tincture: 'Sable' },
-];
+const { pillars, variants } = FRAME_REGISTRY;
+const pillarList = Object.values(pillars);
+const variantEntries = Object.entries(variants) as [FrameVariant, (typeof variants)[FrameVariant]][];
 
 export default function FrameMatrixPage() {
   return (
@@ -28,29 +16,29 @@ export default function FrameMatrixPage() {
         Frame Matrix
       </h1>
       <p style={{ opacity: 0.5, marginBottom: '2rem' }}>
-        6 pillars &times; 4 variants — all 24 OrnateFrame combinations
+        {pillarList.length} pillars &times; {variantEntries.length} variants — all {FRAME_REGISTRY.totalCombinations} OrnateFrame combinations
       </p>
 
-      {/* Grid: label column + 4 variant columns */}
+      {/* Grid: label column + variant columns */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '140px repeat(4, 1fr)',
+          gridTemplateColumns: `140px repeat(${variantEntries.length}, 1fr)`,
           gap: '1rem',
           alignItems: 'start',
         }}
       >
         {/* Header row */}
         <div />
-        {VARIANTS.map((v) => (
-          <div key={v.id} style={{ textAlign: 'center', fontSize: '0.8rem' }}>
-            <div style={{ fontWeight: 600 }}>{v.label}</div>
-            <div style={{ opacity: 0.4, fontSize: '0.7rem', marginTop: '0.15rem' }}>{v.desc}</div>
+        {variantEntries.map(([id, spec]) => (
+          <div key={id} style={{ textAlign: 'center', fontSize: '0.8rem' }}>
+            <div style={{ fontWeight: 600 }}>{id.charAt(0).toUpperCase() + id.slice(1)}</div>
+            <div style={{ opacity: 0.4, fontSize: '0.7rem', marginTop: '0.15rem' }}>{spec.description}</div>
           </div>
         ))}
 
         {/* One row per pillar */}
-        {PILLARS.map((p) => (
+        {pillarList.map((p) => (
           <Fragment key={p.id}>
             {/* Row label */}
             <div
@@ -69,12 +57,14 @@ export default function FrameMatrixPage() {
             </div>
 
             {/* One cell per variant */}
-            {VARIANTS.map((v) => (
-              <div key={`${p.id}-${v.id}`}>
-                <OrnateFrame pillar={p.id} variant={v.id}>
+            {variantEntries.map(([vId]) => (
+              <div key={`${p.id}-${vId}`}>
+                <OrnateFrame pillar={p.id} variant={vId}>
                   <div style={{ padding: '0.75rem', textAlign: 'center', fontSize: '0.8rem' }}>
                     <div style={{ fontWeight: 600, color: p.color }}>{p.name}</div>
-                    <div style={{ opacity: 0.5, fontSize: '0.7rem', marginTop: '0.25rem' }}>{v.label}</div>
+                    <div style={{ opacity: 0.5, fontSize: '0.7rem', marginTop: '0.25rem' }}>
+                      {vId.charAt(0).toUpperCase() + vId.slice(1)}
+                    </div>
                   </div>
                 </OrnateFrame>
               </div>
@@ -92,7 +82,7 @@ export default function FrameMatrixPage() {
           <div><strong>Tooltip:</strong> Minimal corners, no edge ornaments</div>
         </div>
         <div style={{ marginTop: '0.75rem', opacity: 0.4 }}>
-          {PILLARS.length} pillars &times; {VARIANTS.length} variants = {PILLARS.length * VARIANTS.length} combinations
+          {pillarList.length} pillars &times; {variantEntries.length} variants = {FRAME_REGISTRY.totalCombinations} combinations
         </div>
       </div>
     </div>

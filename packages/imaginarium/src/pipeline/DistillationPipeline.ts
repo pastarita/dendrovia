@@ -8,7 +8,7 @@
 
 import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
-import type { CodeTopology, ProceduralPalette, SDFShader, NoiseFunction, LSystemRule } from '@dendrovia/shared';
+import type { CodeTopology, ProceduralPalette, SDFShader, NoiseFunction, LSystemRule, StoryArc, SegmentAssets } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { readTopology } from './TopologyReader.js';
 import { generateVariants } from './VariantGenerator.js';
@@ -21,6 +21,8 @@ import { DeterministicCache } from '../cache/DeterministicCache.js';
 import { hashString } from '../utils/hash.js';
 import { distillMycology } from '../mycology/MycologyPipeline.js';
 import { generateMeshAssets } from '../mesh/generateMeshAssets.js';
+import { deriveStoryArc } from '../storyarc/StoryArcDeriver.js';
+import { distillSegments } from './SegmentPipeline.js';
 import type { FungalSpecimen } from '../mycology/types.js';
 import type { MeshManifestEntry } from '@dendrovia/shared';
 
@@ -128,6 +130,27 @@ export async function distill(
   await eventBus.emit(GameEvents.SHADERS_COMPILED, { shaders });
   console.log(`[IMAGINARIUM]   Shaders: ${shaderResults.length} variants`);
 
+  // 7.5. Story arc derivation and per-segment distillation
+  let storyArcData: { arc: StoryArc; segmentAssets: SegmentAssets[] } | undefined;
+  try {
+    const storyArc = deriveStoryArc(topology);
+    const segmentAssets = await distillSegments(topology, storyArc, outputDir);
+
+    // Write story arc and segment assets manifest
+    await Bun.write(join(outputDir, 'story-arc.json'), JSON.stringify(storyArc, null, 2));
+    await Bun.write(join(outputDir, 'segment-assets.json'), JSON.stringify(segmentAssets, null, 2));
+
+    storyArcData = { arc: storyArc, segmentAssets };
+
+    await eventBus.emit(GameEvents.STORY_ARC_DERIVED, {
+      arc: storyArc,
+      segmentCount: storyArc.segments.length,
+    });
+    console.log(`[IMAGINARIUM]   Story Arc: ${storyArc.segments.length} segments`);
+  } catch (e) {
+    console.log(`[IMAGINARIUM]   Story Arc: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+  }
+
   // 8. Mycology catalogization
   let mycologyData: ManifestInput['mycology'] | undefined;
   try {
@@ -180,6 +203,11 @@ export async function distill(
     lsystemPath: 'lsystems/global.json',
     mycology: mycologyData,
     meshes: meshEntries,
+    storyArc: storyArcData ? {
+      arc: 'story-arc.json',
+      segmentAssets: 'segment-assets.json',
+      segmentCount: storyArcData.arc.segments.length,
+    } : undefined,
   };
   const manifest = generateManifest(manifestInput);
   const manifestPath = join(outputDir, 'manifest.json');

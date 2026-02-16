@@ -12,7 +12,8 @@
     "./fallbacks": "./src/fallback/index.ts",
     "./utils/color": "./src/utils/color.ts",
     "./utils/glsl": "./src/utils/glsl.ts",
-    "./mycology": "./src/mycology/index.ts"
+    "./mycology": "./src/mycology/index.ts",
+    "./storyarc": "./src/storyarc/index.ts"
   },
   "scripts": {
     "dev": "bun run src/index.ts --watch",

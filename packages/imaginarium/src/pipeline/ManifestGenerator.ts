@@ -18,6 +18,11 @@ export interface ManifestInput {
     specimenCount: number;
   };
   meshes?: Record<string, MeshManifestEntry>;
+  storyArc?: {
+    arc: string;
+    segmentAssets: string;
+    segmentCount: number;
+  };
 }
 
 export function generateManifest(input: ManifestInput): AssetManifest {
@@ -56,6 +61,10 @@ export function generateManifest(input: ManifestInput): AssetManifest {
 
   if (input.meshes && Object.keys(input.meshes).length > 0) {
     manifest.meshes = input.meshes;
+  }
+
+  if (input.storyArc) {
+    manifest.storyArc = input.storyArc;
   }
 
   return manifest;

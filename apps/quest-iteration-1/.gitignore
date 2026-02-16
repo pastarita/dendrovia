@@ -1,0 +1,9 @@
+# Generated CHRONOS output
+public/generated/
+
+# Next.js
+.next/
+out/
+
+# Node
+node_modules/

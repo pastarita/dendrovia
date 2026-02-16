@@ -55,6 +55,12 @@ export function PillarNav({ currentPillar }: { currentPillar: string }) {
         >
           {"\u{1F333}"} Dendrovia Quest <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:3010</span>
         </a>
+        <a
+          href="http://localhost:3030"
+          style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem", borderRadius: "4px", fontSize: "0.8rem", border: "1px solid #222", marginTop: "0.25rem", opacity: 0.6 }}
+        >
+          {"\u{1F9EA}"} Iteration 1 <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:3030</span>
+        </a>
       </div>
     </>
   );

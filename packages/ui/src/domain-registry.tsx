@@ -3,7 +3,7 @@
  * pillar-domain affinity scores, and per-pillar descriptions.
  */
 
-export type DomainSlug = "museums" | "zoos" | "halls" | "gyms" | "generators" | "spatial-docs";
+export type DomainSlug = "museums" | "zoos" | "halls" | "gyms" | "generators" | "spatial-docs" | "foundry";
 export type PillarName = "ARCHITECTUS" | "CHRONOS" | "IMAGINARIUM" | "LUDUS" | "OCULUS" | "OPERATUS";
 export type AffinityTier = "hero" | "featured" | "reference";
 
@@ -27,6 +27,7 @@ export const ALL_DOMAINS: DomainDef[] = [
   { name: "Gyms",         slug: "gyms",         path: "/gyms",         icon: "\u{1F3CB}\uFE0F" },
   { name: "Generators",   slug: "generators",   path: "/generators",   icon: "\u26A1" },
   { name: "Spatial Docs", slug: "spatial-docs",  path: "/spatial-docs", icon: "\u{1F4D0}" },
+  { name: "Foundry",      slug: "foundry",       path: "/foundry",      icon: "\u{1F525}" },
 ];
 
 /**
@@ -36,22 +37,22 @@ export const ALL_DOMAINS: DomainDef[] = [
  */
 export const PILLAR_DOMAIN_AFFINITY: Record<PillarName, Record<DomainSlug, number>> = {
   ARCHITECTUS: {
-    museums: 2, zoos: 3, halls: 1, gyms: 5, generators: 3, "spatial-docs": 2,
+    museums: 2, zoos: 3, halls: 1, gyms: 5, generators: 3, "spatial-docs": 2, foundry: 1,
   },
   CHRONOS: {
-    museums: 3, zoos: 2, halls: 3, gyms: 5, generators: 1, "spatial-docs": 2,
+    museums: 3, zoos: 2, halls: 3, gyms: 5, generators: 1, "spatial-docs": 2, foundry: 1,
   },
   IMAGINARIUM: {
-    museums: 3, zoos: 4, halls: 2, gyms: 3, generators: 5, "spatial-docs": 1,
+    museums: 3, zoos: 4, halls: 2, gyms: 3, generators: 5, "spatial-docs": 1, foundry: 2,
   },
   LUDUS: {
-    museums: 2, zoos: 4, halls: 1, gyms: 5, generators: 2, "spatial-docs": 1,
+    museums: 2, zoos: 4, halls: 1, gyms: 5, generators: 2, "spatial-docs": 1, foundry: 1,
   },
   OCULUS: {
-    museums: 4, zoos: 5, halls: 2, gyms: 4, generators: 1, "spatial-docs": 2,
+    museums: 4, zoos: 5, halls: 2, gyms: 4, generators: 1, "spatial-docs": 2, foundry: 5,
   },
   OPERATUS: {
-    museums: 2, zoos: 1, halls: 5, gyms: 1, generators: 3, "spatial-docs": 4,
+    museums: 2, zoos: 1, halls: 5, gyms: 1, generators: 3, "spatial-docs": 4, foundry: 3,
   },
 };
 
@@ -64,6 +65,7 @@ const PILLAR_DOMAIN_DESCRIPTIONS: Record<PillarName, Record<DomainSlug, string>>
     gyms:          "Interactive sandbox \u2014 live 3D experimentation",
     generators:    "Creation tools \u2014 scene & shader generators",
     "spatial-docs": "Documentation surfaces \u2014 spatial API reference",
+    foundry:       "Visual QA \u2014 frame rendering not applicable here",
   },
   CHRONOS: {
     museums:       "Exhibition mode \u2014 historical commit exhibitions",
@@ -72,6 +74,7 @@ const PILLAR_DOMAIN_DESCRIPTIONS: Record<PillarName, Record<DomainSlug, string>>
     gyms:          "Interactive sandbox \u2014 live parsing experiments",
     generators:    "Creation tools \u2014 timeline generators",
     "spatial-docs": "Documentation surfaces \u2014 CHRONOS API reference",
+    foundry:       "Visual QA \u2014 frame rendering not applicable here",
   },
   IMAGINARIUM: {
     museums:       "Exhibition mode \u2014 generated art exhibitions",
@@ -80,6 +83,7 @@ const PILLAR_DOMAIN_DESCRIPTIONS: Record<PillarName, Record<DomainSlug, string>>
     gyms:          "Interactive sandbox \u2014 live shader experimentation",
     generators:    "Creation tools \u2014 palette & SDF generators",
     "spatial-docs": "Documentation surfaces \u2014 IMAGINARIUM API reference",
+    foundry:       "Visual QA \u2014 upstream palette stress-testing",
   },
   LUDUS: {
     museums:       "Exhibition mode \u2014 game design exhibitions",
@@ -88,6 +92,7 @@ const PILLAR_DOMAIN_DESCRIPTIONS: Record<PillarName, Record<DomainSlug, string>>
     gyms:          "Interactive sandbox \u2014 live mechanic experimentation",
     generators:    "Creation tools \u2014 encounter & quest generators",
     "spatial-docs": "Documentation surfaces \u2014 LUDUS API reference",
+    foundry:       "Visual QA \u2014 frame rendering not applicable here",
   },
   OCULUS: {
     museums:       "Exhibition mode \u2014 interface exhibitions",
@@ -96,6 +101,7 @@ const PILLAR_DOMAIN_DESCRIPTIONS: Record<PillarName, Record<DomainSlug, string>>
     gyms:          "Interactive sandbox \u2014 live component experimentation",
     generators:    "Creation tools \u2014 UI & layout generators",
     "spatial-docs": "Documentation surfaces \u2014 OCULUS API reference",
+    foundry:       "Visual QA \u2014 frame matrix & ornament regression testing",
   },
   OPERATUS: {
     museums:       "Exhibition mode \u2014 infrastructure exhibitions",
@@ -104,6 +110,7 @@ const PILLAR_DOMAIN_DESCRIPTIONS: Record<PillarName, Record<DomainSlug, string>>
     gyms:          "Interactive sandbox \u2014 live infrastructure experimentation",
     generators:    "Creation tools \u2014 manifest & config generators",
     "spatial-docs": "Documentation surfaces \u2014 OPERATUS API reference",
+    foundry:       "Visual QA \u2014 frame registry validation & screenshot automation",
   },
 };
 

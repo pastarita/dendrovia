@@ -1,20 +1,9 @@
 /**
- * Health Derivation
+ * Health Derivation — Re-export from shared lib
  *
- * Evaluates an ordered list of conditions to derive a RuntimeHealth value.
- * First match wins. Default: "idle".
+ * Backward-compatible: consumers importing from '@dendrovia/operatus/dendrite'
+ * continue to get deriveHealth and HealthCondition from this path.
  */
 
-import type { RuntimeHealth } from '../../../../lib/dendrite/types.js';
-
-export interface HealthCondition {
-  check: () => boolean;
-  result: RuntimeHealth;
-}
-
-export function deriveHealth(conditions: HealthCondition[]): RuntimeHealth {
-  for (const { check, result } of conditions) {
-    if (check()) return result;
-  }
-  return 'idle';
-}
+export { deriveHealth } from '../../../../lib/dendrite/health.js';
+export type { HealthCondition } from '../../../../lib/dendrite/health.js';

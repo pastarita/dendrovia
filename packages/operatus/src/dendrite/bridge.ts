@@ -28,6 +28,11 @@ import {
   collectGameStore,
   collectCrossTabSync,
   collectPerfMonitor,
+  collectStatePersistence,
+  collectStateAdapter,
+  collectMultiplayerClient,
+  collectServiceWorker,
+  collectGenerate,
   aggregatePhaseHealth,
 } from './collectors.js';
 import {
@@ -142,9 +147,14 @@ export class OperatusRuntimeBridge {
     const gameState = collectGameStore(ctx.gameStore.getState);
     const syncState = collectCrossTabSync(ctx.crossTabSync);
     const perfState = collectPerfMonitor(ctx.perfMonitor);
+    const persistState = collectStatePersistence();
+    const adapterState = collectStateAdapter(!!ctx.gameStore);
+    const multiplayerState = collectMultiplayerClient();
+    const swState = await collectServiceWorker();
+    const generateState = collectGenerate();
 
     // Batch update section nodes
-    const sections = [cacheState, opfsState, idbState, loaderState, cdnState, autoSaveState, gameState, syncState, perfState];
+    const sections = [cacheState, opfsState, idbState, loaderState, cdnState, autoSaveState, gameState, syncState, perfState, persistState, adapterState, multiplayerState, swState, generateState];
     for (const s of sections) {
       updateNode(s.nodeId, s);
     }

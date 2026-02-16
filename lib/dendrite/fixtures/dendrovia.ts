@@ -20,9 +20,10 @@ export const dendroviaFixture: SourceDiagram = {
     { id: "dend-chr-classify", label: "Classify", kind: "section", status: "implemented", domain: "chronos", description: "CommitClassifier" },
 
     // --- IMAGINARIUM ---
-    { id: "dend-imaginarium", label: "IMAGINARIUM", kind: "phase", status: "implemented", domain: "imaginarium", children: ["dend-img-generate", "dend-img-distill", "dend-img-mycology", "dend-img-mesh", "dend-img-cache"] },
+    { id: "dend-imaginarium", label: "IMAGINARIUM", kind: "phase", status: "implemented", domain: "imaginarium", children: ["dend-img-generate", "dend-img-distill", "dend-img-storyarc", "dend-img-mycology", "dend-img-mesh", "dend-img-cache"] },
     { id: "dend-img-generate", label: "Generate", kind: "section", status: "implemented", domain: "imaginarium", description: "ArtGen + PromptBuilder" },
-    { id: "dend-img-distill", label: "Distill", kind: "section", status: "implemented", domain: "imaginarium", description: "Color + SDF + LSystem + Noise + Turtle" },
+    { id: "dend-img-distill", label: "Distill", kind: "section", status: "implemented", domain: "imaginarium", description: "Color + SDF + LSystem + Noise + Turtle + SegmentPipeline" },
+    { id: "dend-img-storyarc", label: "StoryArc", kind: "section", status: "implemented", domain: "imaginarium", description: "StoryArcDeriver + SegmentSlicer + MoodMapper + PhaseAssigner" },
     { id: "dend-img-mycology", label: "Mycology", kind: "section", status: "implemented", domain: "imaginarium", description: "GenusMapper + Morphology + MycelialNetwork + Lore + Catalog" },
     { id: "dend-img-mesh", label: "Mesh", kind: "section", status: "implemented", domain: "imaginarium", description: "HalfEdge + MeshPipeline + GenusPipelines + MeshOps" },
     { id: "dend-img-cache", label: "Cache", kind: "section", status: "implemented", domain: "imaginarium", description: "DeterministicCache + DefaultPalettes + DefaultSDFs" },
@@ -32,7 +33,7 @@ export const dendroviaFixture: SourceDiagram = {
     { id: "dend-arc-load", label: "Load", kind: "section", status: "implemented", domain: "architectus", description: "AssetBridge" },
     { id: "dend-arc-render", label: "Render", kind: "section", status: "partial", domain: "architectus", description: "DendriteWorld + Camera + Lighting + PostFX + Perf" },
     { id: "dend-arc-instances", label: "Instances", kind: "section", status: "partial", domain: "architectus", description: "Branch + Node + Mushroom instances" },
-    { id: "dend-arc-systems", label: "Systems", kind: "section", status: "implemented", domain: "architectus", description: "LSystem + TurtleInterpreter" },
+    { id: "dend-arc-systems", label: "Systems", kind: "section", status: "implemented", domain: "architectus", description: "LSystem + TurtleInterpreter + SegmentMapper" },
 
     // --- LUDUS ---
     { id: "dend-ludus", label: "LUDUS", kind: "phase", status: "implemented", domain: "ludus", children: ["dend-lud-character", "dend-lud-combat", "dend-lud-quest", "dend-lud-progression", "dend-lud-simulation"] },
@@ -76,6 +77,7 @@ export const dendroviaFixture: SourceDiagram = {
     // Containment for IMAGINARIUM
     { source: "dend-imaginarium", target: "dend-img-generate", relation: "containment" },
     { source: "dend-imaginarium", target: "dend-img-distill", relation: "containment" },
+    { source: "dend-imaginarium", target: "dend-img-storyarc", relation: "containment" },
     { source: "dend-imaginarium", target: "dend-img-mycology", relation: "containment" },
     { source: "dend-imaginarium", target: "dend-img-mesh", relation: "containment" },
     { source: "dend-imaginarium", target: "dend-img-cache", relation: "containment" },

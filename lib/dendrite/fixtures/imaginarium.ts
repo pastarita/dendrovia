@@ -12,12 +12,20 @@ export const imaginariumFixture: SourceDiagram = {
     { id: "imag-prompt", label: "PromptBuilder", kind: "section", status: "implemented", domain: "imaginarium", description: "Prompt generation from topology" },
 
     // Phase: Distill
-    { id: "imag-distill", label: "Distill", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-color", "imag-sdf", "imag-lsystem", "imag-noise", "imag-turtle"] },
+    { id: "imag-distill", label: "Distill", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-color", "imag-sdf", "imag-lsystem", "imag-noise", "imag-turtle", "imag-seg-pipeline"] },
     { id: "imag-color", label: "ColorExtractor", kind: "section", status: "implemented", domain: "imaginarium", description: "OKLCH palette extraction" },
     { id: "imag-sdf", label: "SDFCompiler", kind: "section", status: "implemented", domain: "imaginarium", description: "GLSL signed distance function compiler" },
     { id: "imag-lsystem", label: "LSystemCompiler", kind: "section", status: "implemented", domain: "imaginarium", description: "L-System rule generation (depth capped at 5)" },
     { id: "imag-noise", label: "NoiseGenerator", kind: "section", status: "implemented", domain: "imaginarium", description: "Perlin/Simplex noise generation" },
     { id: "imag-turtle", label: "TurtleInterpreter", kind: "section", status: "implemented", domain: "imaginarium", description: "L-System turtle graphics interpreter" },
+    { id: "imag-seg-pipeline", label: "SegmentPipeline", kind: "section", status: "implemented", domain: "imaginarium", description: "Per-segment distillation with mood-based overrides" },
+
+    // Phase: StoryArc
+    { id: "imag-storyarc", label: "StoryArc", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-arc-deriver", "imag-seg-slicer", "imag-mood-mapper", "imag-phase-assigner"] },
+    { id: "imag-arc-deriver", label: "StoryArcDeriver", kind: "section", status: "implemented", domain: "imaginarium", description: "Orchestrates story arc derivation from topology" },
+    { id: "imag-seg-slicer", label: "SegmentSlicer", kind: "section", status: "implemented", domain: "imaginarium", description: "Partitions file tree into story segments" },
+    { id: "imag-mood-mapper", label: "MoodMapper", kind: "section", status: "implemented", domain: "imaginarium", description: "Maps segment metrics to mood" },
+    { id: "imag-phase-assigner", label: "PhaseAssigner", kind: "section", status: "implemented", domain: "imaginarium", description: "Assigns story phases by tension scoring" },
 
     // Phase: Mycology
     { id: "imag-mycology", label: "Mycology", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-genus", "imag-morphology", "imag-mycelial", "imag-lore", "imag-specimen", "imag-myco-pipeline"] },
@@ -45,7 +53,8 @@ export const imaginariumFixture: SourceDiagram = {
     // Pipeline flow
     { source: "imag-root", target: "imag-generate", relation: "pipeline-flow" },
     { source: "imag-generate", target: "imag-distill", relation: "pipeline-flow" },
-    { source: "imag-distill", target: "imag-mycology", relation: "pipeline-flow" },
+    { source: "imag-distill", target: "imag-storyarc", relation: "pipeline-flow" },
+    { source: "imag-storyarc", target: "imag-mycology", relation: "pipeline-flow" },
     { source: "imag-distill", target: "imag-mesh", relation: "pipeline-flow" },
     { source: "imag-distill", target: "imag-cache", relation: "pipeline-flow" },
 
@@ -57,6 +66,11 @@ export const imaginariumFixture: SourceDiagram = {
     { source: "imag-distill", target: "imag-lsystem", relation: "containment" },
     { source: "imag-distill", target: "imag-noise", relation: "containment" },
     { source: "imag-distill", target: "imag-turtle", relation: "containment" },
+    { source: "imag-distill", target: "imag-seg-pipeline", relation: "containment" },
+    { source: "imag-storyarc", target: "imag-arc-deriver", relation: "containment" },
+    { source: "imag-storyarc", target: "imag-seg-slicer", relation: "containment" },
+    { source: "imag-storyarc", target: "imag-mood-mapper", relation: "containment" },
+    { source: "imag-storyarc", target: "imag-phase-assigner", relation: "containment" },
     { source: "imag-mycology", target: "imag-genus", relation: "containment" },
     { source: "imag-mycology", target: "imag-morphology", relation: "containment" },
     { source: "imag-mycology", target: "imag-mycelial", relation: "containment" },

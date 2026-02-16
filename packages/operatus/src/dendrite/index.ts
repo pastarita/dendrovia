@@ -20,6 +20,11 @@ export {
   collectCrossTabSync,
   collectPerfMonitor,
   collectManifest,
+  collectStatePersistence,
+  collectStateAdapter,
+  collectMultiplayerClient,
+  collectServiceWorker,
+  collectGenerate,
   aggregatePhaseHealth,
 } from './collectors.js';
 export {

@@ -26,9 +26,10 @@ export const architectusFixture: SourceDiagram = {
     { id: "arch-mushroom-inst", label: "MushroomInstances", kind: "section", status: "scaffold", domain: "architectus", description: "Instanced mushroom placement" },
 
     // Phase: Systems
-    { id: "arch-systems", label: "Systems", kind: "phase", status: "implemented", domain: "architectus", children: ["arch-lsystem", "arch-turtle"] },
+    { id: "arch-systems", label: "Systems", kind: "phase", status: "implemented", domain: "architectus", children: ["arch-lsystem", "arch-turtle", "arch-segment-mapper"] },
     { id: "arch-lsystem", label: "LSystem", kind: "section", status: "implemented", domain: "architectus", description: "L-System executor" },
     { id: "arch-turtle", label: "TurtleInterpreter", kind: "section", status: "implemented", domain: "architectus", description: "3D turtle graphics interpreter" },
+    { id: "arch-segment-mapper", label: "SegmentMapper", kind: "section", status: "implemented", domain: "architectus", description: "Maps node markers to story arc segment placements" },
   ],
   edges: [
     { source: "arch-root", target: "arch-load", relation: "pipeline-flow" },
@@ -48,5 +49,6 @@ export const architectusFixture: SourceDiagram = {
     { source: "arch-instances", target: "arch-mushroom-inst", relation: "containment" },
     { source: "arch-systems", target: "arch-lsystem", relation: "containment" },
     { source: "arch-systems", target: "arch-turtle", relation: "containment" },
+    { source: "arch-systems", target: "arch-segment-mapper", relation: "containment" },
   ],
 };

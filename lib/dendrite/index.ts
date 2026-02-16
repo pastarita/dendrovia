@@ -27,6 +27,10 @@ export type {
   RuntimeEvent,
 } from "./types";
 
+// Health derivation (shared across pillar bridges)
+export { deriveHealth } from "./health";
+export type { HealthCondition } from "./health";
+
 // Design tokens
 export { DT, PILLAR_COLORS, STATUS_COLORS, FIDELITY_COLORS, RUNTIME_HEALTH_COLORS } from "./design-tokens";
 

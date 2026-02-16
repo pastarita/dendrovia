@@ -10,16 +10,19 @@ import {
   DendriteCanvas,
   DendriteToolbar,
   operatusFixture,
+  architectusFixture,
   dendroviaFixture,
 } from "@dendrovia/dendrite";
 import { useOperatusInfrastructure } from "../../hooks/useOperatusInfrastructure";
 import { useOperatusBridge } from "../../hooks/useOperatusBridge";
+import { useArchitectusBridge } from "../../hooks/useArchitectusBridge";
 
 const FIXTURES = {
   [operatusFixture.id]: operatusFixture,
+  [architectusFixture.id]: architectusFixture,
   [dendroviaFixture.id]: dendroviaFixture,
 };
-const AVAILABLE = [operatusFixture.id, dendroviaFixture.id];
+const AVAILABLE = [operatusFixture.id, architectusFixture.id, dendroviaFixture.id];
 
 export default function DendritePage() {
   const store = useMemo(
@@ -30,6 +33,7 @@ export default function DendritePage() {
   const infra = useOperatusInfrastructure();
 
   useOperatusBridge(runtimeStore, infra);
+  useArchitectusBridge(runtimeStore);
 
   return (
     <div>

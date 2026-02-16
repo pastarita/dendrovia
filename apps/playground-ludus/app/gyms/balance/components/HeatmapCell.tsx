@@ -14,7 +14,7 @@ function getColor(winRate: number): string {
   return '#EF4444'; // too hard - red
 }
 
-export default function HeatmapCell({ result }: HeatmapCellProps) {
+export default function HeatmapCell({ result }: HeatmapCellProps): React.JSX.Element {
   const bg = getColor(result.winRate);
   const winPct = (result.winRate * 100).toFixed(1);
 

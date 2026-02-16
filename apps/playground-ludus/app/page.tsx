@@ -1,4 +1,4 @@
-export default function LudusDashboard() {
+export default function LudusDashboard(): React.JSX.Element {
   const DOMAINS = [
     { name: "Museums", href: "/museums", icon: "🏛️", desc: "Exhibition mode — game design exhibitions" },
     { name: "Zoos", href: "/zoos", icon: "🦁", desc: "Catalog mode — rule & mechanic catalogs" },

@@ -24,7 +24,7 @@ const selectStyle: React.CSSProperties = {
   fontSize: '0.8rem',
 };
 
-export default function SpellCatalog() {
+export default function SpellCatalog(): React.JSX.Element {
   const [elementFilter, setElementFilter] = useState<string>('all');
   const [effectFilter, setEffectFilter] = useState<string>('all');
 

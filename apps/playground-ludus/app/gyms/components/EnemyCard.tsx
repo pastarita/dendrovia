@@ -23,7 +23,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   none: '#6B7280',
 };
 
-export default function EnemyCard({ enemy }: EnemyCardProps) {
+export default function EnemyCard({ enemy }: EnemyCardProps): React.JSX.Element {
   return (
     <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111', flex: 1 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>

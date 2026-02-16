@@ -15,7 +15,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'a1b2c3d4e5f6789012345678901234567890abcd',
     message: 'fix(parser): resolve null pointer in AST traversal',
     author: 'dev@example.com',
-    date: '2024-06-15T10:30:00Z',
+    date: new Date('2024-06-15T10:30:00Z'),
     insertions: 45,
     deletions: 12,
     filesChanged: ['src/parser/ast.ts', 'src/parser/visitor.ts'],
@@ -27,7 +27,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'b2c3d4e5f6789012345678901234567890abcde1',
     message: 'fix(memory): patch memory leak in event listener cleanup',
     author: 'dev@example.com',
-    date: '2024-06-14T14:20:00Z',
+    date: new Date('2024-06-14T14:20:00Z'),
     insertions: 120,
     deletions: 30,
     filesChanged: ['src/events/bus.ts', 'src/events/listener.ts', 'src/events/cleanup.ts'],
@@ -39,7 +39,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'c3d4e5f6789012345678901234567890abcde123',
     message: 'feat(combat): implement spell cooldown system',
     author: 'dev@example.com',
-    date: '2024-06-13T09:15:00Z',
+    date: new Date('2024-06-13T09:15:00Z'),
     insertions: 250,
     deletions: 80,
     filesChanged: ['src/combat/spells.ts', 'src/combat/cooldowns.ts', 'src/combat/engine.ts', 'src/types/spell.ts'],
@@ -51,7 +51,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'd4e5f6789012345678901234567890abcde12345',
     message: 'fix(race): fix race condition in async state update',
     author: 'dev@example.com',
-    date: '2024-06-12T16:45:00Z',
+    date: new Date('2024-06-12T16:45:00Z'),
     insertions: 30,
     deletions: 8,
     filesChanged: ['src/state/store.ts'],
@@ -63,7 +63,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'e5f6789012345678901234567890abcde1234567',
     message: 'fix(index): off-by-one error in array bounds check',
     author: 'dev@example.com',
-    date: '2024-06-11T11:00:00Z',
+    date: new Date('2024-06-11T11:00:00Z'),
     insertions: 8,
     deletions: 3,
     filesChanged: ['src/utils/array.ts'],
@@ -74,9 +74,9 @@ const MOCK_COMMITS: ParsedCommit[] = [
 ];
 
 const MOCK_FILES: ParsedFile[] = [
-  { path: 'src/legacy/old-parser.ts', language: 'typescript', complexity: 28, lines: 450, functions: 15, classes: 3 },
-  { path: 'src/core/engine.ts', language: 'typescript', complexity: 22, lines: 380, functions: 12, classes: 2 },
-  { path: 'src/utils/helpers.ts', language: 'typescript', complexity: 18, lines: 200, functions: 20, classes: 0 },
+  { path: 'src/legacy/old-parser.ts', hash: 'aaa111', language: 'typescript', complexity: 28, loc: 450, lastModified: new Date('2024-06-10'), author: 'dev@example.com' },
+  { path: 'src/core/engine.ts', hash: 'bbb222', language: 'typescript', complexity: 22, loc: 380, lastModified: new Date('2024-06-11'), author: 'dev@example.com' },
+  { path: 'src/utils/helpers.ts', hash: 'ccc333', language: 'typescript', complexity: 18, loc: 200, lastModified: new Date('2024-06-12'), author: 'dev@example.com' },
 ];
 
 const MOCK_HOTSPOTS: Hotspot[] = [
@@ -98,7 +98,7 @@ const STATUS_COLORS: Record<string, string> = {
   completed: '#A16207',
 };
 
-export default function QuestGenerator() {
+export default function QuestGenerator(): React.JSX.Element {
   const [quests, setQuests] = useState<Quest[]>([]);
   const [activeType, setActiveType] = useState<string | null>(null);
 

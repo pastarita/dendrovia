@@ -45,7 +45,7 @@ const ELEMENT_COLORS: Record<string, string> = {
 const thStyle: React.CSSProperties = { textAlign: 'right', padding: '0.3rem 0.5rem', borderBottom: '1px solid #333', fontSize: '0.7rem', opacity: 0.5 };
 const tdStyle: React.CSSProperties = { textAlign: 'right', padding: '0.25rem 0.5rem', fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', borderBottom: '1px solid #1a1a1a' };
 
-export default function MonsterGuideHall() {
+export default function MonsterGuideHall(): React.JSX.Element {
   const monsterData = useMemo(() => {
     return BUG_TYPES.map(type => {
       const meta = TYPE_META[type];

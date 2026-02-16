@@ -41,7 +41,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Meta: '#6B7280',
 };
 
-export default function BattleStatsExhibit() {
+export default function BattleStatsExhibit(): React.JSX.Element {
   const [playerClass, setPlayerClass] = useState<CharacterClass>('tank');
   const [playerLevel, setPlayerLevel] = useState(5);
   const [bugType, setBugType] = useState<BugType>('null-pointer');

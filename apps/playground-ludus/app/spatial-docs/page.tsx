@@ -1,7 +1,7 @@
 import Link from "next/link";
 import SpatialDocsClient from "./SpatialDocsClient";
 
-export default function SpatialDocsPage() {
+export default function SpatialDocsPage(): React.JSX.Element {
   return (
     <div>
       <Link href="/" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; LUDUS Dashboard</Link>

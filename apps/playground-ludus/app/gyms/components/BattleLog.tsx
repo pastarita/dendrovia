@@ -7,7 +7,7 @@ interface BattleLogProps {
   log: ActionLogEntry[];
 }
 
-export default function BattleLog({ log }: BattleLogProps) {
+export default function BattleLog({ log }: BattleLogProps): React.JSX.Element {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

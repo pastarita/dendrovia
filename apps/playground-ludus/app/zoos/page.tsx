@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ZooClient from "./ZooClient";
 
-export default function ZoosPage() {
+export default function ZoosPage(): React.JSX.Element {
   return (
     <div>
       <Link href="/" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; LUDUS Dashboard</Link>

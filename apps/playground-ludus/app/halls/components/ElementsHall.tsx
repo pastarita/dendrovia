@@ -54,7 +54,7 @@ function multBg(mult: number): string {
   return 'transparent';
 }
 
-export default function ElementsHall() {
+export default function ElementsHall(): React.JSX.Element {
   const spellsByElement = useMemo(() => {
     const all = getAllSpells();
     const grouped: Record<string, string[]> = {};

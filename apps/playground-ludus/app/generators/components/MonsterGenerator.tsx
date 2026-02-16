@@ -15,7 +15,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   none: '#6B7280',
 };
 
-export default function MonsterGenerator() {
+export default function MonsterGenerator(): React.JSX.Element {
   const [bugType, setBugType] = useState<BugType>('null-pointer');
   const [severity, setSeverity] = useState<1 | 2 | 3 | 4 | 5>(2);
   const [complexity, setComplexity] = useState(5);
@@ -95,8 +95,8 @@ export default function MonsterGenerator() {
         </button>
         <button
           onClick={() => {
-            setBugType(BUG_TYPES[Math.floor(Math.random() * BUG_TYPES.length)]);
-            setSeverity(SEVERITIES[Math.floor(Math.random() * SEVERITIES.length)]);
+            setBugType(BUG_TYPES[Math.floor(Math.random() * BUG_TYPES.length)]!);
+            setSeverity(SEVERITIES[Math.floor(Math.random() * SEVERITIES.length)]!);
             setComplexity(Math.floor(Math.random() * 31));
             setSeed(Math.floor(Math.random() * 99999));
           }}

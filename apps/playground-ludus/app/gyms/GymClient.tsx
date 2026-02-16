@@ -49,7 +49,7 @@ const inputStyle: React.CSSProperties = {
   ...selectStyle,
 };
 
-export default function GymClient() {
+export default function GymClient(): React.JSX.Element {
   // Setup state
   const [charClass, setCharClass] = useState<CharacterClass>('tank');
   const [charLevel, setCharLevel] = useState(5);
@@ -320,7 +320,7 @@ export default function GymClient() {
           {/* Arena */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <PlayerCard player={battleState.player} />
-            <EnemyCard enemy={battleState.enemies[0]} />
+            <EnemyCard enemy={battleState.enemies[0]!} />
           </div>
 
           {/* Result Overlay */}

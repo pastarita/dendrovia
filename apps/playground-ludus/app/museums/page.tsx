@@ -1,7 +1,7 @@
 import Link from "next/link";
 import MuseumsClient from "./MuseumsClient";
 
-export default function MuseumsPage() {
+export default function MuseumsPage(): React.JSX.Element {
   return (
     <div>
       <Link href="/" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; LUDUS Dashboard</Link>

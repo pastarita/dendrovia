@@ -15,7 +15,7 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id'];
 
-export default function GeneratorsClient() {
+export default function GeneratorsClient(): React.JSX.Element {
   const [tab, setTab] = useState<TabId>('spells');
 
   return (

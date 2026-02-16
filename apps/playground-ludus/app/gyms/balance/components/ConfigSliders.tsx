@@ -34,7 +34,7 @@ const SLIDERS: SliderDef[] = [
 function getNestedValue(config: BalanceConfig, section: string, key: string): number {
   const s = config[section as keyof BalanceConfig];
   if (typeof s === 'object' && s !== null) {
-    return (s as Record<string, number>)[key] ?? 0;
+    return (s as unknown as Record<string, number>)[key] ?? 0;
   }
   return 0;
 }
@@ -44,11 +44,11 @@ const sliderInputStyle: React.CSSProperties = {
   accentColor: 'var(--pillar-accent)',
 };
 
-export default function ConfigSliders({ config, onChange }: ConfigSlidersProps) {
+export default function ConfigSliders({ config, onChange }: ConfigSlidersProps): React.JSX.Element {
   // Group sliders by section
   const sections = SLIDERS.reduce<Record<string, SliderDef[]>>((acc, s) => {
     if (!acc[s.section]) acc[s.section] = [];
-    acc[s.section].push(s);
+    acc[s.section]!.push(s);
     return acc;
   }, {});
 

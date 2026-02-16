@@ -19,7 +19,7 @@ const CLASS_LABELS: Record<string, string> = {
   dps: 'DPS (Feature Dev)',
 };
 
-export default function ProgressionExhibit() {
+export default function ProgressionExhibit(): React.JSX.Element {
   // XP table
   const xpTable = useMemo(() => {
     const rows: Array<{ level: number; totalXP: number; toNext: number }> = [];

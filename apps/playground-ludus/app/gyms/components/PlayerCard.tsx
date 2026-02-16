@@ -13,7 +13,7 @@ const CLASS_LABELS: Record<string, string> = {
   dps: 'DPS (Feature Dev)',
 };
 
-export default function PlayerCard({ player }: PlayerCardProps) {
+export default function PlayerCard({ player }: PlayerCardProps): React.JSX.Element {
   return (
     <div style={{ padding: '1.25rem', border: '1px solid #222', borderRadius: '8px', background: '#111', flex: 1 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>

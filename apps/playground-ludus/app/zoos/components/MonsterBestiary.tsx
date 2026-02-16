@@ -15,7 +15,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   none: '#6B7280',
 };
 
-export default function MonsterBestiary() {
+export default function MonsterBestiary(): React.JSX.Element {
   const monsters = useMemo(() => {
     const grid: Record<string, ReturnType<typeof createMonster>[0]> = {};
     for (const type of BUG_TYPES) {

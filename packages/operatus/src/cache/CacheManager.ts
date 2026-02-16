@@ -31,6 +31,14 @@ export interface StorageQuota {
   percentUsed: number;
 }
 
+export interface CacheEntryInfo {
+  path: string;
+  size: number;
+  hash?: string;
+  cachedAt: string;
+  tiers: CacheTier[];
+}
+
 export class CacheManager {
   private memory = new Map<string, string>();
   private opfs: OPFSCache | null = null;
@@ -299,6 +307,37 @@ export class CacheManager {
     }
 
     return evicted;
+  }
+
+  /**
+   * List all cached entries with tier presence info.
+   * Uses IDB as source of truth for the entry list.
+   */
+  async listEntries(): Promise<CacheEntryInfo[]> {
+    await this.ensureInit();
+
+    const paths = await this.idb.list();
+    const entries: CacheEntryInfo[] = [];
+
+    for (const path of paths) {
+      const meta = await this.idb.getMeta(path);
+      if (!meta) continue;
+
+      const tiers: CacheTier[] = [];
+      if (this.memory.has(path)) tiers.push('memory');
+      if (this.opfsAvailable && this.opfs && await this.opfs.exists(path)) tiers.push('opfs');
+      tiers.push('idb'); // present by definition (listed from IDB)
+
+      entries.push({
+        path,
+        size: meta.size,
+        hash: meta.hash,
+        cachedAt: meta.cachedAt,
+        tiers,
+      });
+    }
+
+    return entries;
   }
 
   /** Whether OPFS is being used (vs IDB-only fallback) */

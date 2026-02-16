@@ -13,8 +13,11 @@ import type { FileTreeNode, Hotspot, DeepWikiEnrichment } from '../types/index.j
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
+type AnyEventHandler = (event: string, data?: any) => void | Promise<void>;
+
 export class EventBus {
   private handlers = new Map<string, Set<EventHandler>>();
+  private anyHandlers = new Set<AnyEventHandler>();
   private debug = false;
 
   constructor(debug = false) {
@@ -37,6 +40,17 @@ export class EventBus {
   }
 
   /**
+   * Subscribe to ALL events. Handler receives (event, data).
+   * Returns unsubscribe function.
+   */
+  onAny(handler: AnyEventHandler): () => void {
+    this.anyHandlers.add(handler);
+    return () => {
+      this.anyHandlers.delete(handler);
+    };
+  }
+
+  /**
    * Emit an event to all subscribers
    */
   async emit<T = any>(event: string, data?: T): Promise<void> {
@@ -45,12 +59,23 @@ export class EventBus {
     }
 
     const handlers = this.handlers.get(event);
-    if (!handlers) return;
 
-    // Execute handlers in parallel
-    await Promise.all(
-      Array.from(handlers).map(handler => handler(data))
-    );
+    // Execute specific handlers + anyHandlers in parallel
+    const promises: (void | Promise<void>)[] = [];
+
+    if (handlers) {
+      for (const handler of handlers) {
+        promises.push(handler(data));
+      }
+    }
+
+    for (const handler of this.anyHandlers) {
+      promises.push(handler(event, data));
+    }
+
+    if (promises.length > 0) {
+      await Promise.all(promises);
+    }
   }
 
   /**
@@ -75,6 +100,7 @@ export class EventBus {
    */
   clear(): void {
     this.handlers.clear();
+    this.anyHandlers.clear();
   }
 }
 

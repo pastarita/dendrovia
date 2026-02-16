@@ -36,34 +36,41 @@ const monoTd: React.CSSProperties = {
   fontSize: '0.75rem',
 };
 
-const EVENT_CATALOG: Array<{ constant: string; value: string; direction: string; payload: string; description: string }> = [
+type EventMeta = { direction: 'input' | 'output'; payload: string; description: string };
+
+const EVENT_META: Record<string, EventMeta> = {
   // Spatial Input Events (ARCHITECTUS → LUDUS)
-  { constant: 'PLAYER_MOVED', value: GameEvents.PLAYER_MOVED, direction: 'input', payload: 'PlayerMovedEvent', description: 'Player navigated to a new position in the 3D scene' },
-  { constant: 'NODE_CLICKED', value: GameEvents.NODE_CLICKED, direction: 'input', payload: 'NodeClickedEvent', description: 'Player clicked on a code node in the tree' },
-  { constant: 'COLLISION_DETECTED', value: GameEvents.COLLISION_DETECTED, direction: 'input', payload: 'CollisionDetectedEvent', description: 'Player collided with an entity or boundary' },
-  { constant: 'BRANCH_ENTERED', value: GameEvents.BRANCH_ENTERED, direction: 'input', payload: 'BranchEnteredEvent', description: 'Player entered a new git branch region' },
-
+  PLAYER_MOVED:          { direction: 'input',  payload: 'PlayerMovedEvent',          description: 'Player navigated to a new position in the 3D scene' },
+  NODE_CLICKED:          { direction: 'input',  payload: 'NodeClickedEvent',          description: 'Player clicked on a code node in the tree' },
+  COLLISION_DETECTED:    { direction: 'input',  payload: 'CollisionDetectedEvent',    description: 'Player collided with an entity or boundary' },
+  BRANCH_ENTERED:        { direction: 'input',  payload: 'BranchEnteredEvent',        description: 'Player entered a new git branch region' },
   // Combat Output Events (LUDUS → OCULUS/ARCHITECTUS)
-  { constant: 'ENCOUNTER_TRIGGERED', value: GameEvents.ENCOUNTER_TRIGGERED, direction: 'output', payload: 'EncounterTriggeredEvent', description: 'A monster encounter was triggered by navigation' },
-  { constant: 'COMBAT_STARTED', value: GameEvents.COMBAT_STARTED, direction: 'output', payload: 'CombatStartedEvent', description: 'Battle has begun — display combat HUD' },
-  { constant: 'COMBAT_ENDED', value: GameEvents.COMBAT_ENDED, direction: 'output', payload: 'CombatEndedEvent', description: 'Battle resolved — show victory/defeat screen' },
-  { constant: 'COMBAT_TURN_START', value: GameEvents.COMBAT_TURN_START, direction: 'output', payload: 'CombatTurnEvent', description: 'New turn started (player or enemy phase)' },
-  { constant: 'COMBAT_TURN_END', value: GameEvents.COMBAT_TURN_END, direction: 'output', payload: 'CombatTurnEvent', description: 'Turn completed' },
-  { constant: 'HEALTH_CHANGED', value: GameEvents.HEALTH_CHANGED, direction: 'output', payload: 'HealthChangedEvent', description: 'HP changed for any entity (player or monster)' },
-  { constant: 'MANA_CHANGED', value: GameEvents.MANA_CHANGED, direction: 'output', payload: 'ManaChangedEvent', description: 'Mana changed for the player character' },
-  { constant: 'SPELL_RESOLVED', value: GameEvents.SPELL_RESOLVED, direction: 'output', payload: 'SpellResolvedEvent', description: 'A spell effect was applied (damage, heal, buff, etc.)' },
-  { constant: 'STATUS_EFFECT_APPLIED', value: GameEvents.STATUS_EFFECT_APPLIED, direction: 'output', payload: 'StatusEffectEvent', description: 'A status effect was applied to an entity' },
-  { constant: 'STATUS_EFFECT_EXPIRED', value: GameEvents.STATUS_EFFECT_EXPIRED, direction: 'output', payload: 'StatusEffectEvent', description: 'A status effect expired on an entity' },
-  { constant: 'DAMAGE_DEALT', value: GameEvents.DAMAGE_DEALT, direction: 'output', payload: 'DamageDealtEvent', description: 'Damage was dealt — trigger visual feedback' },
-  { constant: 'EXPERIENCE_GAINED', value: GameEvents.EXPERIENCE_GAINED, direction: 'output', payload: 'ExperienceGainedEvent', description: 'XP was awarded after combat' },
-  { constant: 'LEVEL_UP', value: GameEvents.LEVEL_UP, direction: 'output', payload: 'LevelUpEvent', description: 'Character leveled up — show celebration' },
-  { constant: 'LOOT_DROPPED', value: GameEvents.LOOT_DROPPED, direction: 'output', payload: 'LootDroppedEvent', description: 'Loot items were obtained from defeated monsters' },
-  { constant: 'QUEST_UPDATED', value: GameEvents.QUEST_UPDATED, direction: 'output', payload: 'QuestUpdatedEvent', description: 'Quest status changed (started, progressed, completed)' },
-
+  ENCOUNTER_TRIGGERED:   { direction: 'output', payload: 'EncounterTriggeredEvent',   description: 'A monster encounter was triggered by navigation' },
+  COMBAT_STARTED:        { direction: 'output', payload: 'CombatStartedEvent',        description: 'Battle has begun — display combat HUD' },
+  COMBAT_ENDED:          { direction: 'output', payload: 'CombatEndedEvent',          description: 'Battle resolved — show victory/defeat screen' },
+  COMBAT_TURN_START:     { direction: 'output', payload: 'CombatTurnEvent',           description: 'New turn started (player or enemy phase)' },
+  COMBAT_TURN_END:       { direction: 'output', payload: 'CombatTurnEvent',           description: 'Turn completed' },
+  HEALTH_CHANGED:        { direction: 'output', payload: 'HealthChangedEvent',        description: 'HP changed for any entity (player or monster)' },
+  MANA_CHANGED:          { direction: 'output', payload: 'ManaChangedEvent',          description: 'Mana changed for the player character' },
+  SPELL_RESOLVED:        { direction: 'output', payload: 'SpellResolvedEvent',        description: 'A spell effect was applied (damage, heal, buff, etc.)' },
+  STATUS_EFFECT_APPLIED: { direction: 'output', payload: 'StatusEffectEvent',         description: 'A status effect was applied to an entity' },
+  STATUS_EFFECT_EXPIRED: { direction: 'output', payload: 'StatusEffectEvent',         description: 'A status effect expired on an entity' },
+  DAMAGE_DEALT:          { direction: 'output', payload: 'DamageDealtEvent',          description: 'Damage was dealt — trigger visual feedback' },
+  EXPERIENCE_GAINED:     { direction: 'output', payload: 'ExperienceGainedEvent',     description: 'XP was awarded after combat' },
+  LEVEL_UP:              { direction: 'output', payload: 'LevelUpEvent',              description: 'Character leveled up — show celebration' },
+  LOOT_DROPPED:          { direction: 'output', payload: 'LootDroppedEvent',          description: 'Loot items were obtained from defeated monsters' },
+  QUEST_UPDATED:         { direction: 'output', payload: 'QuestUpdatedEvent',         description: 'Quest status changed (started, progressed, completed)' },
   // User Actions (OCULUS → LUDUS)
-  { constant: 'SPELL_CAST', value: GameEvents.SPELL_CAST, direction: 'input', payload: 'SpellCastEvent', description: 'User initiated a spell cast from the combat HUD' },
-  { constant: 'ITEM_USED', value: GameEvents.ITEM_USED, direction: 'input', payload: 'ItemUsedEvent', description: 'User consumed an item from inventory' },
-];
+  SPELL_CAST:            { direction: 'input',  payload: 'SpellCastEvent',            description: 'User initiated a spell cast from the combat HUD' },
+  ITEM_USED:             { direction: 'input',  payload: 'ItemUsedEvent',             description: 'User consumed an item from inventory' },
+};
+
+const EVENT_CATALOG = Object.entries(GameEvents)
+  .filter(([key]) => key in EVENT_META)
+  .map(([constant, value]) => {
+    const meta = EVENT_META[constant]!;
+    return { constant, value, direction: meta.direction, payload: meta.payload, description: meta.description };
+  });
 
 const SPATIAL_INPUTS = EVENT_CATALOG.filter(e => ['PLAYER_MOVED', 'NODE_CLICKED', 'COLLISION_DETECTED', 'BRANCH_ENTERED'].includes(e.constant));
 const COMBAT_OUTPUTS = EVENT_CATALOG.filter(e => e.direction === 'output');

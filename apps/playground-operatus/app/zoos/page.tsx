@@ -7,6 +7,12 @@ const PAGES = [
     desc: "Browsable catalog of manifest.json entries — shaders, palettes, meshes, mycology",
     icon: "📋",
   },
+  {
+    name: "Contract Validator",
+    href: "/zoos/contract",
+    desc: "Validates the OPERATUS public API surface — exports, subpaths, events, performance budget",
+    icon: "✅",
+  },
 ];
 
 export default function ZoosPage() {

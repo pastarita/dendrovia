@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { PillarNav } from "@repo/ui/pillar-nav";
+import { DomainNav } from "@repo/ui/domain-nav";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -16,15 +17,6 @@ export const metadata: Metadata = {
   title: "IMAGINARIUM Playground",
   description: "The Artificer — Procedural Art Generation playground",
 };
-
-const DOMAINS = [
-  { name: "Museums", href: "/museums", icon: "🏛️" },
-  { name: "Zoos", href: "/zoos", icon: "🦁" },
-  { name: "Halls", href: "/halls", icon: "🏰" },
-  { name: "Gyms", href: "/gyms", icon: "🏋️" },
-  { name: "Generators", href: "/generators", icon: "⚡" },
-  { name: "Spatial Docs", href: "/spatial-docs", icon: "📐" },
-];
 
 
 export default function RootLayout({
@@ -54,21 +46,7 @@ export default function RootLayout({
             </a>
             <div style={{ fontSize: "0.75rem", opacity: 0.5 }}>:3013 · Purpure</div>
 
-            <div>
-              <div style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.4, marginBottom: "0.5rem" }}>
-                SpacePark Domains
-              </div>
-              {DOMAINS.map((d) => (
-                <a
-                  key={d.href}
-                  href={d.href}
-                  style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.4rem 0.5rem", borderRadius: "4px", fontSize: "0.9rem" }}
-                >
-                  <span>{d.icon}</span>
-                  <span>{d.name}</span>
-                </a>
-              ))}
-            </div>
+            <DomainNav currentPillar="IMAGINARIUM" />
 
             <PillarNav currentPillar="IMAGINARIUM" />
           </nav>

@@ -11,7 +11,7 @@
  */
 
 import type { Element, RngState, DamageResult, CharacterStats } from '@dendrovia/shared';
-import { rngNext } from '../utils/SeededRandom.js';
+import { rngNext } from '../utils/SeededRandom';
 
 // ─── Constants ───────────────────────────────────────────────
 

@@ -16,8 +16,8 @@ import type {
   Hotspot,
   RngState,
 } from '@dendrovia/shared';
-import { scaleMonsterStat, xpRewardForMonster } from './CombatMath.js';
-import { rngNext, rngPick } from '../utils/SeededRandom.js';
+import { scaleMonsterStat, xpRewardForMonster } from './CombatMath';
+import { rngNext, rngPick } from '../utils/SeededRandom';
 
 // ─── Base Monster Templates ─────────────────────────────────
 

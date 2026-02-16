@@ -5,7 +5,7 @@
 
 import { existsSync } from 'fs';
 import type { CodeTopology } from '@dendrovia/shared';
-import { generateMockTopology } from './MockTopology.js';
+import { generateMockTopology } from './MockTopology';
 
 export async function readTopology(path: string): Promise<CodeTopology> {
   if (!existsSync(path)) {

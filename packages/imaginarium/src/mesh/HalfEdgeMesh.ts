@@ -58,9 +58,9 @@ export function buildFromIndexed(
   const vertices: HEVertex[] = [];
   for (let i = 0; i < vertexCount; i++) {
     vertices.push({
-      x: positions[i * 3],
-      y: positions[i * 3 + 1],
-      z: positions[i * 3 + 2],
+      x: positions[i * 3]!,
+      y: positions[i * 3 + 1]!,
+      z: positions[i * 3 + 2]!,
       halfedge: -1,
     });
   }
@@ -73,9 +73,9 @@ export function buildFromIndexed(
   const edgeMap = new Map<string, number>();
 
   for (let fi = 0; fi < faceCount; fi++) {
-    const i0 = indices[fi * 3];
-    const i1 = indices[fi * 3 + 1];
-    const i2 = indices[fi * 3 + 2];
+    const i0 = indices[fi * 3]!;
+    const i1 = indices[fi * 3 + 1]!;
+    const i2 = indices[fi * 3 + 2]!;
     const vis = [i0, i1, i2];
 
     const baseHE = halfedges.length;
@@ -84,7 +84,7 @@ export function buildFromIndexed(
     // Create 3 halfedges for this triangle
     for (let e = 0; e < 3; e++) {
       halfedges.push({
-        vertex: vis[(e + 1) % 3], // points TO next vertex
+        vertex: vis[(e + 1) % 3]!, // points TO next vertex
         face: fi,
         next: baseHE + (e + 1) % 3,
         prev: baseHE + (e + 2) % 3,
@@ -95,24 +95,24 @@ export function buildFromIndexed(
     // Set vertex -> halfedge references
     for (let e = 0; e < 3; e++) {
       const heIdx = baseHE + e;
-      const fromV = vis[e];
-      if (vertices[fromV].halfedge === -1) {
-        vertices[fromV].halfedge = heIdx;
+      const fromV = vis[e]!;
+      if (vertices[fromV]!.halfedge === -1) {
+        vertices[fromV]!.halfedge = heIdx;
       }
     }
 
     // Twin pairing
     for (let e = 0; e < 3; e++) {
-      const from = vis[e];
-      const to = vis[(e + 1) % 3];
+      const from = vis[e]!;
+      const to = vis[(e + 1) % 3]!;
       const heIdx = baseHE + e;
       const key = `${from}:${to}`;
       const twinKey = `${to}:${from}`;
 
       if (edgeMap.has(twinKey)) {
         const twinIdx = edgeMap.get(twinKey)!;
-        halfedges[heIdx].twin = twinIdx;
-        halfedges[twinIdx].twin = heIdx;
+        halfedges[heIdx]!.twin = twinIdx;
+        halfedges[twinIdx]!.twin = heIdx;
         edgeMap.delete(twinKey);
       } else {
         edgeMap.set(key, heIdx);
@@ -144,7 +144,7 @@ export function buildFromProfile(
     const sinT = Math.sin(theta);
 
     for (let r = 0; r < rows; r++) {
-      const [radius, height] = profile[r];
+      const [radius, height] = profile[r]!;
       positions.push(radius * cosT, height, radius * sinT);
     }
   }
@@ -191,7 +191,7 @@ export function buildFromCylinder(
 
 /** Iterate vertex indices of vertices adjacent to the given vertex. */
 export function* vertexNeighbors(mesh: HalfEdgeMesh, vi: number): Generator<number> {
-  const startHE = mesh.vertices[vi].halfedge;
+  const startHE = mesh.vertices[vi]!.halfedge;
   if (startHE === -1) return;
 
   const seen = new Set<number>();
@@ -199,27 +199,27 @@ export function* vertexNeighbors(mesh: HalfEdgeMesh, vi: number): Generator<numb
   // Traverse CW around vertex via twin.next
   let he = startHE;
   do {
-    const target = mesh.halfedges[he].vertex;
+    const target = mesh.halfedges[he]!.vertex;
     if (!seen.has(target)) {
       seen.add(target);
       yield target;
     }
-    const twin = mesh.halfedges[he].twin;
+    const twin = mesh.halfedges[he]!.twin;
     if (twin === -1) break; // hit boundary going CW
-    he = mesh.halfedges[twin].next;
+    he = mesh.halfedges[twin]!.next;
   } while (he !== startHE);
 
   // If we hit a boundary, also traverse CCW from start to find remaining neighbors
-  if (mesh.halfedges[he].twin === -1 || he === startHE) {
+  if (mesh.halfedges[he]!.twin === -1 || he === startHE) {
     // Go CCW: follow prev.twin from startHE
     he = startHE;
     while (true) {
-      const prev = mesh.halfedges[he].prev;
-      const fromV = mesh.halfedges[mesh.halfedges[prev].prev].vertex;
+      const prev = mesh.halfedges[he]!.prev;
+      const fromV = mesh.halfedges[mesh.halfedges[prev]!.prev]!.vertex;
       if (!seen.has(fromV)) {
         // The "from" vertex of the previous halfedge is a neighbor
       }
-      const prevTwin = mesh.halfedges[prev].twin;
+      const prevTwin = mesh.halfedges[prev]!.twin;
       if (prevTwin === -1) {
         // prev goes from some vertex to vi; that vertex is a neighbor
         const source = halfedgeFrom(mesh, prev);
@@ -230,7 +230,7 @@ export function* vertexNeighbors(mesh: HalfEdgeMesh, vi: number): Generator<numb
         break;
       }
       he = prevTwin;
-      const target = mesh.halfedges[he].vertex;
+      const target = mesh.halfedges[he]!.vertex;
       if (!seen.has(target)) {
         seen.add(target);
         yield target;
@@ -242,49 +242,49 @@ export function* vertexNeighbors(mesh: HalfEdgeMesh, vi: number): Generator<numb
 
 /** Iterate face indices of faces adjacent to the given vertex. */
 export function* vertexFaces(mesh: HalfEdgeMesh, vi: number): Generator<number> {
-  const startHE = mesh.vertices[vi].halfedge;
+  const startHE = mesh.vertices[vi]!.halfedge;
   if (startHE === -1) return;
 
   let he = startHE;
   do {
-    const face = mesh.halfedges[he].face;
+    const face = mesh.halfedges[he]!.face;
     if (face !== -1) yield face;
-    const twin = mesh.halfedges[he].twin;
+    const twin = mesh.halfedges[he]!.twin;
     if (twin === -1) break;
-    he = mesh.halfedges[twin].next;
+    he = mesh.halfedges[twin]!.next;
   } while (he !== startHE);
 }
 
 /** Get the three vertex indices of a triangle face. */
 export function faceVertices(mesh: HalfEdgeMesh, fi: number): [number, number, number] {
-  const he0 = mesh.faces[fi].halfedge;
-  const he1 = mesh.halfedges[he0].next;
-  const he2 = mesh.halfedges[he1].next;
+  const he0 = mesh.faces[fi]!.halfedge;
+  const he1 = mesh.halfedges[he0]!.next;
+  const he2 = mesh.halfedges[he1]!.next;
 
   // The "from" vertex of each halfedge
   return [
-    mesh.halfedges[mesh.halfedges[he0].prev].vertex === mesh.halfedges[he0].vertex
-      ? mesh.halfedges[he2].vertex
-      : mesh.halfedges[mesh.halfedges[he0].prev].vertex,
-    mesh.halfedges[he0].vertex,
-    mesh.halfedges[he1].vertex,
+    mesh.halfedges[mesh.halfedges[he0]!.prev]!.vertex === mesh.halfedges[he0]!.vertex
+      ? mesh.halfedges[he2]!.vertex
+      : mesh.halfedges[mesh.halfedges[he0]!.prev]!.vertex,
+    mesh.halfedges[he0]!.vertex,
+    mesh.halfedges[he1]!.vertex,
   ];
 }
 
 /** Get vertex index that a halfedge originates FROM. */
 export function halfedgeFrom(mesh: HalfEdgeMesh, heIdx: number): number {
-  return mesh.halfedges[mesh.halfedges[heIdx].prev].vertex;
+  return mesh.halfedges[mesh.halfedges[heIdx]!.prev]!.vertex;
 }
 
 /** Check if a vertex is on the boundary (has a boundary halfedge). */
 export function isBoundaryVertex(mesh: HalfEdgeMesh, vi: number): boolean {
-  const startHE = mesh.vertices[vi].halfedge;
+  const startHE = mesh.vertices[vi]!.halfedge;
   if (startHE === -1) return true;
 
   let he = startHE;
   do {
-    if (mesh.halfedges[he].twin === -1) return true;
-    he = mesh.halfedges[mesh.halfedges[he].twin].next;
+    if (mesh.halfedges[he]!.twin === -1) return true;
+    he = mesh.halfedges[mesh.halfedges[he]!.twin]!.next;
   } while (he !== startHE);
   return false;
 }
@@ -330,63 +330,63 @@ export function toFlatArrays(mesh: HalfEdgeMesh): FlatMeshData {
 
   // Copy positions
   for (let i = 0; i < vCount; i++) {
-    positions[i * 3] = mesh.vertices[i].x;
-    positions[i * 3 + 1] = mesh.vertices[i].y;
-    positions[i * 3 + 2] = mesh.vertices[i].z;
+    positions[i * 3] = mesh.vertices[i]!.x;
+    positions[i * 3 + 1] = mesh.vertices[i]!.y;
+    positions[i * 3 + 2] = mesh.vertices[i]!.z;
   }
 
   // Compute per-vertex normals (area-weighted face normal accumulation)
   for (const face of mesh.faces) {
     const he0 = face.halfedge;
-    const he1 = mesh.halfedges[he0].next;
-    const he2 = mesh.halfedges[he1].next;
+    const he1 = mesh.halfedges[he0]!.next;
+    const he2 = mesh.halfedges[he1]!.next;
 
     const v0 = halfedgeFrom(mesh, he0);
-    const v1 = mesh.halfedges[he0].vertex;
-    const v2 = mesh.halfedges[he1].vertex;
+    const v1 = mesh.halfedges[he0]!.vertex;
+    const v2 = mesh.halfedges[he1]!.vertex;
 
     // Cross product for face normal (not normalized = area-weighted)
-    const ax = mesh.vertices[v1].x - mesh.vertices[v0].x;
-    const ay = mesh.vertices[v1].y - mesh.vertices[v0].y;
-    const az = mesh.vertices[v1].z - mesh.vertices[v0].z;
-    const bx = mesh.vertices[v2].x - mesh.vertices[v0].x;
-    const by = mesh.vertices[v2].y - mesh.vertices[v0].y;
-    const bz = mesh.vertices[v2].z - mesh.vertices[v0].z;
+    const ax = mesh.vertices[v1]!.x - mesh.vertices[v0]!.x;
+    const ay = mesh.vertices[v1]!.y - mesh.vertices[v0]!.y;
+    const az = mesh.vertices[v1]!.z - mesh.vertices[v0]!.z;
+    const bx = mesh.vertices[v2]!.x - mesh.vertices[v0]!.x;
+    const by = mesh.vertices[v2]!.y - mesh.vertices[v0]!.y;
+    const bz = mesh.vertices[v2]!.z - mesh.vertices[v0]!.z;
 
     const nx = ay * bz - az * by;
     const ny = az * bx - ax * bz;
     const nz = ax * by - ay * bx;
 
     for (const vi of [v0, v1, v2]) {
-      normals[vi * 3] += nx;
-      normals[vi * 3 + 1] += ny;
-      normals[vi * 3 + 2] += nz;
+      normals[vi * 3] = normals[vi * 3]! + nx;
+      normals[vi * 3 + 1] = normals[vi * 3 + 1]! + ny;
+      normals[vi * 3 + 2] = normals[vi * 3 + 2]! + nz;
     }
   }
 
   // Normalize
   for (let i = 0; i < vCount; i++) {
-    const nx = normals[i * 3];
-    const ny = normals[i * 3 + 1];
-    const nz = normals[i * 3 + 2];
+    const nx = normals[i * 3]!;
+    const ny = normals[i * 3 + 1]!;
+    const nz = normals[i * 3 + 2]!;
     const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
     if (len > 0) {
-      normals[i * 3] /= len;
-      normals[i * 3 + 1] /= len;
-      normals[i * 3 + 2] /= len;
+      normals[i * 3] = nx / len;
+      normals[i * 3 + 1] = ny / len;
+      normals[i * 3 + 2] = nz / len;
     }
   }
 
   // Build index buffer
   const indices = new Uint32Array(mesh.faces.length * 3);
   for (let fi = 0; fi < mesh.faces.length; fi++) {
-    const he0 = mesh.faces[fi].halfedge;
-    const he1 = mesh.halfedges[he0].next;
-    const he2 = mesh.halfedges[he1].next;
+    const he0 = mesh.faces[fi]!.halfedge;
+    const he1 = mesh.halfedges[he0]!.next;
+    const he2 = mesh.halfedges[he1]!.next;
 
     indices[fi * 3] = halfedgeFrom(mesh, he0);
-    indices[fi * 3 + 1] = mesh.halfedges[he0].vertex;
-    indices[fi * 3 + 2] = mesh.halfedges[he1].vertex;
+    indices[fi * 3 + 1] = mesh.halfedges[he0]!.vertex;
+    indices[fi * 3 + 2] = mesh.halfedges[he1]!.vertex;
   }
 
   return { positions, normals, indices };

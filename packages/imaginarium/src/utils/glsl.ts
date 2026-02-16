@@ -75,7 +75,7 @@ export function validateGLSL(source: string): GLSLValidationResult {
   // Check semicolons after statements (heuristic)
   const lines = source.split('\n');
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
+    const line = lines[i]!.trim();
     // Skip empty, comments, preprocessor, braces, function defs, flow-control
     if (
       !line ||

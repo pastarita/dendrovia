@@ -11,11 +11,11 @@ import type {
   MushroomPlacement,
   SubstrateType,
   FungalGenus,
-} from './types.js';
-import { buildTaxonomy, buildFileContext, buildCoChurnMap, type FileContext } from './GenusMapper.js';
-import { generateMorphology } from './MorphologyGenerator.js';
-import { generateLore } from './LoreGenerator.js';
-import { hashString } from '../utils/hash.js';
+} from './types';
+import { buildTaxonomy, buildFileContext, buildCoChurnMap, type FileContext } from './GenusMapper';
+import { generateMorphology } from './MorphologyGenerator';
+import { generateLore } from './LoreGenerator';
+import { hashString } from '../utils/hash';
 
 // ---------------------------------------------------------------------------
 // File filtering — skip trivial files
@@ -110,7 +110,7 @@ export function catalogize(topology: CodeTopology): FungalSpecimen[] {
   const specimens: FungalSpecimen[] = [];
 
   for (let i = 0; i < filesToCatalog.length; i++) {
-    const file = filesToCatalog[i];
+    const file = filesToCatalog[i]!;
     const ctx = buildFileContext(file, topology, coChurnMap);
     const taxonomy = buildTaxonomy(file, ctx);
     const morphology = generateMorphology(file, ctx, taxonomy.genus);

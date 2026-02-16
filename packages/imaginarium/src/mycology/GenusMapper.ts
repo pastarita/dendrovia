@@ -9,7 +9,7 @@
  */
 
 import type { ParsedFile, Hotspot, CodeTopology } from '@dendrovia/shared';
-import { hashString } from '../utils/hash.js';
+import { hashString } from '../utils/hash';
 import type {
   FungalGenus,
   FungalTaxonomy,
@@ -17,7 +17,7 @@ import type {
   FungalClass,
   FungalOrder,
   FungalFamily,
-} from './types.js';
+} from './types';
 
 // ---------------------------------------------------------------------------
 // Genus scoring criteria
@@ -447,11 +447,13 @@ export function buildCoChurnMap(topology: CodeTopology): Map<string, Set<string>
   for (const commit of topology.commits) {
     const changed = commit.filesChanged;
     for (let i = 0; i < changed.length; i++) {
+      const ci = changed[i]!;
       for (let j = i + 1; j < changed.length; j++) {
-        if (!map.has(changed[i])) map.set(changed[i], new Set());
-        if (!map.has(changed[j])) map.set(changed[j], new Set());
-        map.get(changed[i])!.add(changed[j]);
-        map.get(changed[j])!.add(changed[i]);
+        const cj = changed[j]!;
+        if (!map.has(ci)) map.set(ci, new Set());
+        if (!map.has(cj)) map.set(cj, new Set());
+        map.get(ci)!.add(cj);
+        map.get(cj)!.add(ci);
       }
     }
   }

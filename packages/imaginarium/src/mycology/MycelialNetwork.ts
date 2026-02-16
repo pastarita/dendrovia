@@ -15,8 +15,8 @@ import type {
   MycorrhizalType,
   SignalType,
   FungalGenus,
-} from './types.js';
-import { hashString } from '../utils/hash.js';
+} from './types';
+import { hashString } from '../utils/hash';
 
 // ---------------------------------------------------------------------------
 // Connection type derivation
@@ -127,7 +127,7 @@ export function buildNetwork(
   for (const [key, count] of coChurnFreq.entries()) {
     if (count < MIN_COCHURN) continue;
 
-    const [sourcePath, targetPath] = key.split('|');
+    const [sourcePath, targetPath] = key.split('|') as [string, string];
     const source = fileMap.get(sourcePath)!;
     const target = fileMap.get(targetPath)!;
 

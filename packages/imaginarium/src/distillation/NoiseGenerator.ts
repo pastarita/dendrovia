@@ -7,7 +7,7 @@
  */
 
 import type { CodeTopology, NoiseFunction } from '@dendrovia/shared';
-import { hashString } from '../utils/hash.js';
+import { hashString } from '../utils/hash';
 
 export interface NoiseOverrides {
   typeOverride?: NoiseFunction['type'];

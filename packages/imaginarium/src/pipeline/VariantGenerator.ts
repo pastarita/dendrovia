@@ -10,12 +10,12 @@
  */
 
 import type { CodeTopology, SDFShader, ProceduralPalette } from '@dendrovia/shared';
-import { compile as compileSDF, type SDFCompileConfig } from '../distillation/SDFCompiler.js';
-import { compile as compileLSystem } from '../distillation/LSystemCompiler.js';
-import { generate as generateNoise } from '../distillation/NoiseGenerator.js';
-import { extractPalette } from '../distillation/ColorExtractor.js';
-import { getDefaultPalette } from '../fallback/DefaultPalettes.js';
-import { hashString } from '../utils/hash.js';
+import { compile as compileSDF, type SDFCompileConfig } from '../distillation/SDFCompiler';
+import { compile as compileLSystem } from '../distillation/LSystemCompiler';
+import { generate as generateNoise } from '../distillation/NoiseGenerator';
+import { extractPalette } from '../distillation/ColorExtractor';
+import { getDefaultPalette } from '../fallback/DefaultPalettes';
+import { hashString } from '../utils/hash';
 
 export async function generateVariants(
   topology: CodeTopology,
@@ -155,7 +155,7 @@ function createStructuralSubset(topology: CodeTopology): CodeTopology {
   const topDirs = topology.tree.children?.filter(c => c.type === 'directory') ?? [];
   if (topDirs.length === 0) return topology;
 
-  const firstDir = topDirs[0];
+  const firstDir = topDirs[0]!;
   const dirPath = firstDir.path;
   const files = topology.files.filter(f => f.path.startsWith(dirPath));
 

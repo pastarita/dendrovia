@@ -42,8 +42,8 @@ export function generateMockTopology(
   const dirs = ['src', 'src/components', 'src/utils', 'src/api', 'src/types', 'tests', 'config'];
 
   for (let i = 0; i < fileCount; i++) {
-    const lang = languages[Math.floor(rng() * languages.length)];
-    const dir = dirs[Math.floor(rng() * dirs.length)];
+    const lang = languages[Math.floor(rng() * languages.length)]!;
+    const dir = dirs[Math.floor(rng() * dirs.length)]!;
     const ext = FILE_EXTENSIONS[lang] ?? '.ts';
     const name = `file-${i}${ext}`;
     const path = `${dir}/${name}`;
@@ -75,7 +75,7 @@ export function generateMockTopology(
   // Generate mock commits
   for (let i = 0; i < Math.min(fileCount * 2, 100); i++) {
     const changedFiles = Array.from({ length: Math.floor(rng() * 5) + 1 }, () =>
-      files[Math.floor(rng() * files.length)].path,
+      files[Math.floor(rng() * files.length)]!.path,
     );
 
     commits.push({
@@ -106,7 +106,7 @@ function buildMockTree(files: ParsedFile[]): FileTreeNode {
     let current = root;
 
     for (let i = 0; i < parts.length; i++) {
-      const part = parts[i];
+      const part = parts[i]!;
       const isFile = i === parts.length - 1;
 
       if (isFile) {

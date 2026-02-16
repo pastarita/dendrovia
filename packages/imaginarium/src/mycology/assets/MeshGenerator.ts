@@ -5,8 +5,8 @@
  * Does NOT render — that's ARCHITECTUS's job. This just generates data.
  */
 
-import type { FungalSpecimen, MushroomMorphology, CapShape } from '../types.js';
-import { hexToRgb } from '../../utils/color.js';
+import type { FungalSpecimen, MushroomMorphology, CapShape } from '../types';
+import { hexToRgb } from '../../utils/color';
 
 // ---------------------------------------------------------------------------
 // Output types

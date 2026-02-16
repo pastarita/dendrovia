@@ -31,30 +31,30 @@ export type {
   MushroomArchetype,
   MycologyManifest,
   MycologyCatalogedEvent,
-} from './types.js';
+} from './types';
 
 // Genus classification
-export { classifyGenus, buildTaxonomy, buildFileContext, buildCoChurnMap } from './GenusMapper.js';
-export type { FileContext } from './GenusMapper.js';
+export { classifyGenus, buildTaxonomy, buildFileContext, buildCoChurnMap } from './GenusMapper';
+export type { FileContext } from './GenusMapper';
 
 // Morphology
-export { generateMorphology } from './MorphologyGenerator.js';
+export { generateMorphology } from './MorphologyGenerator';
 
 // Network
-export { buildNetwork } from './MycelialNetwork.js';
+export { buildNetwork } from './MycelialNetwork';
 
 // Lore
-export { generateLore } from './LoreGenerator.js';
+export { generateLore } from './LoreGenerator';
 
 // Catalog
-export { catalogize } from './SpecimenCatalog.js';
+export { catalogize } from './SpecimenCatalog';
 
 // Assets
-export { generateSvg, generateSvgBatch } from './assets/SvgTemplates.js';
-export { MushroomSprite } from './assets/MushroomSprite.js';
-export type { MushroomSpriteProps } from './assets/MushroomSprite.js';
-export { generateMeshData } from './assets/MeshGenerator.js';
-export type { MushroomMeshData, InstanceData, LODConfig } from './assets/MeshGenerator.js';
+export { generateSvg, generateSvgBatch } from './assets/SvgTemplates';
+export { MushroomSprite } from './assets/MushroomSprite';
+export type { MushroomSpriteProps } from './assets/MushroomSprite';
+export { generateMeshData } from './assets/MeshGenerator';
+export type { MushroomMeshData, InstanceData, LODConfig } from './assets/MeshGenerator';
 
 // Pipeline
-export { distillMycology } from './MycologyPipeline.js';
+export { distillMycology } from './MycologyPipeline';

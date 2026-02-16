@@ -6,8 +6,8 @@
  */
 
 import type { CodeTopology, ParsedFile, ProceduralPalette } from '@dendrovia/shared';
-import { oklchToHex, harmonize, type OklchColor, type HarmonyScheme } from '../utils/color.js';
-import { getDefaultPalette, getLanguageHue } from '../fallback/DefaultPalettes.js';
+import { oklchToHex, harmonize, type OklchColor, type HarmonyScheme } from '../utils/color';
+import { getDefaultPalette, getLanguageHue } from '../fallback/DefaultPalettes';
 
 export interface PaletteOverrides {
   harmonyScheme?: HarmonyScheme;
@@ -26,7 +26,7 @@ export function extractPalette(topology: CodeTopology, overrides?: PaletteOverri
     for (const f of files) {
       langCounts.set(f.language, (langCounts.get(f.language) ?? 0) + 1);
     }
-    const dominantLang = [...langCounts.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const dominantLang = [...langCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'unknown';
 
     // Compute aggregate metrics
     const avgComplexity = files.reduce((sum, f) => sum + f.complexity, 0) / files.length;
@@ -53,11 +53,11 @@ export function extractPalette(topology: CodeTopology, overrides?: PaletteOverri
       ?? (files.length < 20 ? 'analogous' : 'split-complementary');
     const hues = harmonize(baseHue, scheme);
 
-    const primary: OklchColor = { L: lightness, C: saturation, h: hues[0] };
-    const secondary: OklchColor = { L: lightness * 0.8, C: saturation * 0.85, h: hues[1] };
-    const accent: OklchColor = { L: lightness * 1.2, C: saturation * 1.3, h: hues[hues.length - 1] };
-    const glow: OklchColor = { L: lightness * 1.4, C: saturation * 1.5, h: hues[0] };
-    const background: OklchColor = { L: 0.1, C: saturation * 0.3, h: hues[0] };
+    const primary: OklchColor = { L: lightness, C: saturation, h: hues[0]! };
+    const secondary: OklchColor = { L: lightness * 0.8, C: saturation * 0.85, h: hues[1] ?? hues[0]! };
+    const accent: OklchColor = { L: lightness * 1.2, C: saturation * 1.3, h: hues[hues.length - 1]! };
+    const glow: OklchColor = { L: lightness * 1.4, C: saturation * 1.5, h: hues[0]! };
+    const background: OklchColor = { L: 0.1, C: saturation * 0.3, h: hues[0]! };
 
     // Mood from temperature
     const mood: ProceduralPalette['mood'] =
@@ -87,11 +87,11 @@ export function extractFilePalette(file: ParsedFile): ProceduralPalette {
     const hues = harmonize(baseHue, 'analogous');
 
     return {
-      primary: oklchToHex({ L: lightness, C: saturation, h: hues[0] }),
-      secondary: oklchToHex({ L: lightness * 0.8, C: saturation * 0.85, h: hues[1] }),
-      accent: oklchToHex({ L: lightness * 1.2, C: saturation * 1.3, h: hues[2] }),
-      background: oklchToHex({ L: 0.1, C: saturation * 0.3, h: hues[0] }),
-      glow: oklchToHex({ L: lightness * 1.4, C: saturation * 1.5, h: hues[0] }),
+      primary: oklchToHex({ L: lightness, C: saturation, h: hues[0]! }),
+      secondary: oklchToHex({ L: lightness * 0.8, C: saturation * 0.85, h: hues[1]! }),
+      accent: oklchToHex({ L: lightness * 1.2, C: saturation * 1.3, h: hues[2]! }),
+      background: oklchToHex({ L: 0.1, C: saturation * 0.3, h: hues[0]! }),
+      glow: oklchToHex({ L: lightness * 1.4, C: saturation * 1.5, h: hues[0]! }),
       mood: baseHue >= 0 && baseHue < 60 ? 'warm' : baseHue < 180 ? 'neutral' : 'cool',
     };
   } catch {

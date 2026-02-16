@@ -8,40 +8,40 @@
 // Data structure
 export type {
   HEVertex, HEHalfEdge, HEFace, HalfEdgeMesh, FlatMeshData,
-} from './HalfEdgeMesh.js';
+} from './HalfEdgeMesh';
 export {
   buildFromIndexed, buildFromProfile, buildFromCylinder,
   vertexNeighbors, vertexFaces, faceVertices, halfedgeFrom,
   isBoundaryVertex, meshStats, toFlatArrays,
-} from './HalfEdgeMesh.js';
+} from './HalfEdgeMesh';
 
 // Pipeline
-export type { MeshOp, AsyncMeshOp, PipelineStep } from './pipeline.js';
-export { pipe, pipeAsync, when, repeat, MeshPipeline } from './pipeline.js';
+export type { MeshOp, AsyncMeshOp, PipelineStep } from './pipeline';
+export { pipe, pipeAsync, when, repeat, MeshPipeline } from './pipeline';
 
 // Operations
 export {
   subdivide, loopSubdivideOnce,
   smooth, taubinSmooth, laplacianSmoothOnce,
   displaceNormal, displaceByFunction, displaceByField, displaceByNoise,
-} from './ops/index.js';
+} from './ops/index';
 
 // Serialization (OPERATUS-compatible versioned persistence)
-export type { SerializeOptions } from './serialize.js';
+export type { SerializeOptions } from './serialize';
 export {
   serialize, deserializeToHalfEdge, deserializeToFlat, deserializeWithFallback,
-} from './serialize.js';
+} from './serialize';
 
 // Adapters (bridge existing MeshGenerator types ↔ HalfEdgeMesh pipeline)
 export {
   profileToHalfEdge, cylinderToHalfEdge, specimenToHalfEdge,
   fallbackMeshFromProfile, fallbackMeshFromCylinder,
   applyPipelineToProfile, applyPipelineToCylinder,
-} from './adapters.js';
+} from './adapters';
 
 // Genus pipelines (per-genus MeshOp definitions for the distillation pipeline)
-export { genusPipeline, DEFAULT_PIPELINE, STEM_PIPELINE } from './genusPipelines.js';
+export { genusPipeline, DEFAULT_PIPELINE, STEM_PIPELINE } from './genusPipelines';
 
 // Mesh asset generation (orchestrator for the distillation pipeline)
-export type { MeshGenerationResult, MeshGenerationStats } from './generateMeshAssets.js';
-export { generateMeshAssets } from './generateMeshAssets.js';
+export type { MeshGenerationResult, MeshGenerationStats } from './generateMeshAssets';
+export { generateMeshAssets } from './generateMeshAssets';

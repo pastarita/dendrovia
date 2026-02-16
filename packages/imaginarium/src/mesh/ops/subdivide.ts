@@ -6,9 +6,9 @@
  * Boundary vertices use special rules to preserve mesh edges.
  */
 
-import type { HalfEdgeMesh, HEVertex, HEHalfEdge, HEFace } from '../HalfEdgeMesh.js';
-import { vertexNeighbors, isBoundaryVertex, buildFromIndexed } from '../HalfEdgeMesh.js';
-import type { MeshOp } from '../pipeline.js';
+import type { HalfEdgeMesh, HEVertex, HEHalfEdge, HEFace } from '../HalfEdgeMesh';
+import { vertexNeighbors, isBoundaryVertex, buildFromIndexed } from '../HalfEdgeMesh';
+import type { MeshOp } from '../pipeline';
 
 /**
  * Perform one iteration of Loop subdivision.
@@ -22,7 +22,7 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
   const evenPositions: [number, number, number][] = [];
 
   for (let vi = 0; vi < vertices.length; vi++) {
-    const v = vertices[vi];
+    const v = vertices[vi]!;
 
     if (isBoundaryVertex(mesh, vi)) {
       // Boundary: keep position (or average with 2 boundary neighbors)
@@ -53,9 +53,9 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
     let nz = v.z * weight;
 
     for (const ni of neighbors) {
-      nx += vertices[ni].x * beta;
-      ny += vertices[ni].y * beta;
-      nz += vertices[ni].z * beta;
+      nx += vertices[ni]!.x * beta;
+      ny += vertices[ni]!.y * beta;
+      nz += vertices[ni]!.z * beta;
     }
 
     evenPositions.push([nx, ny, nz]);
@@ -72,8 +72,8 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
     if (edgeMidpoints.has(key)) return edgeMidpoints.get(key)!;
 
     const newIdx = vertices.length + oddPositions.length;
-    const va = vertices[a];
-    const vb = vertices[b];
+    const va = vertices[a]!;
+    const vb = vertices[b]!;
 
     // Find the two opposite vertices (for interior edges)
     // For simplicity, use simple midpoint (3/8 + 3/8 + 1/8 + 1/8 rule requires face info)
@@ -102,13 +102,13 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
   // Pre-compute midpoints for all face edges
   const faceMids: number[][] = [];
   for (let fi = 0; fi < faces.length; fi++) {
-    const he0 = faces[fi].halfedge;
-    const he1 = halfedges[he0].next;
-    const he2 = halfedges[he1].next;
+    const he0 = faces[fi]!.halfedge;
+    const he1 = halfedges[he0]!.next;
+    const he2 = halfedges[he1]!.next;
 
-    const v0 = halfedges[halfedges[he0].prev].vertex;
-    const v1 = halfedges[he0].vertex;
-    const v2 = halfedges[he1].vertex;
+    const v0 = halfedges[halfedges[he0]!.prev]!.vertex;
+    const v1 = halfedges[he0]!.vertex;
+    const v2 = halfedges[he1]!.vertex;
 
     // Wait — we need the "from" vertex of he0.
     // halfedge he0 points TO v1. The "from" is the vertex of the previous halfedge's target...
@@ -116,16 +116,16 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
     const fvs: number[] = [];
     let he = he0;
     for (let i = 0; i < 3; i++) {
-      fvs.push(halfedges[he].vertex);
-      he = halfedges[he].next;
+      fvs.push(halfedges[he]!.vertex);
+      he = halfedges[he]!.next;
     }
     // fvs = [v_he0_to, v_he1_to, v_he2_to]
     // edges: (fvs[2]->fvs[0]), (fvs[0]->fvs[1]), (fvs[1]->fvs[2])
 
-    const m01 = getOrCreateMidpoint(fvs[0], fvs[1]);
-    const m12 = getOrCreateMidpoint(fvs[1], fvs[2]);
-    const m20 = getOrCreateMidpoint(fvs[2], fvs[0]);
-    faceMids.push([fvs[0], fvs[1], fvs[2], m01, m12, m20]);
+    const m01 = getOrCreateMidpoint(fvs[0]!, fvs[1]!);
+    const m12 = getOrCreateMidpoint(fvs[1]!, fvs[2]!);
+    const m20 = getOrCreateMidpoint(fvs[2]!, fvs[0]!);
+    faceMids.push([fvs[0]!, fvs[1]!, fvs[2]!, m01, m12, m20]);
   }
 
   // Add odd vertices
@@ -138,7 +138,8 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
   // Midpoints: m01 (between v0,v1), m12 (between v1,v2), m20 (between v2,v0)
   // New triangles: (v0,m01,m20), (m01,v1,m12), (m20,m12,v2), (m01,m12,m20)
   const newIndices: number[] = [];
-  for (const [v0, v1, v2, m01, m12, m20] of faceMids) {
+  for (const fm of faceMids) {
+    const [v0, v1, v2, m01, m12, m20] = fm as [number, number, number, number, number, number];
     newIndices.push(v0, m01, m20);
     newIndices.push(m01, v1, m12);
     newIndices.push(m20, m12, v2);
@@ -148,9 +149,9 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
   // Rebuild using the indexed constructor
   const positions = new Float32Array(newVertices.length * 3);
   for (let i = 0; i < newVertices.length; i++) {
-    positions[i * 3] = newVertices[i].x;
-    positions[i * 3 + 1] = newVertices[i].y;
-    positions[i * 3 + 2] = newVertices[i].z;
+    positions[i * 3] = newVertices[i]!.x;
+    positions[i * 3 + 1] = newVertices[i]!.y;
+    positions[i * 3 + 2] = newVertices[i]!.z;
   }
 
   // Reconstruct full half-edge connectivity

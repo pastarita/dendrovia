@@ -10,11 +10,11 @@
 import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
 import type { CodeTopology } from '@dendrovia/shared';
-import type { MycologyManifest, FungalSpecimen, MycelialNetwork, FungalGenus } from './types.js';
-import { catalogize } from './SpecimenCatalog.js';
-import { buildNetwork } from './MycelialNetwork.js';
-import { buildCoChurnMap, buildFileContext, classifyGenus } from './GenusMapper.js';
-import { generateSvg } from './assets/SvgTemplates.js';
+import type { MycologyManifest, FungalSpecimen, MycelialNetwork, FungalGenus } from './types';
+import { catalogize } from './SpecimenCatalog';
+import { buildNetwork } from './MycelialNetwork';
+import { buildCoChurnMap, buildFileContext, classifyGenus } from './GenusMapper';
+import { generateSvg } from './assets/SvgTemplates';
 
 export async function distillMycology(
   topology: CodeTopology,

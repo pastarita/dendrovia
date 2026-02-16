@@ -195,7 +195,7 @@ packages/
 
 - [x] `bun test` — 806 tests pass, 0 failures
 - [x] `bun run analyze open-telemetry/opentelemetry-collector` — Go parsing produces 1601 parsed files, 9670 functions, 50 hotspots
-- [ ] `bun run analyze facebook/react` — TS/JS analysis unchanged (no Go files)
+- [x] `bun run analyze facebook/react` — TS/JS analysis unchanged (4419 files, 11389 functions, no regressions)
 - [ ] Verify playground-chronos zoo pages load with real topology data
 - [ ] Verify playground-ludus combat sandbox and balance simulator render correctly
 - [ ] Verify playground-oculus SpacePark and component zoo pages render correctly

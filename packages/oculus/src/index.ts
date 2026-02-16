@@ -36,6 +36,8 @@ export type { CodeReaderProps } from './components/CodeReader';
 export { StatusEffectBar } from './components/StatusEffectBar';
 export { LootPanel } from './components/LootPanel';
 export { FalconModeOverlay } from './components/FalconModeOverlay';
+export { WorldHeader } from './components/WorldHeader';
+export { NavigationBar } from './components/NavigationBar';
 export { Billboard3D } from './components/Billboard3D';
 export type { Billboard3DProps } from './components/Billboard3D';
 

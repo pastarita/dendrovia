@@ -3,7 +3,9 @@
 import type { StoreApi } from "zustand";
 import { useStore } from "zustand";
 import type { DendriteState, SourceNode } from "../types";
+import type { RuntimeStoreState } from "../store/runtime-store";
 import { DT, PILLAR_COLORS, STATUS_COLORS } from "../design-tokens";
+import { LiveMetricsSection } from "./LiveMetricsSection";
 
 // ---------------------------------------------------------------------------
 // Styles
@@ -65,9 +67,10 @@ function badge(bg: string, text: string, label: string): React.ReactNode {
 
 export interface NodeDetailPanelProps {
   store: StoreApi<DendriteState>;
+  runtimeStore?: StoreApi<RuntimeStoreState>;
 }
 
-export function NodeDetailPanel({ store }: NodeDetailPanelProps) {
+export function NodeDetailPanel({ store, runtimeStore }: NodeDetailPanelProps) {
   const selectedNodeId = useStore(store, (s) => s.selectedNodeId);
   const activeFixtureId = useStore(store, (s) => s.activeFixtureId);
   const fixtures = useStore(store, (s) => s.fixtures);
@@ -166,6 +169,11 @@ export function NodeDetailPanel({ store }: NodeDetailPanelProps) {
             })}
           </div>
         </div>
+      )}
+
+      {/* Runtime metrics */}
+      {runtimeStore && (
+        <LiveMetricsSection nodeId={selectedNodeId} runtimeStore={runtimeStore} />
       )}
 
       {/* ID */}

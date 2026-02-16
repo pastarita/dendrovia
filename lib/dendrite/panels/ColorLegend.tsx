@@ -3,7 +3,7 @@
 import type { StoreApi } from "zustand";
 import { useStore } from "zustand";
 import type { DendriteState, ColorMode } from "../types";
-import { DT, STATUS_COLORS, PILLAR_COLORS, FIDELITY_COLORS } from "../design-tokens";
+import { DT, STATUS_COLORS, PILLAR_COLORS, FIDELITY_COLORS, RUNTIME_HEALTH_COLORS } from "../design-tokens";
 
 // ---------------------------------------------------------------------------
 // Legend entries per color mode
@@ -27,10 +27,17 @@ function getFidelityEntries() {
   );
 }
 
+function getRuntimeEntries() {
+  return (Object.entries(RUNTIME_HEALTH_COLORS) as [string, { fill: string }][]).map(
+    ([key, val]) => ({ label: key, color: val.fill })
+  );
+}
+
 const ENTRIES: Record<ColorMode, () => { label: string; color: string }[]> = {
   status: getStatusEntries,
   domain: getDomainEntries,
   fidelity: getFidelityEntries,
+  runtime: getRuntimeEntries,
 };
 
 // ---------------------------------------------------------------------------

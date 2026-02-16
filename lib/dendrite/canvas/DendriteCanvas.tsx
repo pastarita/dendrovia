@@ -11,6 +11,7 @@ import type { Node, Edge } from "@xyflow/react";
 import type { StoreApi } from "zustand";
 import { useStore } from "zustand";
 import type { DendriteState } from "../types";
+import type { RuntimeStoreState } from "../store/runtime-store";
 import { dendritenodeTypes } from "../nodes";
 import { dendriteEdgeTypes } from "../edges";
 import { DT } from "../design-tokens";
@@ -61,9 +62,10 @@ const THEME_CSS = `
 
 export interface DendriteCanvasProps {
   store: StoreApi<DendriteState>;
+  runtimeStore?: StoreApi<RuntimeStoreState>;
 }
 
-export function DendriteCanvas({ store }: DendriteCanvasProps) {
+export function DendriteCanvas({ store, runtimeStore }: DendriteCanvasProps) {
   const nodes = useStore(store, (s) => s.nodes);
   const edges = useStore(store, (s) => s.edges);
   const onNodesChange = useStore(store, (s) => s.onNodesChange);
@@ -135,7 +137,7 @@ export function DendriteCanvas({ store }: DendriteCanvasProps) {
       </ReactFlow>
       <ColorLegend store={store} />
       {selectedNodeId && !selectedEdgeId && (
-        <NodeDetailPanel store={store} />
+        <NodeDetailPanel store={store} runtimeStore={runtimeStore} />
       )}
       {selectedEdgeId && !selectedNodeId && (
         <ContractDetailPanel store={store} />

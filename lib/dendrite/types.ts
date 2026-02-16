@@ -87,12 +87,47 @@ export interface SourceDiagram {
 }
 
 // ---------------------------------------------------------------------------
+// Runtime State Types (for live subsystem observation)
+// ---------------------------------------------------------------------------
+
+export type RuntimeHealth = "healthy" | "degraded" | "error" | "idle";
+
+export interface RuntimeMetric {
+  key: string;
+  value: string | number | boolean;
+  unit?: string;
+}
+
+export interface NodeAction {
+  id: string;
+  label: string;
+  handler: () => void | Promise<void>;
+  confirm?: string;
+  category?: "default" | "danger" | "info";
+}
+
+export interface RuntimeNodeState {
+  nodeId: string;
+  health: RuntimeHealth;
+  metrics: RuntimeMetric[];
+  actions: NodeAction[];
+  lastUpdated: number;
+  statusText?: string;
+}
+
+export interface RuntimeEvent {
+  event: string;
+  timestamp: number;
+  summary?: string;
+}
+
+// ---------------------------------------------------------------------------
 // Layout & Rendering Types
 // ---------------------------------------------------------------------------
 
 export type LayoutDirection = "TB" | "LR";
 
-export type ColorMode = "status" | "domain" | "fidelity";
+export type ColorMode = "status" | "domain" | "fidelity" | "runtime";
 
 export interface LayoutConfig {
   direction: LayoutDirection;
@@ -135,6 +170,9 @@ export interface DendriteState {
   selectedNodeId: string | null;
   selectedEdgeId: string | null;
 
+  // Runtime health map (for runtime color mode)
+  runtimeHealthMap: Map<string, RuntimeHealth> | null;
+
   // Actions
   setFixture: (id: string) => void;
   setDirection: (dir: LayoutDirection) => void;
@@ -146,6 +184,7 @@ export interface DendriteState {
   selectNode: (nodeId: string) => void;
   selectEdge: (edgeId: string) => void;
   clearSelection: () => void;
+  setRuntimeHealthMap: (map: Map<string, RuntimeHealth> | null) => void;
   relayout: () => void;
 
   // ReactFlow callbacks

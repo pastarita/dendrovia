@@ -14,8 +14,10 @@ import type {
   SourceEdge,
   LayoutDirection,
   ColorMode,
+  RuntimeHealth,
 } from "../types";
 import { resolveNodeColor } from "../coloring";
+import { resolveRuntimeColor } from "../coloring/modes";
 import { getVisibleNodes, getHiddenNodeIds } from "./collapse-manager";
 import { DT } from "../design-tokens";
 
@@ -42,7 +44,8 @@ export function transformFixtureToFlow(
   diagram: SourceDiagram,
   collapsed: Set<string>,
   colorMode: ColorMode,
-  phaseFilter: string | null
+  phaseFilter: string | null,
+  runtimeHealthMap?: Map<string, RuntimeHealth>
 ): { nodes: Node[]; edges: Edge[] } {
   const hidden = getHiddenNodeIds(diagram, collapsed);
   let visible = getVisibleNodes(diagram, collapsed);
@@ -66,10 +69,16 @@ export function transformFixtureToFlow(
   const visibleIds = new Set(visible.map((n) => n.id));
 
   const nodes: Node[] = visible.map((sn) => {
-    const colors = resolveNodeColor(colorMode, sn);
+    let colors = resolveNodeColor(colorMode, sn);
     const dims = getDimensions(sn.kind);
     const isCollapsed = collapsed.has(sn.id);
     const hasChildren = (sn.children?.length ?? 0) > 0;
+
+    // In runtime mode, override colors with runtime health if available
+    const runtimeHealth = runtimeHealthMap?.get(sn.id);
+    if (colorMode === "runtime" && runtimeHealth) {
+      colors = resolveRuntimeColor(runtimeHealth);
+    }
 
     return {
       id: sn.id,
@@ -85,6 +94,7 @@ export function transformFixtureToFlow(
         textColor: colors.text,
         isCollapsed,
         hasChildren,
+        runtimeHealth,
       },
       style: {
         width: dims.width,
@@ -170,13 +180,15 @@ export function buildDendriteLayout(
   collapsed: Set<string>,
   direction: LayoutDirection,
   colorMode: ColorMode,
-  phaseFilter: string | null
+  phaseFilter: string | null,
+  runtimeHealthMap?: Map<string, RuntimeHealth>
 ): { nodes: Node[]; edges: Edge[] } {
   const { nodes, edges } = transformFixtureToFlow(
     diagram,
     collapsed,
     colorMode,
-    phaseFilter
+    phaseFilter,
+    runtimeHealthMap
   );
   const positioned = applyDagreLayout(nodes, edges, direction);
   return { nodes: positioned, edges };

@@ -3,12 +3,26 @@
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
 import type { NodeProps } from "@xyflow/react";
-import { DT } from "../design-tokens";
+import { DT, RUNTIME_HEALTH_COLORS } from "../design-tokens";
+import type { RuntimeHealth } from "../types";
+
+const PULSE_CSS = `
+@keyframes dendrite-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+`;
 
 function SectionNodeInner({ data }: NodeProps) {
   const fill = (data.fill as string) ?? DT.panel;
   const textColor = (data.textColor as string) ?? DT.text;
   const status = data.status as string;
+  const runtimeHealth = data.runtimeHealth as RuntimeHealth | undefined;
+
+  const dotColor = runtimeHealth
+    ? RUNTIME_HEALTH_COLORS[runtimeHealth].fill
+    : statusDot(status);
+  const isPulsing = runtimeHealth && runtimeHealth !== "idle";
 
   return (
     <div
@@ -30,13 +44,15 @@ function SectionNodeInner({ data }: NodeProps) {
       }}
       title={data.description as string}
     >
+      {isPulsing && <style>{PULSE_CSS}</style>}
       <span
         style={{
           width: "6px",
           height: "6px",
           borderRadius: "50%",
-          backgroundColor: statusDot(status),
+          backgroundColor: dotColor,
           flexShrink: 0,
+          ...(isPulsing ? { animation: "dendrite-pulse 2s ease-in-out infinite" } : {}),
         }}
       />
       {data.label as string}

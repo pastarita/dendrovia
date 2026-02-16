@@ -20,6 +20,7 @@ import { LootPanel } from './LootPanel';
 import { FalconModeOverlay } from './FalconModeOverlay';
 import { WorldHeader } from './WorldHeader';
 import { NavigationBar } from './NavigationBar';
+import { FalconModeOverlay } from './FalconModeOverlay';
 
 export function HUD() {
   const health = useOculusStore((s) => s.health);

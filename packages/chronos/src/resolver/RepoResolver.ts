@@ -12,6 +12,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { homedir } from 'os';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('CHRONOS', 'resolver');
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -232,20 +235,20 @@ export async function resolveRepo(input: string): Promise<ResolvedRepo> {
 
   if (existsSync(join(localPath, '.git'))) {
     // Repo already cloned — check if refresh is needed
-    console.log(`  Cache hit: ${owner}/${repo}`);
+    log.info({ owner, repo }, 'Cache hit');
     const refreshed = await refreshRepo(localPath);
     clonedFresh = refreshed;
     if (refreshed) {
-      console.log(`  Refreshed to latest HEAD`);
+      log.info('Refreshed to latest HEAD');
     } else {
-      console.log(`  Already up-to-date`);
+      log.info('Already up-to-date');
     }
   } else {
     // Fresh clone
-    console.log(`  Cloning ${owner}/${repo} (depth ${CLONE_DEPTH})...`);
+    log.info({ owner, repo, depth: CLONE_DEPTH }, 'Cloning repository');
     await cloneRepo(remoteUrl, localPath);
     clonedFresh = true;
-    console.log(`  Cloned to ${localPath}`);
+    log.info({ path: localPath }, 'Clone complete');
   }
 
   return {

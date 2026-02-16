@@ -12,6 +12,9 @@
 import { resolve } from 'path';
 import { runPipeline } from './pipeline.js';
 import { chronosGenerated } from '@dendrovia/shared/paths';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('CHRONOS', 'parse');
 
 // ---------------------------------------------------------------------------
 // Argument parsing
@@ -29,14 +32,12 @@ const outputDir = positionalArgs[1] ? resolve(positionalArgs[1]) : chronosGenera
 // ---------------------------------------------------------------------------
 
 async function main() {
-  console.log('='.repeat(60));
-  console.log('  CHRONOS — The Archaeologist');
-  console.log('  Parsing codebase into game-ready data');
-  console.log('='.repeat(60));
-  console.log();
-  console.log(`  Repository: ${repoPath}`);
-  console.log(`  Output:     ${outputDir}`);
-  console.log();
+  process.stdout.write('='.repeat(60) + '\n');
+  process.stdout.write('  CHRONOS — The Archaeologist\n');
+  process.stdout.write('  Parsing codebase into game-ready data\n');
+  process.stdout.write('='.repeat(60) + '\n\n');
+
+  log.info({ repoPath, outputDir }, 'Starting CHRONOS parse');
 
   const result = await runPipeline({
     repoPath,
@@ -44,19 +45,21 @@ async function main() {
     emitEvents,
   });
 
-  console.log('='.repeat(60));
-  console.log('  CHRONOS Complete');
-  console.log('='.repeat(60));
-  console.log(`  Files parsed:     ${result.stats.fileCount}`);
-  console.log(`  Commits analyzed: ${result.stats.commitCount}`);
-  console.log(`  Hotspots found:   ${result.stats.hotspotCount}`);
-  console.log(`  Contributors:     ${result.stats.contributorCount}`);
-  console.log(`  Total time:       ${result.stats.duration.toFixed(2)}s`);
-  console.log(`  Output:           ${outputDir}`);
-  console.log();
+  process.stdout.write('='.repeat(60) + '\n');
+  process.stdout.write('  CHRONOS Complete\n');
+  process.stdout.write('='.repeat(60) + '\n');
+
+  log.info({
+    filesParsed: result.stats.fileCount,
+    commitsAnalyzed: result.stats.commitCount,
+    hotspotsFound: result.stats.hotspotCount,
+    contributors: result.stats.contributorCount,
+    totalTime: `${result.stats.duration.toFixed(2)}s`,
+    outputDir,
+  }, 'CHRONOS parse complete');
 }
 
 main().catch(err => {
-  console.error('CHRONOS failed:', err);
+  log.fatal(err, 'CHRONOS failed');
   process.exit(1);
 });

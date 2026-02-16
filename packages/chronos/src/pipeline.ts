@@ -14,6 +14,7 @@ import { profileContributors } from './builder/ContributorProfiler.js';
 import { buildFileTree, countFiles, countDirectories } from './builder/TreeBuilder.js';
 import { buildTopology, writeOutputFiles } from './builder/TopologyBuilder.js';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import type { ParsedFile } from '@dendrovia/shared';
 import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer.js';
 import type { TopologyOutput } from './builder/TopologyBuilder.js';
@@ -64,11 +65,7 @@ export interface PipelineResult {
   };
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function log(silent: boolean, ...args: unknown[]) {
-  if (!silent) console.log(...args);
-}
+const log = createLogger('CHRONOS', 'pipeline');
 
 // ── Pipeline ─────────────────────────────────────────────────────────────────
 
@@ -80,6 +77,9 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     emitEvents = false,
     silent = false,
   } = options;
+
+  const savedLevel = log.level;
+  if (silent) log.level = 'silent';
 
   const t0 = performance.now();
 
@@ -94,38 +94,38 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
 
   // ── Step 1: Git metadata ────────────────────────────────────────────────
   const t1 = performance.now();
-  log(silent, '[1/6] Extracting git history...');
+  log.info({ step: '1/6' }, 'Extracting git history');
 
   const headHash = await getHeadHash(repoPath);
-  log(silent, `  HEAD: ${headHash.slice(0, 8)}`);
+  log.info({ head: headHash.slice(0, 8) }, 'HEAD resolved');
 
   const commits = await parseGitHistory(repoPath);
-  log(silent, `  ${commits.length} commits parsed`);
+  log.info({ commits: commits.length }, 'Commits parsed');
 
   const repoMetaBase = await extractRepositoryMetadata(repoPath, { headHash });
-  log(silent, `  Branch: ${repoMetaBase.currentBranch} (${repoMetaBase.branchCount} branches)`);
+  log.info({ branch: repoMetaBase.currentBranch, branchCount: repoMetaBase.branchCount }, 'Branch info');
 
   const elapsed1 = ((performance.now() - t1) / 1000).toFixed(2);
-  log(silent, `  Done in ${elapsed1}s\n`);
+  log.info({ step: '1/6', elapsed: elapsed1 }, 'Git metadata complete');
 
   // ── Step 2: File inventory ──────────────────────────────────────────────
   const t2 = performance.now();
-  log(silent, '[2/6] Building file inventory...');
+  log.info({ step: '2/6' }, 'Building file inventory');
 
   const allFiles = await listFilesAtHead(repoPath);
   const relevantFiles = allFiles.filter(f => !shouldIgnore(f));
-  log(silent, `  ${allFiles.length} tracked files, ${relevantFiles.length} after filtering`);
+  log.info({ total: allFiles.length, filtered: relevantFiles.length }, 'File inventory built');
 
   const elapsed2 = ((performance.now() - t2) / 1000).toFixed(2);
-  log(silent, `  Done in ${elapsed2}s\n`);
+  log.info({ step: '2/6', elapsed: elapsed2 }, 'File inventory complete');
 
   // ── Step 3: AST parsing ─────────────────────────────────────────────────
   const t3 = performance.now();
-  log(silent, '[3/6] Parsing code structure (AST)...');
+  log.info({ step: '3/6' }, 'Parsing code structure (AST)');
 
   const parseableFiles = relevantFiles.filter(f => canParse(f));
   const nonParseableFiles = relevantFiles.filter(f => !canParse(f));
-  log(silent, `  ${parseableFiles.length} parseable (TS/JS/Go), ${nonParseableFiles.length} other`);
+  log.info({ parseable: parseableFiles.length, other: nonParseableFiles.length }, 'File categorization');
 
   const astResults = parseFiles(
     parseableFiles.map(f => join(repoPath, f)),
@@ -150,10 +150,10 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     }
   }
 
-  log(silent, `  ${astResults.length} files AST-parsed, ${totalFunctions} functions analyzed`);
+  log.info({ astParsed: astResults.length, functions: totalFunctions }, 'AST parsing done');
 
   const elapsed3 = ((performance.now() - t3) / 1000).toFixed(2);
-  log(silent, `  Done in ${elapsed3}s\n`);
+  log.info({ step: '3/6', elapsed: elapsed3 }, 'AST parsing complete');
 
   if (emitEvents) {
     await getEventBus().emit(GameEvents.PARSE_COMPLETE, { files: allParsedFiles });
@@ -161,41 +161,38 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
 
   // ── Step 4: Hotspot detection ───────────────────────────────────────────
   const t4 = performance.now();
-  log(silent, '[4/6] Detecting hotspots...');
+  log.info({ step: '4/6' }, 'Detecting hotspots');
 
   const { hotspots, temporalCouplings } = detectHotspots(allParsedFiles, commits);
 
   const dangerZones = hotspots.filter(h => h.riskScore > 0.5).length;
-  log(silent, `  ${hotspots.length} hotspots ranked, ${dangerZones} in danger zone (risk > 0.5)`);
-  log(silent, `  ${temporalCouplings.length} temporal couplings detected`);
+  log.info({ hotspots: hotspots.length, dangerZones, temporalCouplings: temporalCouplings.length }, 'Hotspots detected');
 
   const elapsed4 = ((performance.now() - t4) / 1000).toFixed(2);
-  log(silent, `  Done in ${elapsed4}s\n`);
+  log.info({ step: '4/6', elapsed: elapsed4 }, 'Hotspot detection complete');
 
   // ── Step 5: Contributor profiling ───────────────────────────────────────
   const t5 = performance.now();
-  log(silent, '[5/6] Profiling contributors...');
+  log.info({ step: '5/6' }, 'Profiling contributors');
 
   const contributors = profileContributors(commits);
 
-  if (!silent) {
-    for (const c of contributors.slice(0, 5)) {
-      console.log(`  ${c.name}: ${c.archetype} (${c.commitCount} commits)`);
-    }
-    if (contributors.length > 5) {
-      console.log(`  ... and ${contributors.length - 5} more`);
-    }
+  for (const c of contributors.slice(0, 5)) {
+    log.info({ contributor: c.name, archetype: c.archetype, commits: c.commitCount }, 'Contributor profiled');
+  }
+  if (contributors.length > 5) {
+    log.info({ remaining: contributors.length - 5 }, 'Additional contributors');
   }
 
   const elapsed5 = ((performance.now() - t5) / 1000).toFixed(2);
-  log(silent, `  Done in ${elapsed5}s\n`);
+  log.info({ step: '5/6', elapsed: elapsed5 }, 'Contributor profiling complete');
 
   // ── Step 6: Assembly & output ───────────────────────────────────────────
   const t6 = performance.now();
-  log(silent, '[6/6] Assembling topology...');
+  log.info({ step: '6/6' }, 'Assembling topology');
 
   const tree = buildFileTree(allParsedFiles, basename(repoPath));
-  log(silent, `  Tree: ${countFiles(tree)} files in ${countDirectories(tree)} directories`);
+  log.info({ files: countFiles(tree), directories: countDirectories(tree) }, 'File tree built');
 
   const uniqueLanguages = [...new Set(allParsedFiles.map(f => f.language))].sort();
   const uniqueContributors = new Set(commits.map(c => c.author)).size;
@@ -222,15 +219,13 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
 
   const writtenFiles = await writeOutputFiles(output, outputDir);
 
-  if (!silent) {
-    for (const f of writtenFiles) {
-      const size = (Bun.file(f).size / 1024).toFixed(1);
-      console.log(`  Wrote ${basename(f)} (${size} KB)`);
-    }
+  for (const f of writtenFiles) {
+    const size = (Bun.file(f).size / 1024).toFixed(1);
+    log.info({ file: basename(f), sizeKB: size }, 'Output written');
   }
 
   const elapsed6 = ((performance.now() - t6) / 1000).toFixed(2);
-  log(silent, `  Done in ${elapsed6}s\n`);
+  log.info({ step: '6/6', elapsed: elapsed6 }, 'Assembly complete');
 
   if (emitEvents) {
     await getEventBus().emit(GameEvents.TOPOLOGY_GENERATED, {
@@ -252,6 +247,8 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
   );
 
   const duration = (performance.now() - t0) / 1000;
+
+  log.level = savedLevel;
 
   return {
     output,

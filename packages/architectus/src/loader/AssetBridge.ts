@@ -24,6 +24,8 @@ import type {
   FungalSpecimen,
   MycelialNetwork,
   SerializedMeshData,
+  StoryArc,
+  SegmentAssets,
 } from '@dendrovia/shared';
 import { deserializeToFlat } from '@dendrovia/imaginarium';
 import type { FlatMeshData } from '@dendrovia/imaginarium';
@@ -45,6 +47,10 @@ export interface GeneratedAssets {
    *  manifest.meshes entries via deserializeToFlat(). Null until loaded,
    *  empty map if no meshes are referenced in the manifest. */
   meshes: Map<string, FlatMeshData> | null;
+  /** Story arc data loaded from story-arc.json. Null if not available. */
+  storyArc: StoryArc | null;
+  /** Per-segment distilled assets. Null if not available. */
+  segmentAssets: SegmentAssets[] | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -308,13 +314,33 @@ export async function loadGeneratedAssets(
     }
   }
 
+  // 7. Load story arc and segment assets if referenced in the manifest.
+  let storyArc: StoryArc | null = null;
+  let segmentAssets: SegmentAssets[] | null = null;
+  if (manifest.storyArc) {
+    [storyArc, segmentAssets] = await Promise.all([
+      loadJson<StoryArc>(
+        manifest.storyArc.arc, manifestPath, loader,
+        PRIORITY.VISIBLE, 'json',
+      ),
+      loadJson<SegmentAssets[]>(
+        manifest.storyArc.segmentAssets, manifestPath, loader,
+        PRIORITY.VISIBLE, 'json',
+      ),
+    ]);
+    if (storyArc) {
+      console.log(`[ARCHITECTUS] Loaded story arc with ${storyArc.segments.length} segments`);
+    }
+  }
+
   const assetCount =
     Object.keys(palettes).length +
     Object.keys(shaders).length +
     (lsystem ? 1 : 0) +
     (noise ? 1 : 0) +
     (mycology ? 1 : 0) +
-    (meshes ? meshes.size : 0);
+    (meshes ? meshes.size : 0) +
+    (storyArc ? 1 : 0);
 
   console.log(`[ARCHITECTUS] Loaded ${assetCount} generated assets`);
 
@@ -327,5 +353,7 @@ export async function loadGeneratedAssets(
     shaders,
     mycology,
     meshes,
+    storyArc,
+    segmentAssets,
   };
 }

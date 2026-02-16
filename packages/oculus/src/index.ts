@@ -42,6 +42,7 @@ export {
   IconBadge,
   StatLabel,
   Tooltip,
+  OrnateFrame,
 } from './components/primitives';
 export type {
   PanelProps,
@@ -50,6 +51,10 @@ export type {
   IconBadgeProps,
   StatLabelProps,
   TooltipProps,
+  OrnateFrameProps,
+  PillarId,
+  FrameVariant,
+  PillarPalette,
 } from './components/primitives';
 
 // ── Hooks ────────────────────────────────────────────

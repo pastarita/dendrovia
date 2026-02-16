@@ -4,7 +4,6 @@
   "private": true,
   "description": "Quest Iteration 1: Thin-shell demo with narrative landing + toy dendrite scene. Archived as a learning artifact.",
   "scripts": {
-    "dev": "next dev --port 3030 --webpack",
     "build": "next build",
     "start": "next start --port 3030"
   },

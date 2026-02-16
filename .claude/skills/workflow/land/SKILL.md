@@ -1,6 +1,6 @@
 # Skill: Landing Workflow
 
-> Semantic commit segmentation → rebase → PR description → push
+> Semantic commit segmentation → PR description → rebase → push
 
 ## Activation
 
@@ -71,26 +71,28 @@ For each planned commit:
 
 **Never use `git add -A` or `git add .`** — always stage specific files.
 
-### Phase 4: Rebase (Conditional)
-
-1. `git fetch origin main`
-2. Check if main has new commits: `git log HEAD..origin/main --oneline`
-3. If yes: `git rebase origin/main` (resolve conflicts if any)
-4. If no: skip rebase
-
-### Phase 5: Push
-
-1. `git push origin HEAD` (or `git push -u origin HEAD` if no upstream)
-2. If rejected due to rebase divergence, confirm with user before force-pushing
-
-### Phase 6: PR Description
+### Phase 4: PR Description
 
 Invoke the **pr-workflow** skill:
 1. Read all mandatory pre-flight rules
 2. Gather metadata from the full commit range on this branch
 3. Generate Coat of Arms via pr-heraldry sub-skill
 4. Write description to `docs/pr-descriptions/PR_DESCRIPTION_{NAME}.md`
-5. Commit and push the description file
+5. Commit the description file (it will be rebased and pushed with the rest)
+
+**Why before rebase:** The PR description is committed content. It should be part of the branch's commit history and travel through rebase like every other commit.
+
+### Phase 5: Rebase (Conditional)
+
+1. `git fetch origin main`
+2. Check if main has new commits: `git log HEAD..origin/main --oneline`
+3. If yes: `git rebase origin/main` (resolve conflicts if any)
+4. If no: skip rebase
+
+### Phase 6: Push
+
+1. `git push origin HEAD` (or `git push -u origin HEAD` if no upstream)
+2. If rejected due to rebase divergence, use `git push --force-with-lease` (safe force push)
 
 ## Output
 
@@ -110,17 +112,19 @@ The branch is pushed with:
 | Skip rebase | Always fetch and check for divergence |
 | Amend previous commits | Create new commits; history is append-only |
 | Commit secrets or .env files | Check staged files before each commit |
+| Stash before rebase | Commit first, then rebase (stash IS a commit) |
+| Write PR description after push | Write and commit PR description before rebase |
 
 ## Cross-References
 
 | Related | Purpose |
 |---------|---------|
-| `pr-workflow` SKILL | PR description generation (Phase 6) |
+| `pr-workflow` SKILL | PR description generation (Phase 4) |
 | `pr-heraldry` SKILL | Coat of Arms classification |
 | `BRANCH_WORKFLOW.rules.md` | Commit message format |
 | `CASTLE_WALLS.rules.md` | Pre-commit quality gates |
 
 ---
 
-_Version: 1.0.0_
-_Created: 2026-02-15_
+_Version: 1.1.0_
+_Updated: 2026-02-16_

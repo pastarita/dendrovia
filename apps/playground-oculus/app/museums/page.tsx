@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 const PAGES = [
-  { name: "Event Flow Exhibition", href: "/museums/event-flow", desc: "Interactive catalog of all 29 GameEvents with payload inspection" },
-  { name: "Cross-Pillar Interface Map", href: "/museums/cross-pillar", desc: "OCULUS in the six-pillar architecture — upstream providers, downstream consumers" },
+  { name: "Event Flow Exhibition", href: "/museums/event-flow", desc: "All 29 GameEvents with search, group headers, and payload inspection" },
+  { name: "Cross-Pillar Interface Map", href: "/museums/cross-pillar", desc: "Pillars and data flows — searchable, filterable, with pipeline diagrams" },
 ];
 
 export default function MuseumsPage() {

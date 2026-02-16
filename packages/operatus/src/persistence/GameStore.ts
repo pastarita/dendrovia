@@ -24,7 +24,7 @@ import type {
   Item,
   GameSaveState,
 } from '@dendrovia/shared';
-import { createDendroviaStorage, SAVE_VERSION } from './StatePersistence.js';
+import { createDendroviaStorage, SAVE_VERSION } from './StatePersistence';
 
 // ── State Shape ──────────────────────────────────────────────────
 

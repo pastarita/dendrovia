@@ -13,11 +13,11 @@
  * Feature-detects OPFS and transparently falls back to IDB-only.
  */
 
-import { OPFSCache, isOPFSSupported } from './OPFSCache.js';
-import { IDBCache } from './IDBCache.js';
+import { OPFSCache, isOPFSSupported } from './OPFSCache';
+import { IDBCache } from './IDBCache';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { CacheUpdatedEvent } from '@dendrovia/shared';
-import type { CacheStats } from './OPFSCache.js';
+import type { CacheStats } from './OPFSCache';
 
 export type CacheTier = 'memory' | 'opfs' | 'idb' | 'network';
 

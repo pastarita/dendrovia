@@ -9,6 +9,7 @@ import { TurtleInterpreter, type NodeMarker } from '../systems/TurtleInterpreter
 import { BranchInstances } from './BranchInstances';
 import { NodeInstances } from './NodeInstances';
 import { MushroomInstances } from './MushroomInstances';
+import { SDFBackdrop } from './SDFBackdrop';
 import { useRendererStore } from '../store/useRendererStore';
 
 /**
@@ -96,8 +97,9 @@ function BranchTracker({ nodes }: { nodes: NodeMarker[] }) {
 }
 
 export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverride }: DendriteWorldProps) {
-  // Pull generated assets from the store (loaded by AssetBridge)
+  // Pull generated assets and SDF backdrop toggle from the store
   const generatedAssets = useRendererStore((s) => s.generatedAssets);
+  const sdfBackdrop = useRendererStore((s) => s.sdfBackdrop);
 
   // Generate tree geometry from topology (memoized — expensive computation)
   // When IMAGINARIUM provides L-system rules, use its angle for the interpreter.
@@ -114,8 +116,23 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
   const mushroomSpecimens = generatedAssets?.mycology?.specimens ?? null;
   const mushroomMeshes = generatedAssets?.meshes ?? null;
 
+  // Resolve first available shader source for SDF backdrop
+  const firstShaderSource = useMemo(() => {
+    if (!generatedAssets?.shaders) return null;
+    const entries = Object.values(generatedAssets.shaders);
+    return entries.length > 0 ? entries[0] : null;
+  }, [generatedAssets?.shaders]);
+
   return (
     <group name="dendrite-world">
+      {/* SDF backdrop — fullscreen raymarching shader behind the scene */}
+      {sdfBackdrop && firstShaderSource && (
+        <SDFBackdrop
+          shaderSource={firstShaderSource}
+          palette={palette}
+        />
+      )}
+
       {/* Branch proximity tracker — emits BRANCH_ENTERED events */}
       <BranchTracker nodes={treeGeometry.nodes} />
 

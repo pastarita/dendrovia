@@ -2,6 +2,7 @@
  * ManifestGenerator — collects artifact paths and writes manifest.json.
  */
 
+import { basename } from 'path';
 import type { AssetManifest, SDFShader, ProceduralPalette, MeshManifestEntry } from '@dendrovia/shared';
 import { hashString } from '../utils/hash.js';
 
@@ -9,6 +10,7 @@ export interface ManifestInput {
   shaders: Array<{ id: string; path: string }>;
   palettes: Array<{ id: string; path: string }>;
   topologyPath: string;
+  topologyHash?: string;
   noisePath?: string;
   lsystemPath?: string;
   mycology?: {
@@ -36,24 +38,35 @@ export function generateManifest(input: ManifestInput): AssetManifest {
     palettes[p.id] = p.path;
   }
 
-  // Compute overall checksum from all artifact paths
-  const allPaths = [
+  // Content-based checksum: includes paths, topology hash, and asset counts
+  const checksumParts = [
     ...input.shaders.map(s => s.path),
     ...input.palettes.map(p => p.path),
-    input.topologyPath,
     input.noisePath ?? '',
     input.lsystemPath ?? '',
+    input.topologyHash ?? '',
+    `mycology:${input.mycology?.specimenCount ?? 0}`,
+    `meshes:${input.meshes ? Object.keys(input.meshes).length : 0}`,
+    `segments:${input.storyArc?.segmentCount ?? 0}`,
   ].filter(Boolean);
 
-  const checksum = hashString(allPaths.sort().join(':'));
+  const checksum = hashString(checksumParts.sort().join(':'));
 
   const manifest: AssetManifest = {
     version: '1.0.0',
     shaders,
     palettes,
-    topology: input.topologyPath,
+    topology: basename(input.topologyPath),
     checksum,
   };
+
+  if (input.noisePath) {
+    manifest.noise = input.noisePath;
+  }
+
+  if (input.lsystemPath) {
+    manifest.lsystem = input.lsystemPath;
+  }
 
   if (input.mycology) {
     manifest.mycology = input.mycology;

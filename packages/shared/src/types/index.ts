@@ -426,6 +426,10 @@ export interface AssetManifest {
   palettes: Record<string, string>;
   topology: string; // Path to topology.json
   checksum: string;
+  /** Path to noise config JSON */
+  noise?: string;
+  /** Path to L-system config JSON */
+  lsystem?: string;
   mycology?: {
     specimens: string;    // path to specimens.json
     network: string;      // path to network.json

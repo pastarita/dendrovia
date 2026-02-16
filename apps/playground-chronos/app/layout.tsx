@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { PillarNav } from "@repo/ui/pillar-nav";
+import { DomainNav } from "@repo/ui/domain-nav";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -16,22 +18,6 @@ export const metadata: Metadata = {
   description: "The Chronicler — Git History + AST Parsing playground",
 };
 
-const DOMAINS = [
-  { name: "Museums", href: "/museums", icon: "🏛️" },
-  { name: "Zoos", href: "/zoos", icon: "🦁" },
-  { name: "Halls", href: "/halls", icon: "🏰" },
-  { name: "Gyms", href: "/gyms", icon: "🏋️" },
-  { name: "Generators", href: "/generators", icon: "⚡" },
-  { name: "Spatial Docs", href: "/spatial-docs", icon: "📐" },
-];
-
-const CROSS_NAV = [
-  { name: "ARCHITECTUS", port: 3010, emoji: "🏛️" },
-  { name: "IMAGINARIUM", port: 3012, emoji: "🎨" },
-  { name: "LUDUS", port: 3013, emoji: "🎮" },
-  { name: "OCULUS", port: 3014, emoji: "👁️" },
-  { name: "OPERATUS", port: 3015, emoji: "💾" },
-];
 
 export default function RootLayout({
   children,
@@ -60,47 +46,9 @@ export default function RootLayout({
             </a>
             <div style={{ fontSize: "0.75rem", opacity: 0.5 }}>:3012 · Amber</div>
 
-            <div>
-              <div style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.4, marginBottom: "0.5rem" }}>
-                SpacePark Domains
-              </div>
-              {DOMAINS.map((d) => (
-                <a
-                  key={d.href}
-                  href={d.href}
-                  style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.4rem 0.5rem", borderRadius: "4px", fontSize: "0.9rem" }}
-                >
-                  <span>{d.icon}</span>
-                  <span>{d.name}</span>
-                </a>
-              ))}
-            </div>
+            <DomainNav currentPillar="CHRONOS" />
 
-            <div>
-              <div style={{ fontSize: "0.7rem", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.4, marginBottom: "0.5rem" }}>
-                Other Pillars
-              </div>
-              {CROSS_NAV.map((p) => (
-                <a
-                  key={p.port}
-                  href={`http://localhost:${p.port}`}
-                  style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.4rem 0.5rem", borderRadius: "4px", fontSize: "0.85rem" }}
-                >
-                  <span>{p.emoji}</span>
-                  <span>{p.name}</span>
-                  <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:{p.port}</span>
-                </a>
-              ))}
-            </div>
-
-            <div style={{ marginTop: "auto" }}>
-              <a
-                href="http://localhost:3010"
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.5rem", borderRadius: "4px", fontSize: "0.85rem", border: "1px solid #333" }}
-              >
-                🌳 Dendrovia Quest <span style={{ fontSize: "0.7rem", opacity: 0.4, marginLeft: "auto" }}>:3010</span>
-              </a>
-            </div>
+            <PillarNav currentPillar="CHRONOS" />
           </nav>
           <main style={{ flex: 1, padding: "2rem", overflow: "auto" }}>
             {children}

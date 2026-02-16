@@ -14,6 +14,7 @@
 | "PR description" / "write PR" | `PR_DESCRIPTION_CONTENT.rules.md`, `PR_HERALDRY_COMPLETENESS.rules.md` |
 | Creating a branch | `BRANCH_WORKFLOW.rules.md` |
 | Committing code | `BRANCH_WORKFLOW.rules.md` |
+| "land this" / "land it" / "let's land" | `.claude/skills/workflow/land/SKILL.md` |
 
 ## Diagrams & Visualization
 
@@ -40,6 +41,7 @@
 | `pr-workflow` | `.claude/skills/workflow/pr/SKILL.md` | Full PR creation workflow |
 | `pr-heraldry` | `.claude/skills/heraldry/pr-heraldry/SKILL.md` | Coat of Arms generation |
 | `pr-heterogeneous` | `.claude/skills/workflow/pr-heterogeneous/SKILL.md` | Multi-feature-space PRs |
+| `land` | `.claude/skills/workflow/land/SKILL.md` | Semantic commit segmentation + rebase + PR |
 
 ---
 
@@ -66,10 +68,10 @@ Every rule file MUST be reachable from this index AND from at least one skill fi
 | `PR_DESCRIPTION_CONTENT.rules.md` | pr-workflow, pr-heterogeneous, pr-heraldry |
 | `PR_HERALDRY_COMPLETENESS.rules.md` | pr-workflow, pr-heraldry |
 | `DIAGRAM_CONVENTIONS.rules.md` | pr-workflow |
-| `BRANCH_WORKFLOW.rules.md` | pr-workflow, Castle Walls (pre-push) |
+| `BRANCH_WORKFLOW.rules.md` | pr-workflow, land, Castle Walls (pre-push) |
 | `CASTLE_WALLS.rules.md` | Castle Walls hooks, policy engine |
 
 ---
 
-_Version: 1.1.0_
-_Updated: 2026-02-12_
+_Version: 1.2.0_
+_Updated: 2026-02-15_

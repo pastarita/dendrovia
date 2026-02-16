@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const PAGES = [
+  { name: "Dendrite Observatory", href: "/gyms/dendrite", desc: "Interactive 2D flow visualization of the OCULUS pipeline" },
   { name: "HUD Sandbox", href: "/gyms/hud-sandbox", desc: "Sliders and buttons fire real EventBus events — watch the HUD respond" },
   { name: "Battle Arena", href: "/gyms/battle-arena", desc: "Start mock combat, cast spells, watch battle log populate, experience victory/defeat" },
 ];

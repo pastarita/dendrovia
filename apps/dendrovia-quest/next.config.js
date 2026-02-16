@@ -14,6 +14,7 @@ const nextConfig = {
     '@dendrovia/ludus',
     '@dendrovia/oculus',
     '@dendrovia/operatus',
+    '@dendrovia/dendrite',
   ],
 };
 

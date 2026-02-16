@@ -11,6 +11,7 @@ const nextConfig = {
   transpilePackages: [
     '@dendrovia/shared',
     '@dendrovia/oculus',
+    '@dendrovia/dendrite',
   ],
 };
 

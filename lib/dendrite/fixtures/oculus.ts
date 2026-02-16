@@ -1,0 +1,67 @@
+import type { SourceDiagram } from "../types";
+
+export const oculusFixture: SourceDiagram = {
+  id: "oculus",
+  title: "OCULUS",
+  nodes: [
+    { id: "oculus-root", label: "OCULUS", kind: "root", status: "implemented", domain: "oculus" },
+
+    // Phase: Components
+    { id: "oculus-components", label: "Components", kind: "phase", status: "implemented", domain: "oculus", children: ["oculus-hud", "oculus-battle-ui", "oculus-code-reader", "oculus-minimap", "oculus-quest-log", "oculus-billboard", "oculus-falcon", "oculus-miller"] },
+    { id: "oculus-hud", label: "HUD", kind: "section", status: "implemented", domain: "oculus", description: "Heads-up display overlay" },
+    { id: "oculus-battle-ui", label: "BattleUI", kind: "section", status: "implemented", domain: "oculus", description: "Combat interface" },
+    { id: "oculus-code-reader", label: "CodeReader", kind: "section", status: "implemented", domain: "oculus", description: "Source code viewer panel" },
+    { id: "oculus-minimap", label: "Minimap", kind: "section", status: "implemented", domain: "oculus", description: "2D world overview" },
+    { id: "oculus-quest-log", label: "QuestLog", kind: "section", status: "implemented", domain: "oculus", description: "Quest tracking UI" },
+    { id: "oculus-billboard", label: "Billboard3D", kind: "section", status: "implemented", domain: "oculus", description: "3D-attached label billboard" },
+    { id: "oculus-falcon", label: "FalconModeOverlay", kind: "section", status: "implemented", domain: "oculus", description: "Bird's-eye exploration mode" },
+    { id: "oculus-miller", label: "MillerColumns", kind: "section", status: "implemented", domain: "oculus", description: "File tree navigation columns" },
+
+    // Phase: Primitives
+    { id: "oculus-primitives", label: "Primitives", kind: "phase", status: "implemented", domain: "oculus", children: ["oculus-panel", "oculus-icon", "oculus-progress", "oculus-stat", "oculus-tooltip"] },
+    { id: "oculus-panel", label: "Panel", kind: "section", status: "implemented", domain: "oculus", description: "Base container primitive" },
+    { id: "oculus-icon", label: "IconBadge", kind: "section", status: "implemented", domain: "oculus", description: "Icon with badge indicator" },
+    { id: "oculus-progress", label: "ProgressBar", kind: "section", status: "implemented", domain: "oculus", description: "Progress bar primitive" },
+    { id: "oculus-stat", label: "StatLabel", kind: "section", status: "implemented", domain: "oculus", description: "Key-value stat display" },
+    { id: "oculus-tooltip", label: "Tooltip", kind: "section", status: "implemented", domain: "oculus", description: "Hover tooltip" },
+
+    // Phase: Hooks
+    { id: "oculus-hooks", label: "Hooks", kind: "phase", status: "implemented", domain: "oculus", children: ["oculus-code-loader", "oculus-event-subs", "oculus-input", "oculus-keyboard"] },
+    { id: "oculus-code-loader", label: "useCodeLoader", kind: "section", status: "implemented", domain: "oculus", description: "Async code file loading hook" },
+    { id: "oculus-event-subs", label: "useEventSubscriptions", kind: "section", status: "implemented", domain: "oculus", description: "Game event subscription hook" },
+    { id: "oculus-input", label: "useInputCapture", kind: "section", status: "implemented", domain: "oculus", description: "Input capture and debounce" },
+    { id: "oculus-keyboard", label: "useKeyboardShortcuts", kind: "section", status: "implemented", domain: "oculus", description: "Keyboard shortcut bindings" },
+
+    // Phase: Store
+    { id: "oculus-store", label: "Store", kind: "phase", status: "implemented", domain: "oculus", children: ["oculus-provider", "oculus-use-store"] },
+    { id: "oculus-provider", label: "OculusProvider", kind: "section", status: "implemented", domain: "oculus", description: "React context provider" },
+    { id: "oculus-use-store", label: "useOculusStore", kind: "section", status: "implemented", domain: "oculus", description: "Zustand store hook" },
+  ],
+  edges: [
+    { source: "oculus-root", target: "oculus-components", relation: "pipeline-flow" },
+    { source: "oculus-root", target: "oculus-primitives", relation: "pipeline-flow" },
+    { source: "oculus-primitives", target: "oculus-components", relation: "pipeline-flow" },
+    { source: "oculus-root", target: "oculus-hooks", relation: "pipeline-flow" },
+    { source: "oculus-hooks", target: "oculus-store", relation: "pipeline-flow" },
+
+    { source: "oculus-components", target: "oculus-hud", relation: "containment" },
+    { source: "oculus-components", target: "oculus-battle-ui", relation: "containment" },
+    { source: "oculus-components", target: "oculus-code-reader", relation: "containment" },
+    { source: "oculus-components", target: "oculus-minimap", relation: "containment" },
+    { source: "oculus-components", target: "oculus-quest-log", relation: "containment" },
+    { source: "oculus-components", target: "oculus-billboard", relation: "containment" },
+    { source: "oculus-components", target: "oculus-falcon", relation: "containment" },
+    { source: "oculus-components", target: "oculus-miller", relation: "containment" },
+    { source: "oculus-primitives", target: "oculus-panel", relation: "containment" },
+    { source: "oculus-primitives", target: "oculus-icon", relation: "containment" },
+    { source: "oculus-primitives", target: "oculus-progress", relation: "containment" },
+    { source: "oculus-primitives", target: "oculus-stat", relation: "containment" },
+    { source: "oculus-primitives", target: "oculus-tooltip", relation: "containment" },
+    { source: "oculus-hooks", target: "oculus-code-loader", relation: "containment" },
+    { source: "oculus-hooks", target: "oculus-event-subs", relation: "containment" },
+    { source: "oculus-hooks", target: "oculus-input", relation: "containment" },
+    { source: "oculus-hooks", target: "oculus-keyboard", relation: "containment" },
+    { source: "oculus-store", target: "oculus-provider", relation: "containment" },
+    { source: "oculus-store", target: "oculus-use-store", relation: "containment" },
+  ],
+};

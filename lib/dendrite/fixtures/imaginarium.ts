@@ -1,0 +1,74 @@
+import type { SourceDiagram } from "../types";
+
+export const imaginariumFixture: SourceDiagram = {
+  id: "imaginarium",
+  title: "IMAGINARIUM",
+  nodes: [
+    { id: "imag-root", label: "IMAGINARIUM", kind: "root", status: "implemented", domain: "imaginarium" },
+
+    // Phase: Generate
+    { id: "imag-generate", label: "Generate", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-artgen", "imag-prompt"] },
+    { id: "imag-artgen", label: "ArtGen", kind: "section", status: "implemented", domain: "imaginarium", description: "AI art generation (default: skip)" },
+    { id: "imag-prompt", label: "PromptBuilder", kind: "section", status: "implemented", domain: "imaginarium", description: "Prompt generation from topology" },
+
+    // Phase: Distill
+    { id: "imag-distill", label: "Distill", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-color", "imag-sdf", "imag-lsystem", "imag-noise", "imag-turtle"] },
+    { id: "imag-color", label: "ColorExtractor", kind: "section", status: "implemented", domain: "imaginarium", description: "OKLCH palette extraction" },
+    { id: "imag-sdf", label: "SDFCompiler", kind: "section", status: "implemented", domain: "imaginarium", description: "GLSL signed distance function compiler" },
+    { id: "imag-lsystem", label: "LSystemCompiler", kind: "section", status: "implemented", domain: "imaginarium", description: "L-System rule generation (depth capped at 5)" },
+    { id: "imag-noise", label: "NoiseGenerator", kind: "section", status: "implemented", domain: "imaginarium", description: "Perlin/Simplex noise generation" },
+    { id: "imag-turtle", label: "TurtleInterpreter", kind: "section", status: "implemented", domain: "imaginarium", description: "L-System turtle graphics interpreter" },
+
+    // Phase: Mycology
+    { id: "imag-mycology", label: "Mycology", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-genus", "imag-morphology", "imag-mycelial", "imag-lore", "imag-specimen", "imag-myco-pipeline"] },
+    { id: "imag-genus", label: "GenusMapper", kind: "section", status: "implemented", domain: "imaginarium", description: "Maps code properties to 20 fungal genera" },
+    { id: "imag-morphology", label: "MorphologyGenerator", kind: "section", status: "implemented", domain: "imaginarium", description: "Generates mushroom morphology from genus" },
+    { id: "imag-mycelial", label: "MycelialNetwork", kind: "section", status: "implemented", domain: "imaginarium", description: "Inter-file dependency network as mycelium" },
+    { id: "imag-lore", label: "LoreGenerator", kind: "section", status: "implemented", domain: "imaginarium", description: "Fungal specimen lore text generation" },
+    { id: "imag-specimen", label: "SpecimenCatalog", kind: "section", status: "implemented", domain: "imaginarium", description: "Catalog of all discovered specimens" },
+    { id: "imag-myco-pipeline", label: "MycologyPipeline", kind: "section", status: "implemented", domain: "imaginarium", description: "Orchestrates mycology sub-pipeline" },
+
+    // Phase: Mesh
+    { id: "imag-mesh", label: "Mesh", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-halfedge", "imag-mesh-pipeline", "imag-genus-pipelines", "imag-mesh-ops"] },
+    { id: "imag-halfedge", label: "HalfEdgeMesh", kind: "section", status: "implemented", domain: "imaginarium", description: "Half-edge mesh data structure" },
+    { id: "imag-mesh-pipeline", label: "MeshPipeline", kind: "section", status: "implemented", domain: "imaginarium", description: "Mesh generation pipeline" },
+    { id: "imag-genus-pipelines", label: "GenusPipelines", kind: "section", status: "implemented", domain: "imaginarium", description: "Per-genus mesh generation" },
+    { id: "imag-mesh-ops", label: "MeshOps", kind: "section", status: "implemented", domain: "imaginarium", description: "Subdivide, smooth, displace operations" },
+
+    // Phase: Cache/Fallback
+    { id: "imag-cache", label: "Cache", kind: "phase", status: "implemented", domain: "imaginarium", children: ["imag-det-cache", "imag-fallback-palettes", "imag-fallback-sdfs"] },
+    { id: "imag-det-cache", label: "DeterministicCache", kind: "section", status: "implemented", domain: "imaginarium", description: "SHA-256 based deterministic caching" },
+    { id: "imag-fallback-palettes", label: "DefaultPalettes", kind: "section", status: "implemented", domain: "imaginarium", description: "Fallback color palettes" },
+    { id: "imag-fallback-sdfs", label: "DefaultSDFs", kind: "section", status: "implemented", domain: "imaginarium", description: "Fallback SDF shapes" },
+  ],
+  edges: [
+    // Pipeline flow
+    { source: "imag-root", target: "imag-generate", relation: "pipeline-flow" },
+    { source: "imag-generate", target: "imag-distill", relation: "pipeline-flow" },
+    { source: "imag-distill", target: "imag-mycology", relation: "pipeline-flow" },
+    { source: "imag-distill", target: "imag-mesh", relation: "pipeline-flow" },
+    { source: "imag-distill", target: "imag-cache", relation: "pipeline-flow" },
+
+    // Containment
+    { source: "imag-generate", target: "imag-artgen", relation: "containment" },
+    { source: "imag-generate", target: "imag-prompt", relation: "containment" },
+    { source: "imag-distill", target: "imag-color", relation: "containment" },
+    { source: "imag-distill", target: "imag-sdf", relation: "containment" },
+    { source: "imag-distill", target: "imag-lsystem", relation: "containment" },
+    { source: "imag-distill", target: "imag-noise", relation: "containment" },
+    { source: "imag-distill", target: "imag-turtle", relation: "containment" },
+    { source: "imag-mycology", target: "imag-genus", relation: "containment" },
+    { source: "imag-mycology", target: "imag-morphology", relation: "containment" },
+    { source: "imag-mycology", target: "imag-mycelial", relation: "containment" },
+    { source: "imag-mycology", target: "imag-lore", relation: "containment" },
+    { source: "imag-mycology", target: "imag-specimen", relation: "containment" },
+    { source: "imag-mycology", target: "imag-myco-pipeline", relation: "containment" },
+    { source: "imag-mesh", target: "imag-halfedge", relation: "containment" },
+    { source: "imag-mesh", target: "imag-mesh-pipeline", relation: "containment" },
+    { source: "imag-mesh", target: "imag-genus-pipelines", relation: "containment" },
+    { source: "imag-mesh", target: "imag-mesh-ops", relation: "containment" },
+    { source: "imag-cache", target: "imag-det-cache", relation: "containment" },
+    { source: "imag-cache", target: "imag-fallback-palettes", relation: "containment" },
+    { source: "imag-cache", target: "imag-fallback-sdfs", relation: "containment" },
+  ],
+};

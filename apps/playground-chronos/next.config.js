@@ -11,6 +11,8 @@ const nextConfig = {
   },
   transpilePackages: [
     '@dendrovia/shared',
+    '@dendrovia/chronos',
+    '@dendrovia/dendrite',
   ],
 };
 

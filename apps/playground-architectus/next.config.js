@@ -13,6 +13,7 @@ const nextConfig = {
     '@dendrovia/shared',
     '@dendrovia/architectus',
     '@dendrovia/imaginarium',
+    '@dendrovia/dendrite',
   ],
   webpack: (config, { isServer }) => {
     config.resolve.extensionAlias = {

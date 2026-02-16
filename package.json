@@ -2,6 +2,7 @@
   "name": "dendrovia",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "Autogamification of Codebase Archaeologization - The Six-Pillar Architecture",
   "workspaces": [
     "packages/*",

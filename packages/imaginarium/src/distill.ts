@@ -45,7 +45,7 @@ try {
     manifest: result.manifestPath,
     durationMs: result.durationMs,
   }, 'Distillation results');
-} catch (err) {
-  log.fatal(err, 'Fatal error');
+} catch (err: unknown) {
+  log.fatal(err instanceof Error ? err : { error: String(err) }, 'Fatal error');
   process.exit(1);
 }

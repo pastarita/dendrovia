@@ -11,6 +11,9 @@
  */
 
 import type { HalfEdgeMesh } from './HalfEdgeMesh.js';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const meshLog = createLogger('IMAGINARIUM', 'mesh-pipeline');
 
 // ---------------------------------------------------------------------------
 // Core types
@@ -93,16 +96,14 @@ export class MeshPipeline {
   }
 
   /** Execute all steps, logging vertex/face counts and timing. */
-  execute(mesh: HalfEdgeMesh, log = false): HalfEdgeMesh {
+  execute(mesh: HalfEdgeMesh, verbose = false): HalfEdgeMesh {
     let current = mesh;
     for (const { name, op } of this.steps) {
       const t0 = performance.now();
       current = op(current);
-      if (log) {
+      if (verbose) {
         const dt = (performance.now() - t0).toFixed(1);
-        console.log(
-          `[MeshPipeline] ${name}: ${current.vertices.length} verts, ${current.faces.length} faces (${dt}ms)`,
-        );
+        meshLog.debug({ step: name, vertices: current.vertices.length, faces: current.faces.length, durationMs: dt }, 'Mesh step complete');
       }
     }
     return current;

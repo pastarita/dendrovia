@@ -7,11 +7,14 @@
 import { existsSync } from 'fs';
 import type { CodeTopology } from '@dendrovia/shared';
 import { validateTopology } from '@dendrovia/shared/schemas';
+import { createLogger } from '@dendrovia/shared/logger';
 import { generateMockTopology } from './MockTopology.js';
+
+const log = createLogger('IMAGINARIUM', 'topology-reader');
 
 export async function readTopology(path: string): Promise<CodeTopology> {
   if (!existsSync(path)) {
-    console.warn(`[IMAGINARIUM] topology.json not found at ${path} — using mock topology`);
+    log.warn({ path }, 'topology.json not found — using mock topology');
     return generateMockTopology();
   }
 

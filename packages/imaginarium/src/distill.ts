@@ -14,6 +14,9 @@
 import { join, resolve } from 'path';
 import { distill } from './pipeline/DistillationPipeline.js';
 import { chronosGenerated, imaginariumGenerated } from '@dendrovia/shared/paths';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('IMAGINARIUM', 'distill');
 
 const args = process.argv.slice(2);
 
@@ -25,22 +28,24 @@ const outputDir = args[1]
   ? resolve(args[1])
   : imaginariumGenerated();
 
-console.log('========================================');
-console.log(' IMAGINARIUM - The Compiler');
-console.log(' AI -> Shader Distillation');
-console.log('========================================\n');
+process.stdout.write('========================================\n');
+process.stdout.write(' IMAGINARIUM - The Compiler\n');
+process.stdout.write(' AI -> Shader Distillation\n');
+process.stdout.write('========================================\n\n');
 
 try {
   const result = await distill(topologyPath, outputDir);
 
-  console.log('\n--- Results ---');
-  console.log(`  Palettes: ${result.palettes.length}`);
-  console.log(`  Shaders:  ${result.shaders.length}`);
-  console.log(`  Noise:    ${result.noise.config.type} (${result.noise.config.octaves} octaves)`);
-  console.log(`  L-System: ${result.lsystem.rule.iterations} iterations`);
-  console.log(`  Manifest: ${result.manifestPath}`);
-  console.log(`  Duration: ${result.durationMs}ms\n`);
+  log.info({
+    palettes: result.palettes.length,
+    shaders: result.shaders.length,
+    noiseType: result.noise.config.type,
+    noiseOctaves: result.noise.config.octaves,
+    lsystemIterations: result.lsystem.rule.iterations,
+    manifest: result.manifestPath,
+    durationMs: result.durationMs,
+  }, 'Distillation results');
 } catch (err) {
-  console.error('[IMAGINARIUM] Fatal error:', err);
+  log.fatal(err, 'Fatal error');
   process.exit(1);
 }

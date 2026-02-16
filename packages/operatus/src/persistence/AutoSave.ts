@@ -111,6 +111,13 @@ export class AutoSave {
       // Touch state to trigger persist write
       const state = useGameStore.getState();
       useGameStore.setState({ character: { ...state.character } });
+
+      // Emit SAVE_COMPLETED (fire-and-forget)
+      const eventBus = getEventBus();
+      eventBus.emit(GameEvents.SAVE_COMPLETED, {
+        trigger,
+        timestamp: Date.now(),
+      }).catch(() => {});
     } catch (err) {
       console.warn(`[OPERATUS] Auto-save (${trigger}) failed:`, err);
     }

@@ -15,6 +15,8 @@
 
 import { OPFSCache, isOPFSSupported } from './OPFSCache.js';
 import { IDBCache } from './IDBCache.js';
+import { getEventBus, GameEvents } from '@dendrovia/shared';
+import type { CacheUpdatedEvent } from '@dendrovia/shared';
 import type { CacheStats } from './OPFSCache.js';
 
 export type CacheTier = 'memory' | 'opfs' | 'idb' | 'network';
@@ -152,6 +154,8 @@ export class CacheManager {
     }
 
     await Promise.all(writes);
+
+    this.emitCacheUpdated({ path, action: 'set', size: data.length });
   }
 
   /**
@@ -169,6 +173,8 @@ export class CacheManager {
     }
 
     await Promise.all(writes);
+
+    this.emitCacheUpdated({ path, action: 'set', size: data.byteLength });
   }
 
   /**
@@ -217,6 +223,8 @@ export class CacheManager {
     }
 
     await Promise.all(deletes);
+
+    this.emitCacheUpdated({ path, action: 'delete' });
   }
 
   /**
@@ -234,6 +242,8 @@ export class CacheManager {
     }
 
     await Promise.all(clears);
+
+    this.emitCacheUpdated({ path: '*', action: 'clear' });
   }
 
   /**
@@ -343,5 +353,12 @@ export class CacheManager {
   /** Whether OPFS is being used (vs IDB-only fallback) */
   get isOPFSActive(): boolean {
     return this.opfsAvailable;
+  }
+
+  // ── Private ─────────────────────────────────────────────────────
+
+  /** Fire-and-forget CACHE_UPDATED event (non-blocking). */
+  private emitCacheUpdated(data: CacheUpdatedEvent): void {
+    getEventBus().emit(GameEvents.CACHE_UPDATED, data).catch(() => {});
   }
 }

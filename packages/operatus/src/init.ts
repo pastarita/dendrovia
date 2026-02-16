@@ -127,8 +127,24 @@ export async function initializeOperatus(
   // ── Step 4: Hydrate game state ─────────────────────────────────
 
   // The Zustand persist middleware auto-hydrates on store creation.
-  // We wait for it to complete before proceeding.
-  await waitForHydration();
+  // We wait for it to complete, but guard against infinite hang
+  // if IndexedDB is corrupted or unavailable.
+  const HYDRATION_TIMEOUT_MS = 5_000;
+  try {
+    await Promise.race([
+      waitForHydration(),
+      new Promise<void>((_, reject) =>
+        setTimeout(
+          () => reject(new Error('Hydration timeout')),
+          HYDRATION_TIMEOUT_MS,
+        ),
+      ),
+    ]);
+  } catch {
+    console.warn(
+      `[OPERATUS] State hydration timed out after ${HYDRATION_TIMEOUT_MS}ms — proceeding with defaults`,
+    );
+  }
 
   // ── Step 5: Cross-tab sync + leader election ───────────────────
 
@@ -189,11 +205,37 @@ export async function initializeOperatus(
     cdnLoader = new CDNLoader(cache, cdn);
   }
 
-  // ── Step 9: Return context ─────────────────────────────────────
+  // ── Step 9: Inbound lifecycle listeners ────────────────────────
+
+  // GAME_STARTED → confirm asset readiness to other pillars
+  const unsubGameStarted = eventBus.on(GameEvents.GAME_STARTED, async () => {
+    const stats = await cache.stats();
+    eventBus.emit(GameEvents.ASSETS_LOADED, {
+      assetCount: stats.memory + stats.persistent.entryCount,
+      manifest: null,
+      partial: false,
+    }).catch(() => {});
+  });
+
+  // LEVEL_LOADED → preload zone-specific assets
+  const unsubLevelLoaded = eventBus.on(GameEvents.LEVEL_LOADED, async (data: any) => {
+    const paths: string[] = data?.assetPaths ?? [];
+    if (paths.length > 0) {
+      try {
+        await assetLoader.preload(paths);
+      } catch {
+        // Non-critical — game can proceed without optional zone assets
+      }
+    }
+  });
+
+  // ── Step 10: Return context ──────────────────────────────────────
 
   const destroy = () => {
     autoSave.stop();
     crossTabSync.stop();
+    unsubGameStarted();
+    unsubLevelLoaded();
   };
 
   return {

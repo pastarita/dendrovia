@@ -155,6 +155,16 @@ export class AutoSave {
     }
   }
 
+  /** Whether auto-save is currently running */
+  get isRunning(): boolean {
+    return this.enabled;
+  }
+
+  /** Timestamp of the last successful save */
+  get lastSaveTimestamp(): number {
+    return this.lastSaveTime;
+  }
+
   // ── Private ─────────────────────────────────────────────────────
 
   private setupEventSaves(): void {

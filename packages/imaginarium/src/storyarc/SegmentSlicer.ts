@@ -111,7 +111,7 @@ function buildRawSegment(
     langCounts.set(f.language, (langCounts.get(f.language) ?? 0) + 1);
   }
   const dominantLanguage = langCounts.size > 0
-    ? [...langCounts.entries()].sort((a, b) => b[1] - a[1])[0][0]
+    ? [...langCounts.entries()].sort((a, b) => b[1] - a[1])[0]![0]
     : 'unknown';
 
   // Encounter density: hotspots per file

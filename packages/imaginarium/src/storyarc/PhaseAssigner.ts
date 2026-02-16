@@ -37,7 +37,7 @@ export function assignPhases(
     return [{
       index: 0,
       phase: 'climax',
-      tension: computeTension(segmentMetrics[0]),
+      tension: computeTension(segmentMetrics[0]!),
     }];
   }
 
@@ -52,17 +52,19 @@ export function assignPhases(
   const assignments: PhaseAssignment[] = new Array(count);
 
   // Lowest tension → prologue
-  assignments[indexed[0].index] = {
-    index: indexed[0].index,
+  const first = indexed[0]!;
+  assignments[first.index] = {
+    index: first.index,
     phase: 'prologue',
-    tension: indexed[0].tension,
+    tension: first.tension,
   };
 
   // Highest tension → climax
-  assignments[indexed[count - 1].index] = {
-    index: indexed[count - 1].index,
+  const last = indexed[count - 1]!;
+  assignments[last.index] = {
+    index: last.index,
     phase: 'climax',
-    tension: indexed[count - 1].tension,
+    tension: last.tension,
   };
 
   if (count === 2) return assignments;
@@ -72,7 +74,7 @@ export function assignPhases(
   const midpoint = Math.floor(remaining.length / 2);
 
   for (let i = 0; i < remaining.length; i++) {
-    const entry = remaining[i];
+    const entry = remaining[i]!;
     let phase: StoryPhase;
 
     if (i < midpoint) {

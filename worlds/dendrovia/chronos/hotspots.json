@@ -1,0 +1,306 @@
+{
+  "version": "1.0.0",
+  "hotspots": [
+    {
+      "path": "docs/pr-descriptions/PR_DESCRIPTION_CHRONOS_ENRICHMENT_ZOO.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/commits/commit-list.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/commits/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/complexity/complexity-drilldown.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/complexity/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/contract/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/contributors/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/couplings/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/files/files-table.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/files/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/hotspots/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/overview/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/zoos/page.tsx",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/lib/load-data.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/chronos/src/analyzer/HotspotDetector.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/chronos/src/builder/ContributorProfiler.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/chronos/src/builder/TopologyBuilder.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/chronos/src/index.ts",
+      "churnRate": 3,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/chronos/src/parse.ts",
+      "churnRate": 3,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/chronos/src/parser/GitParser.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/shared/src/contracts/index.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/shared/src/types/index.ts",
+      "churnRate": 4,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "docs/pr-descriptions/PR_DESCRIPTION_PLAYGROUND_APPS_TURBODEV.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "docs/TURBOREPO_COLOR_PR_STRATEGY.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "docs/TURBO_DEV_ORCHESTRATION.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "scripts/td-colorizer.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/vite.config.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/package.json",
+      "churnRate": 3,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/package.json",
+      "churnRate": 4,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/tsconfig.json",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/proof-of-concept/package.json",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/proof-of-concept/vite.config.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/.gitignore",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/fonts/GeistMonoVF.woff",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/fonts/GeistVF.woff",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/generators/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/globals.css",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/gyms/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/halls/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/layout.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/museums/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/spatial-docs/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/app/zoos/page.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/eslint.config.js",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/next.config.js",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/package.json",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-architectus/tsconfig.json",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/.gitignore",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/playground-chronos/app/fonts/GeistMonoVF.woff",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    }
+  ],
+  "temporalCouplings": []
+}

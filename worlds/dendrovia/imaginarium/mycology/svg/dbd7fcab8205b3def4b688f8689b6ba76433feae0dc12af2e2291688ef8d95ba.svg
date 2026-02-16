@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <filter id="organic" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="1" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  </defs>
+  <g>
+    <path d="M 97.4,83.31333915381741 Q 96.4,126.65666957690871 96.88,170 L 103.12,170 Q 103.6,126.65666957690871 102.6,83.31333915381741 Z" fill="#979bc4" filter="url(#organic)"/>
+    <path d="M 79.6,83.31333915381741 L 77.026,100.4733391538174 M 93.19999999999999,83.31333915381741 L 92.34199999999998,100.4733391538174 M 106.8,83.31333915381741 L 107.658,100.4733391538174 M 120.4,83.31333915381741 L 122.974,100.4733391538174" stroke="#979bc4" stroke-width="0.8" fill="none" opacity="0.7"/>
+    <path d="M 74.5,83.31333915381741 Q 74.5,70.4433391538174 100,66.15333915381741 Q 125.5,70.4433391538174 125.5,83.31333915381741" fill="#3275b4" filter="url(#organic)"/>
+  </g>
+</svg>

@@ -14,7 +14,8 @@
       "browser": "./src/logger-browser.ts",
       "default": "./src/logger.ts"
     },
-    "./logger-types": "./src/logger-types.ts"
+    "./logger-types": "./src/logger-types.ts",
+    "./magnitude": "./src/magnitude.ts"
   },
   "scripts": {
     "dev": "tsc --watch",

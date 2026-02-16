@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "contributors": [
+    {
+      "name": "Patrick Astarita",
+      "email": "",
+      "archetype": "striker",
+      "timeArchetype": "midnight",
+      "characterClass": "dps",
+      "commitCount": 123,
+      "firstCommit": "2026-02-12T18:39:41.000Z",
+      "lastCommit": "2026-02-14T02:43:14.000Z",
+      "filesOwned": 525,
+      "peakHour": 0,
+      "typeDistribution": {
+        "docs": 13,
+        "feature": 78,
+        "merge": 10,
+        "bug-fix": 8,
+        "chore": 2,
+        "maintenance": 7,
+        "test": 3,
+        "dependency": 2
+      },
+      "facets": {
+        "energy": 50,
+        "discipline": 32,
+        "creativity": 63,
+        "protectiveness": 9,
+        "breadth": 85,
+        "collaboration": 16
+      }
+    }
+  ]
+}

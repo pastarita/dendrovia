@@ -89,8 +89,9 @@ function makeContributor(name: string): ContributorProfile {
     commitCount: 10,
     firstCommit: new Date('2024-01-01'),
     lastCommit: new Date('2025-01-01'),
-    filesOwned: 5,
+    uniqueFilesTouched: 5,
     peakHour: 14,
+    topCommitType: 'feature',
     typeDistribution: { feature: 5, 'bug-fix': 3, chore: 2 },
     facets: {
       energy: 50,

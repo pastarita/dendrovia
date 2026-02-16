@@ -208,7 +208,44 @@ export async function listFilesAtHead(repoPath: string): Promise<string[]> {
     throw new Error('git ls-files failed');
   }
 
-  return stdout.trim().split('\n').filter(Boolean);
+  return stdout.trim().split('\n').filter(Boolean).map(unquoteGitPath);
+}
+
+/**
+ * Git quotes paths containing special characters by wrapping them in
+ * double quotes with octal escapes (e.g. \342\200\223 for an en-dash).
+ * Strip the quotes and decode the octal sequences back to UTF-8 bytes.
+ */
+function unquoteGitPath(path: string): string {
+  if (!path.startsWith('"') || !path.endsWith('"')) return path;
+
+  // Strip surrounding quotes
+  const inner = path.slice(1, -1);
+
+  // Replace octal escape sequences (\NNN) with the corresponding byte
+  const bytes: number[] = [];
+  let i = 0;
+  while (i < inner.length) {
+    if (inner[i] === '\\' && i + 3 < inner.length && /^[0-7]{3}$/.test(inner.slice(i + 1, i + 4))) {
+      bytes.push(parseInt(inner.slice(i + 1, i + 4), 8));
+      i += 4;
+    } else if (inner[i] === '\\' && i + 1 < inner.length) {
+      // Handle standard escapes: \\ \" \n \t
+      const esc = inner[i + 1];
+      if (esc === '\\') bytes.push(0x5c);
+      else if (esc === '"') bytes.push(0x22);
+      else if (esc === 'n') bytes.push(0x0a);
+      else if (esc === 't') bytes.push(0x09);
+      else bytes.push(inner.charCodeAt(i + 1));
+      i += 2;
+    } else {
+      // Regular ASCII char — push its byte value
+      bytes.push(inner.charCodeAt(i));
+      i += 1;
+    }
+  }
+
+  return new TextDecoder().decode(new Uint8Array(bytes));
 }
 
 /**

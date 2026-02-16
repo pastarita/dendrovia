@@ -208,7 +208,7 @@ function calculateCognitive(node: Node): number {
   return total;
 }
 
-function toDifficulty(cyclomatic: number): DifficultyTier {
+export function toDifficulty(cyclomatic: number): DifficultyTier {
   if (cyclomatic <= 5) return 'trivial';
   if (cyclomatic <= 10) return 'easy';
   if (cyclomatic <= 20) return 'medium';

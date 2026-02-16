@@ -350,14 +350,14 @@ describe('profileContributors — metadata', () => {
     expect(profiles[0].lastCommit.getTime()).toBe(new Date('2025-01-01T10:00:00Z').getTime());
   });
 
-  test('counts unique filesOwned', () => {
+  test('counts unique files touched', () => {
     const commits = [
       makeCommit('Dev', 'feat: a', { filesChanged: ['a.ts', 'b.ts'] }),
       makeCommit('Dev', 'feat: b', { filesChanged: ['b.ts', 'c.ts'] }),
     ];
     const profiles = profileContributors(commits);
     // Unique files: a.ts, b.ts, c.ts = 3
-    expect(profiles[0].filesOwned).toBe(3);
+    expect(profiles[0].uniqueFilesTouched).toBe(3);
   });
 
   test('peakHour is the hour with most commits', () => {

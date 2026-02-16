@@ -29,10 +29,12 @@ export interface ContributorProfile {
   commitCount: number;
   firstCommit: Date;
   lastCommit: Date;
-  /** Total files touched across all commits (unique) */
-  filesOwned: number;
+  /** Total unique files touched across all commits */
+  uniqueFilesTouched: number;
   /** Hour of day with most commits (0-23) */
   peakHour: number;
+  /** Most frequent commit type for this contributor */
+  topCommitType: CommitType;
   /** Commit type distribution */
   typeDistribution: Partial<Record<CommitType, number>>;
   /** Personality facets (0-100) */
@@ -101,6 +103,10 @@ function buildProfile(
   const total = authorCommits.length;
   const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
 
+  // Determine top commit type
+  const topCommitType = (Object.entries(typeCounts) as [CommitType, number][])
+    .sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'maintenance';
+
   // Determine archetype
   const archetype = determineArchetype(typeCounts, total, filesSet.size, allCommits.length);
 
@@ -125,8 +131,9 @@ function buildProfile(
     commitCount: total,
     firstCommit: sortedByDate[0].date,
     lastCommit: sortedByDate[sortedByDate.length - 1].date,
-    filesOwned: filesSet.size,
+    uniqueFilesTouched: filesSet.size,
     peakHour,
+    topCommitType,
     typeDistribution: typeCounts,
     facets,
   };

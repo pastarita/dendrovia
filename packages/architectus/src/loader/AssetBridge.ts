@@ -254,12 +254,15 @@ export async function loadGeneratedAssets(
   }
 
   // 4. Load L-system and noise configs (small files, parallel).
+  //    Prefer paths from manifest, fall back to hardcoded defaults for backwards compat.
+  const lsystemPath = manifest.lsystem ?? 'lsystems/global.json';
+  const noisePath = manifest.noise ?? 'noise/global.json';
   const [lsystem, noise] = await Promise.all([
     loadJson<LSystemRule>(
-      'lsystems/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json',
+      lsystemPath, manifestPath, loader, PRIORITY.VISIBLE, 'json',
     ),
     loadJson<NoiseFunction>(
-      'noise/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json',
+      noisePath, manifestPath, loader, PRIORITY.VISIBLE, 'json',
     ),
   ]);
 

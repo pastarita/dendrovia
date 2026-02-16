@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll } from 'bun:test';
 import { join } from 'path';
-import { existsSync, rmSync } from 'fs';
+import { existsSync, rmSync, readdirSync } from 'fs';
 import { distill } from '../src/pipeline/DistillationPipeline';
 import { generateMockTopology } from '../src/pipeline/MockTopology';
 import { validateGLSL } from '../src/utils/glsl';
@@ -79,6 +79,43 @@ describe('Full Pipeline Integration', () => {
     expect(manifest.checksum).toBeTruthy();
     expect(Object.keys(manifest.shaders).length).toBe(result.shaders.length);
     expect(Object.keys(manifest.palettes).length).toBe(result.palettes.length);
+
+    // noise and lsystem paths present
+    expect(manifest.noise).toBe('noise/global.json');
+    expect(manifest.lsystem).toBe('lsystems/global.json');
+
+    // topology path should be relative (basename, not absolute)
+    expect(manifest.topology).not.toContain('/');
+  });
+
+  test('manifest includes mycology, meshes, and storyArc data', async () => {
+    const result = await distill(MOCK_TOPOLOGY_PATH, TEST_OUTPUT_DIR);
+    const manifestRaw = await Bun.file(join(TEST_OUTPUT_DIR, 'manifest.json')).text();
+    const manifest = JSON.parse(manifestRaw);
+
+    // Mycology should be defined with specimens
+    expect(manifest.mycology).toBeDefined();
+    expect(manifest.mycology.specimenCount).toBeGreaterThan(0);
+
+    // Meshes should have entries
+    if (manifest.meshes) {
+      expect(Object.keys(manifest.meshes).length).toBeGreaterThan(0);
+    }
+
+    // Story arc should be defined
+    expect(manifest.storyArc).toBeDefined();
+    expect(manifest.storyArc.segmentCount).toBeGreaterThan(0);
+  });
+
+  test('.cache/ directory has entries after first run', async () => {
+    // Re-run to ensure cache is populated (may already be from prior tests)
+    await distill(MOCK_TOPOLOGY_PATH, TEST_OUTPUT_DIR);
+
+    const cacheDir = join(TEST_OUTPUT_DIR, '.cache');
+    expect(existsSync(cacheDir)).toBe(true);
+
+    const cacheFiles = readdirSync(cacheDir).filter(f => f.endsWith('.json'));
+    expect(cacheFiles.length).toBeGreaterThan(0);
   });
 
   test('completes in <5 seconds for 100-file topology', async () => {

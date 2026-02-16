@@ -105,6 +105,9 @@ interface RendererState {
   // Generated assets from IMAGINARIUM (null until loaded)
   generatedAssets: GeneratedAssets | null;
 
+  // SDF backdrop toggle
+  sdfBackdrop: boolean;
+
   // Actions
   setCameraMode: (mode: CameraMode) => void;
   setPlayerPosition: (pos: [number, number, number]) => void;
@@ -118,6 +121,7 @@ interface RendererState {
   updatePerformance: (fps: number, drawCalls: number, triangles: number) => void;
   setGeneratedAssets: (assets: GeneratedAssets) => void;
   setUiHovered: (hovered: boolean) => void;
+  toggleSdfBackdrop: () => void;
 }
 
 export const useRendererStore = create<RendererState>()(
@@ -150,6 +154,9 @@ export const useRendererStore = create<RendererState>()(
 
     // Generated assets (null until IMAGINARIUM assets are loaded)
     generatedAssets: null,
+
+    // SDF backdrop (off by default)
+    sdfBackdrop: false,
 
     // Actions
     setCameraMode: (mode) =>
@@ -187,6 +194,9 @@ export const useRendererStore = create<RendererState>()(
 
     setUiHovered: (hovered) =>
       set({ isUiHovered: hovered }),
+
+    toggleSdfBackdrop: () =>
+      set((state) => ({ sdfBackdrop: !state.sdfBackdrop })),
   }))
 );
 

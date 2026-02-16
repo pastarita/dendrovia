@@ -96,6 +96,8 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
   const qualityTier = useRendererStore((s) => s.qualityTier);
   const generatedAssets = useRendererStore((s) => s.generatedAssets);
   const setGeneratedAssets = useRendererStore((s) => s.setGeneratedAssets);
+  const sdfBackdrop = useRendererStore((s) => s.sdfBackdrop);
+  const toggleSdfBackdrop = useRendererStore((s) => s.toggleSdfBackdrop);
 
   const [gpuReady, setGpuReady] = useState(false);
 
@@ -135,12 +137,15 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
     return () => { cancelled = true; };
   }, [manifestPath, assetLoader, setGeneratedAssets]);
 
-  // Toggle camera mode with 'C' key
+  // Toggle camera mode with 'C' key, SDF backdrop with 'S' key
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'c' || e.key === 'C') {
       setCameraMode(cameraMode === 'falcon' ? 'player' : 'falcon');
     }
-  }, [cameraMode, setCameraMode]);
+    if (e.key === 's' || e.key === 'S') {
+      toggleSdfBackdrop();
+    }
+  }, [cameraMode, setCameraMode, toggleSdfBackdrop]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -227,7 +232,7 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
       }}>
         <div style={{ opacity: 0.8 }}>ARCHITECTUS v0.1.0</div>
         <div style={{ opacity: 0.5, marginTop: 4 }}>
-          Mode: {cameraMode.toUpperCase()} | [C] Toggle
+          Mode: {cameraMode.toUpperCase()} | [C] Toggle | SDF: {sdfBackdrop ? 'ON' : 'OFF'} [S]
         </div>
         <div style={{ opacity: 0.4, marginTop: 2 }}>
           {fps > 0 ? `${fps} FPS` : '...'} | {qualityTier.toUpperCase()}

@@ -3,15 +3,9 @@
 @import '@dendrovia/oculus/src/styles/animations.css';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: var(--oculus-bg-solid, #0a0a0a);
+  --foreground: var(--oculus-text, #f7f7f7);
+  color-scheme: dark;
 }
 
 html,
@@ -36,19 +30,3 @@ a {
   text-decoration: none;
 }
 
-.imgDark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-
-  .imgLight {
-    display: none;
-  }
-  .imgDark {
-    display: unset;
-  }
-}

@@ -181,7 +181,7 @@ function GenusInstanceGroup({
     if (!mesh || specimens.length === 0) return;
 
     for (let i = 0; i < specimens.length; i++) {
-      const specimen = specimens[i];
+      const specimen = specimens[i]!;
       const placement = specimen.placement;
 
       // Position from placement

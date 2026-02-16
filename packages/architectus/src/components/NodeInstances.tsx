@@ -60,7 +60,7 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
   const pathToIndex = useMemo(() => {
     const map = new Map<number, string>();
     for (let i = 0; i < nodes.length; i++) {
-      map.set(i, nodes[i].path);
+      map.set(i, nodes[i]!.path);
     }
     return map;
   }, [nodes]);
@@ -71,7 +71,7 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
     if (!mesh || nodes.length === 0) return;
 
     for (let i = 0; i < nodes.length; i++) {
-      const node = nodes[i];
+      const node = nodes[i]!;
 
       _position.copy(node.position);
       _quaternion.identity();
@@ -118,7 +118,7 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
       const path = pathToIndex.get(instanceId);
       if (!path) return;
 
-      const node = nodes[instanceId];
+      const node = nodes[instanceId]!;
       useRendererStore.getState().selectNode(path);
 
       // Emit event for other pillars

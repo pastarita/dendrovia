@@ -1,3 +1,7 @@
+@import '@dendrovia/oculus/src/styles/tokens.css';
+@import '@dendrovia/oculus/src/styles/ornate-frame.css';
+@import '@dendrovia/oculus/src/styles/animations.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

@@ -10,7 +10,7 @@
  *   ARCHITECTUS → 3D canvas renderer
  *   OCULUS      → HUD overlay + UI components
  *   LUDUS       → game session + event wiring
- *   OPERATUS    → cache, persistence, cross-tab sync
+ *   OPERATUS    → cache, persistence, cross-tab sync (requires enableOperatus + separate bundle)
  *
  * Each pillar integration is independently disablable: if a subsystem
  * fails to initialize, the others continue working. The 3D scene always
@@ -37,12 +37,16 @@ import {
   createGameSession,
   wireGameEvents,
   createCharacter,
+  generateQuestGraph,
+  generateHotspotQuests,
   type GameSession,
   type GameStore,
 } from '@dendrovia/ludus';
 
-// ── OPERATUS (infrastructure) ─────────────────────────────────
-import { initializeOperatus, StateAdapter, type OperatusContext } from '@dendrovia/operatus';
+// NOTE: OPERATUS is NOT statically imported here because it uses node:fs/promises
+// which webpack cannot bundle for the browser. When enableOperatus is needed,
+// OPERATUS must be provided via a separate server-side integration or a webpack
+// plugin that handles the node: scheme. For now the demo runs without it.
 
 // ─── Configuration ────────────────────────────────────────────
 
@@ -51,7 +55,7 @@ export interface DendroviaQuestProps {
   topologyPath?: string;
   /** Path to IMAGINARIUM manifest (default: /generated/manifest.json) */
   manifestPath?: string;
-  /** Enable OPERATUS infrastructure (default: true) */
+  /** Enable OPERATUS infrastructure (default: false — requires server-side setup) */
   enableOperatus?: boolean;
   /** Enable LUDUS game session (default: true) */
   enableLudus?: boolean;
@@ -100,14 +104,13 @@ function LoadingScreen({ message }: { message: string }) {
 export function DendroviaQuest({
   topologyPath,
   manifestPath = '/generated/manifest.json',
-  enableOperatus = true,
+  enableOperatus = false,
   enableLudus = true,
   enableOculus = true,
   children,
 }: DendroviaQuestProps) {
   // ── Refs (persist across renders, no re-render on mutation) ──
   const eventBusRef = useRef<EventBus | null>(null);
-  const operatusRef = useRef<OperatusContext | null>(null);
   const gameSessionRef = useRef<GameSession | null>(null);
   const cleanupRef = useRef<Array<() => void>>([]);
 
@@ -133,23 +136,19 @@ export function DendroviaQuest({
     async function init() {
       const bus = getOrCreateEventBus();
 
-      // Step 1: OPERATUS — cache + persistence
+      // Step 1: OPERATUS — skipped (requires node: builtins not available in browser)
       if (enableOperatus) {
-        try {
-          if (!cancelled) setInitMessage('Hydrating cache...');
-          const ctx = await initializeOperatus({
-            manifestPath,
-            skipSync: false,
-            skipAutoSave: false,
-          });
-          operatusRef.current = ctx;
-          cleanups.push(() => ctx.destroy());
-        } catch (err) {
-          console.warn('[DENDROVIA] OPERATUS init failed, continuing without infrastructure:', err);
-        }
+        console.warn(
+          '[DENDROVIA] OPERATUS is enabled but not available in the browser bundle. ' +
+          'Set enableOperatus={false} or provide a server-side integration.'
+        );
       }
 
       // Step 2: Load CHRONOS topology (if a path was provided)
+      let chronosFiles: ParsedFile[] = [];
+      let chronosCommits: ParsedCommit[] = [];
+      let chronosHotspots: Hotspot[] = [];
+
       if (topologyPath && !cancelled) {
         try {
           setInitMessage('Loading topology...');
@@ -158,7 +157,10 @@ export function DendroviaQuest({
             const data = await res.json();
             if (!cancelled) {
               const tree = data.tree ?? data;
-              const spots = data.hotspots ?? [];
+              const spots: Hotspot[] = data.hotspots ?? [];
+              chronosFiles = data.files ?? [];
+              chronosCommits = data.commits ?? [];
+              chronosHotspots = spots;
               setTopology(tree);
               setHotspots(spots);
               // T09: Emit topology to OCULUS via EventBus
@@ -173,39 +175,42 @@ export function DendroviaQuest({
         }
       }
 
-      // Step 3: LUDUS — game session + event wiring
+      // Step 3: LUDUS — game session + event wiring (with real CHRONOS data)
       if (enableLudus && !cancelled) {
         try {
-          setInitMessage('Wiring game session...');
+          setInitMessage('Generating quests from git history...');
 
           const character = createCharacter('dps', 'Explorer', 1);
+
+          // Generate quests from real CHRONOS data
+          const commitQuests = generateQuestGraph(chronosCommits);
+          const hotspotQuests = generateHotspotQuests(chronosHotspots);
+          const allQuests = [...commitQuests, ...hotspotQuests];
+
           const store: GameStore = createGameStore({
             character,
             inventory: [],
-            activeQuests: [],
+            activeQuests: allQuests,
             completedQuests: [],
             battleState: null,
             gameFlags: {},
           });
 
-          // Bridge OPERATUS persistence ↔ LUDUS store (if OPERATUS is active)
-          if (enableOperatus && operatusRef.current) {
-            const adapter = new StateAdapter();
-            await adapter.connect(store);
-            cleanups.push(() => adapter.disconnect());
-          }
-
           // Bridge store changes → EventBus
           const unsubBridge = bridgeStoreToEventBus(store);
           cleanups.push(unsubBridge);
 
-          // Create session (empty topology data is fine — LUDUS degrades gracefully)
-          const files: ParsedFile[] = [];
-          const commits: ParsedCommit[] = [];
-          const sessionHotspots: Hotspot[] = [];
-
-          const session = createGameSession(store, files, commits, sessionHotspots);
+          // Create session with real topology data
+          const session = createGameSession(store, chronosFiles, chronosCommits, chronosHotspots);
+          session.quests = allQuests;
           gameSessionRef.current = session;
+
+          if (allQuests.length > 0) {
+            console.log(
+              `[DENDROVIA] LUDUS: ${allQuests.length} quests generated ` +
+              `(${commitQuests.length} from commits, ${hotspotQuests.length} from hotspots)`
+            );
+          }
 
           // Wire EventBus listeners
           const unwireEvents = wireGameEvents(session);
@@ -234,7 +239,6 @@ export function DendroviaQuest({
       // Clear EventBus subscriptions
       eventBusRef.current?.clear();
       eventBusRef.current = null;
-      operatusRef.current = null;
       gameSessionRef.current = null;
     };
   }, [
@@ -265,7 +269,6 @@ export function DendroviaQuest({
         topology={topology}
         hotspots={hotspots}
         manifestPath={manifestPath}
-        assetLoader={operatusRef.current?.assetLoader}
       />
       {enableOculus && <HUD />}
       {enableOculus && <UiHoverBridge />}

@@ -20,7 +20,7 @@ import type {
   DamageResult,
   Item,
 } from '@dendrovia/shared';
-import { createRngState } from '../utils/SeededRandom.js';
+import { createRngState } from '../utils/SeededRandom';
 import {
   calculateDamage,
   calculateBasicAttack,
@@ -29,7 +29,7 @@ import {
   getElementMultiplier,
   effectiveAttack,
   effectiveDefense,
-} from './CombatMath.js';
+} from './CombatMath';
 import {
   tickStatusEffects,
   applyStatusEffect,
@@ -38,15 +38,15 @@ import {
   cleanse,
   createStatusEffect,
   getStatModifiers,
-} from './StatusEffects.js';
-import { getSpell } from '../spell/SpellFactory.js';
+} from './StatusEffects';
+import { getSpell } from '../spell/SpellFactory';
 import {
   chooseEnemyAction,
   resolveEnemySpell,
   isSkippedTurn,
   isOffByOneHeal,
   isOffByOneSelfHit,
-} from './EnemyAI.js';
+} from './EnemyAI';
 
 // ─── Initialize a Battle ─────────────────────────────────────
 

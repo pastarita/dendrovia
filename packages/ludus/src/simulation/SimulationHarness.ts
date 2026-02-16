@@ -12,10 +12,10 @@
  */
 
 import type { Character, Monster, BattleState, CharacterClass, BugType } from '@dendrovia/shared';
-import { createCharacter } from '../character/CharacterSystem.js';
-import { createMonster } from '../combat/MonsterFactory.js';
-import { initBattle, executeTurn } from '../combat/TurnBasedEngine.js';
-import { createRngState } from '../utils/SeededRandom.js';
+import { createCharacter } from '../character/CharacterSystem';
+import { createMonster } from '../combat/MonsterFactory';
+import { initBattle, executeTurn } from '../combat/TurnBasedEngine';
+import { createRngState } from '../utils/SeededRandom';
 
 // ─── Configuration ──────────────────────────────────────────
 

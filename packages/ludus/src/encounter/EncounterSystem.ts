@@ -22,8 +22,8 @@ import {
   generateBugMonster,
   generateBoss,
   generateMiniboss,
-} from '../combat/MonsterFactory.js';
-import { rngNext, rngChance } from '../utils/SeededRandom.js';
+} from '../combat/MonsterFactory';
+import { rngNext, rngChance } from '../utils/SeededRandom';
 
 // ─── Configuration ──────────────────────────────────────────
 

@@ -12,11 +12,11 @@ import type {
   Quest,
   RngState,
 } from '@dendrovia/shared';
-import { gainExperience, type LevelUpResult } from '../character/CharacterSystem.js';
-import { resolveLoot } from '../inventory/InventorySystem.js';
-import { getQuestRewards } from '../quest/QuestGenerator.js';
-import type { Inventory } from '../inventory/InventorySystem.js';
-import { addItem } from '../inventory/InventorySystem.js';
+import { gainExperience, type LevelUpResult } from '../character/CharacterSystem';
+import { resolveLoot } from '../inventory/InventorySystem';
+import { getQuestRewards } from '../quest/QuestGenerator';
+import type { Inventory } from '../inventory/InventorySystem';
+import { addItem } from '../inventory/InventorySystem';
 
 // ─── Battle Statistics ──────────────────────────────────────
 

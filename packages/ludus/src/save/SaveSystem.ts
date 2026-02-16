@@ -14,12 +14,12 @@ import type {
   CharacterStats,
   StatusEffect,
 } from '@dendrovia/shared';
-import type { Inventory, InventorySlot } from '../inventory/InventorySystem.js';
-import type { EncounterState } from '../encounter/EncounterSystem.js';
-import type { BattleStatistics } from '../progression/ProgressionSystem.js';
-import { createBattleStatistics } from '../progression/ProgressionSystem.js';
-import { createEncounterState } from '../encounter/EncounterSystem.js';
-import { createInventory } from '../inventory/InventorySystem.js';
+import type { Inventory, InventorySlot } from '../inventory/InventorySystem';
+import type { EncounterState } from '../encounter/EncounterSystem';
+import type { BattleStatistics } from '../progression/ProgressionSystem';
+import { createBattleStatistics } from '../progression/ProgressionSystem';
+import { createEncounterState } from '../encounter/EncounterSystem';
+import { createInventory } from '../inventory/InventorySystem';
 
 // ─── Save Format ────────────────────────────────────────────
 

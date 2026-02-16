@@ -5,26 +5,26 @@
  */
 
 // Core data layer
-export * from './utils/SeededRandom.js';
-export * from './state/GameStore.js';
-export * from './character/CharacterSystem.js';
+export * from './utils/SeededRandom';
+export * from './state/GameStore';
+export * from './character/CharacterSystem';
 
 // Combat engine
-export * from './spell/SpellFactory.js';
-export * from './combat/CombatMath.js';
-export * from './combat/StatusEffects.js';
-export * from './combat/MonsterFactory.js';
-export * from './combat/EnemyAI.js';
-export * from './combat/TurnBasedEngine.js';
+export * from './spell/SpellFactory';
+export * from './combat/CombatMath';
+export * from './combat/StatusEffects';
+export * from './combat/MonsterFactory';
+export * from './combat/EnemyAI';
+export * from './combat/TurnBasedEngine';
 
 // Game systems
-export * from './quest/QuestGenerator.js';
-export * from './encounter/EncounterSystem.js';
-export * from './inventory/InventorySystem.js';
-export * from './progression/ProgressionSystem.js';
-export * from './integration/EventWiring.js';
+export * from './quest/QuestGenerator';
+export * from './encounter/EncounterSystem';
+export * from './inventory/InventorySystem';
+export * from './progression/ProgressionSystem';
+export * from './integration/EventWiring';
 
 // Simulation, save, and config
-export * from './simulation/SimulationHarness.js';
-export * from './save/SaveSystem.js';
-export * from './config/BalanceConfig.js';
+export * from './simulation/SimulationHarness';
+export * from './save/SaveSystem';
+export * from './config/BalanceConfig';

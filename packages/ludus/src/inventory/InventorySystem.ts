@@ -18,12 +18,12 @@ import type {
   Character,
   RngState,
 } from '@dendrovia/shared';
-import { rngNext } from '../utils/SeededRandom.js';
+import { rngNext } from '../utils/SeededRandom';
 import {
   applyStatusEffect,
   createStatusEffect,
   cleanse,
-} from '../combat/StatusEffects.js';
+} from '../combat/StatusEffects';
 
 // ─── Item Registry ──────────────────────────────────────────
 

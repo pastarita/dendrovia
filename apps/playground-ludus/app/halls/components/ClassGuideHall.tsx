@@ -16,7 +16,7 @@ const CLASS_META: Record<string, { label: string; role: string; archetype: strin
 const thStyle: React.CSSProperties = { textAlign: 'right', padding: '0.3rem 0.5rem', borderBottom: '1px solid #333', fontSize: '0.7rem', opacity: 0.5 };
 const tdStyle: React.CSSProperties = { textAlign: 'right', padding: '0.25rem 0.5rem', fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', borderBottom: '1px solid #1a1a1a' };
 
-export default function ClassGuideHall() {
+export default function ClassGuideHall(): React.JSX.Element {
   const classData = useMemo(() => {
     return CLASSES.map(cls => {
       const meta = CLASS_META[cls];
@@ -33,7 +33,7 @@ export default function ClassGuideHall() {
       const char30 = createCharacter(cls, 'guide', 30);
       const spellDetails = char30.spells.map(id => {
         const spell = getSpell(id);
-        return spell ? { id, ...spell } : null;
+        return spell ? { ...spell, id } : null;
       }).filter(Boolean);
 
       return { cls, meta, base, growth, statTable, spellDetails };

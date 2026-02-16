@@ -22,7 +22,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   air: '#06B6D4',
 };
 
-export default function SpellGenerator() {
+export default function SpellGenerator(): React.JSX.Element {
   const [shape, setShape] = useState<SpellSymbol['shape']>('triangle');
   const [element, setElement] = useState<SpellSymbol['element']>('fire');
   const [modifier, setModifier] = useState<SpellSymbol['modifier']>('swift');
@@ -78,9 +78,9 @@ export default function SpellGenerator() {
         </div>
         <button
           onClick={() => {
-            setShape(SHAPES[Math.floor(Math.random() * SHAPES.length)]);
-            setElement(ELEMENTS[Math.floor(Math.random() * ELEMENTS.length)]);
-            setModifier(MODIFIERS[Math.floor(Math.random() * MODIFIERS.length)]);
+            setShape(SHAPES[Math.floor(Math.random() * SHAPES.length)]!);
+            setElement(ELEMENTS[Math.floor(Math.random() * ELEMENTS.length)]!);
+            setModifier(MODIFIERS[Math.floor(Math.random() * MODIFIERS.length)]!);
           }}
           style={{
             padding: '0.4rem 1rem',

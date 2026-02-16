@@ -1,7 +1,7 @@
 import Link from "next/link";
 import GeneratorsClient from "./GeneratorsClient";
 
-export default function GeneratorsPage() {
+export default function GeneratorsPage(): React.JSX.Element {
   return (
     <div>
       <Link href="/" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; LUDUS Dashboard</Link>

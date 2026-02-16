@@ -12,7 +12,7 @@ const CLASSES: { cls: CharacterClass; label: string }[] = [
 
 const LEVELS = [1, 5, 10, 15, 20, 25, 30];
 
-export default function ClassComparison() {
+export default function ClassComparison(): React.JSX.Element {
   const data = useMemo(() => {
     return CLASSES.map(({ cls, label }) => {
       const levels = LEVELS.map(lv => ({

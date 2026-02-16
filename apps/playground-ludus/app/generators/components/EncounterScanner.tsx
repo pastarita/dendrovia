@@ -5,12 +5,12 @@ import { scanAllEncounters, getEncounterDensity, createRngState } from '@dendrov
 import type { ParsedFile, ParsedCommit, Hotspot } from '@dendrovia/shared';
 
 const MOCK_FILES: ParsedFile[] = [
-  { path: 'src/legacy/old-parser.ts', language: 'typescript', complexity: 28, lines: 450, functions: 15, classes: 3 },
-  { path: 'src/core/engine.ts', language: 'typescript', complexity: 22, lines: 380, functions: 12, classes: 2 },
-  { path: 'src/utils/helpers.ts', language: 'typescript', complexity: 18, lines: 200, functions: 20, classes: 0 },
-  { path: 'src/combat/spells.ts', language: 'typescript', complexity: 12, lines: 150, functions: 8, classes: 1 },
-  { path: 'src/state/store.ts', language: 'typescript', complexity: 8, lines: 90, functions: 5, classes: 0 },
-  { path: 'src/parser/ast.ts', language: 'typescript', complexity: 15, lines: 220, functions: 10, classes: 2 },
+  { path: 'src/legacy/old-parser.ts', hash: 'aaa111', language: 'typescript', complexity: 28, loc: 450, lastModified: new Date('2024-06-10'), author: 'dev@example.com' },
+  { path: 'src/core/engine.ts', hash: 'bbb222', language: 'typescript', complexity: 22, loc: 380, lastModified: new Date('2024-06-11'), author: 'dev@example.com' },
+  { path: 'src/utils/helpers.ts', hash: 'ccc333', language: 'typescript', complexity: 18, loc: 200, lastModified: new Date('2024-06-12'), author: 'dev@example.com' },
+  { path: 'src/combat/spells.ts', hash: 'ddd444', language: 'typescript', complexity: 12, loc: 150, lastModified: new Date('2024-06-13'), author: 'dev@example.com' },
+  { path: 'src/state/store.ts', hash: 'eee555', language: 'typescript', complexity: 8, loc: 90, lastModified: new Date('2024-06-14'), author: 'dev@example.com' },
+  { path: 'src/parser/ast.ts', hash: 'fff666', language: 'typescript', complexity: 15, loc: 220, lastModified: new Date('2024-06-15'), author: 'dev@example.com' },
 ];
 
 const MOCK_COMMITS: ParsedCommit[] = [
@@ -18,7 +18,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'a1b2c3d4e5f6789012345678901234567890abcd',
     message: 'fix(parser): resolve null pointer in AST traversal',
     author: 'dev@example.com',
-    date: '2024-06-15T10:30:00Z',
+    date: new Date('2024-06-15T10:30:00Z'),
     insertions: 45,
     deletions: 12,
     filesChanged: ['src/parser/ast.ts', 'src/parser/visitor.ts'],
@@ -30,7 +30,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'b2c3d4e5f6789012345678901234567890abcde1',
     message: 'fix(memory): patch memory leak in event listener cleanup',
     author: 'dev@example.com',
-    date: '2024-06-14T14:20:00Z',
+    date: new Date('2024-06-14T14:20:00Z'),
     insertions: 120,
     deletions: 30,
     filesChanged: ['src/core/engine.ts', 'src/events/listener.ts'],
@@ -42,7 +42,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     hash: 'd4e5f6789012345678901234567890abcde12345',
     message: 'fix(race): fix race condition in async state update',
     author: 'dev@example.com',
-    date: '2024-06-12T16:45:00Z',
+    date: new Date('2024-06-12T16:45:00Z'),
     insertions: 30,
     deletions: 8,
     filesChanged: ['src/state/store.ts'],
@@ -71,7 +71,7 @@ const ELEMENT_COLORS: Record<string, string> = {
   none: '#6B7280',
 };
 
-export default function EncounterScanner() {
+export default function EncounterScanner(): React.JSX.Element {
   const [scanned, setScanned] = useState(false);
 
   const results = useMemo(() => {

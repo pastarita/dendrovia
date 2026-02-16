@@ -7,7 +7,7 @@ interface StatBarProps {
   color: string;
 }
 
-export default function StatBar({ label, current, max, color }: StatBarProps) {
+export default function StatBar({ label, current, max, color }: StatBarProps): React.JSX.Element {
   const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
 
   return (

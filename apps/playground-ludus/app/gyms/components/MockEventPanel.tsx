@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { NodeClickedEvent, PlayerMovedEvent } from '@dendrovia/shared';
 
-export default function MockEventPanel() {
+export default function MockEventPanel(): React.JSX.Element {
   const [collapsed, setCollapsed] = useState(true);
   const [log, setLog] = useState<string[]>([]);
   const logEndRef = useRef<HTMLDivElement>(null);

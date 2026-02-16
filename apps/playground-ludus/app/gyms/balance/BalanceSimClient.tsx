@@ -32,7 +32,7 @@ const selectStyle: React.CSSProperties = {
   fontSize: '0.8rem',
 };
 
-export default function BalanceSimClient() {
+export default function BalanceSimClient(): React.JSX.Element {
   const [level, setLevel] = useState(5);
   const [severity, setSeverity] = useState<1 | 2 | 3 | 4 | 5>(2);
   const [trials, setTrials] = useState(100);
@@ -58,7 +58,7 @@ export default function BalanceSimClient() {
   }, [level, severity, trials]);
 
   const handlePreset = (idx: number) => {
-    setConfig(PRESETS[idx].config);
+    setConfig(PRESETS[idx]!.config);
   };
 
   const handleSliderChange = (section: string, key: string, value: number) => {

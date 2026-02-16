@@ -100,7 +100,7 @@ const DIRECTION_COLORS: Record<string, string> = {
   output: '#22C55E',
 };
 
-export default function SpatialDocsClient() {
+export default function SpatialDocsClient(): React.JSX.Element {
   return (
     <div>
       {/* 1. Event System Overview */}

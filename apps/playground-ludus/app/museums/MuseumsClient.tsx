@@ -15,7 +15,7 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id'];
 
-export default function MuseumsClient() {
+export default function MuseumsClient(): React.JSX.Element {
   const [tab, setTab] = useState<TabId>('battle-stats');
 
   return (

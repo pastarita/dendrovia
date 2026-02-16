@@ -30,7 +30,7 @@ function multColor(mult: number): string {
   return '#6B7280';
 }
 
-export default function DamageFormulaExhibit() {
+export default function DamageFormulaExhibit(): React.JSX.Element {
   const [atk, setAtk] = useState(15);
   const [spd, setSpd] = useState(7);
   const [def, setDef] = useState(8);

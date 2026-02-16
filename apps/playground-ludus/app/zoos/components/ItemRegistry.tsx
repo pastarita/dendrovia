@@ -12,7 +12,7 @@ const EFFECT_COLORS: Record<string, string> = {
   'full-restore': '#EAB308',
 };
 
-export default function ItemRegistry() {
+export default function ItemRegistry(): React.JSX.Element {
   const items = useMemo(() => getAllItems(), []);
 
   return (

@@ -17,7 +17,7 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id'];
 
-export default function ZooClient() {
+export default function ZooClient(): React.JSX.Element {
   const [tab, setTab] = useState<TabId>('spells');
 
   return (

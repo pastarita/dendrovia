@@ -1,7 +1,7 @@
 import Link from "next/link";
 import BalanceSimClient from "./BalanceSimClient";
 
-export default function BalancePage() {
+export default function BalancePage(): React.JSX.Element {
   return (
     <div>
       <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.85rem', opacity: 0.5, marginBottom: '0.5rem' }}>

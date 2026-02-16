@@ -47,7 +47,7 @@ const FLAG_COLORS: Record<string, string> = {
   'draw-heavy': '#F97316',
 };
 
-export default function BalanceExhibit() {
+export default function BalanceExhibit(): React.JSX.Element {
   const [playerClass, setPlayerClass] = useState<CharacterClass>('tank');
   const [playerLevel, setPlayerLevel] = useState(10);
   const [bugType, setBugType] = useState<BugType>('null-pointer');

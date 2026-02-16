@@ -21,7 +21,7 @@ const listStyle: React.CSSProperties = {
   margin: 0,
 };
 
-export default function CombatRulesHall() {
+export default function CombatRulesHall(): React.JSX.Element {
   return (
     <div>
       {/* Battle Phases */}

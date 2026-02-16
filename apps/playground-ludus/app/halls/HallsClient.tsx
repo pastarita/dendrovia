@@ -15,7 +15,7 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id'];
 
-export default function HallsClient() {
+export default function HallsClient(): React.JSX.Element {
   const [tab, setTab] = useState<TabId>('combat');
 
   return (

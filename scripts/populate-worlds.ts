@@ -11,6 +11,9 @@
  *   - worlds/{owner}/{repo}/chronos/*.json
  *   - worlds/dendrovia/chronos/*.json
  *   - worlds/index.json
+ *
+ * The core logic is exported as `installToWorlds()` so parse.ts can call it
+ * directly with the --install flag.
  */
 
 import { join, resolve, dirname } from 'path';
@@ -59,11 +62,6 @@ function computeWorldMagnitude(stats: {
 }
 
 // ── Constants ────────────────────────────────────────────────────────────────
-
-const root = findMonorepoRoot();
-const worldsDir = join(root, 'worlds');
-const registryPath = join(homedir(), '.chronos', 'registry.json');
-const dendroviaGenerated = join(root, 'packages', 'chronos', 'generated');
 
 const CHRONOS_FILES = [
   'topology.json',
@@ -142,7 +140,7 @@ function copyChronosData(sourceDir: string, destDir: string) {
   }
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
+// ── World entry type ─────────────────────────────────────────────────────────
 
 interface WorldEntry {
   slug: string;
@@ -166,44 +164,105 @@ interface WorldEntry {
   framePillar: string;
 }
 
-const worlds: WorldEntry[] = [];
+// ── Exportable core logic ────────────────────────────────────────────────────
 
-console.log('Populate Worlds');
-console.log('================\n');
+/**
+ * Install CHRONOS output to worlds/ directory and generate index.json.
+ * Importable by parse.ts for --install flag.
+ */
+export function installToWorlds(options?: { silent?: boolean }): void {
+  const silent = options?.silent ?? false;
+  const root = findMonorepoRoot();
+  const worldsDir = join(root, 'worlds');
+  const registryPath = join(homedir(), '.chronos', 'registry.json');
+  const dendroviaGenerated = join(root, 'packages', 'chronos', 'generated');
 
-// ── 1. External repos from registry ──────────────────────────────────────────
+  const worlds: WorldEntry[] = [];
 
-if (existsSync(registryPath)) {
-  const registry = readJson(registryPath);
-  for (const entry of registry.entries ?? []) {
-    const key = `${entry.owner}/${entry.repo}`;
-    const def = EXTERNAL_WORLDS[key];
-    if (!def) continue;
-    if (entry.status !== 'complete') continue;
+  if (!silent) {
+    console.log('Populate Worlds');
+    console.log('================\n');
+  }
 
-    const sourceDir = entry.outputDir;
-    if (!existsSync(join(sourceDir, 'topology.json'))) {
-      console.warn(`  Skipping ${key}: no topology.json in ${sourceDir}`);
-      continue;
+  // ── 1. External repos from registry ──────────────────────────────────────
+
+  if (existsSync(registryPath)) {
+    const registry = readJson(registryPath);
+    for (const entry of registry.entries ?? []) {
+      const key = `${entry.owner}/${entry.repo}`;
+      const def = EXTERNAL_WORLDS[key];
+      if (!def) continue;
+      if (entry.status !== 'complete') continue;
+
+      const sourceDir = entry.outputDir;
+      if (!existsSync(join(sourceDir, 'topology.json'))) {
+        if (!silent) console.warn(`  Skipping ${key}: no topology.json in ${sourceDir}`);
+        continue;
+      }
+
+      const destDir = join(worldsDir, entry.owner, entry.repo, 'chronos');
+      if (!silent) console.log(`  Copying ${key} → worlds/${entry.owner}/${entry.repo}/chronos/`);
+      copyChronosData(sourceDir, destDir);
+
+      const topology = readJson(join(sourceDir, 'topology.json'));
+      const contributors = existsSync(join(sourceDir, 'contributors.json'))
+        ? readJson(join(sourceDir, 'contributors.json'))
+        : { contributors: [] };
+      const hotspots = existsSync(join(sourceDir, 'hotspots.json'))
+        ? readJson(join(sourceDir, 'hotspots.json'))
+        : { hotspots: [] };
+
+      const languages = extractLanguageDistribution(topology);
+      const stats = {
+        fileCount: topology.repository?.fileCount ?? topology.files?.length ?? 0,
+        commitCount: topology.repository?.commitCount ?? entry.stats?.commitCount ?? 0,
+        hotspotCount: hotspots.hotspots?.length ?? entry.stats?.hotspotCount ?? 0,
+        languageCount: topology.repository?.languages?.length ?? languages.length,
+        contributorCount: topology.repository?.contributorCount ?? contributors.contributors?.length ?? 0,
+        languages,
+      };
+
+      const magnitude = computeWorldMagnitude(stats);
+
+      worlds.push({
+        slug: key,
+        name: def.name,
+        owner: entry.owner,
+        repo: entry.repo,
+        description: def.description,
+        status: 'playable',
+        analyzedAt: entry.analyzedAt ?? topology.analyzedAt,
+        headHash: entry.headHash ?? topology.repository?.headHash ?? '',
+        stats,
+        magnitude,
+        tincture: def.tincture,
+        framePillar: def.framePillar,
+      });
     }
+  } else {
+    if (!silent) console.warn('  No ~/.chronos/registry.json found — skipping external repos');
+  }
 
-    const destDir = join(worldsDir, entry.owner, entry.repo, 'chronos');
-    console.log(`  Copying ${key} → worlds/${entry.owner}/${entry.repo}/chronos/`);
-    copyChronosData(sourceDir, destDir);
+  // ── 2. Dendrovia itself ──────────────────────────────────────────────────
 
-    const topology = readJson(join(sourceDir, 'topology.json'));
-    const contributors = existsSync(join(sourceDir, 'contributors.json'))
-      ? readJson(join(sourceDir, 'contributors.json'))
+  if (existsSync(join(dendroviaGenerated, 'topology.json'))) {
+    const destDir = join(worldsDir, 'dendrovia', 'chronos');
+    if (!silent) console.log('  Copying dendrovia → worlds/dendrovia/chronos/');
+    copyChronosData(dendroviaGenerated, destDir);
+
+    const topology = readJson(join(dendroviaGenerated, 'topology.json'));
+    const contributors = existsSync(join(dendroviaGenerated, 'contributors.json'))
+      ? readJson(join(dendroviaGenerated, 'contributors.json'))
       : { contributors: [] };
-    const hotspots = existsSync(join(sourceDir, 'hotspots.json'))
-      ? readJson(join(sourceDir, 'hotspots.json'))
+    const hotspots = existsSync(join(dendroviaGenerated, 'hotspots.json'))
+      ? readJson(join(dendroviaGenerated, 'hotspots.json'))
       : { hotspots: [] };
 
     const languages = extractLanguageDistribution(topology);
     const stats = {
       fileCount: topology.repository?.fileCount ?? topology.files?.length ?? 0,
-      commitCount: topology.repository?.commitCount ?? entry.stats?.commitCount ?? 0,
-      hotspotCount: hotspots.hotspots?.length ?? entry.stats?.hotspotCount ?? 0,
+      commitCount: topology.repository?.commitCount ?? topology.commitCount ?? 0,
+      hotspotCount: hotspots.hotspots?.length ?? topology.hotspotCount ?? 0,
       languageCount: topology.repository?.languages?.length ?? languages.length,
       contributorCount: topology.repository?.contributorCount ?? contributors.contributors?.length ?? 0,
       languages,
@@ -212,84 +271,48 @@ if (existsSync(registryPath)) {
     const magnitude = computeWorldMagnitude(stats);
 
     worlds.push({
-      slug: key,
-      name: def.name,
-      owner: entry.owner,
-      repo: entry.repo,
-      description: def.description,
+      slug: DENDROVIA_DEF.slug,
+      name: DENDROVIA_DEF.name,
+      owner: DENDROVIA_DEF.owner,
+      repo: DENDROVIA_DEF.repo,
+      description: DENDROVIA_DEF.description,
       status: 'playable',
-      analyzedAt: entry.analyzedAt ?? topology.analyzedAt,
-      headHash: entry.headHash ?? topology.repository?.headHash ?? '',
+      analyzedAt: topology.analyzedAt,
+      headHash: topology.repository?.headHash ?? topology.meta?.headHash ?? '',
       stats,
       magnitude,
-      tincture: def.tincture,
-      framePillar: def.framePillar,
+      tincture: DENDROVIA_DEF.tincture,
+      framePillar: DENDROVIA_DEF.framePillar,
     });
+  } else {
+    if (!silent) console.warn('  No Dendrovia topology found at', dendroviaGenerated);
   }
-} else {
-  console.warn('  No ~/.chronos/registry.json found — skipping external repos');
-}
 
-// ── 2. Dendrovia itself ──────────────────────────────────────────────────────
+  // ── 3. Write index.json ──────────────────────────────────────────────────
 
-if (existsSync(join(dendroviaGenerated, 'topology.json'))) {
-  const destDir = join(worldsDir, 'dendrovia', 'chronos');
-  console.log('  Copying dendrovia → worlds/dendrovia/chronos/');
-  copyChronosData(dendroviaGenerated, destDir);
+  // Sort by magnitude score descending
+  worlds.sort((a, b) => b.magnitude.score - a.magnitude.score);
 
-  const topology = readJson(join(dendroviaGenerated, 'topology.json'));
-  const contributors = existsSync(join(dendroviaGenerated, 'contributors.json'))
-    ? readJson(join(dendroviaGenerated, 'contributors.json'))
-    : { contributors: [] };
-  const hotspots = existsSync(join(dendroviaGenerated, 'hotspots.json'))
-    ? readJson(join(dendroviaGenerated, 'hotspots.json'))
-    : { hotspots: [] };
-
-  const languages = extractLanguageDistribution(topology);
-  const stats = {
-    fileCount: topology.repository?.fileCount ?? topology.files?.length ?? 0,
-    commitCount: topology.repository?.commitCount ?? 0,
-    hotspotCount: hotspots.hotspots?.length ?? 0,
-    languageCount: topology.repository?.languages?.length ?? languages.length,
-    contributorCount: topology.repository?.contributorCount ?? contributors.contributors?.length ?? 0,
-    languages,
+  const index = {
+    version: '1.0.0',
+    worlds,
   };
 
-  const magnitude = computeWorldMagnitude(stats);
+  mkdirSync(worldsDir, { recursive: true });
+  writeFileSync(join(worldsDir, 'index.json'), JSON.stringify(index, null, 2) + '\n');
 
-  worlds.push({
-    slug: DENDROVIA_DEF.slug,
-    name: DENDROVIA_DEF.name,
-    owner: DENDROVIA_DEF.owner,
-    repo: DENDROVIA_DEF.repo,
-    description: DENDROVIA_DEF.description,
-    status: 'playable',
-    analyzedAt: topology.analyzedAt,
-    headHash: topology.repository?.headHash ?? '',
-    stats,
-    magnitude,
-    tincture: DENDROVIA_DEF.tincture,
-    framePillar: DENDROVIA_DEF.framePillar,
-  });
-} else {
-  console.warn('  No Dendrovia topology found at', dendroviaGenerated);
+  if (!silent) {
+    console.log(`\n  Wrote worlds/index.json with ${worlds.length} world(s):`);
+    for (const w of worlds) {
+      console.log(`    ${w.slug} — ${w.magnitude.tier} (score ${w.magnitude.score})`);
+    }
+    console.log('');
+  }
 }
 
-// ── 3. Write index.json ──────────────────────────────────────────────────────
+// ── CLI entry point ──────────────────────────────────────────────────────────
 
-// Sort by magnitude score descending
-worlds.sort((a, b) => b.magnitude.score - a.magnitude.score);
-
-const index = {
-  version: '1.0.0',
-  worlds,
-};
-
-mkdirSync(worldsDir, { recursive: true });
-writeFileSync(join(worldsDir, 'index.json'), JSON.stringify(index, null, 2) + '\n');
-
-console.log(`\n  Wrote worlds/index.json with ${worlds.length} world(s):`);
-for (const w of worlds) {
-  console.log(`    ${w.slug} — ${w.magnitude.tier} (score ${w.magnitude.score})`);
+// Only run when executed directly (not imported)
+if (import.meta.main) {
+  installToWorlds();
 }
-console.log('');

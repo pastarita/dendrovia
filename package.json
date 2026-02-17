@@ -51,7 +51,8 @@
     "slice": "cd packages/proof-of-concept && bun run src/thin-slice.ts",
     "launch": "bun run scripts/launch-workspace.ts",
     "launch:dev": "bun run scripts/launch-workspace.ts --dev",
-    "launch:list": "bun run scripts/launch-workspace.ts --list"
+    "launch:list": "bun run scripts/launch-workspace.ts --list",
+    "refresh:worlds": "bun run --cwd packages/chronos src/parse.ts -- --install"
   },
   "devDependencies": {
     "turbo": "^2.7.0",

@@ -140,12 +140,12 @@ if (!skipBrowser) {
   setTimeout(async () => {
     try {
       process.stdout.write('\n🌐 Opening Brave Browser...\n');
-      await launchBrave({ waitForServers: true, waitTimeout: 20000 });
+      await launchBrave({ waitForServers: true, waitTimeout: 60000 });
       process.stdout.write('✅ Browser ready\n\n');
     } catch (err) {
       process.stderr.write(`⚠ Browser launch failed: ${err}\n`);
     }
-  }, 2000);
+  }, 5000);
 }
 
 child.on('exit', (code) => {

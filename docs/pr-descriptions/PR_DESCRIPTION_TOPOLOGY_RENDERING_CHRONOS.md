@@ -10,7 +10,7 @@
 |                                                              |
 |     +------------------+   +------------------+              |
 |     | I CHRONOS Conv.  |   | II Rendering Fix |              |
-|     | bend x 3         |   | cross x 3        |              |
+|     | bend x 3         |   | cross x 4        |              |
 |     | mullet x 2       |   |                  |              |
 |     | hammer x 2       |   |                  |              |
 |     | [chronos, shared |   | [architectus,    |              |
@@ -21,13 +21,13 @@
 |                  party-per-cross                              |
 |     [chronos, shared, imaginarium, architectus, app, infra]  |
 |                                                              |
-|           files: 20 | +15650 / -1502                         |
+|           files: 27 | +15677 / -1529                         |
 +--------------------------------------------------------------+
 |   "Correctio fundamentum"                                    |
 +--------------------------------------------------------------+
 ```
 
-**Compact:** *** [chronos, shared, imaginarium, architectus, app, infra] cross x3 bend x3 mullet x2 hammer x2 WARN +15650/-1502
+**Compact:** *** [chronos, shared, imaginarium, architectus, app, infra] cross x4 bend x3 mullet x2 hammer x2 WARN +15677/-1529
 
 ---
 
@@ -86,6 +86,7 @@ Three targeted fixes that unblock topology rendering: diagnostic logging in `fet
 | Phantom mesh removal | Stripped all 38 mesh entries from Dendrovia manifest (cap + stem pairs for 19 specimens that never existed on disk) | Complete |
 | Topology path fix | Manifest topology field changed from absolute filesystem path (`/Users/Patmac/denroot/CHRONOS/...`) to relative `../chronos/topology.json` | Complete |
 | Content-Type detection | API route now serves `.json` as `application/json`, `.glsl` as `text/plain`, other as `application/octet-stream` | Complete |
+| Optional field guards | Added `?? []` guards at 22 access sites across 6 IMAGINARIUM files for `topology.commits`/`topology.hotspots` after shared types made them optional | Complete |
 
 ---
 
@@ -151,6 +152,19 @@ packages/imaginarium/
 └── src/pipeline/
     └── TopologyReader.ts               — loadCommitsStandalone/loadHotspotsStandalone
 
+packages/imaginarium/
+└── src/
+    ├── mycology/
+    │   ├── GenusMapper.ts              — ?? [] guards on hotspots/commits access (5 sites)
+    │   └── MycelialNetwork.ts          — ?? [] guard on commits iteration
+    ├── pipeline/
+    │   ├── DistillationPipeline.ts     — ?? [] guards on hotspots logging/hashing/filtering
+    │   ├── SegmentPipeline.ts          — ?? [] guard on per-segment hotspot filtering
+    │   ├── TopologyChunker.ts          — ?? [] guard on chunk hotspot filtering
+    │   └── VariantGenerator.ts         — ?? [] guards on all subset/structural helpers
+    └── storyarc/
+        └── StoryArcDeriver.ts          — ?? [] guards on hotspot metrics in arc derivation
+
 packages/architectus/
 └── src/loader/
     └── AssetBridge.ts                  — diagnostic logging in fetchJson/fetchText,
@@ -189,10 +203,12 @@ package.json                            — script updates
 8. `d5eab4c` fix(architectus): surface silent fetch failures with diagnostic logging
 9. `000bbfa` fix(imaginarium): strip 38 phantom mesh entries from dendrovia manifest
 10. `1e70e32` fix(quest): detect Content-Type by extension in world data API route
+11. `4acc049` fix(imaginarium): guard optional topology.commits/hotspots across consumers
 
 ## Test Plan
 
 - [x] `bun test` — 1013 pass, 2 fail (pre-existing mycology catalog tests, not caused by this PR)
+- [x] `turbo build` — shared, imaginarium, architectus, oculus, dendrovia-quest all pass
 - [x] Verify merged topology: `worlds/dendrovia/chronos/topology.json` has 27 files, 468 commits
 - [x] Verify manifest no longer references phantom meshes (0 mesh entries)
 - [x] Verify manifest topology path is relative (`../chronos/topology.json`)

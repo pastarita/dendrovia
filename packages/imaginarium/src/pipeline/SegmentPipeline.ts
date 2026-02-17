@@ -79,7 +79,7 @@ export async function distillSegments(
       // Filter topology to this segment's files
       const fileSet = new Set(segment.filePaths);
       const segFiles = topology.files.filter(f => fileSet.has(f.path));
-      const segHotspots = topology.hotspots.filter(h => fileSet.has(h.path));
+      const segHotspots = (topology.hotspots ?? []).filter(h => fileSet.has(h.path));
 
       // Build a sub-topology for this segment
       const subTopology: CodeTopology = {

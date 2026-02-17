@@ -104,7 +104,7 @@ export function buildNetwork(
 
   // Build co-churn frequency map
   const coChurnFreq = new Map<string, number>();
-  for (const commit of topology.commits) {
+  for (const commit of topology.commits ?? []) {
     const changed = commit.filesChanged.filter(p => fileMap.has(p));
     // Skip mega-commits — mass refactors provide no useful co-churn signal
     if (changed.length > MAX_COCHURN_COMMIT_FILES) continue;

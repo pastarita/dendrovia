@@ -35,7 +35,7 @@ export function chunkTopology(
 
     // Filter files and hotspots to this segment
     const files = topology.files.filter(f => fileSet.has(f.path));
-    const hotspots = topology.hotspots.filter(h => fileSet.has(h.path));
+    const hotspots = (topology.hotspots ?? []).filter(h => fileSet.has(h.path));
 
     // Prune tree to only contain paths in this segment
     const prunedTree = pruneTree(topology.tree, fileSet);

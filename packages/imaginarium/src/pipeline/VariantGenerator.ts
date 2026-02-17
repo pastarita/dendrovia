@@ -129,9 +129,9 @@ function groupByLanguage(topology: CodeTopology): Map<string, CodeTopology> {
   for (const [lang, files] of langFiles) {
     groups.set(lang, {
       files,
-      commits: topology.commits,
+      commits: (topology.commits ?? []),
       tree: topology.tree,
-      hotspots: topology.hotspots.filter(h => files.some(f => f.path === h.path)),
+      hotspots: (topology.hotspots ?? []).filter(h => files.some(f => f.path === h.path)),
     });
   }
 
@@ -145,9 +145,9 @@ function createComplexitySubset(topology: CodeTopology, tier: 'high' | 'low'): C
 
   return {
     files,
-    commits: topology.commits,
+    commits: (topology.commits ?? []),
     tree: topology.tree,
-    hotspots: topology.hotspots.filter(h => files.some(f => f.path === h.path)),
+    hotspots: (topology.hotspots ?? []).filter(h => files.some(f => f.path === h.path)),
   };
 }
 
@@ -161,31 +161,31 @@ function createStructuralSubset(topology: CodeTopology): CodeTopology {
 
   return {
     files: files.length > 0 ? files : topology.files.slice(0, 5),
-    commits: topology.commits,
+    commits: (topology.commits ?? []),
     tree: firstDir,
-    hotspots: topology.hotspots.filter(h => h.path.startsWith(dirPath)),
+    hotspots: (topology.hotspots ?? []).filter(h => h.path.startsWith(dirPath)),
   };
 }
 
 function createHotspotSubset(topology: CodeTopology): CodeTopology {
-  if (topology.hotspots.length === 0) {
+  if ((topology.hotspots ?? []).length === 0) {
     // Use highest complexity files as pseudo-hotspots
     const sorted = [...topology.files].sort((a, b) => b.complexity - a.complexity);
     return {
       files: sorted.slice(0, Math.max(3, Math.floor(sorted.length / 10))),
-      commits: topology.commits,
+      commits: (topology.commits ?? []),
       tree: topology.tree,
       hotspots: [],
     };
   }
 
-  const hotspotPaths = new Set(topology.hotspots.map(h => h.path));
+  const hotspotPaths = new Set((topology.hotspots ?? []).map(h => h.path));
   const files = topology.files.filter(f => hotspotPaths.has(f.path));
 
   return {
     files: files.length > 0 ? files : topology.files.slice(0, 5),
-    commits: topology.commits,
+    commits: (topology.commits ?? []),
     tree: topology.tree,
-    hotspots: topology.hotspots,
+    hotspots: (topology.hotspots ?? []),
   };
 }

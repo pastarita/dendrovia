@@ -12,37 +12,34 @@
 
 import type { Element, RngState, DamageResult, CharacterStats } from '@dendrovia/shared';
 import { rngNext } from '../utils/SeededRandom';
+import { DEFAULT_BALANCE_CONFIG } from '../config/BalanceConfig';
 
-// ─── Constants ───────────────────────────────────────────────
+const cfg = DEFAULT_BALANCE_CONFIG;
+
+// ─── Constants (derived from BalanceConfig) ──────────────────
 
 /** At DEF = DEFENSE_CONSTANT, 50% of raw power passes through */
-export const DEFENSE_CONSTANT = 20;
+export const DEFENSE_CONSTANT = cfg.damage.defenseConstant;
 
 /** Base critical hit chance (5%) */
-export const BASE_CRIT_CHANCE = 0.05;
+export const BASE_CRIT_CHANCE = cfg.damage.baseCritChance;
 
 /** Critical hit damage multiplier */
-export const CRIT_MULTIPLIER = 1.5;
+export const CRIT_MULTIPLIER = cfg.damage.critMultiplier;
 
 /** Maximum critical hit chance (25%) */
-export const MAX_CRIT_CHANCE = 0.25;
+export const MAX_CRIT_CHANCE = cfg.damage.maxCritChance;
 
 /** Speed contribution to crit chance: +0.5% per point */
-export const CRIT_PER_SPEED = 0.005;
+export const CRIT_PER_SPEED = cfg.damage.critPerSpeed;
 
 /** Damage variance range: [0.85, 1.00] */
-export const VARIANCE_MIN = 0.85;
-export const VARIANCE_RANGE = 0.15;
+export const VARIANCE_MIN = cfg.damage.varianceMin;
+export const VARIANCE_RANGE = cfg.damage.varianceRange;
 
 // ─── Element Effectiveness Table ─────────────────────────────
 
-export const ELEMENT_TABLE: Record<Element, Record<Element, number>> = {
-  fire:  { fire: 0.5, water: 0.5, earth: 1.5, air: 1.0, none: 1.0 },
-  water: { fire: 1.5, water: 0.5, earth: 1.0, air: 0.5, none: 1.0 },
-  earth: { fire: 1.0, water: 1.5, earth: 0.5, air: 1.5, none: 1.0 },
-  air:   { fire: 1.0, water: 1.5, earth: 0.5, air: 0.5, none: 1.0 },
-  none:  { fire: 1.0, water: 1.0, earth: 1.0, air: 1.0, none: 1.0 },
-};
+export const ELEMENT_TABLE: Record<Element, Record<Element, number>> = cfg.elements.effectivenessTable;
 
 export function getElementMultiplier(attackElement: Element, defenderElement: Element): number {
   return ELEMENT_TABLE[attackElement][defenderElement];
@@ -110,7 +107,7 @@ export function calculateDamage(
   const variance = VARIANCE_MIN + varianceRoll * VARIANCE_RANGE;
 
   // Final calculation
-  const finalDamage = Math.max(1, Math.floor(baseDamage * critMult * elementMultiplier * variance));
+  const finalDamage = Math.max(cfg.damage.minDamage, Math.floor(baseDamage * critMult * elementMultiplier * variance));
 
   // Build log string
   const parts: string[] = [`${finalDamage} damage`];
@@ -154,20 +151,20 @@ export function calculateBasicAttack(
 // Healing is NOT reduced by defense. Raw power + portion of ATK.
 
 export function calculateHealing(spellPower: number, casterAttack: number): number {
-  return Math.floor(spellPower + casterAttack * 0.5);
+  return Math.floor(spellPower + casterAttack * cfg.combat.healAttackRatio);
 }
 
 // ─── Shield Calculation ──────────────────────────────────────
 // Shield HP scales with caster's defense.
 
 export function calculateShield(spellPower: number, casterDefense: number): number {
-  return Math.floor(spellPower + casterDefense * 0.5);
+  return Math.floor(spellPower + casterDefense * cfg.combat.shieldDefenseRatio);
 }
 
 // ─── XP Reward Calculation ───────────────────────────────────
 
 export function xpRewardForMonster(severity: number, complexity: number = 0): number {
-  return Math.floor(25 * severity * severity * (1 + 0.05 * complexity));
+  return Math.floor(cfg.xp.monsterXPBase * Math.pow(severity, cfg.xp.monsterXPExponent) * (1 + cfg.xp.monsterComplexityBonus * complexity));
 }
 
 // ─── Monster Stat Scaling ────────────────────────────────────
@@ -177,7 +174,7 @@ export function scaleMonsterStat(
   severity: number,
   complexity: number = 0,
 ): number {
-  const severityMult = 1 + 0.35 * (severity - 1);
-  const complexityMult = 1 + 0.1 * complexity;
+  const severityMult = 1 + cfg.monsters.severityStep * (severity - 1);
+  const complexityMult = 1 + cfg.monsters.complexityStep * complexity;
   return Math.floor(baseStat * severityMult * complexityMult);
 }

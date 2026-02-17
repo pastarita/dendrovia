@@ -42,6 +42,8 @@ import {
   getStatModifiers,
 } from './StatusEffects';
 import { getSpell } from '../spell/SpellFactory';
+import { DEFAULT_BALANCE_CONFIG } from '../config/BalanceConfig';
+import { useItem } from '../inventory/InventorySystem';
 import {
   chooseEnemyAction,
   resolveEnemySpell,
@@ -621,9 +623,9 @@ function executePlayerDefend(state: BattleState): BattleState {
   player = tickCooldowns(player);
 
   // Defend: temporary defense boost
-  const defBuff = createStatusEffect('defense-up', 'Defend', 5, 1, false);
+  const defBuff = createStatusEffect('defense-up', 'Defend', DEFAULT_BALANCE_CONFIG.combat.defendDefenseBonus, DEFAULT_BALANCE_CONFIG.combat.defendDuration, false);
   player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, defBuff) };
-  log = [...log, makeLog(turn, 'player', log.length, `${player.name} takes a defensive stance! DEF +5 this turn`)];
+  log = [...log, makeLog(turn, 'player', log.length, `${player.name} takes a defensive stance! DEF +${DEFAULT_BALANCE_CONFIG.combat.defendDefenseBonus} this turn`)];
 
   events.push({
     type: 'STATUS_APPLIED',
@@ -659,9 +661,31 @@ function executeUseItem(state: BattleState, itemId: string): BattleState {
 
   player = tickCooldowns(player);
 
-  // Items are resolved by the inventory system externally
-  // For now, just log and proceed
-  log = [...log, makeLog(turn, 'player', log.length, `${player.name} uses item ${itemId}`)];
+  // Apply the item effect via InventorySystem
+  const beforeItemEffects = player.statusEffects;
+  const itemResult = useItem(player, itemId);
+  if (itemResult.consumed) {
+    player = itemResult.character;
+
+    // Detect new status effects (buffs from items)
+    const newEffects = player.statusEffects.filter(
+      e => !beforeItemEffects.some(b => b.id === e.id),
+    );
+    for (const eff of newEffects) {
+      events.push({
+        type: 'STATUS_APPLIED',
+        targetId: player.id,
+        effectId: eff.id,
+        effectType: eff.type,
+        remainingTurns: eff.remainingTurns,
+      });
+    }
+
+    // Detect removed effects (cleanse)
+    events.push(...detectExpiredEffects(beforeItemEffects, player.statusEffects, player.id));
+  }
+
+  log = [...log, makeLog(turn, 'player', log.length, itemResult.log)];
 
   return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
 }

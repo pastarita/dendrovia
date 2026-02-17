@@ -13,38 +13,19 @@ import type {
   CharacterStats,
   GrowthRates,
 } from '@dendrovia/shared';
+import { DEFAULT_BALANCE_CONFIG } from '../config/BalanceConfig';
 
-// ─── Base Stats ──────────────────────────────────────────────
+const cfg = DEFAULT_BALANCE_CONFIG;
 
-const TANK_STATS: CharacterStats = {
-  health: 150,
-  maxHealth: 150,
-  mana: 50,
-  maxMana: 50,
-  attack: 5,
-  defense: 15,
-  speed: 6,
-};
+// ─── Base Stats (derived from BalanceConfig) ─────────────────
 
-const HEALER_STATS: CharacterStats = {
-  health: 100,
-  maxHealth: 100,
-  mana: 100,
-  maxMana: 100,
-  attack: 3,
-  defense: 8,
-  speed: 8,
-};
+function toCharacterStats(base: { health: number; mana: number; attack: number; defense: number; speed: number }): CharacterStats {
+  return { health: base.health, maxHealth: base.health, mana: base.mana, maxMana: base.mana, attack: base.attack, defense: base.defense, speed: base.speed };
+}
 
-const DPS_STATS: CharacterStats = {
-  health: 80,
-  maxHealth: 80,
-  mana: 75,
-  maxMana: 75,
-  attack: 15,
-  defense: 5,
-  speed: 7,
-};
+const TANK_STATS: CharacterStats = toCharacterStats(cfg.characters.baseStats.tank);
+const HEALER_STATS: CharacterStats = toCharacterStats(cfg.characters.baseStats.healer);
+const DPS_STATS: CharacterStats = toCharacterStats(cfg.characters.baseStats.dps);
 
 export const BASE_STATS: Record<CharacterClass, CharacterStats> = {
   tank: TANK_STATS,
@@ -52,13 +33,9 @@ export const BASE_STATS: Record<CharacterClass, CharacterStats> = {
   dps: DPS_STATS,
 };
 
-// ─── Growth Rates (per level) ────────────────────────────────
+// ─── Growth Rates (derived from BalanceConfig) ───────────────
 
-export const GROWTH_RATES: Record<CharacterClass, GrowthRates> = {
-  tank:   { hp: 8,   mana: 2, attack: 1,   defense: 2,   speed: 1   },
-  healer: { hp: 5,   mana: 5, attack: 0.5, defense: 1,   speed: 1.5 },
-  dps:    { hp: 3,   mana: 3, attack: 2,   defense: 0.5, speed: 1   },
-};
+export const GROWTH_RATES: Record<CharacterClass, GrowthRates> = cfg.characters.growthRates;
 
 // ─── Starter Spells ──────────────────────────────────────────
 
@@ -70,10 +47,10 @@ const STARTER_SPELLS: Record<CharacterClass, string[]> = {
 
 // ─── XP Curve ────────────────────────────────────────────────
 
-const XP_BASE = 50;
+const XP_BASE = cfg.xp.base;
 
 export function totalXPForLevel(level: number): number {
-  return Math.floor(XP_BASE * level * level);
+  return Math.floor(XP_BASE * Math.pow(level, cfg.xp.exponent));
 }
 
 export function xpToNextLevel(currentLevel: number): number {
@@ -185,7 +162,7 @@ export function gainExperience(
   let levelsGained = 0;
 
   // Check for level ups (can gain multiple levels at once)
-  while (level < 30 && experience >= totalXPForLevel(level + 1)) {
+  while (level < cfg.characters.maxLevel && experience >= totalXPForLevel(level + 1)) {
     level++;
     levelsGained++;
 

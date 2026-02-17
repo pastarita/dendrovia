@@ -24,6 +24,7 @@ import {
   generateMiniboss,
 } from '../combat/MonsterFactory';
 import { rngNext, rngChance } from '../utils/SeededRandom';
+import { DEFAULT_BALANCE_CONFIG } from '../config/BalanceConfig';
 
 // ─── Configuration ──────────────────────────────────────────
 
@@ -38,12 +39,7 @@ export interface EncounterConfig {
   encounterCooldown: number;
 }
 
-export const DEFAULT_CONFIG: EncounterConfig = {
-  bossComplexityThreshold: 20,
-  minibossRiskThreshold: 6,
-  randomEncounterChance: 0.15,
-  encounterCooldown: 3,
-};
+export const DEFAULT_CONFIG: EncounterConfig = DEFAULT_BALANCE_CONFIG.encounters;
 
 // ─── Encounter State ────────────────────────────────────────
 

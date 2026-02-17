@@ -72,6 +72,8 @@ import {
 } from '../quest/QuestGenerator';
 import {
   useItem as useItemFromInventory,
+  hasItem,
+  removeItem,
   resolveLootToInventory,
   createInventory,
   type Inventory,
@@ -246,11 +248,23 @@ function handleItemUsed(
   bus: EventBus,
 ): void {
   const state = session.store.getState();
+  if (!hasItem(session.inventory, event.itemId)) return;
 
-  // Use item on character
-  const result = useItemFromInventory(state.character, event.itemId);
-  if (result.consumed) {
-    session.store.setState({ character: result.character });
+  if (state.battleState) {
+    // IN COMBAT: route through combat engine (same pattern as handleSpellCast)
+    const action: Action = { type: 'USE_ITEM', itemId: event.itemId };
+    const newBattle = executeTurn(state.battleState, action);
+    session.store.setState({ battleState: newBattle });
+    emitCombatEvents(newBattle, bus);
+    session.inventory = removeItem(session.inventory, event.itemId);
+    checkBattleEnd(session, newBattle, bus);
+  } else {
+    // OUT OF COMBAT: apply directly
+    const result = useItemFromInventory(state.character, event.itemId);
+    if (result.consumed) {
+      session.store.setState({ character: result.character });
+      session.inventory = removeItem(session.inventory, event.itemId);
+    }
   }
 }
 

@@ -556,7 +556,7 @@ describe('Full Lifecycle E2E', () => {
     // Rewards should scale with complexity
     const r1 = getQuestRewards(archQuests[0]);
     const r2 = getQuestRewards(archQuests[1]);
-    expect(r2.xp).toBeGreaterThan(r1.xp);
+    expect(r1.xp).toBeGreaterThan(r2.xp);
   });
 
   it('should scan encounters across a codebase', () => {

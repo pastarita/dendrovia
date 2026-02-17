@@ -22,7 +22,7 @@ import { useEffect, useRef, useState, useCallback, type ReactNode } from 'react'
 // ── Shared ────────────────────────────────────────────────────
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { EventBus, TopologyGeneratedEvent } from '@dendrovia/shared';
-import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit, CharacterClass } from '@dendrovia/shared';
+import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit, CharacterClass, ContributorProfile } from '@dendrovia/shared';
 
 // ── ARCHITECTUS (3D renderer) ─────────────────────────────────
 import { App as ArchitectusApp, useRendererStore } from '@dendrovia/architectus';
@@ -46,6 +46,7 @@ import {
   createCharacter,
   generateQuestGraph,
   generateHotspotQuests,
+  generateArchaeologyQuests,
   type GameSession,
   type GameStore,
 } from '@dendrovia/ludus';
@@ -215,27 +216,39 @@ export function DendroviaQuest({
       let chronosFiles: ParsedFile[] = [];
       let chronosCommits: ParsedCommit[] = [];
       let chronosHotspots: Hotspot[] = [];
+      let chronosContributors: ContributorProfile[] = [];
 
       if (topologyPath && !cancelled) {
         try {
           setInitMessage('Loading topology...');
-          const res = await fetch(topologyPath);
-          if (res.ok) {
-            const data = await res.json();
-            if (!cancelled) {
-              const tree = data.tree ?? data;
-              const spots: Hotspot[] = data.hotspots ?? [];
-              chronosFiles = data.files ?? [];
-              chronosCommits = data.commits ?? [];
-              chronosHotspots = spots;
-              setTopology(tree);
-              setHotspots(spots);
-              // T09: Emit topology to OCULUS via EventBus
-              bus.emit<TopologyGeneratedEvent>(GameEvents.TOPOLOGY_GENERATED, {
-                tree,
-                hotspots: spots,
-              });
-            }
+
+          // Derive contributors path from topology path
+          const contributorsPath = topologyPath.replace(/topology\.json$/, 'contributors.json');
+
+          // Fetch topology and contributors in parallel
+          const [topoRes, contribRes] = await Promise.all([
+            fetch(topologyPath),
+            fetch(contributorsPath).catch(() => null),
+          ]);
+
+          if (topoRes.ok && !cancelled) {
+            const data = await topoRes.json();
+            const tree = data.tree ?? data;
+            const spots: Hotspot[] = data.hotspots ?? [];
+            chronosFiles = data.files ?? [];
+            chronosCommits = data.commits ?? [];
+            chronosHotspots = spots;
+            setTopology(tree);
+            setHotspots(spots);
+            // T09: Emit topology to OCULUS via EventBus
+            bus.emit<TopologyGeneratedEvent>(GameEvents.TOPOLOGY_GENERATED, {
+              tree,
+              hotspots: spots,
+            });
+          }
+
+          if (contribRes?.ok && !cancelled) {
+            chronosContributors = await contribRes.json();
           }
         } catch (err) {
           console.warn('[DENDROVIA] Failed to load topology from', topologyPath, err);
@@ -252,7 +265,8 @@ export function DendroviaQuest({
           // Generate quests from real CHRONOS data
           const commitQuests = generateQuestGraph(chronosCommits);
           const hotspotQuests = generateHotspotQuests(chronosHotspots);
-          const allQuests = [...commitQuests, ...hotspotQuests];
+          const archaeologyQuests = generateArchaeologyQuests(chronosFiles);
+          const allQuests = [...commitQuests, ...hotspotQuests, ...archaeologyQuests];
 
           const store: GameStore = createGameStore({
             character,
@@ -267,15 +281,19 @@ export function DendroviaQuest({
           const unsubBridge = bridgeStoreToEventBus(store);
           cleanups.push(unsubBridge);
 
-          // Create session with real topology data
-          const session = createGameSession(store, chronosFiles, chronosCommits, chronosHotspots);
+          // Create session with real topology data + contributor NPCs
+          const session = createGameSession(
+            store, chronosFiles, chronosCommits, chronosHotspots,
+            Date.now(), undefined, chronosContributors,
+          );
           session.quests = allQuests;
           gameSessionRef.current = session;
 
           if (allQuests.length > 0) {
             console.log(
               `[DENDROVIA] LUDUS: ${allQuests.length} quests generated ` +
-              `(${commitQuests.length} from commits, ${hotspotQuests.length} from hotspots)`
+              `(${commitQuests.length} commits, ${hotspotQuests.length} hotspots, ${archaeologyQuests.length} archaeology)` +
+              (chronosContributors.length > 0 ? `, ${chronosContributors.length} NPC contributors loaded` : '')
             );
           }
 

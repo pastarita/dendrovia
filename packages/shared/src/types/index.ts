@@ -89,6 +89,43 @@ export interface ContributorSummary {
   archetypeDistribution: Record<string, number>;
 }
 
+export type Archetype =
+  | 'guardian'    // >50% chore/ci/build — the infrastructure tank
+  | 'healer'     // >50% fix commits — the bug fixer
+  | 'striker'    // >50% feat commits — the feature builder
+  | 'sage'       // >40% docs/test — the knowledge keeper
+  | 'ranger'     // high file diversity — the wide-ranging explorer
+  | 'artificer'  // >40% perf/build — the optimizer
+  | 'berserker'  // high breaking change ratio — the disruptor
+  | 'adventurer'; // no dominant pattern — the generalist
+
+export type TimeArchetype = 'dawn' | 'daylight' | 'twilight' | 'midnight';
+
+export interface ContributorFacets {
+  energy: number;
+  discipline: number;
+  creativity: number;
+  protectiveness: number;
+  breadth: number;
+  collaboration: number;
+}
+
+export interface ContributorProfile {
+  name: string;
+  email: string;
+  archetype: Archetype;
+  timeArchetype: TimeArchetype;
+  characterClass: CharacterClass;
+  commitCount: number;
+  firstCommit: Date;
+  lastCommit: Date;
+  uniqueFilesTouched: number;
+  peakHour: number;
+  topCommitType: CommitType;
+  typeDistribution: Partial<Record<CommitType, number>>;
+  facets: ContributorFacets;
+}
+
 export interface DeepWikiEnrichment {
   wikiUrl: string;
   overview?: string;

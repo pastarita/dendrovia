@@ -18,6 +18,7 @@ import type {
   ParsedFile,
   ParsedCommit,
   Hotspot,
+  ContributorProfile,
   Character,
   BattleState,
   Quest,
@@ -86,6 +87,8 @@ export interface GameSession {
   files: ParsedFile[];
   commits: ParsedCommit[];
   hotspots: Hotspot[];
+  /** Contributor profiles from CHRONOS — NPC data for encounters */
+  contributors: ContributorProfile[];
 }
 
 export function createGameSession(
@@ -95,6 +98,7 @@ export function createGameSession(
   hotspots: Hotspot[],
   seed: number = Date.now(),
   config: EncounterConfig = DEFAULT_CONFIG,
+  contributors: ContributorProfile[] = [],
 ): GameSession {
   return {
     store,
@@ -107,6 +111,7 @@ export function createGameSession(
     files,
     commits,
     hotspots,
+    contributors,
   };
 }
 

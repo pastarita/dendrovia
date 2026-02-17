@@ -87,9 +87,8 @@ function makeCommit(overrides: Partial<ParsedCommit> = {}): ParsedCommit {
     filesChanged: ['src/parser.ts'],
     insertions: 30,
     deletions: 10,
-    isBugFix: true,
-    isFeature: false,
     isMerge: false,
+    type: 'bug-fix',
     ...overrides,
   };
 }
@@ -175,8 +174,8 @@ describe('QuestGenerator', () => {
   it('should generate quests from commits', () => {
     const commits = [
       makeCommit({ message: 'fix: null pointer in parser' }),
-      makeCommit({ message: 'feat: add user auth', isBugFix: false, isFeature: true }),
-      makeCommit({ message: 'fix: memory leak in cache', isBugFix: true }),
+      makeCommit({ message: 'feat: add user auth', type: 'feature' }),
+      makeCommit({ message: 'fix: memory leak in cache', type: 'bug-fix' }),
     ];
     const quests = generateQuestGraph(commits);
     expect(quests).toHaveLength(3);
@@ -229,9 +228,9 @@ describe('QuestGenerator', () => {
 
   it('should generate bug-hunt quests from bug-fix commits only', () => {
     const commits = [
-      makeCommit({ isBugFix: true }),
-      makeCommit({ isBugFix: false, isFeature: true }),
-      makeCommit({ isBugFix: true }),
+      makeCommit({ type: 'bug-fix' }),
+      makeCommit({ type: 'feature' }),
+      makeCommit({ type: 'bug-fix' }),
     ];
     const bugQuests = generateBugHuntQuests(commits);
     expect(bugQuests).toHaveLength(2);
@@ -341,7 +340,7 @@ describe('EncounterSystem', () => {
 
   it('should trigger bug encounter for bug-fix commits', () => {
     const file = makeFile({ path: 'src/parser.ts', complexity: 5 });
-    const commits = [makeCommit({ filesChanged: ['src/parser.ts'], isBugFix: true })];
+    const commits = [makeCommit({ filesChanged: ['src/parser.ts'], type: 'bug-fix' })];
     const result = checkEncounter(file, commits, [], encounterState, rng);
     expect(result.encounter).not.toBeNull();
     expect(result.encounter!.type).toBe('bug');

@@ -22,8 +22,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     insertions: 45,
     deletions: 12,
     filesChanged: ['src/parser/ast.ts', 'src/parser/visitor.ts'],
-    isBugFix: true,
-    isFeature: false,
+    type: 'bug-fix',
     isMerge: false,
   },
   {
@@ -34,8 +33,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     insertions: 120,
     deletions: 30,
     filesChanged: ['src/core/engine.ts', 'src/events/listener.ts'],
-    isBugFix: true,
-    isFeature: false,
+    type: 'bug-fix',
     isMerge: false,
   },
   {
@@ -46,8 +44,7 @@ const MOCK_COMMITS: ParsedCommit[] = [
     insertions: 30,
     deletions: 8,
     filesChanged: ['src/state/store.ts'],
-    isBugFix: true,
-    isFeature: false,
+    type: 'bug-fix',
     isMerge: false,
   },
 ];

@@ -58,7 +58,7 @@ describe('Lore tier assignment', () => {
         hash: `c${i}`, message: 'feat', author: 'dev', date: new Date(),
         filesChanged: [hub.path, f.path],
         insertions: 10, deletions: 0,
-        isBugFix: false, isFeature: true, isMerge: false,
+        isMerge: false, type: 'feature',
       })),
       tree: { name: 'root', path: '', type: 'directory' },
       hotspots: [{ path: hub.path, churnRate: 15, complexity: 25, riskScore: 0.9 }],

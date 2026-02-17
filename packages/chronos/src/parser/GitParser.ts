@@ -6,7 +6,7 @@
  */
 
 import type { ParsedCommit, RepositoryMetadata } from '@dendrovia/shared';
-import { classifyCommit, commitFlags } from '../classifier/CommitClassifier.js';
+import { classifyCommit } from '../classifier/CommitClassifier.js';
 import { basename } from 'path';
 
 // Sentinel separating fields within a single commit record
@@ -171,7 +171,6 @@ function parseRecord(record: string): RawCommit | null {
 function toCommit(raw: RawCommit): ParsedCommit {
   const fullMessage = raw.body ? `${raw.subject}\n\n${raw.body}` : raw.subject;
   const classified = classifyCommit(fullMessage);
-  const flags = commitFlags(classified);
 
   return {
     hash: raw.hash,
@@ -181,9 +180,7 @@ function toCommit(raw: RawCommit): ParsedCommit {
     filesChanged: raw.filesChanged,
     insertions: raw.insertions,
     deletions: raw.deletions,
-    isBugFix: flags.isBugFix,
-    isFeature: flags.isFeature,
-    isMerge: raw.parentHashes.length > 1 || flags.isMerge,
+    isMerge: raw.parentHashes.length > 1 || classified.type === 'merge',
     type: classified.type,
     scope: classified.scope,
     isBreaking: classified.isBreaking,
@@ -302,6 +299,63 @@ export async function getFileChurnCounts(
   }
 
   return counts;
+}
+
+/**
+ * Get last author per file in a single pass via `git log --format='%an' --name-only`.
+ * Uses the same batch-spawn pattern as getFileChurnCounts.
+ * Returns the most recent committer for each file (last-committer heuristic).
+ */
+export async function getFileAuthors(
+  repoPath: string,
+): Promise<Map<string, string>> {
+  const proc = Bun.spawn(
+    ['git', 'log', '--format=%an', '--name-only', '--diff-filter=ACMR'],
+    { cwd: repoPath, stdout: 'pipe', stderr: 'pipe' },
+  );
+
+  const stdout = await new Response(proc.stdout).text();
+  const exitCode = await proc.exited;
+
+  if (exitCode !== 0) {
+    throw new Error('git log --name-only (authors) failed');
+  }
+
+  const authors = new Map<string, string>();
+  let currentAuthor = '';
+
+  for (const line of stdout.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    // Author lines don't contain path separators and aren't file extensions;
+    // file lines always contain at least one '/' or a '.' extension.
+    // But a simpler heuristic: author lines appear after blank lines following
+    // numstat/file blocks. Since --format=%an puts author on its own line
+    // followed by blank then file list, we track state by presence of path chars.
+    //
+    // Actually the output format is:
+    //   author1\n\nfile1\nfile2\n\nauthor2\n\nfile3\n...
+    // Blank lines separate author+files blocks. The first non-blank line
+    // after a blank is the author, followed by file paths.
+    // Since we already skip blanks above, we need a different approach.
+
+    // Simplest approach: if we haven't seen this file yet, the first author
+    // we encounter for it is the most recent (git log is newest-first).
+    // We just need to distinguish author lines from file lines.
+    // File lines contain '/' or have a file extension pattern.
+    if (trimmed.includes('/') || /\.\w{1,10}$/.test(trimmed)) {
+      // This is a file path
+      if (currentAuthor && !authors.has(trimmed)) {
+        authors.set(trimmed, currentAuthor);
+      }
+    } else {
+      // This is an author name
+      currentAuthor = trimmed;
+    }
+  }
+
+  return authors;
 }
 
 /**

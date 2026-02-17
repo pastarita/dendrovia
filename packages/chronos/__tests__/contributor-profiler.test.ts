@@ -23,8 +23,6 @@ function makeCommit(
     filesChanged: ['src/index.ts'],
     insertions: 10,
     deletions: 5,
-    isBugFix: false,
-    isFeature: false,
     isMerge: false,
     ...opts,
   };

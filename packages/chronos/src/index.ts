@@ -12,6 +12,7 @@ export {
   listFilesAtHead,
   getHeadHash,
   getFileChurnCounts,
+  getFileAuthors,
   extractRepositoryMetadata,
   type GitParserOptions,
   type RawCommit,
@@ -32,7 +33,6 @@ export { parseGoFile } from './parser/GoParser.js';
 // Classifiers
 export {
   classifyCommit,
-  commitFlags,
   type CommitType,
   type ClassifiedCommit,
 } from './classifier/CommitClassifier.js';
@@ -68,13 +68,8 @@ export {
   type TopologyOutput,
 } from './builder/TopologyBuilder.js';
 
-export {
-  profileContributors,
-  type ContributorProfile,
-  type ContributorFacets,
-  type Archetype,
-  type TimeArchetype,
-} from './builder/ContributorProfiler.js';
+export { profileContributors } from './builder/ContributorProfiler.js';
+export type { ContributorProfile, ContributorFacets, Archetype, TimeArchetype } from '@dendrovia/shared';
 
 // Pipeline (reusable entry point)
 export {

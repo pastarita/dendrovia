@@ -3,14 +3,19 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useRendererStore } from '../store/useRendererStore';
 import type { QualityTier } from '../store/useRendererStore';
+import { deriveDimensions } from '../systems/PlatformConfig';
+import type { PlatformConfig } from '../systems/PlatformConfig';
 
 /**
  * ROOT PLATFORM
  *
- * Persistent spawn platform at the base of the root trunk (origin).
- * Four concentric geometry layers centered at (0, 0, 0):
+ * Persistent spawn platform at the base of the root trunk.
+ * All dimensions derive dynamically from the topology's trunk radius
+ * via PlatformConfig — the same tree that produces a 0.3-radius trunk
+ * gets a radius-3 platform, while a larger tree gets proportionally larger.
  *
- *   Layer 1 — Base Disc ("the puck"): metallic platform flush with Y=0
+ * Four concentric geometry layers:
+ *   Layer 1 — Base Disc ("the puck"): metallic platform, top flush with origin Y
  *   Layer 2 — Concentric Ring Grooves: glowing rings marking trunk/route zones
  *   Layer 3 — Edge Rim Glow: Tron-style bloom-catching torus
  *   Layer 4 — Center Well: trunk mount anchor
@@ -22,31 +27,14 @@ import type { QualityTier } from '../store/useRendererStore';
 interface RootPlatformProps {
   palette: { primary: string; secondary: string; glow: string; accent: string };
   routes: Array<{ direction: THREE.Vector3; label: string }>;
-  rootName: string;
+  config: PlatformConfig;
 }
 
-// Platform dimensions (world units)
-const PLATFORM_RADIUS = 3.0;
-const PLATFORM_THICKNESS = 0.15;
-const WELL_RADIUS = 0.35;
-const WELL_HEIGHT = 0.3;
-const RIM_MAJOR_RADIUS = 3.0;
-const RIM_TUBE_RADIUS = 0.03;
-const INNER_RING_INNER = 1.0;
-const INNER_RING_OUTER = 1.1;
-const OUTER_RING_INNER = 2.5;
-const OUTER_RING_OUTER = 2.6;
-const ROUTE_LENGTH = 1.5;
-const ROUTE_RADIUS_BASE = 0.02;
-const ROUTE_RADIUS_TIP = 0.015;
-
-// Ring rotation speeds (rad/s)
+// Ring rotation speeds (rad/s) — scale-invariant
 const INNER_RING_SPEED = 0.05;
 const OUTER_RING_SPEED = -0.03;
 
-// Rim pulse parameters
-const RIM_PULSE_MIN = 1.5;
-const RIM_PULSE_MAX = 2.5;
+// Rim pulse parameters — scale-invariant
 const RIM_PULSE_SPEED = 1.2;
 
 /** Geometry detail per quality tier */
@@ -63,9 +51,12 @@ const TIER_DETAIL: Record<QualityTier, {
   potato: { discSegments: 8,  layers: 1, animated: false, routes: false },
 };
 
-export function RootPlatform({ palette, routes, rootName }: RootPlatformProps) {
+export function RootPlatform({ palette, routes, config }: RootPlatformProps) {
   const qualityTier = useRendererStore((s) => s.qualityTier);
   const detail = TIER_DETAIL[qualityTier];
+
+  // Derive all concrete dimensions from topology config
+  const dim = useMemo(() => deriveDimensions(config), [config]);
 
   // Refs for animated elements
   const innerRingRef = useRef<THREE.Mesh>(null);
@@ -114,42 +105,41 @@ export function RootPlatform({ palette, routes, rootName }: RootPlatformProps) {
     roughness: 0.3,
   }), [palette.accent, palette.glow]);
 
-  // --- Geometries (memoized per quality tier) ---
+  // --- Geometries (memoized per dimensions + quality tier) ---
   const discGeometry = useMemo(
-    () => new THREE.CylinderGeometry(PLATFORM_RADIUS, PLATFORM_RADIUS, PLATFORM_THICKNESS, detail.discSegments),
-    [detail.discSegments],
+    () => new THREE.CylinderGeometry(dim.platformRadius, dim.platformRadius, dim.platformThickness, detail.discSegments),
+    [dim.platformRadius, dim.platformThickness, detail.discSegments],
   );
 
   const wellGeometry = useMemo(
-    () => new THREE.CylinderGeometry(WELL_RADIUS, WELL_RADIUS, WELL_HEIGHT, 32),
-    [],
+    () => new THREE.CylinderGeometry(dim.wellRadius, dim.wellRadius, dim.wellHeight, 32),
+    [dim.wellRadius, dim.wellHeight],
   );
 
   const innerRingGeometry = useMemo(
-    () => new THREE.RingGeometry(INNER_RING_INNER, INNER_RING_OUTER, 64),
-    [],
+    () => new THREE.RingGeometry(dim.innerRingInner, dim.innerRingOuter, 64),
+    [dim.innerRingInner, dim.innerRingOuter],
   );
 
   const outerRingGeometry = useMemo(
-    () => new THREE.RingGeometry(OUTER_RING_INNER, OUTER_RING_OUTER, 64),
-    [],
+    () => new THREE.RingGeometry(dim.outerRingInner, dim.outerRingOuter, 64),
+    [dim.outerRingInner, dim.outerRingOuter],
   );
 
   const rimGeometry = useMemo(
-    () => new THREE.TorusGeometry(RIM_MAJOR_RADIUS, RIM_TUBE_RADIUS, 8, 128),
-    [],
+    () => new THREE.TorusGeometry(dim.platformRadius, dim.rimTubeRadius, 8, 128),
+    [dim.platformRadius, dim.rimTubeRadius],
   );
 
   const routeGeometry = useMemo(
-    () => new THREE.CylinderGeometry(ROUTE_RADIUS_TIP, ROUTE_RADIUS_BASE, ROUTE_LENGTH, 4),
-    [],
+    () => new THREE.CylinderGeometry(dim.routeRadiusTip, dim.routeRadiusBase, dim.routeLength, 4),
+    [dim.routeRadiusTip, dim.routeRadiusBase, dim.routeLength],
   );
 
   // --- Route indicator transforms ---
   const routeTransforms = useMemo(() => {
     return routes.map((route) => {
       const dir = route.direction.clone();
-      // Project onto XZ plane
       dir.y = 0;
       if (dir.lengthSq() < 0.001) {
         dir.set(1, 0, 0);
@@ -157,32 +147,28 @@ export function RootPlatform({ palette, routes, rootName }: RootPlatformProps) {
       dir.normalize();
 
       // Position at platform edge
-      const pos = dir.clone().multiplyScalar(PLATFORM_RADIUS + ROUTE_LENGTH * 0.5);
-      pos.y = 0;
+      const pos = dir.clone().multiplyScalar(dim.platformRadius + dim.routeLength * 0.5);
+      pos.y = config.origin[1];
 
       // Slight Y tilt to show branch trajectory
       const tiltedDir = route.direction.clone().normalize();
-      tiltedDir.y = Math.max(tiltedDir.y * 0.3, 0.05); // Flatten but keep hint
+      tiltedDir.y = Math.max(tiltedDir.y * 0.3, 0.05);
       tiltedDir.normalize();
 
-      // Rotation: align cylinder Y-axis with tiltedDir projected into XZ+slight Y
       const quaternion = new THREE.Quaternion();
       const up = new THREE.Vector3(0, 1, 0);
-      // The cylinder's default axis is Y, so we rotate from Y to the direction
-      // But we want the rod to lay mostly flat, pointing outward from center
       const rodDir = new THREE.Vector3(dir.x, tiltedDir.y * 0.5, dir.z).normalize();
       quaternion.setFromUnitVectors(up, rodDir);
 
       return { position: pos, quaternion, label: route.label };
     });
-  }, [routes]);
+  }, [routes, dim.platformRadius, dim.routeLength, config.origin]);
 
   // --- Animation ---
   useFrame((_, delta) => {
     if (!detail.animated) return;
     const dt = Math.min(delta, 0.1);
 
-    // Counter-rotating rings
     if (innerRingRef.current) {
       innerRingRef.current.rotation.z += INNER_RING_SPEED * dt;
     }
@@ -190,23 +176,21 @@ export function RootPlatform({ palette, routes, rootName }: RootPlatformProps) {
       outerRingRef.current.rotation.z += OUTER_RING_SPEED * dt;
     }
 
-    // Rim pulse
     if (rimRef.current) {
       const t = performance.now() * 0.001 * RIM_PULSE_SPEED;
-      const pulse = RIM_PULSE_MIN + (RIM_PULSE_MAX - RIM_PULSE_MIN) * (0.5 + 0.5 * Math.sin(t));
       (rimRef.current.material as THREE.MeshBasicMaterial).opacity = 0.5 + 0.3 * Math.sin(t);
-      // Scale emissive effect via opacity since MeshBasicMaterial has no emissiveIntensity
-      void pulse; // pulse tracked for potential future emissive material upgrade
     }
   });
 
+  const [ox, oy, oz] = config.origin;
+
   return (
-    <group name="root-platform">
+    <group name="root-platform" position={[ox, oy, oz]}>
       {/* Layer 1 — Base Disc */}
       <mesh
         geometry={discGeometry}
         material={discMaterial}
-        position={[0, -PLATFORM_THICKNESS / 2, 0]}
+        position={[0, -dim.platformThickness / 2, 0]}
         receiveShadow
       />
 
@@ -215,7 +199,7 @@ export function RootPlatform({ palette, routes, rootName }: RootPlatformProps) {
         <mesh
           geometry={wellGeometry}
           material={wellMaterial}
-          position={[0, WELL_HEIGHT / 2, 0]}
+          position={[0, dim.wellHeight / 2, 0]}
         />
       )}
 

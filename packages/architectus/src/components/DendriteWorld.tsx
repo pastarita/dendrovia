@@ -1,14 +1,18 @@
 import { useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import type { FileTreeNode, Hotspot, ProceduralPalette, LSystemRule } from '@dendrovia/shared';
+import * as THREE from 'three';
+import type { FileTreeNode, Hotspot, ProceduralPalette, LSystemRule, StoryArc } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { BranchEnteredEvent } from '@dendrovia/shared';
 import { LSystem } from '../systems/LSystem';
 import { TurtleInterpreter } from '../systems/TurtleInterpreter';
 import { SpatialIndex } from '../systems/SpatialIndex';
+import { mapNodesToSegments } from '../systems/SegmentMapper';
 import { BranchInstances } from './BranchInstances';
 import { NodeInstances } from './NodeInstances';
 import { MushroomInstances } from './MushroomInstances';
+import { ParticleInstances } from './ParticleInstances';
+import { SegmentOverlay } from './SegmentOverlay';
 import { SDFBackdrop } from './SDFBackdrop';
 import { useRendererStore } from '../store/useRendererStore';
 
@@ -33,6 +37,10 @@ interface DendriteWorldProps {
   /** Optional L-system rules from IMAGINARIUM. When provided, the angle and
    *  iterations override the defaults derived from topology. */
   lsystemOverride?: LSystemRule;
+  /** Story arc from LUDUS — drives segment overlay glow regions (D7) */
+  storyArc?: StoryArc | null;
+  /** Currently active segment ID (quest target) for pulsing highlight */
+  activeSegmentId?: string | null;
 }
 
 /**
@@ -84,7 +92,7 @@ function BranchTracker({ spatialIndex }: { spatialIndex: SpatialIndex }) {
   return null;
 }
 
-export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverride }: DendriteWorldProps) {
+export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverride, storyArc, activeSegmentId }: DendriteWorldProps) {
   // Pull generated assets and SDF backdrop toggle from the store
   const generatedAssets = useRendererStore((s) => s.generatedAssets);
   const sdfBackdrop = useRendererStore((s) => s.sdfBackdrop);
@@ -117,6 +125,17 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     const entries = Object.values(generatedAssets.shaders);
     return entries.length > 0 ? entries[0] : null;
   }, [generatedAssets?.shaders]);
+
+  // D7: Map story arc segments to spatial placements for the overlay
+  const segmentPlacements = useMemo(() => {
+    if (!storyArc) return new Map();
+    return mapNodesToSegments(treeGeometry.nodes, storyArc);
+  }, [treeGeometry.nodes, storyArc]);
+
+  // D6: Bounding box for particle system ambient spawning
+  const sceneBounds = useMemo(() => {
+    return treeGeometry.boundingBox.clone().expandByScalar(2);
+  }, [treeGeometry.boundingBox]);
 
   return (
     <group name="dendrite-world">
@@ -156,6 +175,18 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
           specimens={mushroomSpecimens}
           meshData={mushroomMeshes}
           palette={palette}
+        />
+      )}
+
+      {/* D6: Ambient firefly particles within scene bounds */}
+      <ParticleInstances bounds={sceneBounds} color={palette.glow} />
+
+      {/* D7: Story arc segment glow regions */}
+      {segmentPlacements.size > 0 && (
+        <SegmentOverlay
+          placements={segmentPlacements}
+          activeSegmentId={activeSegmentId}
+          glowColor={palette.glow}
         />
       )}
     </group>

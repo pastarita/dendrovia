@@ -61,9 +61,9 @@ const _tempQ = new THREE.Quaternion();
 // Local-space axes for the turtle frame.
 // The turtle's heading (forward) is local +Y, right is local +X, up is local +Z.
 // All rotations use orientation.multiply(Qlocal) for proper local-axis rotation.
-const _localUp = new THREE.Vector3(0, 0, 1);    // Turtle's up axis (yaw axis)
-const _localRight = new THREE.Vector3(1, 0, 0);  // Turtle's right axis (pitch axis)
-const _localFwd = new THREE.Vector3(0, 1, 0);    // Turtle's forward axis (roll axis)
+const _localUp = new THREE.Vector3(0, 0, 1); // Turtle's up axis (yaw axis)
+const _localRight = new THREE.Vector3(1, 0, 0); // Turtle's right axis (pitch axis)
+const _localFwd = new THREE.Vector3(0, 1, 0); // Turtle's forward axis (roll axis)
 
 export class TurtleInterpreter {
   private defaultAngle: number;
@@ -259,10 +259,7 @@ export class TurtleInterpreter {
             nodePath = raw.slice(2);
           }
 
-          const dir = _forward
-            .set(0, 1, 0)
-            .applyQuaternion(state.orientation)
-            .clone();
+          const dir = _forward.set(0, 1, 0).applyQuaternion(state.orientation).clone();
 
           nodes.push({
             position: state.position.clone(),
@@ -305,7 +302,7 @@ export class TurtleInterpreter {
     const closeIdx = str.indexOf(')', idx);
     if (closeIdx === -1) return defaultVal;
     const val = parseFloat(str.slice(idx + 1, closeIdx));
-    return isNaN(val) ? defaultVal : val;
+    return Number.isNaN(val) ? defaultVal : val;
   }
 
   /**

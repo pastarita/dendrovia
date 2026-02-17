@@ -3,11 +3,10 @@
  * Reads GLSL template files, substitutes placeholders, validates output.
  */
 
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { ProceduralPalette } from '@dendrovia/shared';
-import { glslVec3FromHex, glslUniform } from '../utils/glsl';
-import { validateGLSL, countInstructions } from '../utils/glsl';
+import { countInstructions, glslUniform, validateGLSL } from '../utils/glsl';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -51,11 +50,7 @@ export interface AssembledShader {
 }
 
 export async function assembleShader(config: AssemblerConfig): Promise<AssembledShader> {
-  const [sdfLib, lighting, template] = await Promise.all([
-    getSdfLibrary(),
-    getLighting(),
-    getRaymarcher(),
-  ]);
+  const [sdfLib, lighting, template] = await Promise.all([getSdfLibrary(), getLighting(), getRaymarcher()]);
 
   const colorUniforms = [
     glslUniform('u_color1', 'vec3'),
@@ -65,7 +60,7 @@ export async function assembleShader(config: AssemblerConfig): Promise<Assembled
     glslUniform('u_background', 'vec3'),
   ].join('\n');
 
-  let source = template
+  const source = template
     .replace('{{SEED}}', config.seed)
     .replace('{{VARIANT_ID}}', config.variantId)
     .replace('{{COLOR_UNIFORMS}}', colorUniforms)
@@ -101,10 +96,20 @@ export function buildColorParameters(palette: ProceduralPalette): Record<string,
   const bg = parse(palette.background);
 
   return {
-    'u_color1.r': c1.r, 'u_color1.g': c1.g, 'u_color1.b': c1.b,
-    'u_color2.r': c2.r, 'u_color2.g': c2.g, 'u_color2.b': c2.b,
-    'u_color3.r': c3.r, 'u_color3.g': c3.g, 'u_color3.b': c3.b,
-    'u_glow.r': glow.r, 'u_glow.g': glow.g, 'u_glow.b': glow.b,
-    'u_background.r': bg.r, 'u_background.g': bg.g, 'u_background.b': bg.b,
+    'u_color1.r': c1.r,
+    'u_color1.g': c1.g,
+    'u_color1.b': c1.b,
+    'u_color2.r': c2.r,
+    'u_color2.g': c2.g,
+    'u_color2.b': c2.b,
+    'u_color3.r': c3.r,
+    'u_color3.g': c3.g,
+    'u_color3.b': c3.b,
+    'u_glow.r': glow.r,
+    'u_glow.g': glow.g,
+    'u_glow.b': glow.b,
+    'u_background.r': bg.r,
+    'u_background.g': bg.g,
+    'u_background.b': bg.b,
   };
 }

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { memo } from "react";
-import { Handle, Position } from "@xyflow/react";
-import type { NodeProps } from "@xyflow/react";
-import { DT } from "../design-tokens";
+import type { NodeProps } from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
+import { memo } from 'react';
+import { DT } from '../design-tokens';
 
 function PhaseNodeInner({ data }: NodeProps) {
   const fill = (data.fill as string) ?? DT.surface;
@@ -14,29 +14,25 @@ function PhaseNodeInner({ data }: NodeProps) {
   return (
     <div
       style={{
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: fill,
-        borderWidth: "1px",
-        borderStyle: "solid",
+        borderWidth: '1px',
+        borderStyle: 'solid',
         borderColor: DT.border,
-        borderRadius: "6px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "0.35rem",
-        fontSize: "0.8rem",
+        borderRadius: '6px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.35rem',
+        fontSize: '0.8rem',
         fontWeight: 600,
         color: textColor,
-        cursor: hasChildren ? "pointer" : "default",
+        cursor: hasChildren ? 'pointer' : 'default',
       }}
       title={data.description as string}
     >
-      {hasChildren && (
-        <span style={{ fontSize: "0.65rem", opacity: 0.6 }}>
-          {isCollapsed ? "+" : "-"}
-        </span>
-      )}
+      {hasChildren && <span style={{ fontSize: '0.65rem', opacity: 0.6 }}>{isCollapsed ? '+' : '-'}</span>}
       {data.label as string}
       <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
       <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />

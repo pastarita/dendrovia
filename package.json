@@ -12,7 +12,11 @@
     "dev": "turbo run dev --parallel",
     "build": "turbo run build",
     "test": "turbo run test",
-    "lint": "turbo run lint",
+    "check": "biome check .",
+    "check:fix": "biome check . --write",
+    "lint": "biome lint .",
+    "format": "biome format . --write",
+    "format:check": "biome format .",
     "clean": "turbo run clean && rm -rf node_modules",
     "bd": "turbo run dev --filter='./apps/playground-*'",
     "bd:all": "turbo run dev",
@@ -34,6 +38,7 @@
     "launch:list": "bun run scripts/launch-workspace.ts --list"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
     "turbo": "^2.7.0",
     "typescript": "^5.7.2",
     "@types/node": "^22.10.5"

@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import type { CharacterClass, BugType } from '@dendrovia/shared';
+import type { BalanceConfig, MatchupResult, SimulationConfig, SimulationReport } from '@dendrovia/ludus';
 import {
-  runFullSimulation,
-  formatCSV,
+  createBalanceConfig,
   DEFAULT_BALANCE_CONFIG,
   EASY_CONFIG,
+  formatCSV,
   HARD_CONFIG,
-  createBalanceConfig,
+  runFullSimulation,
 } from '@dendrovia/ludus';
-import type { BalanceConfig, SimulationReport, SimulationConfig, MatchupResult } from '@dendrovia/ludus';
-import HeatmapCell from './components/HeatmapCell';
+import type { BugType, CharacterClass } from '@dendrovia/shared';
+import { useCallback, useState } from 'react';
 import ConfigSliders from './components/ConfigSliders';
+import HeatmapCell from './components/HeatmapCell';
 
 const ALL_CLASSES: CharacterClass[] = ['tank', 'healer', 'dps'];
 const ALL_BUG_TYPES: BugType[] = ['null-pointer', 'memory-leak', 'race-condition', 'off-by-one'];
@@ -47,8 +47,8 @@ export default function BalanceSimClient(): React.JSX.Element {
       const simConfig: SimulationConfig = {
         trials,
         maxTurns: 100,
-        lowWinThreshold: 0.30,
-        highWinThreshold: 0.80,
+        lowWinThreshold: 0.3,
+        highWinThreshold: 0.8,
         baseSeed: 12345,
       };
       const result = runFullSimulation(level, severity, 0, simConfig);
@@ -62,7 +62,9 @@ export default function BalanceSimClient(): React.JSX.Element {
   };
 
   const handleSliderChange = (section: string, key: string, value: number) => {
-    setConfig(prev => createBalanceConfig({ ...prev, [section]: { ...(prev as Record<string, any>)[section], [key]: value } }));
+    setConfig((prev) =>
+      createBalanceConfig({ ...prev, [section]: { ...(prev as Record<string, any>)[section], [key]: value } }),
+    );
   };
 
   const exportCSV = () => {
@@ -91,7 +93,7 @@ export default function BalanceSimClient(): React.JSX.Element {
 
   // Build matchup lookup from report
   const getMatchup = (cls: CharacterClass, bug: BugType): MatchupResult | undefined => {
-    return report?.matchups.find(m => m.playerClass === cls && m.monsterType === bug);
+    return report?.matchups.find((m) => m.playerClass === cls && m.monsterType === bug);
   };
 
   return (
@@ -103,19 +105,48 @@ export default function BalanceSimClient(): React.JSX.Element {
           <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>Simulation Setup</div>
 
           <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Player Level: {level}</label>
-          <input type="range" min={1} max={30} value={level} onChange={e => setLevel(Number(e.target.value))} style={{ width: '100%', accentColor: 'var(--pillar-accent)' }} />
+          <input
+            type="range"
+            min={1}
+            max={30}
+            value={level}
+            onChange={(e) => setLevel(Number(e.target.value))}
+            style={{ width: '100%', accentColor: 'var(--pillar-accent)' }}
+          />
 
-          <label style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.5rem', display: 'block' }}>Monster Severity</label>
-          <select style={{ ...selectStyle, width: '100%' }} value={severity} onChange={e => setSeverity(Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}>
-            {[1, 2, 3, 4, 5].map(s => <option key={s} value={s}>Severity {s}</option>)}
+          <label style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.5rem', display: 'block' }}>
+            Monster Severity
+          </label>
+          <select
+            style={{ ...selectStyle, width: '100%' }}
+            value={severity}
+            onChange={(e) => setSeverity(Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
+          >
+            {[1, 2, 3, 4, 5].map((s) => (
+              <option key={s} value={s}>
+                Severity {s}
+              </option>
+            ))}
           </select>
 
-          <label style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.5rem', display: 'block' }}>Trials per matchup</label>
-          <select style={{ ...selectStyle, width: '100%' }} value={trials} onChange={e => setTrials(Number(e.target.value))}>
-            {[50, 100, 250, 500, 1000].map(n => <option key={n} value={n}>{n}</option>)}
+          <label style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.5rem', display: 'block' }}>
+            Trials per matchup
+          </label>
+          <select
+            style={{ ...selectStyle, width: '100%' }}
+            value={trials}
+            onChange={(e) => setTrials(Number(e.target.value))}
+          >
+            {[50, 100, 250, 500, 1000].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
           </select>
 
-          <label style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.5rem', display: 'block' }}>Config Preset</label>
+          <label style={{ fontSize: '0.75rem', opacity: 0.5, marginTop: '0.5rem', display: 'block' }}>
+            Config Preset
+          </label>
           <div style={{ display: 'flex', gap: '0.35rem', marginTop: '0.25rem' }}>
             {PRESETS.map((p, i) => (
               <button
@@ -159,7 +190,15 @@ export default function BalanceSimClient(): React.JSX.Element {
       {/* Right — results */}
       <div>
         {!report && !running && (
-          <div style={{ padding: '3rem', textAlign: 'center', border: '1px dashed #333', borderRadius: '8px', opacity: 0.4 }}>
+          <div
+            style={{
+              padding: '3rem',
+              textAlign: 'center',
+              border: '1px dashed #333',
+              borderRadius: '8px',
+              opacity: 0.4,
+            }}
+          >
             Configure parameters and click "Run Simulation"
           </div>
         )}
@@ -168,19 +207,34 @@ export default function BalanceSimClient(): React.JSX.Element {
           <div>
             {/* Summary */}
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', fontSize: '0.8rem' }}>
-              <div style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}>
+              <div
+                style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}
+              >
                 <span style={{ opacity: 0.5 }}>Overall Win Rate: </span>
-                <span style={{ fontWeight: 700, fontFamily: 'var(--font-geist-mono)' }}>{(report.overallWinRate * 100).toFixed(1)}%</span>
+                <span style={{ fontWeight: 700, fontFamily: 'var(--font-geist-mono)' }}>
+                  {(report.overallWinRate * 100).toFixed(1)}%
+                </span>
               </div>
-              <div style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}>
+              <div
+                style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}
+              >
                 <span style={{ opacity: 0.5 }}>Total Trials: </span>
                 <span style={{ fontFamily: 'var(--font-geist-mono)' }}>{report.totalTrials}</span>
               </div>
-              <div style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}>
+              <div
+                style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}
+              >
                 <span style={{ opacity: 0.5 }}>Duration: </span>
                 <span style={{ fontFamily: 'var(--font-geist-mono)' }}>{report.durationMs}ms</span>
               </div>
-              <div style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: '6px', background: report.flaggedMatchups.length > 0 ? '#5f1e1e' : '#111' }}>
+              <div
+                style={{
+                  padding: '0.5rem 0.75rem',
+                  border: '1px solid #222',
+                  borderRadius: '6px',
+                  background: report.flaggedMatchups.length > 0 ? '#5f1e1e' : '#111',
+                }}
+              >
                 <span style={{ opacity: 0.5 }}>Flagged: </span>
                 <span style={{ fontWeight: 700 }}>{report.flaggedMatchups.length}</span>
               </div>
@@ -188,21 +242,42 @@ export default function BalanceSimClient(): React.JSX.Element {
 
             {/* Heatmap Matrix */}
             <div style={{ marginBottom: '1rem' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem' }}>Matchup Heatmap (Win Rate %)</div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                Matchup Heatmap (Win Rate %)
+              </div>
 
               {/* Header row */}
-              <div style={{ display: 'grid', gridTemplateColumns: '100px repeat(4, 1fr)', gap: '0.4rem', marginBottom: '0.4rem' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '100px repeat(4, 1fr)',
+                  gap: '0.4rem',
+                  marginBottom: '0.4rem',
+                }}
+              >
                 <div />
-                {ALL_BUG_TYPES.map(bug => (
-                  <div key={bug} style={{ textAlign: 'center', fontSize: '0.7rem', opacity: 0.5 }}>{bug}</div>
+                {ALL_BUG_TYPES.map((bug) => (
+                  <div key={bug} style={{ textAlign: 'center', fontSize: '0.7rem', opacity: 0.5 }}>
+                    {bug}
+                  </div>
                 ))}
               </div>
 
               {/* Data rows */}
-              {ALL_CLASSES.map(cls => (
-                <div key={cls} style={{ display: 'grid', gridTemplateColumns: '100px repeat(4, 1fr)', gap: '0.4rem', marginBottom: '0.4rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600 }}>{cls}</div>
-                  {ALL_BUG_TYPES.map(bug => {
+              {ALL_CLASSES.map((cls) => (
+                <div
+                  key={cls}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '100px repeat(4, 1fr)',
+                    gap: '0.4rem',
+                    marginBottom: '0.4rem',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600 }}>
+                    {cls}
+                  </div>
+                  {ALL_BUG_TYPES.map((bug) => {
                     const matchup = getMatchup(cls, bug);
                     if (!matchup) return <div key={bug} />;
                     return <HeatmapCell key={bug} result={matchup} />;
@@ -212,11 +287,71 @@ export default function BalanceSimClient(): React.JSX.Element {
 
               {/* Legend */}
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', fontSize: '0.7rem', opacity: 0.6 }}>
-                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: '#22C55E', borderRadius: '2px', marginRight: '0.25rem' }} />55-65% balanced</span>
-                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: '#EAB308', borderRadius: '2px', marginRight: '0.25rem' }} />30-55% hard</span>
-                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: '#EF4444', borderRadius: '2px', marginRight: '0.25rem' }} />&lt;30% too hard</span>
-                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: '#F97316', borderRadius: '2px', marginRight: '0.25rem' }} />65-80% easy</span>
-                <span><span style={{ display: 'inline-block', width: '10px', height: '10px', background: '#991B1B', borderRadius: '2px', marginRight: '0.25rem' }} />&gt;80% too easy</span>
+                <span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      background: '#22C55E',
+                      borderRadius: '2px',
+                      marginRight: '0.25rem',
+                    }}
+                  />
+                  55-65% balanced
+                </span>
+                <span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      background: '#EAB308',
+                      borderRadius: '2px',
+                      marginRight: '0.25rem',
+                    }}
+                  />
+                  30-55% hard
+                </span>
+                <span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      background: '#EF4444',
+                      borderRadius: '2px',
+                      marginRight: '0.25rem',
+                    }}
+                  />
+                  &lt;30% too hard
+                </span>
+                <span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      background: '#F97316',
+                      borderRadius: '2px',
+                      marginRight: '0.25rem',
+                    }}
+                  />
+                  65-80% easy
+                </span>
+                <span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      background: '#991B1B',
+                      borderRadius: '2px',
+                      marginRight: '0.25rem',
+                    }}
+                  />
+                  &gt;80% too easy
+                </span>
               </div>
             </div>
 

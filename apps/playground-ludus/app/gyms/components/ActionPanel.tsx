@@ -29,10 +29,24 @@ const btnDisabled: React.CSSProperties = {
   cursor: 'not-allowed',
 };
 
-export default function ActionPanel({ actions, onAttack, onSpell, onDefend, disabled }: ActionPanelProps): React.JSX.Element {
+export default function ActionPanel({
+  actions,
+  onAttack,
+  onSpell,
+  onDefend,
+  disabled,
+}: ActionPanelProps): React.JSX.Element {
   return (
     <OrnateFrame pillar="ludus" variant="compact">
-      <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <div
+        style={{
+          fontSize: '0.75rem',
+          opacity: 0.5,
+          marginBottom: '0.5rem',
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+        }}
+      >
         Actions
       </div>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -56,7 +70,7 @@ export default function ActionPanel({ actions, onAttack, onSpell, onDefend, disa
         <div style={{ marginTop: '0.5rem' }}>
           <div style={{ fontSize: '0.7rem', opacity: 0.4, marginBottom: '0.35rem' }}>Spells</div>
           <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-            {actions.availableSpells.map(spellId => {
+            {actions.availableSpells.map((spellId) => {
               const spell = getSpell(spellId);
               if (!spell) return null;
               return (

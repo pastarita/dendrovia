@@ -16,8 +16,8 @@
  *   --output ../imaginarium/generated/operatus-manifest.json
  */
 
-import { resolve, dirname } from 'path';
-import { stat } from 'fs/promises';
+import { stat } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
 import { ManifestGenerator } from './ManifestGenerator';
 
 // ── Resolve Paths ───────────────────────────────────────────────

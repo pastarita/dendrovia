@@ -5,9 +5,9 @@
  * interactive PropPlayground controls, and a live preview.
  */
 
-import type { ZooExhibitDescriptor, ExhibitRenderProps } from './types';
-import { inspectorStyle, sectionHeaderStyle } from './zoo-styles';
 import { PropPlayground } from './PropPlayground';
+import type { ExhibitRenderProps, ZooExhibitDescriptor } from './types';
+import { inspectorStyle, sectionHeaderStyle } from './zoo-styles';
 
 interface ZooInspectorProps {
   exhibit: ZooExhibitDescriptor;
@@ -16,23 +16,20 @@ interface ZooInspectorProps {
   onClose: () => void;
 }
 
-export function ZooInspector({
-  exhibit,
-  controlValues,
-  onControlChange,
-  onClose,
-}: ZooInspectorProps) {
+export function ZooInspector({ exhibit, controlValues, onControlChange, onClose }: ZooInspectorProps) {
   const Preview = exhibit.component;
   const renderProps: ExhibitRenderProps = { controlValues, isInspecting: true };
 
   return (
-    <div style={{
-      ...inspectorStyle,
-      position: 'sticky',
-      top: 0,
-      alignSelf: 'flex-start',
-      maxHeight: '100vh',
-    }}>
+    <div
+      style={{
+        ...inspectorStyle,
+        position: 'sticky',
+        top: 0,
+        alignSelf: 'flex-start',
+        maxHeight: '100vh',
+      }}
+    >
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -64,13 +61,16 @@ export function ZooInspector({
       {exhibit.tags.length > 0 && (
         <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
           {exhibit.tags.map((tag) => (
-            <span key={tag} style={{
-              fontSize: '0.65rem',
-              padding: '0.1rem 0.4rem',
-              borderRadius: '3px',
-              border: '1px solid #333',
-              opacity: 0.5,
-            }}>
+            <span
+              key={tag}
+              style={{
+                fontSize: '0.65rem',
+                padding: '0.1rem 0.4rem',
+                borderRadius: '3px',
+                border: '1px solid #333',
+                opacity: 0.5,
+              }}
+            >
               {tag}
             </span>
           ))}
@@ -81,22 +81,20 @@ export function ZooInspector({
       {exhibit.controls.length > 0 && (
         <>
           <div style={sectionHeaderStyle}>Controls</div>
-          <PropPlayground
-            controls={exhibit.controls}
-            values={controlValues}
-            onChange={onControlChange}
-          />
+          <PropPlayground controls={exhibit.controls} values={controlValues} onChange={onControlChange} />
         </>
       )}
 
       {/* Live Preview */}
       <div style={sectionHeaderStyle}>Live Preview</div>
-      <div style={{
-        background: '#0a0a0a',
-        borderRadius: '6px',
-        padding: '1rem',
-        overflow: 'hidden',
-      }}>
+      <div
+        style={{
+          background: '#0a0a0a',
+          borderRadius: '6px',
+          padding: '1rem',
+          overflow: 'hidden',
+        }}
+      >
         <Preview {...renderProps} />
       </div>
     </div>

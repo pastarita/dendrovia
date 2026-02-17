@@ -1,12 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import {
-  DEFAULT_PALETTES,
-  LANGUAGE_HUES,
-} from '@dendrovia/imaginarium/fallbacks';
+import { DEFAULT_PALETTES, LANGUAGE_HUES } from '@dendrovia/imaginarium/fallbacks';
 import { hexToOklch } from '@dendrovia/imaginarium/utils/color';
 import { OrnateFrame } from '@dendrovia/oculus';
+import { useState } from 'react';
 
 const SWATCH_KEYS = ['primary', 'secondary', 'accent', 'background', 'glow'] as const;
 
@@ -129,72 +126,73 @@ export default function PaletteExhibit() {
       </div>
 
       {/* Expanded detail panel */}
-      {selectedLanguage && (() => {
-        const palette = DEFAULT_PALETTES.get(selectedLanguage)!;
-        return (
-          <div
-            style={{
-              marginTop: '1.5rem',
-              padding: '1.25rem',
-              border: '1px solid var(--pillar-accent)',
-              borderRadius: '8px',
-              background: '#0a0a0a',
-            }}
-          >
-            <h3 style={{ margin: 0, marginBottom: '1rem', fontSize: '1.1rem' }}>
-              {selectedLanguage} — OKLCH Color Space
-            </h3>
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              {SWATCH_KEYS.map((key) => {
-                const hex = palette[key];
-                const oklch = hexToOklch(hex);
-                return (
-                  <div key={key} style={{ textAlign: 'center' }}>
-                    <div
-                      style={{
-                        width: 80,
-                        height: 80,
-                        background: hex,
-                        borderRadius: '6px',
-                        marginBottom: '0.5rem',
-                        border: '1px solid #333',
-                      }}
-                    />
-                    <div
-                      style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        marginBottom: '0.25rem',
-                      }}
-                    >
-                      {key}
+      {selectedLanguage &&
+        (() => {
+          const palette = DEFAULT_PALETTES.get(selectedLanguage)!;
+          return (
+            <div
+              style={{
+                marginTop: '1.5rem',
+                padding: '1.25rem',
+                border: '1px solid var(--pillar-accent)',
+                borderRadius: '8px',
+                background: '#0a0a0a',
+              }}
+            >
+              <h3 style={{ margin: 0, marginBottom: '1rem', fontSize: '1.1rem' }}>
+                {selectedLanguage} — OKLCH Color Space
+              </h3>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                {SWATCH_KEYS.map((key) => {
+                  const hex = palette[key];
+                  const oklch = hexToOklch(hex);
+                  return (
+                    <div key={key} style={{ textAlign: 'center' }}>
+                      <div
+                        style={{
+                          width: 80,
+                          height: 80,
+                          background: hex,
+                          borderRadius: '6px',
+                          marginBottom: '0.5rem',
+                          border: '1px solid #333',
+                        }}
+                      />
+                      <div
+                        style={{
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          marginBottom: '0.25rem',
+                        }}
+                      >
+                        {key}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '0.65rem',
+                          fontFamily: 'var(--font-geist-mono), monospace',
+                          opacity: 0.7,
+                        }}
+                      >
+                        {hex}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '0.6rem',
+                          fontFamily: 'var(--font-geist-mono), monospace',
+                          opacity: 0.5,
+                          marginTop: '0.15rem',
+                        }}
+                      >
+                        L:{oklch.L.toFixed(2)} C:{oklch.C.toFixed(2)} H:{oklch.h.toFixed(0)}&deg;
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        fontSize: '0.65rem',
-                        fontFamily: 'var(--font-geist-mono), monospace',
-                        opacity: 0.7,
-                      }}
-                    >
-                      {hex}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: '0.6rem',
-                        fontFamily: 'var(--font-geist-mono), monospace',
-                        opacity: 0.5,
-                        marginTop: '0.15rem',
-                      }}
-                    >
-                      L:{oklch.L.toFixed(2)} C:{oklch.C.toFixed(2)} H:{oklch.h.toFixed(0)}&deg;
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
     </div>
   );
 }

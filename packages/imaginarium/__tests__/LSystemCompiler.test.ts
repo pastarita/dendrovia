@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { compile, expandLSystem } from '../src/distillation/LSystemCompiler';
 import { generateMockTopology } from '../src/pipeline/MockTopology';
 
@@ -9,7 +9,7 @@ describe('compile', () => {
 
     expect(rule.axiom).toBe('F');
     expect(rule.rules).toBeDefined();
-    expect(rule.rules['F']).toBeDefined();
+    expect(rule.rules.F).toBeDefined();
     expect(rule.iterations).toBeGreaterThanOrEqual(1);
     expect(rule.iterations).toBeLessThanOrEqual(5);
     expect(rule.angle).toBe(25);
@@ -32,7 +32,7 @@ describe('compile', () => {
   test('produces hotspot rule', () => {
     const topology = generateMockTopology(50);
     const rule = compile(topology);
-    expect(rule.rules['H']).toBeDefined();
+    expect(rule.rules.H).toBeDefined();
   });
 });
 
@@ -40,7 +40,7 @@ describe('expandLSystem', () => {
   test('expands simple rule', () => {
     const result = expandLSystem({
       axiom: 'F',
-      rules: { 'F': 'FF' },
+      rules: { F: 'FF' },
       iterations: 3,
       angle: 25,
     });
@@ -50,7 +50,7 @@ describe('expandLSystem', () => {
   test('preserves non-rule characters', () => {
     const result = expandLSystem({
       axiom: 'F',
-      rules: { 'F': 'F[+F][-F]' },
+      rules: { F: 'F[+F][-F]' },
       iterations: 1,
       angle: 25,
     });
@@ -60,7 +60,7 @@ describe('expandLSystem', () => {
   test('iteration 0 returns axiom', () => {
     const result = expandLSystem({
       axiom: 'F',
-      rules: { 'F': 'FF' },
+      rules: { F: 'FF' },
       iterations: 0,
       angle: 25,
     });
@@ -70,7 +70,7 @@ describe('expandLSystem', () => {
   test('multi-iteration expansion', () => {
     const result = expandLSystem({
       axiom: 'F',
-      rules: { 'F': 'F[+F]' },
+      rules: { F: 'F[+F]' },
       iterations: 2,
       angle: 25,
     });

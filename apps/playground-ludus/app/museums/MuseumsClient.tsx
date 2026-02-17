@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import BattleStatsExhibit from './components/BattleStatsExhibit';
-import ProgressionExhibit from './components/ProgressionExhibit';
-import DamageFormulaExhibit from './components/DamageFormulaExhibit';
 import BalanceExhibit from './components/BalanceExhibit';
+import BattleStatsExhibit from './components/BattleStatsExhibit';
+import DamageFormulaExhibit from './components/DamageFormulaExhibit';
+import ProgressionExhibit from './components/ProgressionExhibit';
 
 const TABS = [
   { id: 'battle-stats', label: 'Battle Stats' },
@@ -13,7 +13,7 @@ const TABS = [
   { id: 'balance', label: 'Balance' },
 ] as const;
 
-type TabId = typeof TABS[number]['id'];
+type TabId = (typeof TABS)[number]['id'];
 
 export default function MuseumsClient(): React.JSX.Element {
   const [tab, setTab] = useState<TabId>('battle-stats');
@@ -21,8 +21,16 @@ export default function MuseumsClient(): React.JSX.Element {
   return (
     <div>
       {/* Tab Nav */}
-      <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1.5rem', borderBottom: '1px solid #222', paddingBottom: '0.5rem' }}>
-        {TABS.map(t => (
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.25rem',
+          marginBottom: '1.5rem',
+          borderBottom: '1px solid #222',
+          paddingBottom: '0.5rem',
+        }}
+      >
+        {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}

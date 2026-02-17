@@ -15,8 +15,6 @@
  * without this module.
  */
 
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-
 // ── Types ────────────────────────────────────────────────────────
 
 export interface MultiplayerConfig {
@@ -131,7 +129,7 @@ export class MultiplayerClient {
           this.handleMessage(event);
         };
 
-        this.ws.onclose = (event) => {
+        this.ws.onclose = (_event) => {
           this.stopHeartbeat();
 
           if (this.state !== 'disconnected') {
@@ -357,10 +355,7 @@ export class MultiplayerClient {
     this.reconnectAttempts++;
 
     // Exponential backoff with jitter
-    const delay = Math.min(
-      this.config.baseDelay * Math.pow(2, this.reconnectAttempts - 1),
-      this.config.maxDelay,
-    );
+    const delay = Math.min(this.config.baseDelay * 2 ** (this.reconnectAttempts - 1), this.config.maxDelay);
     const jitter = delay * 0.2 * Math.random();
 
     this.reconnectTimer = setTimeout(() => {

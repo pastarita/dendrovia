@@ -1,10 +1,6 @@
-import { describe, test, expect } from 'bun:test';
-import {
-  buildFileTree,
-  countFiles,
-  countDirectories,
-} from '../src/builder/TreeBuilder';
-import type { ParsedFile, FileTreeNode } from '@dendrovia/shared';
+import { describe, expect, test } from 'bun:test';
+import type { FileTreeNode, ParsedFile } from '@dendrovia/shared';
+import { buildFileTree, countDirectories, countFiles } from '../src/builder/TreeBuilder';
 
 // ---------------------------------------------------------------------------
 // Helper
@@ -37,10 +33,7 @@ describe('buildFileTree — structure', () => {
   });
 
   test('builds nested directory structure', () => {
-    const files = [
-      makeFile('src/utils/helpers.ts'),
-      makeFile('src/index.ts'),
-    ];
+    const files = [makeFile('src/utils/helpers.ts'), makeFile('src/index.ts')];
     const tree = buildFileTree(files);
 
     expect(tree.children!.length).toBe(1); // src
@@ -102,28 +95,21 @@ describe('buildFileTree — structure', () => {
   });
 
   test('handles multiple files in same directory', () => {
-    const files = [
-      makeFile('src/a.ts'),
-      makeFile('src/b.ts'),
-      makeFile('src/c.ts'),
-    ];
+    const files = [makeFile('src/a.ts'), makeFile('src/b.ts'), makeFile('src/c.ts')];
     const tree = buildFileTree(files);
     const src = tree.children![0];
     expect(src.children!.length).toBe(3);
   });
 
   test('file paths are built correctly', () => {
-    const files = [
-      makeFile('src/utils/format.ts'),
-      makeFile('src/index.ts'),
-    ];
+    const files = [makeFile('src/utils/format.ts'), makeFile('src/index.ts')];
     const tree = buildFileTree(files);
 
     const src = tree.children![0];
     expect(src.path).toBe('src');
 
     // Find format.ts in the tree
-    const utils = src.children!.find(c => c.name === 'utils')!;
+    const utils = src.children!.find((c) => c.name === 'utils')!;
     expect(utils.path).toBe('src/utils');
 
     const format = utils.children![0];
@@ -136,11 +122,7 @@ describe('buildFileTree — structure', () => {
 // ---------------------------------------------------------------------------
 describe('buildFileTree — sorting', () => {
   test('directories come before files', () => {
-    const files = [
-      makeFile('src/b.ts'),
-      makeFile('src/utils/helper.ts'),
-      makeFile('src/a.ts'),
-    ];
+    const files = [makeFile('src/b.ts'), makeFile('src/utils/helper.ts'), makeFile('src/a.ts')];
     const tree = buildFileTree(files);
     const src = tree.children![0];
     // "utils" dir should come before "a.ts" and "b.ts"
@@ -149,38 +131,26 @@ describe('buildFileTree — sorting', () => {
   });
 
   test('files are alphabetically sorted within same type', () => {
-    const files = [
-      makeFile('src/zebra.ts'),
-      makeFile('src/alpha.ts'),
-      makeFile('src/middle.ts'),
-    ];
+    const files = [makeFile('src/zebra.ts'), makeFile('src/alpha.ts'), makeFile('src/middle.ts')];
     const tree = buildFileTree(files);
     const src = tree.children![0];
-    const names = src.children!.map(c => c.name);
+    const names = src.children!.map((c) => c.name);
     expect(names).toEqual(['alpha.ts', 'middle.ts', 'zebra.ts']);
   });
 
   test('directories are alphabetically sorted', () => {
-    const files = [
-      makeFile('c/file.ts'),
-      makeFile('a/file.ts'),
-      makeFile('b/file.ts'),
-    ];
+    const files = [makeFile('c/file.ts'), makeFile('a/file.ts'), makeFile('b/file.ts')];
     const tree = buildFileTree(files);
-    const names = tree.children!.map(c => c.name);
+    const names = tree.children!.map((c) => c.name);
     expect(names).toEqual(['a', 'b', 'c']);
   });
 
   test('sorting is recursive', () => {
-    const files = [
-      makeFile('pkg/src/z.ts'),
-      makeFile('pkg/src/a.ts'),
-      makeFile('pkg/src/m.ts'),
-    ];
+    const files = [makeFile('pkg/src/z.ts'), makeFile('pkg/src/a.ts'), makeFile('pkg/src/m.ts')];
     const tree = buildFileTree(files);
     const pkg = tree.children![0];
     const src = pkg.children![0];
-    const names = src.children!.map(c => c.name);
+    const names = src.children!.map((c) => c.name);
     expect(names).toEqual(['a.ts', 'm.ts', 'z.ts']);
   });
 });
@@ -190,12 +160,7 @@ describe('buildFileTree — sorting', () => {
 // ---------------------------------------------------------------------------
 describe('countFiles', () => {
   test('counts all files in a tree', () => {
-    const files = [
-      makeFile('src/a.ts'),
-      makeFile('src/b.ts'),
-      makeFile('src/lib/c.ts'),
-      makeFile('readme.md'),
-    ];
+    const files = [makeFile('src/a.ts'), makeFile('src/b.ts'), makeFile('src/lib/c.ts'), makeFile('readme.md')];
     const tree = buildFileTree(files);
     expect(countFiles(tree)).toBe(4);
   });
@@ -225,10 +190,7 @@ describe('countFiles', () => {
 // ---------------------------------------------------------------------------
 describe('countDirectories', () => {
   test('counts root + nested directories', () => {
-    const files = [
-      makeFile('src/lib/util.ts'),
-      makeFile('src/index.ts'),
-    ];
+    const files = [makeFile('src/lib/util.ts'), makeFile('src/index.ts')];
     const tree = buildFileTree(files);
     // root + src + lib = 3
     expect(countDirectories(tree)).toBe(3);
@@ -281,21 +243,14 @@ describe('buildFileTree — edge cases', () => {
   });
 
   test('handles single-segment paths (root-level files)', () => {
-    const files = [
-      makeFile('package.json'),
-      makeFile('tsconfig.json'),
-    ];
+    const files = [makeFile('package.json'), makeFile('tsconfig.json')];
     const tree = buildFileTree(files);
     expect(tree.children!.length).toBe(2);
-    expect(tree.children!.every(c => c.type === 'file')).toBe(true);
+    expect(tree.children!.every((c) => c.type === 'file')).toBe(true);
   });
 
   test('handles mixed depths', () => {
-    const files = [
-      makeFile('shallow.ts'),
-      makeFile('a/medium.ts'),
-      makeFile('a/b/c/deep.ts'),
-    ];
+    const files = [makeFile('shallow.ts'), makeFile('a/medium.ts'), makeFile('a/b/c/deep.ts')];
     const tree = buildFileTree(files);
     expect(countFiles(tree)).toBe(3);
     // root has: a/ dir and shallow.ts file

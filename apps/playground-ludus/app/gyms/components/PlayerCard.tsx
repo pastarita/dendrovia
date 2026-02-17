@@ -1,7 +1,7 @@
 'use client';
 
+import { IconBadge, OrnateFrame, ProgressBar, StatLabel } from '@dendrovia/oculus';
 import type { Character } from '@dendrovia/shared';
-import { OrnateFrame, ProgressBar, StatLabel, IconBadge } from '@dendrovia/oculus';
 
 interface PlayerCardProps {
   player: Character;
@@ -51,11 +51,24 @@ export default function PlayerCard({ player }: PlayerCardProps): React.JSX.Eleme
       </div>
 
       {player.statusEffects.length > 0 && (
-        <div style={{ marginTop: 'var(--oculus-space-sm)', display: 'flex', gap: 'var(--oculus-space-xs)', flexWrap: 'wrap' }}>
+        <div
+          style={{
+            marginTop: 'var(--oculus-space-sm)',
+            display: 'flex',
+            gap: 'var(--oculus-space-xs)',
+            flexWrap: 'wrap',
+          }}
+        >
           {player.statusEffects.map((fx, i) => {
             const info = STATUS_STYLE[fx.type] ?? DEFAULT_STATUS;
             return (
-              <IconBadge key={i} icon={info.icon} label={`${fx.name} (${fx.remainingTurns}t)`} color={info.color} size="sm" />
+              <IconBadge
+                key={i}
+                icon={info.icon}
+                label={`${fx.name} (${fx.remainingTurns}t)`}
+                color={info.color}
+                size="sm"
+              />
             );
           })}
         </div>

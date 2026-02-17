@@ -2,8 +2,7 @@
  * ARCHITECTUS ornaments — Column capital brackets, fluted pillar lines
  */
 
-import React from 'react';
-import type { CornerProps, EdgeProps, DefsProps, FrameOrnamentSet } from './types';
+import type { CornerProps, DefsProps, EdgeProps, FrameOrnamentSet } from './types';
 
 function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
   const [flipX, flipY] = mirror;
@@ -21,19 +20,9 @@ function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
         strokeLinejoin="miter"
       />
       {/* Serif kick at horizontal end */}
-      <line
-        x1={size} y1={0}
-        x2={size} y2={4}
-        stroke={palette.primary}
-        strokeWidth="1.5"
-      />
+      <line x1={size} y1={0} x2={size} y2={4} stroke={palette.primary} strokeWidth="1.5" />
       {/* Serif kick at vertical end */}
-      <line
-        x1={0} y1={size}
-        x2={4} y2={size}
-        stroke={palette.primary}
-        strokeWidth="1.5"
-      />
+      <line x1={0} y1={size} x2={4} y2={size} stroke={palette.primary} strokeWidth="1.5" />
       {/* Inner capital step */}
       <path
         d={`M ${size * 0.6} 3 L 3 3 L 3 ${size * 0.6}`}
@@ -54,13 +43,7 @@ function EdgeH({ id, x, y, length, palette }: EdgeProps) {
   return (
     <g transform={`translate(${x},${y})`}>
       {/* Base line */}
-      <line
-        x1={0} y1={0}
-        x2={length} y2={0}
-        stroke={palette.primary}
-        strokeWidth="1"
-        opacity="0.25"
-      />
+      <line x1={0} y1={0} x2={length} y2={0} stroke={palette.primary} strokeWidth="1" opacity="0.25" />
       {/* Flute accents */}
       {Array.from({ length: flutes }, (_, i) => (
         <line
@@ -85,13 +68,7 @@ function EdgeV({ id, x, y, length, palette }: EdgeProps) {
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <line
-        x1={0} y1={0}
-        x2={0} y2={length}
-        stroke={palette.primary}
-        strokeWidth="1"
-        opacity="0.25"
-      />
+      <line x1={0} y1={0} x2={0} y2={length} stroke={palette.primary} strokeWidth="1" opacity="0.25" />
       {Array.from({ length: flutes }, (_, i) => (
         <line
           key={i}

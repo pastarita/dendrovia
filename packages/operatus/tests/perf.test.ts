@@ -5,7 +5,7 @@
  * Uses Bun's built-in performance API.
  */
 
-import { describe, test, expect, beforeEach } from 'bun:test';
+import { beforeEach, describe, expect, test } from 'bun:test';
 import { PerfMonitor } from '../src/perf/PerfMonitor.js';
 
 describe('PerfMonitor', () => {
@@ -20,8 +20,8 @@ describe('PerfMonitor', () => {
     monitor.mark('test-op');
 
     // Simulate some work
-    let sum = 0;
-    for (let i = 0; i < 10000; i++) sum += i;
+    let _sum = 0;
+    for (let i = 0; i < 10000; i++) _sum += i;
 
     const duration = monitor.measure('test-op');
 

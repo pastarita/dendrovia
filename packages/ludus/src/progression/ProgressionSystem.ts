@@ -6,17 +6,11 @@
  * the full "victory screen" data pipeline.
  */
 
-import type {
-  BattleState,
-  Character,
-  Quest,
-  RngState,
-} from '@dendrovia/shared';
+import type { BattleState, Character, Quest, RngState } from '@dendrovia/shared';
 import { gainExperience, type LevelUpResult } from '../character/CharacterSystem';
-import { resolveLoot } from '../inventory/InventorySystem';
-import { getQuestRewards } from '../quest/QuestGenerator';
 import type { Inventory } from '../inventory/InventorySystem';
-import { addItem } from '../inventory/InventorySystem';
+import { addItem, resolveLoot } from '../inventory/InventorySystem';
+import { getQuestRewards } from '../quest/QuestGenerator';
 
 // ─── Battle Statistics ──────────────────────────────────────
 
@@ -84,15 +78,13 @@ export function resolveBattleRewards(
     }
   }
 
-  const bossDefeated = state.enemies.some(
-    e => e.stats.health <= 0 && e.name.includes('[BOSS]'),
-  );
+  const bossDefeated = state.enemies.some((e) => e.stats.health <= 0 && e.name.includes('[BOSS]'));
 
   return {
     rewards: {
       xp,
       lootItems: allLoot,
-      monstersDefeated: state.enemies.filter(e => e.stats.health <= 0).length,
+      monstersDefeated: state.enemies.filter((e) => e.stats.health <= 0).length,
       bossDefeated,
       turnsElapsed: state.turn,
     },
@@ -138,7 +130,9 @@ export function applyBattleRewards(
   }
 
   // 3. Summary
-  log.push(`Defeated ${rewards.monstersDefeated} monster${rewards.monstersDefeated > 1 ? 's' : ''} in ${rewards.turnsElapsed} turns`);
+  log.push(
+    `Defeated ${rewards.monstersDefeated} monster${rewards.monstersDefeated > 1 ? 's' : ''} in ${rewards.turnsElapsed} turns`,
+  );
   if (rewards.bossDefeated) {
     log.push('BOSS DEFEATED!');
   }
@@ -163,11 +157,7 @@ export interface QuestRewardResult {
 }
 
 /** Apply rewards from completing a quest */
-export function applyQuestRewards(
-  character: Character,
-  inventory: Inventory,
-  quest: Quest,
-): QuestRewardResult {
+export function applyQuestRewards(character: Character, inventory: Inventory, quest: Quest): QuestRewardResult {
   const { xp, items, knowledge } = getQuestRewards(quest);
   const log: string[] = [];
 

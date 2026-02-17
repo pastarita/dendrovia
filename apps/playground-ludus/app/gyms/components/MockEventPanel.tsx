@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { NodeClickedEvent, PlayerMovedEvent } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function MockEventPanel(): React.JSX.Element {
   const [collapsed, setCollapsed] = useState(true);
@@ -10,7 +10,7 @@ export default function MockEventPanel(): React.JSX.Element {
   const logEndRef = useRef<HTMLDivElement>(null);
 
   const addLog = useCallback((msg: string) => {
-    setLog(prev => [...prev.slice(-49), msg]);
+    setLog((prev) => [...prev.slice(-49), msg]);
   }, []);
 
   useEffect(() => {
@@ -22,16 +22,18 @@ export default function MockEventPanel(): React.JSX.Element {
       unsubs.push(
         bus.on(event, (data: unknown) => {
           addLog(`${event} → ${JSON.stringify(data).slice(0, 120)}`);
-        })
+        }),
       );
     }
 
-    return () => { for (const u of unsubs) u(); };
+    return () => {
+      for (const u of unsubs) u();
+    };
   }, [addLog]);
 
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [log.length]);
+  }, []);
 
   const emitNodeClicked = () => {
     const bus = getEventBus();

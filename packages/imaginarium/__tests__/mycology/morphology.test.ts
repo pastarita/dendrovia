@@ -1,7 +1,7 @@
-import { describe, test, expect } from 'bun:test';
-import type { ParsedFile, CodeTopology } from '@dendrovia/shared';
+import { describe, expect, test } from 'bun:test';
+import type { CodeTopology, ParsedFile } from '@dendrovia/shared';
+import { buildCoChurnMap, buildFileContext, classifyGenus } from '../../src/mycology/GenusMapper';
 import { generateMorphology } from '../../src/mycology/MorphologyGenerator';
-import { buildFileContext, buildCoChurnMap, classifyGenus } from '../../src/mycology/GenusMapper';
 import type { FungalGenus, MushroomMorphology, SizeClass } from '../../src/mycology/types';
 import { generateMockTopology } from '../../src/pipeline/MockTopology';
 
@@ -130,27 +130,21 @@ describe('Bioluminescence', () => {
 
   test('high churn hotspot -> pulsing', () => {
     const file = makeFile({ path: 'src/hot.ts' });
-    const topology = makeTopology([file], [
-      { path: 'src/hot.ts', churnRate: 20, complexity: 10, riskScore: 0.9 },
-    ]);
+    const topology = makeTopology([file], [{ path: 'src/hot.ts', churnRate: 20, complexity: 10, riskScore: 0.9 }]);
     const m = getMorphology(file, topology);
     expect(m.bioluminescence).toBe('pulsing');
   });
 
   test('moderate churn -> bright', () => {
     const file = makeFile({ path: 'src/warm.ts' });
-    const topology = makeTopology([file], [
-      { path: 'src/warm.ts', churnRate: 10, complexity: 5, riskScore: 0.5 },
-    ]);
+    const topology = makeTopology([file], [{ path: 'src/warm.ts', churnRate: 10, complexity: 5, riskScore: 0.5 }]);
     const m = getMorphology(file, topology);
     expect(m.bioluminescence).toBe('bright');
   });
 
   test('low churn -> faint', () => {
     const file = makeFile({ path: 'src/cool.ts' });
-    const topology = makeTopology([file], [
-      { path: 'src/cool.ts', churnRate: 5, complexity: 3, riskScore: 0.3 },
-    ]);
+    const topology = makeTopology([file], [{ path: 'src/cool.ts', churnRate: 5, complexity: 3, riskScore: 0.3 }]);
     const m = getMorphology(file, topology);
     expect(m.bioluminescence).toBe('faint');
   });
@@ -219,10 +213,10 @@ describe('Morphology with mock topology', () => {
       expect(m.stem.thickness).toBeLessThanOrEqual(1.0);
       expect(m.scaleColor).toMatch(/^#[0-9a-f]{6}$/);
       expect(m.gillColor).toMatch(/^#[0-9a-f]{6}$/);
-      expect(isNaN(m.capWidth)).toBe(false);
-      expect(isNaN(m.capHeight)).toBe(false);
-      expect(isNaN(m.stem.height)).toBe(false);
-      expect(isNaN(m.stem.thickness)).toBe(false);
+      expect(Number.isNaN(m.capWidth)).toBe(false);
+      expect(Number.isNaN(m.capHeight)).toBe(false);
+      expect(Number.isNaN(m.stem.height)).toBe(false);
+      expect(Number.isNaN(m.stem.thickness)).toBe(false);
     }
   });
 });

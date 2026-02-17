@@ -27,8 +27,8 @@
  * - Build health-check endpoints that verify frame rendering
  */
 
-import type { FrameVariant, PillarId, PillarPalette } from './types';
 import { PILLAR_PALETTES } from './palettes';
+import type { FrameVariant, PillarId, PillarPalette } from './types';
 
 export interface VariantSpec {
   cornerSize: number;
@@ -127,6 +127,5 @@ export const PILLAR_SPECS: Record<PillarId, PillarSpec> = {
 export const FRAME_REGISTRY = {
   pillars: PILLAR_SPECS,
   variants: VARIANT_SPECS,
-  totalCombinations: (Object.keys(PILLAR_SPECS).length *
-    Object.keys(VARIANT_SPECS).length) as 24,
+  totalCombinations: (Object.keys(PILLAR_SPECS).length * Object.keys(VARIANT_SPECS).length) as 24,
 } as const;

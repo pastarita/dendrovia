@@ -5,11 +5,11 @@
  * to the component tree.
  */
 
-import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
 import type { EventBus } from '@dendrovia/shared';
+import React, { createContext, type ReactNode, useContext, useMemo } from 'react';
+import { type CodeLoaderOptions, useCodeLoader } from './hooks/useCodeLoader';
 import { useEventSubscriptions } from './hooks/useEventSubscriptions';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
-import { useCodeLoader, type CodeLoaderOptions } from './hooks/useCodeLoader';
 import './styles/base.css';
 import './styles/responsive.css';
 
@@ -46,10 +46,7 @@ export interface OculusProviderProps {
 }
 
 export function OculusProvider({ eventBus, config, children }: OculusProviderProps) {
-  const mergedConfig = useMemo(
-    () => ({ ...defaultConfig, ...config }),
-    [config]
-  );
+  const mergedConfig = useMemo(() => ({ ...defaultConfig, ...config }), [config]);
 
   // Wire EventBus → Zustand store
   useEventSubscriptions(eventBus);
@@ -60,15 +57,10 @@ export function OculusProvider({ eventBus, config, children }: OculusProviderPro
   // Auto-load file content when CodeReader opens
   useCodeLoader(mergedConfig.codeLoader);
 
-  const value = useMemo(
-    () => ({ eventBus, config: mergedConfig }),
-    [eventBus, mergedConfig]
-  );
+  const value = useMemo(() => ({ eventBus, config: mergedConfig }), [eventBus, mergedConfig]);
 
   // Apply theme overrides as CSS custom properties
-  const style = mergedConfig.themeOverrides
-    ? (mergedConfig.themeOverrides as React.CSSProperties)
-    : undefined;
+  const style = mergedConfig.themeOverrides ? (mergedConfig.themeOverrides as React.CSSProperties) : undefined;
 
   return (
     <OculusContext.Provider value={value}>

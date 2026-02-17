@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <filter id="organic" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="1" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  </defs>
+  <g>
+    <path d="M 96.8,88.3779484875598 Q 95.8,129.1889742437799 96.16,170 L 103.84,170 Q 104.2,129.1889742437799 103.2,88.3779484875598 Z" fill="#979bc4" filter="url(#organic)"/>
+    <path d="M 73.72,88.3779484875598 L 72.118,99.05794848755981 M 79.56,88.3779484875598 L 78.31400000000001,99.05794848755981 M 85.4,88.3779484875598 L 84.51,99.05794848755981 M 91.24,88.3779484875598 L 90.70599999999999,99.05794848755981 M 97.08,88.3779484875598 L 96.902,99.05794848755981 M 102.92,88.3779484875598 L 103.098,99.05794848755981 M 108.75999999999999,88.3779484875598 L 109.294,99.05794848755981 M 114.6,88.3779484875598 L 115.49,99.05794848755981 M 120.44,88.3779484875598 L 121.68599999999999,99.05794848755981 M 126.28,88.3779484875598 L 127.882,99.05794848755981" stroke="#979bc4" stroke-width="0.8" fill="none" opacity="0.7"/>
+    <path d="M 67.15,88.3779484875598 Q 67.15,61.6779484875598 100,61.6779484875598 Q 132.85,61.6779484875598 132.85,88.3779484875598" fill="#3275b4" filter="url(#organic)"/>
+    <circle cx="83.6" cy="69.7" r="3" fill="white" opacity="0.85"/>
+    <circle cx="109.9" cy="67.0" r="2.5" fill="white" opacity="0.85"/>
+    <circle cx="96.7" cy="65.7" r="2" fill="white" opacity="0.85"/>
+    <circle cx="119.7" cy="72.4" r="2" fill="white" opacity="0.85"/>
+    <circle cx="80.3" cy="75.0" r="1.5" fill="white" opacity="0.85"/>
+    <circle cx="103.3" cy="75.0" r="2.5" fill="white" opacity="0.85"/>
+  </g>
+</svg>

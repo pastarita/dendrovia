@@ -12,16 +12,11 @@
  * from the same morphological parameters (ProfileGeometry/CylinderGeometry).
  */
 
-import type { HalfEdgeMesh, FlatMeshData } from './HalfEdgeMesh';
-import { buildFromProfile, buildFromCylinder, toFlatArrays } from './HalfEdgeMesh';
-import type { MeshOp } from './pipeline';
-
 // Re-import the existing MeshGenerator types
-import type {
-  ProfileGeometry,
-  CylinderGeometry,
-  MushroomMeshData,
-} from '../mycology/assets/MeshGenerator';
+import type { CylinderGeometry, MushroomMeshData, ProfileGeometry } from '../mycology/assets/MeshGenerator';
+import type { FlatMeshData, HalfEdgeMesh } from './HalfEdgeMesh';
+import { buildFromCylinder, buildFromProfile, toFlatArrays } from './HalfEdgeMesh';
+import type { MeshOp } from './pipeline';
 
 // ---------------------------------------------------------------------------
 // ProfileGeometry → HalfEdgeMesh
@@ -50,12 +45,7 @@ export function profileToHalfEdge(profile: ProfileGeometry): HalfEdgeMesh {
  *   const mesh = cylinderToHalfEdge(stemGeo);
  */
 export function cylinderToHalfEdge(cyl: CylinderGeometry): HalfEdgeMesh {
-  return buildFromCylinder(
-    cyl.radiusTop,
-    cyl.radiusBottom,
-    cyl.height,
-    cyl.radialSegments,
-  );
+  return buildFromCylinder(cyl.radiusTop, cyl.radiusBottom, cyl.height, cyl.radialSegments);
 }
 
 // ---------------------------------------------------------------------------
@@ -105,12 +95,7 @@ export function fallbackMeshFromProfile(profile: ProfileGeometry): FlatMeshData 
  * Generate a minimal fallback mesh from CylinderGeometry.
  */
 export function fallbackMeshFromCylinder(cyl: CylinderGeometry): FlatMeshData {
-  const mesh = buildFromCylinder(
-    cyl.radiusTop,
-    cyl.radiusBottom,
-    cyl.height,
-    cyl.radialSegments,
-  );
+  const mesh = buildFromCylinder(cyl.radiusTop, cyl.radiusBottom, cyl.height, cyl.radialSegments);
   return toFlatArrays(mesh);
 }
 
@@ -125,10 +110,7 @@ export function fallbackMeshFromCylinder(cyl: CylinderGeometry): FlatMeshData {
  *   const flat = applyPipelineToProfile(capProfile, pipe(subdivide(2), smooth(3)));
  *   // If pipeline fails, returns base mesh from profile (never throws)
  */
-export function applyPipelineToProfile(
-  profile: ProfileGeometry,
-  pipeline: MeshOp,
-): FlatMeshData {
+export function applyPipelineToProfile(profile: ProfileGeometry, pipeline: MeshOp): FlatMeshData {
   try {
     const mesh = profileToHalfEdge(profile);
     const enriched = pipeline(mesh);
@@ -142,10 +124,7 @@ export function applyPipelineToProfile(
 /**
  * Apply a MeshOp pipeline to CylinderGeometry, with automatic fallback.
  */
-export function applyPipelineToCylinder(
-  cyl: CylinderGeometry,
-  pipeline: MeshOp,
-): FlatMeshData {
+export function applyPipelineToCylinder(cyl: CylinderGeometry, pipeline: MeshOp): FlatMeshData {
   try {
     const mesh = cylinderToHalfEdge(cyl);
     const enriched = pipeline(mesh);

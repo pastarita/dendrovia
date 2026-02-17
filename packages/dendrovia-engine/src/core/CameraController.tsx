@@ -4,8 +4,8 @@
  * Player: Third-person view for character control
  */
 
-import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useEffect, useRef } from 'react';
 import { Vector3 } from 'three';
 import { useGameLoop } from './GameLoop';
 import { useInput } from './InputManager';
@@ -31,7 +31,7 @@ export function CameraController({
   const distanceRef = useRef(distance);
 
   // Keyboard input for camera movement
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     const moveSpeed = mode === 'falcon' ? 30 : 10;
     const rotateSpeed = 2;
 
@@ -58,11 +58,7 @@ export function CameraController({
     const offsetY = dist * Math.sin(pitch);
     const offsetZ = dist * Math.cos(pitch) * Math.cos(yaw);
 
-    camera.position.set(
-      targetRef.current.x + offsetX,
-      targetRef.current.y + offsetY,
-      targetRef.current.z + offsetZ
-    );
+    camera.position.set(targetRef.current.x + offsetX, targetRef.current.y + offsetY, targetRef.current.z + offsetZ);
 
     camera.lookAt(targetRef.current);
   });

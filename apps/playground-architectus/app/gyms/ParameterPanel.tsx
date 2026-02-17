@@ -67,24 +67,37 @@ const btnStyle: React.CSSProperties = {
 };
 
 export function ParameterPanel({
-  axiom, setAxiom,
-  rulesText, setRulesText,
-  angle, setAngle,
-  iterations, setIterations,
-  seed, setSeed,
-  paletteKey, setPaletteKey,
+  axiom,
+  setAxiom,
+  rulesText,
+  setRulesText,
+  angle,
+  setAngle,
+  iterations,
+  setIterations,
+  seed,
+  setSeed,
+  paletteKey,
+  setPaletteKey,
   paletteKeys,
-  presets, loadPreset,
-  stats, fps, error,
+  presets,
+  loadPreset,
+  stats,
+  fps,
+  error,
 }: ParameterPanelProps) {
   return (
-    <OrnateFrame pillar="architectus" variant="panel" style={{
-      width: 300,
-      overflowY: 'auto',
-      flexShrink: 0,
-      background: '#111',
-      fontSize: '0.85rem',
-    }}>
+    <OrnateFrame
+      pillar="architectus"
+      variant="panel"
+      style={{
+        width: 300,
+        overflowY: 'auto',
+        flexShrink: 0,
+        background: '#111',
+        fontSize: '0.85rem',
+      }}
+    >
       <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--pillar-accent)' }}>
         L-System Parameters
       </div>
@@ -104,12 +117,7 @@ export function ParameterPanel({
       {/* Axiom */}
       <div style={sectionStyle}>
         <label style={labelStyle}>Axiom</label>
-        <input
-          style={inputStyle}
-          value={axiom}
-          onChange={(e) => setAxiom(e.target.value)}
-          spellCheck={false}
-        />
+        <input style={inputStyle} value={axiom} onChange={(e) => setAxiom(e.target.value)} spellCheck={false} />
       </div>
 
       {/* Rules */}
@@ -155,12 +163,7 @@ export function ParameterPanel({
       {/* Seed */}
       <div style={sectionStyle}>
         <label style={labelStyle}>Stochastic Seed</label>
-        <input
-          type="number"
-          style={inputStyle}
-          value={seed}
-          onChange={(e) => setSeed(Number(e.target.value))}
-        />
+        <input type="number" style={inputStyle} value={seed} onChange={(e) => setSeed(Number(e.target.value))} />
       </div>
 
       {/* Palette */}
@@ -172,36 +175,50 @@ export function ParameterPanel({
           onChange={(e) => setPaletteKey(e.target.value)}
         >
           {paletteKeys.map((k) => (
-            <option key={k} value={k}>{k}</option>
+            <option key={k} value={k}>
+              {k}
+            </option>
           ))}
         </select>
       </div>
 
       {/* Error */}
       {error && (
-        <div style={{
-          padding: '0.5rem',
-          background: '#3a1111',
-          border: '1px solid #ff3333',
-          borderRadius: '4px',
-          fontSize: '0.75rem',
-          color: '#ff6666',
-          marginBottom: '1rem',
-        }}>
+        <div
+          style={{
+            padding: '0.5rem',
+            background: '#3a1111',
+            border: '1px solid #ff3333',
+            borderRadius: '4px',
+            fontSize: '0.75rem',
+            color: '#ff6666',
+            marginBottom: '1rem',
+          }}
+        >
           {error}
         </div>
       )}
 
       {/* Stats */}
-      <div style={{
-        padding: '0.5rem',
-        background: '#0a0a1e',
-        border: '1px solid #1a1a3e',
-        borderRadius: '4px',
-        fontFamily: 'var(--font-geist-mono), monospace',
-        fontSize: '0.7rem',
-      }}>
-        <div style={{ opacity: 0.5, marginBottom: '0.25rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+      <div
+        style={{
+          padding: '0.5rem',
+          background: '#0a0a1e',
+          border: '1px solid #1a1a3e',
+          borderRadius: '4px',
+          fontFamily: 'var(--font-geist-mono), monospace',
+          fontSize: '0.7rem',
+        }}
+      >
+        <div
+          style={{
+            opacity: 0.5,
+            marginBottom: '0.25rem',
+            fontSize: '0.65rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+          }}
+        >
           Performance
         </div>
         <div>FPS: {fps || '...'}</div>

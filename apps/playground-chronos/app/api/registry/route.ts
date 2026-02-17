@@ -5,9 +5,9 @@
  * @dendrovia/chronos, which uses .js import extensions incompatible with turbopack.
  */
 
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
-import { homedir } from 'os';
+import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 
 const REGISTRY_PATH = join(homedir(), '.chronos', 'registry.json');
 

@@ -26,11 +26,7 @@ export interface CacheStats {
 
 /** Check if OPFS is available in the current environment */
 export function isOPFSSupported(): boolean {
-  return (
-    typeof navigator !== 'undefined' &&
-    'storage' in navigator &&
-    'getDirectory' in navigator.storage
-  );
+  return typeof navigator !== 'undefined' && 'storage' in navigator && 'getDirectory' in navigator.storage;
 }
 
 export class OPFSCache {
@@ -78,7 +74,7 @@ export class OPFSCache {
       size,
     };
 
-    const metaFile = await this.metaDir!.getFileHandle(safeName + '.json', { create: true });
+    const metaFile = await this.metaDir!.getFileHandle(`${safeName}.json`, { create: true });
     const metaWritable = await metaFile.createWritable();
     await metaWritable.write(JSON.stringify(meta));
     await metaWritable.close();
@@ -139,7 +135,7 @@ export class OPFSCache {
 
     try {
       const safeName = this.encodePath(path);
-      const metaFile = await this.metaDir!.getFileHandle(safeName + '.json');
+      const metaFile = await this.metaDir!.getFileHandle(`${safeName}.json`);
       const fileData = await metaFile.getFile();
       const raw = await fileData.text();
       const meta = JSON.parse(raw) as CacheEntry;
@@ -173,7 +169,7 @@ export class OPFSCache {
     }
 
     try {
-      await this.metaDir!.removeEntry(safeName + '.json');
+      await this.metaDir!.removeEntry(`${safeName}.json`);
     } catch {
       // Meta doesn't exist, that's fine
     }

@@ -2,9 +2,9 @@
  * Color mode registry — resolves node colors by active mode.
  */
 
-import type { ColorMode, SourceNode } from "../types";
-import type { ColorPair, ColorResolver } from "./modes";
-import { statusResolver, domainResolver, fidelityResolver, runtimeResolver, resolveRuntimeColor } from "./modes";
+import type { ColorMode, SourceNode } from '../types';
+import type { ColorPair, ColorResolver } from './modes';
+import { domainResolver, fidelityResolver, resolveRuntimeColor, runtimeResolver, statusResolver } from './modes';
 
 const COLOR_REGISTRY: Record<ColorMode, ColorResolver> = {
   status: statusResolver,

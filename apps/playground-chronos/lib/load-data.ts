@@ -1,14 +1,14 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import type {
-  CodeTopology,
-  ParsedCommit,
-  Hotspot,
-  TemporalCoupling,
-  RepositoryMetadata,
-  LanguageDistribution,
   ContributorSummary,
+  Hotspot,
+  LanguageDistribution,
+  ParsedCommit,
+  RepositoryMetadata,
+  TemporalCoupling,
 } from '@dendrovia/shared';
+
 // Inline types from @dendrovia/chronos to avoid turbopack .js extension
 // resolution issues (chronos uses .js imports that turbopack can't alias)
 interface FunctionComplexity {

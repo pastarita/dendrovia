@@ -11,48 +11,47 @@
  * No virtualization needed for 200 items.
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
 import type { EventBus } from '@dendrovia/shared';
-import type { WiretapEntry } from './types';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  gymBtnStyle,
   wiretapContainerStyle,
+  wiretapEntryStyle,
   wiretapHeaderStyle,
   wiretapListStyle,
-  wiretapEntryStyle,
-  gymBtnStyle,
-  tabStyle,
 } from './gym-styles';
+import type { WiretapEntry } from './types';
 
 const MAX_ENTRIES = 200;
 
 /** Map event key prefixes to pillar names and colors. */
 const PILLAR_MAP: Record<string, { name: string; color: string }> = {
-  'player':     { name: 'ARCHITECTUS', color: '#3B82F6' },
-  'branch':     { name: 'ARCHITECTUS', color: '#3B82F6' },
-  'node':       { name: 'ARCHITECTUS', color: '#3B82F6' },
-  'collision':  { name: 'ARCHITECTUS', color: '#3B82F6' },
-  'encounter':  { name: 'LUDUS',       color: '#EF4444' },
-  'damage':     { name: 'LUDUS',       color: '#EF4444' },
-  'health':     { name: 'LUDUS',       color: '#EF4444' },
-  'mana':       { name: 'LUDUS',       color: '#EF4444' },
-  'quest':      { name: 'LUDUS',       color: '#EF4444' },
-  'combat':     { name: 'LUDUS',       color: '#EF4444' },
-  'spell':      { name: 'LUDUS',       color: '#EF4444' },
-  'status':     { name: 'LUDUS',       color: '#EF4444' },
-  'experience': { name: 'LUDUS',       color: '#EF4444' },
-  'level':      { name: 'LUDUS',       color: '#EF4444' },
-  'loot':       { name: 'LUDUS',       color: '#EF4444' },
-  'item':       { name: 'OCULUS',      color: '#22C55E' },
-  'parse':      { name: 'CHRONOS',     color: '#c77b3f' },
-  'topology':   { name: 'CHRONOS',     color: '#c77b3f' },
-  'shaders':    { name: 'IMAGINARIUM', color: '#A855F7' },
-  'palette':    { name: 'IMAGINARIUM', color: '#A855F7' },
-  'mycology':   { name: 'IMAGINARIUM', color: '#A855F7' },
-  'assets':     { name: 'OPERATUS',    color: '#888'    },
-  'state':      { name: 'OPERATUS',    color: '#888'    },
-  'cache':      { name: 'OPERATUS',    color: '#888'    },
-  'save':       { name: 'OPERATUS',    color: '#888'    },
-  'game':       { name: 'OPERATUS',    color: '#888'    },
+  player: { name: 'ARCHITECTUS', color: '#3B82F6' },
+  branch: { name: 'ARCHITECTUS', color: '#3B82F6' },
+  node: { name: 'ARCHITECTUS', color: '#3B82F6' },
+  collision: { name: 'ARCHITECTUS', color: '#3B82F6' },
+  encounter: { name: 'LUDUS', color: '#EF4444' },
+  damage: { name: 'LUDUS', color: '#EF4444' },
+  health: { name: 'LUDUS', color: '#EF4444' },
+  mana: { name: 'LUDUS', color: '#EF4444' },
+  quest: { name: 'LUDUS', color: '#EF4444' },
+  combat: { name: 'LUDUS', color: '#EF4444' },
+  spell: { name: 'LUDUS', color: '#EF4444' },
+  status: { name: 'LUDUS', color: '#EF4444' },
+  experience: { name: 'LUDUS', color: '#EF4444' },
+  level: { name: 'LUDUS', color: '#EF4444' },
+  loot: { name: 'LUDUS', color: '#EF4444' },
+  item: { name: 'OCULUS', color: '#22C55E' },
+  parse: { name: 'CHRONOS', color: '#c77b3f' },
+  topology: { name: 'CHRONOS', color: '#c77b3f' },
+  shaders: { name: 'IMAGINARIUM', color: '#A855F7' },
+  palette: { name: 'IMAGINARIUM', color: '#A855F7' },
+  mycology: { name: 'IMAGINARIUM', color: '#A855F7' },
+  assets: { name: 'OPERATUS', color: '#888' },
+  state: { name: 'OPERATUS', color: '#888' },
+  cache: { name: 'OPERATUS', color: '#888' },
+  save: { name: 'OPERATUS', color: '#888' },
+  game: { name: 'OPERATUS', color: '#888' },
 };
 
 function inferPillar(event: string): { name: string; color: string } {
@@ -71,7 +70,7 @@ function summarizePayload(payload: unknown): string {
   if (typeof payload === 'number' || typeof payload === 'boolean') return String(payload);
   try {
     const s = JSON.stringify(payload);
-    return s.length > 60 ? s.slice(0, 57) + '...' : s;
+    return s.length > 60 ? `${s.slice(0, 57)}...` : s;
   } catch {
     return '[object]';
   }
@@ -114,7 +113,7 @@ export function GymWiretap({ eventBus, collapsed = false }: GymWiretapProps) {
     if (listRef.current && !isCollapsed) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
-  }, [entries, isCollapsed]);
+  }, [isCollapsed]);
 
   const handleClear = useCallback(() => setEntries([]), []);
 
@@ -137,21 +136,37 @@ export function GymWiretap({ eventBus, collapsed = false }: GymWiretapProps) {
   return (
     <div style={wiretapContainerStyle}>
       <div style={wiretapHeaderStyle}>
-        <span style={{ cursor: 'pointer' }} onClick={() => setIsCollapsed(true)}>Wiretap</span>
+        <span style={{ cursor: 'pointer' }} onClick={() => setIsCollapsed(true)}>
+          Wiretap
+        </span>
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          style={{ background: '#222', border: '1px solid #333', borderRadius: 3, color: 'inherit', fontSize: '0.7rem', padding: '0.15rem 0.3rem' }}
+          style={{
+            background: '#222',
+            border: '1px solid #333',
+            borderRadius: 3,
+            color: 'inherit',
+            fontSize: '0.7rem',
+            padding: '0.15rem 0.3rem',
+          }}
         >
           <option value="all">All ({entries.length})</option>
           {eventNames.map((n) => (
-            <option key={n} value={n}>{n}</option>
+            <option key={n} value={n}>
+              {n}
+            </option>
           ))}
         </select>
-        <button style={{ ...gymBtnStyle, padding: '0.15rem 0.4rem', fontSize: '0.65rem', marginLeft: 'auto' }} onClick={handleClear}>
+        <button
+          style={{ ...gymBtnStyle, padding: '0.15rem 0.4rem', fontSize: '0.65rem', marginLeft: 'auto' }}
+          onClick={handleClear}
+        >
           Clear
         </button>
-        <span style={{ opacity: 0.4, cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => setIsCollapsed(true)}>-</span>
+        <span style={{ opacity: 0.4, cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => setIsCollapsed(true)}>
+          -
+        </span>
       </div>
       <div ref={listRef} style={wiretapListStyle}>
         {filtered.length === 0 && (
@@ -166,7 +181,9 @@ export function GymWiretap({ eventBus, collapsed = false }: GymWiretapProps) {
               <span style={{ opacity: 0.4, flexShrink: 0 }}>{formatTime(entry.timestamp)}</span>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: pillar.color, flexShrink: 0 }} />
               <span style={{ fontWeight: 500, flexShrink: 0 }}>{entry.event}</span>
-              <span style={{ opacity: 0.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+              <span
+                style={{ opacity: 0.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}
+              >
                 {summarizePayload(entry.payload)}
               </span>
             </div>

@@ -1,7 +1,7 @@
-import { describe, test, expect } from 'bun:test';
-import { deriveStoryArc } from '../../src/storyarc/StoryArcDeriver';
-import { generateMockTopology } from '../../src/pipeline/MockTopology';
+import { describe, expect, test } from 'bun:test';
 import type { CodeTopology, FileTreeNode, ParsedFile } from '@dendrovia/shared';
+import { generateMockTopology } from '../../src/pipeline/MockTopology';
+import { deriveStoryArc } from '../../src/storyarc/StoryArcDeriver';
 
 function buildMultiDirTopology(dirCount: number, filesPerDir: number): CodeTopology {
   const files: ParsedFile[] = [];
@@ -40,7 +40,7 @@ function buildMultiDirTopology(dirCount: number, filesPerDir: number): CodeTopol
     tree: { name: 'root', path: '.', type: 'directory', children: rootChildren },
     hotspots: files
       .filter((_, i) => i % 7 === 0)
-      .map(f => ({ path: f.path, churnRate: 10, complexity: f.complexity, riskScore: f.complexity * 2 })),
+      .map((f) => ({ path: f.path, churnRate: 10, complexity: f.complexity, riskScore: f.complexity * 2 })),
   };
 }
 
@@ -66,7 +66,7 @@ describe('StoryArcDeriver', () => {
     const topology = buildMultiDirTopology(5, 5);
     const arc = deriveStoryArc(topology);
 
-    const allSegmentPaths = arc.segments.flatMap(s => s.filePaths);
+    const allSegmentPaths = arc.segments.flatMap((s) => s.filePaths);
     const segPathSet = new Set(allSegmentPaths);
 
     // No duplicates
@@ -121,7 +121,9 @@ describe('StoryArcDeriver', () => {
       files: [file],
       commits: [],
       tree: {
-        name: 'root', path: '.', type: 'directory',
+        name: 'root',
+        path: '.',
+        type: 'directory',
         children: [{ name: 'lone.ts', path: 'lone.ts', type: 'file', metadata: file }],
       },
       hotspots: [],

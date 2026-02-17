@@ -2,7 +2,7 @@
  * ProgressBar — Animated fill bar for health, mana, XP, quest progress
  */
 
-import React, { useRef, useEffect, type CSSProperties } from 'react';
+import { type CSSProperties, useEffect, useRef } from 'react';
 
 export type ProgressBarVariant = 'health' | 'mana' | 'xp' | 'quest' | 'custom';
 

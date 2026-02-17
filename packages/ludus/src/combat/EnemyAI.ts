@@ -11,8 +11,8 @@
  * All decisions are seeded through the battle's PRNG.
  */
 
-import type { Action, Monster, Character, BattleState, RngState } from '@dendrovia/shared';
-import { rngNext, rngChance } from '../utils/SeededRandom';
+import type { Action, BattleState, Character, Monster, RngState } from '@dendrovia/shared';
+import { rngNext } from '../utils/SeededRandom';
 
 export interface EnemyDecision {
   action: Action;
@@ -21,12 +21,9 @@ export interface EnemyDecision {
 }
 
 /** Choose an enemy action based on monster type and battle state */
-export function chooseEnemyAction(
-  enemyIndex: number,
-  state: BattleState,
-): EnemyDecision {
+export function chooseEnemyAction(enemyIndex: number, state: BattleState): EnemyDecision {
   const monster = state.enemies[enemyIndex];
-  let rng = state.rng;
+  const rng = state.rng;
 
   // Boss phase transitions override normal behavior
   if (monster.name.includes('[BOSS]') || monster.name.includes('[MINIBOSS]')) {
@@ -49,11 +46,7 @@ export function chooseEnemyAction(
 
 // ─── Null Pointer: Chaotic — crash, propagate, or normal ────
 
-function chooseNullPointerAction(
-  enemyIndex: number,
-  monster: Monster,
-  rng: RngState,
-): EnemyDecision {
+function chooseNullPointerAction(enemyIndex: number, monster: Monster, rng: RngState): EnemyDecision {
   const [roll, rng1] = rngNext(rng);
 
   // 15% chance to "crash" — skip turn
@@ -84,13 +77,8 @@ function chooseNullPointerAction(
 
 // ─── Memory Leak: Gets stronger every turn ──────────────────
 
-function chooseMemoryLeakAction(
-  enemyIndex: number,
-  monster: Monster,
-  turn: number,
-  rng: RngState,
-): EnemyDecision {
-  const [roll, rng1] = rngNext(rng);
+function chooseMemoryLeakAction(enemyIndex: number, monster: Monster, turn: number, rng: RngState): EnemyDecision {
+  const [_roll, rng1] = rngNext(rng);
 
   // Every 3rd turn, buff itself instead of attacking
   if (turn % 3 === 0 && monster.spells.includes('spell-heap-grow')) {
@@ -119,12 +107,7 @@ function chooseMemoryLeakAction(
 
 // ─── Race Condition: Fast/slow alternation ──────────────────
 
-function chooseRaceConditionAction(
-  enemyIndex: number,
-  monster: Monster,
-  turn: number,
-  rng: RngState,
-): EnemyDecision {
+function chooseRaceConditionAction(enemyIndex: number, monster: Monster, turn: number, rng: RngState): EnemyDecision {
   const [roll, rng1] = rngNext(rng);
 
   // Even turns: double-speed attack (uses Thread Swap spell)
@@ -137,7 +120,7 @@ function chooseRaceConditionAction(
   }
 
   // Odd turns: 30% chance to do nothing (thread blocked)
-  if (turn % 2 === 1 && roll < 0.30) {
+  if (turn % 2 === 1 && roll < 0.3) {
     return {
       action: basicAttack(enemyIndex),
       rng: rng1,
@@ -154,15 +137,11 @@ function chooseRaceConditionAction(
 
 // ─── Off By One: Unreliable — sometimes helps the player ────
 
-function chooseOffByOneAction(
-  enemyIndex: number,
-  monster: Monster,
-  rng: RngState,
-): EnemyDecision {
+function chooseOffByOneAction(enemyIndex: number, monster: Monster, rng: RngState): EnemyDecision {
   const [roll, rng1] = rngNext(rng);
 
   // 10% chance to "miss by one" — attack heals player instead
-  if (roll < 0.10) {
+  if (roll < 0.1) {
     return {
       action: basicAttack(enemyIndex),
       rng: rng1,
@@ -188,12 +167,7 @@ function chooseOffByOneAction(
 
 // ─── Boss AI: Phase transitions at HP thresholds ────────────
 
-function chooseBossAction(
-  enemyIndex: number,
-  monster: Monster,
-  player: Character,
-  rng: RngState,
-): EnemyDecision {
+function chooseBossAction(enemyIndex: number, monster: Monster, _player: Character, rng: RngState): EnemyDecision {
   const hpPercent = monster.stats.health / monster.stats.maxHealth;
   const [roll, rng1] = rngNext(rng);
 
@@ -210,7 +184,7 @@ function chooseBossAction(
   }
 
   // Phase 2: Below 50% HP — more aggressive, alternates specials
-  if (hpPercent <= 0.50) {
+  if (hpPercent <= 0.5) {
     if (roll < 0.6 && monster.spells.length > 1) {
       return {
         action: { type: 'ENEMY_ACT', enemyIndex },
@@ -246,10 +220,7 @@ function basicAttack(enemyIndex: number): Action {
  * Determine which spell a monster should use based on its behavior.
  * Returns the spell ID or null if the monster should basic attack.
  */
-export function resolveEnemySpell(
-  monster: Monster,
-  decision: EnemyDecision,
-): string | null {
+export function resolveEnemySpell(monster: Monster, decision: EnemyDecision): string | null {
   // If the AI chose ENEMY_ACT and the monster has spells, pick one
   if (decision.action.type === 'ENEMY_ACT' && monster.spells.length > 0) {
     // For simplicity, use the first spell; boss AI picks the last (strongest)

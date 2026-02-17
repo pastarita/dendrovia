@@ -5,8 +5,8 @@
  * Does NOT render — that's ARCHITECTUS's job. This just generates data.
  */
 
-import type { FungalSpecimen, MushroomMorphology, CapShape } from '../types';
 import { hexToRgb } from '../../utils/color';
+import type { CapShape, FungalSpecimen } from '../types';
 
 // ---------------------------------------------------------------------------
 // Output types
@@ -22,7 +22,7 @@ export interface MushroomMeshData {
 
 export interface ProfileGeometry {
   points: [number, number][]; // profile curve for LatheGeometry
-  segments: number;           // radial segments
+  segments: number; // radial segments
 }
 
 export interface CylinderGeometry {
@@ -36,15 +36,15 @@ export interface InstanceData {
   position: [number, number, number];
   scale: [number, number, number];
   rotation: [number, number, number]; // euler angles
-  color: [number, number, number];    // normalized RGB
+  color: [number, number, number]; // normalized RGB
   emissive: [number, number, number]; // glow color (0,0,0 if none)
 }
 
 export interface LODConfig {
-  billboard: boolean;          // use sprite at distance
-  billboardThreshold: number;  // distance threshold
-  clusterCount: number;        // instances in cluster (1 = solitary)
-  clusterRadius: number;       // spread radius for cluster
+  billboard: boolean; // use sprite at distance
+  billboardThreshold: number; // distance threshold
+  clusterCount: number; // instances in cluster (1 = solitary)
+  clusterRadius: number; // spread radius for cluster
 }
 
 // ---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ function generateCapProfile(shape: CapShape, width: number, height: number): [nu
         y = height * (1 - t * t); // parabolic dome
         break;
       case 'campanulate':
-        y = height * Math.pow(1 - t, 1.5); // bell curve
+        y = height * (1 - t) ** 1.5; // bell curve
         break;
       case 'umbonate':
         y = height * (1 - t * t) + (t < 0.3 ? height * 0.2 * (1 - t / 0.3) : 0);
@@ -102,13 +102,8 @@ function generateInstanceData(specimen: FungalSpecimen): InstanceData {
   let emissive: [number, number, number] = [0, 0, 0];
   if (m.bioluminescence !== 'none') {
     const glowRgb = hexToRgb(m.scaleColor);
-    const intensity = m.bioluminescence === 'pulsing' ? 0.8 :
-                     m.bioluminescence === 'bright' ? 0.5 : 0.2;
-    emissive = [
-      glowRgb.r / 255 * intensity,
-      glowRgb.g / 255 * intensity,
-      glowRgb.b / 255 * intensity,
-    ];
+    const intensity = m.bioluminescence === 'pulsing' ? 0.8 : m.bioluminescence === 'bright' ? 0.5 : 0.2;
+    emissive = [(glowRgb.r / 255) * intensity, (glowRgb.g / 255) * intensity, (glowRgb.b / 255) * intensity];
   }
 
   return {
@@ -129,10 +124,16 @@ function generateLOD(specimen: FungalSpecimen): LODConfig {
   const p = specimen.placement;
 
   // Small specimens get billboarded sooner
-  const sizeMultiplier = m.sizeClass === 'tiny' ? 0.5 :
-                         m.sizeClass === 'small' ? 0.7 :
-                         m.sizeClass === 'medium' ? 1.0 :
-                         m.sizeClass === 'large' ? 1.3 : 1.5;
+  const sizeMultiplier =
+    m.sizeClass === 'tiny'
+      ? 0.5
+      : m.sizeClass === 'small'
+        ? 0.7
+        : m.sizeClass === 'medium'
+          ? 1.0
+          : m.sizeClass === 'large'
+            ? 1.3
+            : 1.5;
 
   return {
     billboard: m.sizeClass === 'tiny' || m.sizeClass === 'small',
@@ -150,8 +151,8 @@ export function generateMeshData(specimen: FungalSpecimen): MushroomMeshData {
   const m = specimen.morphology;
 
   // Cap
-  const capWidth = 0.3 + m.capWidth * 0.7;   // 0.3 - 1.0 world units
-  const capHeight = 0.1 + m.capHeight * 0.5;  // 0.1 - 0.6 world units
+  const capWidth = 0.3 + m.capWidth * 0.7; // 0.3 - 1.0 world units
+  const capHeight = 0.1 + m.capHeight * 0.5; // 0.1 - 0.6 world units
   const capProfile = generateCapProfile(m.capShape, capWidth, capHeight);
   const capSegments = m.sizeClass === 'tiny' ? 8 : m.sizeClass === 'small' ? 12 : 16;
 

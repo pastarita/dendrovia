@@ -9,18 +9,14 @@
  * 5. Global variant — whole-codebase master shader
  */
 
-import type { CodeTopology, SDFShader, ProceduralPalette } from '@dendrovia/shared';
-import { compile as compileSDF, type SDFCompileConfig } from '../distillation/SDFCompiler';
+import type { CodeTopology, SDFShader } from '@dendrovia/shared';
+import { extractPalette } from '../distillation/ColorExtractor';
 import { compile as compileLSystem } from '../distillation/LSystemCompiler';
 import { generate as generateNoise } from '../distillation/NoiseGenerator';
-import { extractPalette } from '../distillation/ColorExtractor';
-import { getDefaultPalette } from '../fallback/DefaultPalettes';
+import { compile as compileSDF } from '../distillation/SDFCompiler';
 import { hashString } from '../utils/hash';
 
-export async function generateVariants(
-  topology: CodeTopology,
-  count: number = 5,
-): Promise<SDFShader[]> {
+export async function generateVariants(topology: CodeTopology, count: number = 5): Promise<SDFShader[]> {
   const shaders: SDFShader[] = [];
   const seed = hashString(JSON.stringify({ fc: topology.files.length }));
 
@@ -29,35 +25,37 @@ export async function generateVariants(
   const globalLSystem = compileLSystem(topology);
   const globalNoise = generateNoise(topology);
 
-  shaders.push(await compileSDF({
-    topology,
-    palette: globalPalette,
-    lsystem: globalLSystem,
-    noise: globalNoise,
-    seed,
-    variantId: 'global',
-  }));
+  shaders.push(
+    await compileSDF({
+      topology,
+      palette: globalPalette,
+      lsystem: globalLSystem,
+      noise: globalNoise,
+      seed,
+      variantId: 'global',
+    }),
+  );
 
   if (count <= 1) return shaders;
 
   // 2. Language variant — top language-specific palette
   const langGroups = groupByLanguage(topology);
-  const topLangs = [...langGroups.entries()]
-    .sort((a, b) => b[1].files.length - a[1].files.length)
-    .slice(0, 1);
+  const topLangs = [...langGroups.entries()].sort((a, b) => b[1].files.length - a[1].files.length).slice(0, 1);
 
   for (const [lang, sub] of topLangs) {
     const palette = extractPalette(sub);
     const lsystem = compileLSystem(sub);
     const noise = generateNoise(sub);
-    shaders.push(await compileSDF({
-      topology: sub,
-      palette,
-      lsystem,
-      noise,
-      seed: hashString(`lang-${lang}`),
-      variantId: `lang-${lang}`,
-    }));
+    shaders.push(
+      await compileSDF({
+        topology: sub,
+        palette,
+        lsystem,
+        noise,
+        seed: hashString(`lang-${lang}`),
+        variantId: `lang-${lang}`,
+      }),
+    );
   }
 
   if (shaders.length >= count) return shaders.slice(0, count);
@@ -68,14 +66,16 @@ export async function generateVariants(
     const palette = extractPalette(highComplexity);
     const lsystem = compileLSystem(highComplexity);
     const noise = generateNoise(highComplexity);
-    shaders.push(await compileSDF({
-      topology: highComplexity,
-      palette,
-      lsystem,
-      noise,
-      seed: hashString('complexity-high'),
-      variantId: 'complexity-high',
-    }));
+    shaders.push(
+      await compileSDF({
+        topology: highComplexity,
+        palette,
+        lsystem,
+        noise,
+        seed: hashString('complexity-high'),
+        variantId: 'complexity-high',
+      }),
+    );
   }
 
   if (shaders.length >= count) return shaders.slice(0, count);
@@ -86,14 +86,16 @@ export async function generateVariants(
     const palette = extractPalette(structuralSub);
     const lsystem = compileLSystem(structuralSub);
     const noise = generateNoise(structuralSub);
-    shaders.push(await compileSDF({
-      topology: structuralSub,
-      palette,
-      lsystem,
-      noise,
-      seed: hashString('structural'),
-      variantId: 'structural',
-    }));
+    shaders.push(
+      await compileSDF({
+        topology: structuralSub,
+        palette,
+        lsystem,
+        noise,
+        seed: hashString('structural'),
+        variantId: 'structural',
+      }),
+    );
   }
 
   if (shaders.length >= count) return shaders.slice(0, count);
@@ -104,14 +106,16 @@ export async function generateVariants(
     const palette = extractPalette(hotspotSub);
     const lsystem = compileLSystem(hotspotSub);
     const noise = generateNoise(hotspotSub);
-    shaders.push(await compileSDF({
-      topology: hotspotSub,
-      palette,
-      lsystem,
-      noise,
-      seed: hashString('hotspot'),
-      variantId: 'hotspot',
-    }));
+    shaders.push(
+      await compileSDF({
+        topology: hotspotSub,
+        palette,
+        lsystem,
+        noise,
+        seed: hashString('hotspot'),
+        variantId: 'hotspot',
+      }),
+    );
   }
 
   return shaders.slice(0, count);
@@ -131,7 +135,7 @@ function groupByLanguage(topology: CodeTopology): Map<string, CodeTopology> {
       files,
       commits: topology.commits,
       tree: topology.tree,
-      hotspots: topology.hotspots.filter(h => files.some(f => f.path === h.path)),
+      hotspots: topology.hotspots.filter((h) => files.some((f) => f.path === h.path)),
     });
   }
 
@@ -147,23 +151,23 @@ function createComplexitySubset(topology: CodeTopology, tier: 'high' | 'low'): C
     files,
     commits: topology.commits,
     tree: topology.tree,
-    hotspots: topology.hotspots.filter(h => files.some(f => f.path === h.path)),
+    hotspots: topology.hotspots.filter((h) => files.some((f) => f.path === h.path)),
   };
 }
 
 function createStructuralSubset(topology: CodeTopology): CodeTopology {
-  const topDirs = topology.tree.children?.filter(c => c.type === 'directory') ?? [];
+  const topDirs = topology.tree.children?.filter((c) => c.type === 'directory') ?? [];
   if (topDirs.length === 0) return topology;
 
   const firstDir = topDirs[0]!;
   const dirPath = firstDir.path;
-  const files = topology.files.filter(f => f.path.startsWith(dirPath));
+  const files = topology.files.filter((f) => f.path.startsWith(dirPath));
 
   return {
     files: files.length > 0 ? files : topology.files.slice(0, 5),
     commits: topology.commits,
     tree: firstDir,
-    hotspots: topology.hotspots.filter(h => h.path.startsWith(dirPath)),
+    hotspots: topology.hotspots.filter((h) => h.path.startsWith(dirPath)),
   };
 }
 
@@ -179,8 +183,8 @@ function createHotspotSubset(topology: CodeTopology): CodeTopology {
     };
   }
 
-  const hotspotPaths = new Set(topology.hotspots.map(h => h.path));
-  const files = topology.files.filter(f => hotspotPaths.has(f.path));
+  const hotspotPaths = new Set(topology.hotspots.map((h) => h.path));
+  const files = topology.files.filter((f) => hotspotPaths.has(f.path));
 
   return {
     files: files.length > 0 ? files : topology.files.slice(0, 5),

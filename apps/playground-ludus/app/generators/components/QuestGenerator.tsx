@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import {
-  generateBugHuntQuests,
   generateArchaeologyQuests,
+  generateBugHuntQuests,
   generateHotspotQuests,
   getQuestRewards,
   resetQuestIds,
 } from '@dendrovia/ludus';
-import type { Quest, ParsedCommit, ParsedFile, Hotspot } from '@dendrovia/shared';
+import type { Hotspot, ParsedCommit, ParsedFile, Quest } from '@dendrovia/shared';
+import { useState } from 'react';
 
 const MOCK_COMMITS: ParsedCommit[] = [
   {
@@ -74,9 +74,33 @@ const MOCK_COMMITS: ParsedCommit[] = [
 ];
 
 const MOCK_FILES: ParsedFile[] = [
-  { path: 'src/legacy/old-parser.ts', hash: 'aaa111', language: 'typescript', complexity: 28, loc: 450, lastModified: new Date('2024-06-10'), author: 'dev@example.com' },
-  { path: 'src/core/engine.ts', hash: 'bbb222', language: 'typescript', complexity: 22, loc: 380, lastModified: new Date('2024-06-11'), author: 'dev@example.com' },
-  { path: 'src/utils/helpers.ts', hash: 'ccc333', language: 'typescript', complexity: 18, loc: 200, lastModified: new Date('2024-06-12'), author: 'dev@example.com' },
+  {
+    path: 'src/legacy/old-parser.ts',
+    hash: 'aaa111',
+    language: 'typescript',
+    complexity: 28,
+    loc: 450,
+    lastModified: new Date('2024-06-10'),
+    author: 'dev@example.com',
+  },
+  {
+    path: 'src/core/engine.ts',
+    hash: 'bbb222',
+    language: 'typescript',
+    complexity: 22,
+    loc: 380,
+    lastModified: new Date('2024-06-11'),
+    author: 'dev@example.com',
+  },
+  {
+    path: 'src/utils/helpers.ts',
+    hash: 'ccc333',
+    language: 'typescript',
+    complexity: 18,
+    loc: 200,
+    lastModified: new Date('2024-06-12'),
+    author: 'dev@example.com',
+  },
 ];
 
 const MOCK_HOTSPOTS: Hotspot[] = [
@@ -86,9 +110,9 @@ const MOCK_HOTSPOTS: Hotspot[] = [
 
 const TYPE_COLORS: Record<string, string> = {
   'bug-hunt': '#EF4444',
-  'archaeology': '#A16207',
-  'feature': '#22C55E',
-  'refactor': '#6366F1',
+  archaeology: '#A16207',
+  feature: '#22C55E',
+  refactor: '#6366F1',
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -130,7 +154,7 @@ export default function QuestGenerator(): React.JSX.Element {
           { type: 'bug-hunt', label: 'Bug Hunt Quests' },
           { type: 'archaeology', label: 'Archaeology Quests' },
           { type: 'hotspot', label: 'Hotspot Quests' },
-        ].map(btn => (
+        ].map((btn) => (
           <button
             key={btn.type}
             onClick={() => generate(btn.type)}
@@ -153,7 +177,7 @@ export default function QuestGenerator(): React.JSX.Element {
       {/* Quest List */}
       {quests.length > 0 && (
         <div style={{ display: 'grid', gap: '0.75rem' }}>
-          {quests.map((quest, i) => {
+          {quests.map((quest, _i) => {
             const rewards = getQuestRewards(quest);
             return (
               <div
@@ -167,26 +191,37 @@ export default function QuestGenerator(): React.JSX.Element {
                   borderLeft: quest.requirements.length > 0 ? '2px solid #333' : undefined,
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '0.35rem',
+                  }}
+                >
                   <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{quest.title}</div>
                   <div style={{ display: 'flex', gap: '0.35rem' }}>
-                    <span style={{
-                      fontSize: '0.65rem',
-                      padding: '0.1rem 0.35rem',
-                      borderRadius: '3px',
-                      background: TYPE_COLORS[quest.type] ?? '#333',
-                      color: '#fff',
-                    }}>
+                    <span
+                      style={{
+                        fontSize: '0.65rem',
+                        padding: '0.1rem 0.35rem',
+                        borderRadius: '3px',
+                        background: TYPE_COLORS[quest.type] ?? '#333',
+                        color: '#fff',
+                      }}
+                    >
                       {quest.type}
                     </span>
-                    <span style={{
-                      fontSize: '0.65rem',
-                      padding: '0.1rem 0.35rem',
-                      borderRadius: '3px',
-                      border: '1px solid',
-                      borderColor: STATUS_COLORS[quest.status] ?? '#555',
-                      color: STATUS_COLORS[quest.status] ?? '#555',
-                    }}>
+                    <span
+                      style={{
+                        fontSize: '0.65rem',
+                        padding: '0.1rem 0.35rem',
+                        borderRadius: '3px',
+                        border: '1px solid',
+                        borderColor: STATUS_COLORS[quest.status] ?? '#555',
+                        color: STATUS_COLORS[quest.status] ?? '#555',
+                      }}
+                    >
                       {quest.status}
                     </span>
                   </div>
@@ -197,10 +232,20 @@ export default function QuestGenerator(): React.JSX.Element {
                     Requires: {quest.requirements.join(', ')}
                   </div>
                 )}
-                <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)', opacity: 0.7 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '0.75rem',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-geist-mono)',
+                    opacity: 0.7,
+                  }}
+                >
                   <span style={{ color: '#22C55E' }}>XP {rewards.xp}</span>
                   {rewards.items.length > 0 && <span>{rewards.items.join(', ')}</span>}
-                  {rewards.knowledge.length > 0 && <span style={{ color: '#3B82F6' }}>+{rewards.knowledge.length} knowledge</span>}
+                  {rewards.knowledge.length > 0 && (
+                    <span style={{ color: '#3B82F6' }}>+{rewards.knowledge.length} knowledge</span>
+                  )}
                 </div>
               </div>
             );
@@ -209,7 +254,9 @@ export default function QuestGenerator(): React.JSX.Element {
       )}
 
       {quests.length === 0 && (
-        <div style={{ padding: '2rem', border: '1px dashed #333', borderRadius: '8px', textAlign: 'center', opacity: 0.4 }}>
+        <div
+          style={{ padding: '2rem', border: '1px dashed #333', borderRadius: '8px', textAlign: 'center', opacity: 0.4 }}
+        >
           Click a button above to generate quests from mock CHRONOS data
         </div>
       )}

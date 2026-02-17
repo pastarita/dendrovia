@@ -20,11 +20,11 @@ export interface HEVertex {
 }
 
 export interface HEHalfEdge {
-  vertex: number;   // vertex this halfedge points TO
-  face: number;     // face to the left (-1 if boundary)
-  next: number;     // next halfedge in the face loop (CCW)
-  prev: number;     // previous halfedge in the face loop
-  twin: number;     // opposite halfedge (-1 if boundary)
+  vertex: number; // vertex this halfedge points TO
+  face: number; // face to the left (-1 if boundary)
+  next: number; // next halfedge in the face loop (CCW)
+  prev: number; // previous halfedge in the face loop
+  twin: number; // opposite halfedge (-1 if boundary)
 }
 
 export interface HEFace {
@@ -47,10 +47,7 @@ export interface HalfEdgeMesh {
  * @param positions Flat [x,y,z, x,y,z, ...] vertex positions
  * @param indices   Triangle indices (every 3 = one face)
  */
-export function buildFromIndexed(
-  positions: ArrayLike<number>,
-  indices: ArrayLike<number>,
-): HalfEdgeMesh {
+export function buildFromIndexed(positions: ArrayLike<number>, indices: ArrayLike<number>): HalfEdgeMesh {
   const vertexCount = positions.length / 3;
   const faceCount = indices.length / 3;
 
@@ -86,8 +83,8 @@ export function buildFromIndexed(
       halfedges.push({
         vertex: vis[(e + 1) % 3]!, // points TO next vertex
         face: fi,
-        next: baseHE + (e + 1) % 3,
-        prev: baseHE + (e + 2) % 3,
+        next: baseHE + ((e + 1) % 3),
+        prev: baseHE + ((e + 2) % 3),
         twin: -1,
       });
     }
@@ -129,10 +126,7 @@ export function buildFromIndexed(
  * @param profile  Array of [radius, height] pairs (profile curve)
  * @param segments Number of radial segments (e.g., 16, 32)
  */
-export function buildFromProfile(
-  profile: [number, number][],
-  segments: number,
-): HalfEdgeMesh {
+export function buildFromProfile(profile: [number, number][], segments: number): HalfEdgeMesh {
   const rows = profile.length;
   const positions: number[] = [];
   const indices: number[] = [];
@@ -317,9 +311,9 @@ export function meshStats(mesh: HalfEdgeMesh): {
 // ---------------------------------------------------------------------------
 
 export interface FlatMeshData {
-  positions: Float32Array;  // 3 floats per vertex
-  normals: Float32Array;    // 3 floats per vertex
-  indices: Uint32Array;     // 3 indices per face
+  positions: Float32Array; // 3 floats per vertex
+  normals: Float32Array; // 3 floats per vertex
+  indices: Uint32Array; // 3 indices per face
 }
 
 /** Convert HalfEdgeMesh to flat typed arrays for GPU upload. */
@@ -339,7 +333,7 @@ export function toFlatArrays(mesh: HalfEdgeMesh): FlatMeshData {
   for (const face of mesh.faces) {
     const he0 = face.halfedge;
     const he1 = mesh.halfedges[he0]!.next;
-    const he2 = mesh.halfedges[he1]!.next;
+    const _he2 = mesh.halfedges[he1]!.next;
 
     const v0 = halfedgeFrom(mesh, he0);
     const v1 = mesh.halfedges[he0]!.vertex;
@@ -382,7 +376,7 @@ export function toFlatArrays(mesh: HalfEdgeMesh): FlatMeshData {
   for (let fi = 0; fi < mesh.faces.length; fi++) {
     const he0 = mesh.faces[fi]!.halfedge;
     const he1 = mesh.halfedges[he0]!.next;
-    const he2 = mesh.halfedges[he1]!.next;
+    const _he2 = mesh.halfedges[he1]!.next;
 
     indices[fi * 3] = halfedgeFrom(mesh, he0);
     indices[fi * 3 + 1] = mesh.halfedges[he0]!.vertex;

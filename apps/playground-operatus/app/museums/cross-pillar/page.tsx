@@ -8,8 +8,8 @@
  * with asset loading, caching, and state persistence.
  */
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface PillarInfo {
   name: string;
@@ -21,12 +21,54 @@ interface PillarInfo {
 }
 
 const PILLARS: PillarInfo[] = [
-  { name: 'CHRONOS', role: 'Git History + AST Parsing', color: '#c77b3f', tincture: 'Amber', emoji: '📜', packages: ['packages/chronos'] },
-  { name: 'IMAGINARIUM', role: 'Procedural Art Generation', color: '#A855F7', tincture: 'Purpure', emoji: '🎨', packages: ['packages/imaginarium'] },
-  { name: 'ARCHITECTUS', role: '3D Rendering Engine', color: '#3B82F6', tincture: 'Azure', emoji: '🏛️', packages: ['packages/architectus', 'packages/dendrovia-engine'] },
-  { name: 'LUDUS', role: 'Game Mechanics + Rules', color: '#EF4444', tincture: 'Gules', emoji: '🎮', packages: ['packages/ludus'] },
-  { name: 'OCULUS', role: 'UI + Navigation', color: '#22C55E', tincture: 'Vert', emoji: '👁️', packages: ['packages/oculus', 'packages/ui'] },
-  { name: 'OPERATUS', role: 'Infrastructure + Persistence', color: '#1F2937', tincture: 'Sable', emoji: '💾', packages: ['packages/operatus'] },
+  {
+    name: 'CHRONOS',
+    role: 'Git History + AST Parsing',
+    color: '#c77b3f',
+    tincture: 'Amber',
+    emoji: '📜',
+    packages: ['packages/chronos'],
+  },
+  {
+    name: 'IMAGINARIUM',
+    role: 'Procedural Art Generation',
+    color: '#A855F7',
+    tincture: 'Purpure',
+    emoji: '🎨',
+    packages: ['packages/imaginarium'],
+  },
+  {
+    name: 'ARCHITECTUS',
+    role: '3D Rendering Engine',
+    color: '#3B82F6',
+    tincture: 'Azure',
+    emoji: '🏛️',
+    packages: ['packages/architectus', 'packages/dendrovia-engine'],
+  },
+  {
+    name: 'LUDUS',
+    role: 'Game Mechanics + Rules',
+    color: '#EF4444',
+    tincture: 'Gules',
+    emoji: '🎮',
+    packages: ['packages/ludus'],
+  },
+  {
+    name: 'OCULUS',
+    role: 'UI + Navigation',
+    color: '#22C55E',
+    tincture: 'Vert',
+    emoji: '👁️',
+    packages: ['packages/oculus', 'packages/ui'],
+  },
+  {
+    name: 'OPERATUS',
+    role: 'Infrastructure + Persistence',
+    color: '#1F2937',
+    tincture: 'Sable',
+    emoji: '💾',
+    packages: ['packages/operatus'],
+  },
 ];
 
 interface DataFlow {
@@ -37,12 +79,37 @@ interface DataFlow {
 }
 
 const FLOWS: DataFlow[] = [
-  { from: 'CHRONOS', to: 'IMAGINARIUM', label: 'Topology + AST data', events: ['PARSE_COMPLETE', 'TOPOLOGY_GENERATED'] },
-  { from: 'IMAGINARIUM', to: 'ARCHITECTUS', label: 'Shaders + palettes + specimens', events: ['SHADERS_COMPILED', 'PALETTE_GENERATED', 'MYCOLOGY_CATALOGED'] },
-  { from: 'IMAGINARIUM', to: 'OPERATUS', label: 'Generated assets for caching', events: ['SHADERS_COMPILED', 'PALETTE_GENERATED'] },
-  { from: 'ARCHITECTUS', to: 'LUDUS', label: 'Spatial events', events: ['PLAYER_MOVED', 'BRANCH_ENTERED', 'NODE_CLICKED', 'COLLISION_DETECTED'] },
+  {
+    from: 'CHRONOS',
+    to: 'IMAGINARIUM',
+    label: 'Topology + AST data',
+    events: ['PARSE_COMPLETE', 'TOPOLOGY_GENERATED'],
+  },
+  {
+    from: 'IMAGINARIUM',
+    to: 'ARCHITECTUS',
+    label: 'Shaders + palettes + specimens',
+    events: ['SHADERS_COMPILED', 'PALETTE_GENERATED', 'MYCOLOGY_CATALOGED'],
+  },
+  {
+    from: 'IMAGINARIUM',
+    to: 'OPERATUS',
+    label: 'Generated assets for caching',
+    events: ['SHADERS_COMPILED', 'PALETTE_GENERATED'],
+  },
+  {
+    from: 'ARCHITECTUS',
+    to: 'LUDUS',
+    label: 'Spatial events',
+    events: ['PLAYER_MOVED', 'BRANCH_ENTERED', 'NODE_CLICKED', 'COLLISION_DETECTED'],
+  },
   { from: 'LUDUS', to: 'ARCHITECTUS', label: 'Feedback events', events: ['ENCOUNTER_TRIGGERED', 'DAMAGE_DEALT'] },
-  { from: 'LUDUS', to: 'OCULUS', label: 'UI updates (state)', events: ['HEALTH_CHANGED', 'MANA_CHANGED', 'QUEST_UPDATED', 'COMBAT_STARTED'] },
+  {
+    from: 'LUDUS',
+    to: 'OCULUS',
+    label: 'UI updates (state)',
+    events: ['HEALTH_CHANGED', 'MANA_CHANGED', 'QUEST_UPDATED', 'COMBAT_STARTED'],
+  },
   { from: 'OCULUS', to: 'LUDUS', label: 'User actions', events: ['SPELL_CAST', 'ITEM_USED'] },
   { from: 'OPERATUS', to: 'ARCHITECTUS', label: 'Cached shaders + meshes', events: ['ASSETS_LOADED', 'CACHE_UPDATED'] },
   { from: 'OPERATUS', to: 'LUDUS', label: 'Persisted game state', events: ['STATE_PERSISTED', 'SAVE_COMPLETED'] },
@@ -76,13 +143,13 @@ export default function CrossPillarPage() {
   const [selected, setSelected] = useState<string | null>('OPERATUS');
   const selectedPillar = PILLARS.find((p) => p.name === selected);
 
-  const relatedFlows = selected
-    ? FLOWS.filter((f) => f.from === selected || f.to === selected)
-    : FLOWS;
+  const relatedFlows = selected ? FLOWS.filter((f) => f.from === selected || f.to === selected) : FLOWS;
 
   return (
     <div>
-      <Link href="/museums" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; Museums</Link>
+      <Link href="/museums" style={{ fontSize: '0.85rem', opacity: 0.5 }}>
+        &larr; Museums
+      </Link>
       <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', marginBottom: '0.5rem' }}>
         Cross-Pillar Interface Map
       </h1>
@@ -116,13 +183,31 @@ export default function CrossPillarPage() {
         {/* Left column: pipeline + OPERATUS specifics */}
         <div>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>Build-to-Runtime Pipeline</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem', background: '#111', borderRadius: 8, border: '1px solid #222' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+              padding: '1rem',
+              background: '#111',
+              borderRadius: 8,
+              border: '1px solid #222',
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
               <PillarBadge p={PILLARS[0]!} active={selected === 'CHRONOS'} onClick={() => setSelected('CHRONOS')} />
               <Arrow />
-              <PillarBadge p={PILLARS[1]!} active={selected === 'IMAGINARIUM'} onClick={() => setSelected('IMAGINARIUM')} />
+              <PillarBadge
+                p={PILLARS[1]!}
+                active={selected === 'IMAGINARIUM'}
+                onClick={() => setSelected('IMAGINARIUM')}
+              />
               <Arrow />
-              <PillarBadge p={PILLARS[2]!} active={selected === 'ARCHITECTUS'} onClick={() => setSelected('ARCHITECTUS')} />
+              <PillarBadge
+                p={PILLARS[2]!}
+                active={selected === 'ARCHITECTUS'}
+                onClick={() => setSelected('ARCHITECTUS')}
+              />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', paddingLeft: '40%' }}>
               <span style={{ opacity: 0.3, fontSize: '1.2rem' }}>|</span>
@@ -139,12 +224,17 @@ export default function CrossPillarPage() {
             <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>OPERATUS Subsystems</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {OPERATUS_SUBSYSTEMS.map((s) => (
-                <div key={s.name} style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}>
+                <div
+                  key={s.name}
+                  style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}
+                >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span>{s.icon}</span>
                     <span style={{ fontWeight: 600, fontFamily: 'var(--font-geist-mono)' }}>{s.name}</span>
                   </div>
-                  <div style={{ opacity: 0.5, fontSize: '0.8rem', marginTop: '0.25rem', paddingLeft: '1.5rem' }}>{s.desc}</div>
+                  <div style={{ opacity: 0.5, fontSize: '0.8rem', marginTop: '0.25rem', paddingLeft: '1.5rem' }}>
+                    {s.desc}
+                  </div>
                 </div>
               ))}
             </div>
@@ -156,16 +246,26 @@ export default function CrossPillarPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <h3 style={{ fontSize: '0.85rem', opacity: 0.5, margin: 0 }}>Provides to (downstream):</h3>
               {OPERATUS_PROVIDES.map((r) => (
-                <div key={r.pillar} style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}>
-                  <span style={{ color: PILLARS.find((p) => p.name === r.pillar)?.color ?? '#888', fontWeight: 600 }}>{r.pillar}</span>
+                <div
+                  key={r.pillar}
+                  style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}
+                >
+                  <span style={{ color: PILLARS.find((p) => p.name === r.pillar)?.color ?? '#888', fontWeight: 600 }}>
+                    {r.pillar}
+                  </span>
                   <span style={{ opacity: 0.5, marginLeft: '0.5rem' }}>({r.events} events)</span>
                   <div style={{ opacity: 0.5, fontSize: '0.8rem', marginTop: '0.25rem' }}>{r.data}</div>
                 </div>
               ))}
               <h3 style={{ fontSize: '0.85rem', opacity: 0.5, margin: '0.5rem 0 0 0' }}>Consumes from (upstream):</h3>
               {OPERATUS_CONSUMES.map((r) => (
-                <div key={r.pillar} style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}>
-                  <span style={{ color: PILLARS.find((p) => p.name === r.pillar)?.color, fontWeight: 600 }}>{r.pillar}</span>
+                <div
+                  key={r.pillar}
+                  style={{ padding: '0.5rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}
+                >
+                  <span style={{ color: PILLARS.find((p) => p.name === r.pillar)?.color, fontWeight: 600 }}>
+                    {r.pillar}
+                  </span>
                   <span style={{ opacity: 0.5, marginLeft: '0.5rem' }}>({r.events} events)</span>
                   <div style={{ opacity: 0.5, fontSize: '0.8rem', marginTop: '0.25rem' }}>{r.data}</div>
                 </div>
@@ -177,7 +277,15 @@ export default function CrossPillarPage() {
         {/* Right column: selected pillar detail + flows */}
         <div>
           {selectedPillar && (
-            <div style={{ padding: '1rem', border: `1px solid ${selectedPillar.color}40`, borderRadius: 8, background: `${selectedPillar.color}08`, marginBottom: '1.5rem' }}>
+            <div
+              style={{
+                padding: '1rem',
+                border: `1px solid ${selectedPillar.color}40`,
+                borderRadius: 8,
+                background: `${selectedPillar.color}08`,
+                marginBottom: '1.5rem',
+              }}
+            >
               <h2 style={{ margin: 0, fontSize: '1.1rem', color: selectedPillar.color }}>
                 {selectedPillar.emoji} {selectedPillar.name}
               </h2>
@@ -196,17 +304,31 @@ export default function CrossPillarPage() {
               const fromColor = PILLARS.find((p) => p.name === f.from)?.color ?? '#666';
               const toColor = PILLARS.find((p) => p.name === f.to)?.color ?? '#666';
               return (
-                <div key={i} style={{ padding: '0.6rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}>
+                <div
+                  key={i}
+                  style={{ padding: '0.6rem 0.75rem', border: '1px solid #222', borderRadius: 4, fontSize: '0.85rem' }}
+                >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span style={{ color: fromColor, fontWeight: 600 }}>{f.from}</span>
                     <span style={{ opacity: 0.3 }}>&rarr;</span>
                     <span style={{ color: toColor, fontWeight: 600 }}>{f.to}</span>
-                    <span style={{ opacity: 0.5, marginLeft: 'auto', fontSize: '0.75rem' }}>{f.events.length} events</span>
+                    <span style={{ opacity: 0.5, marginLeft: 'auto', fontSize: '0.75rem' }}>
+                      {f.events.length} events
+                    </span>
                   </div>
                   <div style={{ opacity: 0.5, fontSize: '0.8rem', marginTop: '0.25rem' }}>{f.label}</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginTop: '0.25rem' }}>
                     {f.events.map((e) => (
-                      <span key={e} style={{ fontSize: '0.7rem', padding: '0.1rem 0.4rem', background: '#222', borderRadius: 3, fontFamily: 'var(--font-geist-mono)' }}>
+                      <span
+                        key={e}
+                        style={{
+                          fontSize: '0.7rem',
+                          padding: '0.1rem 0.4rem',
+                          background: '#222',
+                          borderRadius: 3,
+                          fontFamily: 'var(--font-geist-mono)',
+                        }}
+                      >
                         {e}
                       </span>
                     ))}

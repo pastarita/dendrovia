@@ -9,57 +9,36 @@
  * Replay = actions.reduce(executeTurn, initialState)
  */
 
-import type {
-  BattleState,
-  Action,
-  ActionLogEntry,
-  Character,
-  Monster,
-  RngState,
-  CombatPhase,
-  DamageResult,
-  Item,
-} from '@dendrovia/shared';
+import type { Action, ActionLogEntry, BattleState, Character, CombatPhase, Monster } from '@dendrovia/shared';
+import { getSpell } from '../spell/SpellFactory';
 import { createRngState } from '../utils/SeededRandom';
 import {
-  calculateDamage,
   calculateBasicAttack,
+  calculateDamage,
   calculateHealing,
   calculateShield,
-  getElementMultiplier,
   effectiveAttack,
   effectiveDefense,
 } from './CombatMath';
+import { chooseEnemyAction, isOffByOneHeal, isOffByOneSelfHit, isSkippedTurn, resolveEnemySpell } from './EnemyAI';
 import {
-  tickStatusEffects,
-  applyStatusEffect,
   absorbDamage,
-  isStunned,
+  applyStatusEffect,
   cleanse,
   createStatusEffect,
   getStatModifiers,
+  isStunned,
+  tickStatusEffects,
 } from './StatusEffects';
-import { getSpell } from '../spell/SpellFactory';
-import {
-  chooseEnemyAction,
-  resolveEnemySpell,
-  isSkippedTurn,
-  isOffByOneHeal,
-  isOffByOneSelfHit,
-} from './EnemyAI';
 
 // ─── Initialize a Battle ─────────────────────────────────────
 
-export function initBattle(
-  player: Character,
-  enemies: Monster[],
-  seed: number,
-): BattleState {
+export function initBattle(player: Character, enemies: Monster[], seed: number): BattleState {
   return {
     turn: 1,
     phase: { type: 'PLAYER_TURN' },
     player: { ...player, statusEffects: [], cooldowns: {} },
-    enemies: enemies.map(e => ({ ...e, statusEffects: [] })),
+    enemies: enemies.map((e) => ({ ...e, statusEffects: [] })),
     log: [],
     rng: createRngState(seed),
   };
@@ -86,7 +65,7 @@ export function getAvailableActions(state: BattleState): AvailableActions {
     return { canAttack: false, availableSpells: [], canDefend: false, canUseItem: false };
   }
 
-  const availableSpells = player.spells.filter(spellId => {
+  const availableSpells = player.spells.filter((spellId) => {
     const spell = getSpell(spellId);
     if (!spell) return false;
     if (spell.manaCost > player.stats.mana) return false;
@@ -136,7 +115,7 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
-  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', state.log.length, l))];
+  log = [...log, ...playerTick.log.map((l) => makeLog(turn, 'player', state.log.length, l))];
 
   // Check if player died from DoT
   if (player.stats.health <= 0) {
@@ -160,7 +139,7 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
   const enemy = enemies[targetIndex];
   if (!enemy || enemy.stats.health <= 0) {
     // Target already dead, pick first alive
-    const aliveIdx = enemies.findIndex(e => e.stats.health > 0);
+    const aliveIdx = enemies.findIndex((e) => e.stats.health > 0);
     if (aliveIdx < 0) return { ...state, player, log, phase: victoryPhase(enemies) };
     return executePlayerAttack({ ...state, player, log }, aliveIdx);
   }
@@ -180,14 +159,14 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
     stats: { ...enemy.stats, health: Math.max(0, enemy.stats.health - remainingDamage) },
   };
 
-  enemies = enemies.map((e, i) => i === targetIndex ? updatedEnemy : e);
+  enemies = enemies.map((e, i) => (i === targetIndex ? updatedEnemy : e));
 
   let logMsg = `${player.name} attacks ${enemy.name} for ${result.log}`;
   if (absorbed > 0) logMsg += ` (${absorbed} absorbed by shield)`;
   log = [...log, makeLog(turn, 'player', log.length, logMsg)];
 
   // Check victory
-  if (enemies.every(e => e.stats.health <= 0)) {
+  if (enemies.every((e) => e.stats.health <= 0)) {
     return { ...state, turn, player, enemies, log, rng, phase: victoryPhase(enemies) };
   }
 
@@ -203,7 +182,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
-  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l))];
+  log = [...log, ...playerTick.log.map((l) => makeLog(turn, 'player', log.length, l))];
 
   if (player.stats.health <= 0) {
     return { ...state, player, log, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
@@ -246,7 +225,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
   // Apply spell effect
   switch (spell.effect.type) {
     case 'damage': {
-      const enemy = enemies[targetIndex] ?? enemies.find(e => e.stats.health > 0);
+      const enemy = enemies[targetIndex] ?? enemies.find((e) => e.stats.health > 0);
       if (!enemy) break;
       const idx = enemies.indexOf(enemy);
       const enemyMods = getStatModifiers(enemy.statusEffects);
@@ -263,11 +242,15 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       );
       rng = rng1;
       const { effects: eFx, remainingDamage, absorbed } = absorbDamage(enemy.statusEffects, result.damage);
-      enemies = enemies.map((e, i) => i === idx ? {
-        ...e,
-        statusEffects: eFx,
-        stats: { ...e.stats, health: Math.max(0, e.stats.health - remainingDamage) },
-      } : e);
+      enemies = enemies.map((e, i) =>
+        i === idx
+          ? {
+              ...e,
+              statusEffects: eFx,
+              stats: { ...e.stats, health: Math.max(0, e.stats.health - remainingDamage) },
+            }
+          : e,
+      );
       let msg = `${player.name} casts ${spell.name} on ${enemy.name} for ${result.log}`;
       if (absorbed > 0) msg += ` (${absorbed} absorbed)`;
       log = [...log, makeLog(turn, 'player', log.length, msg)];
@@ -291,11 +274,15 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
         );
         rng = rng1;
         const { effects: eFx, remainingDamage } = absorbDamage(enemies[i].statusEffects, result.damage);
-        enemies = enemies.map((e, j) => j === i ? {
-          ...e,
-          statusEffects: eFx,
-          stats: { ...e.stats, health: Math.max(0, e.stats.health - remainingDamage) },
-        } : e);
+        enemies = enemies.map((e, j) =>
+          j === i
+            ? {
+                ...e,
+                statusEffects: eFx,
+                stats: { ...e.stats, health: Math.max(0, e.stats.health - remainingDamage) },
+              }
+            : e,
+        );
         log = [...log, makeLog(turn, 'player', log.length, `${spell.name} hits ${enemies[i].name} for ${result.log}`)];
       }
       break;
@@ -304,11 +291,20 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
     case 'heal': {
       const healing = calculateHealing(spell.effect.value, effectiveAttack(player.stats, mods.attack ?? 0));
       player = applyHpDelta(player, healing);
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, healing for ${healing} HP`)];
+      log = [
+        ...log,
+        makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, healing for ${healing} HP`),
+      ];
 
       // If heal-over-time (has duration), also apply a regen effect
       if (spell.effect.duration && spell.effect.duration > 1) {
-        const hotEffect = createStatusEffect('regen', `${spell.name} HoT`, Math.floor(spell.effect.value / 2), spell.effect.duration, false);
+        const hotEffect = createStatusEffect(
+          'regen',
+          `${spell.name} HoT`,
+          Math.floor(spell.effect.value / 2),
+          spell.effect.duration,
+          false,
+        );
         player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, hotEffect) };
       }
       break;
@@ -318,41 +314,90 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       const shieldHP = calculateShield(spell.effect.value, player.stats.defense);
       const shieldEffect = createStatusEffect('shield', spell.name, shieldHP, 3, false);
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, shieldEffect) };
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, gaining ${shieldHP} shield`)];
+      log = [
+        ...log,
+        makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, gaining ${shieldHP} shield`),
+      ];
       break;
     }
 
     case 'buff': {
-      const buffEffect = createStatusEffect('attack-up', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
+      const buffEffect = createStatusEffect(
+        'attack-up',
+        spell.name,
+        spell.effect.value,
+        spell.effect.duration ?? 3,
+        false,
+      );
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, buffEffect) };
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, ATK +${spell.effect.value}`)];
+      log = [
+        ...log,
+        makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, ATK +${spell.effect.value}`),
+      ];
       break;
     }
 
     case 'debuff': {
-      const enemy = enemies[targetIndex] ?? enemies.find(e => e.stats.health > 0);
+      const enemy = enemies[targetIndex] ?? enemies.find((e) => e.stats.health > 0);
       if (!enemy) break;
       const idx = enemies.indexOf(enemy);
       // Deadlock/stun = duration-based debuff with value 0
       if (spell.effect.value === 0) {
         const stunEffect = createStatusEffect('stun', spell.name, 0, spell.effect.duration ?? 1, false);
-        enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, stunEffect) } : e);
-        log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, stunning ${enemy.name}!`)];
+        enemies = enemies.map((e, i) =>
+          i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, stunEffect) } : e,
+        );
+        log = [
+          ...log,
+          makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, stunning ${enemy.name}!`),
+        ];
       } else {
-        const defDown = createStatusEffect('defense-down', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
-        enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, defDown) } : e);
-        log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, DEF -${spell.effect.value} on ${enemy.name}`)];
+        const defDown = createStatusEffect(
+          'defense-down',
+          spell.name,
+          spell.effect.value,
+          spell.effect.duration ?? 3,
+          false,
+        );
+        enemies = enemies.map((e, i) =>
+          i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, defDown) } : e,
+        );
+        log = [
+          ...log,
+          makeLog(
+            turn,
+            'player',
+            log.length,
+            `${player.name} casts ${spell.name}, DEF -${spell.effect.value} on ${enemy.name}`,
+          ),
+        ];
       }
       break;
     }
 
     case 'dot': {
-      const enemy = enemies[targetIndex] ?? enemies.find(e => e.stats.health > 0);
+      const enemy = enemies[targetIndex] ?? enemies.find((e) => e.stats.health > 0);
       if (!enemy) break;
       const idx = enemies.indexOf(enemy);
-      const poisonEffect = createStatusEffect('poison', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
-      enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, poisonEffect) } : e);
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, poisoning ${enemy.name} for ${spell.effect.value}/turn`)];
+      const poisonEffect = createStatusEffect(
+        'poison',
+        spell.name,
+        spell.effect.value,
+        spell.effect.duration ?? 3,
+        false,
+      );
+      enemies = enemies.map((e, i) =>
+        i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, poisonEffect) } : e,
+      );
+      log = [
+        ...log,
+        makeLog(
+          turn,
+          'player',
+          log.length,
+          `${player.name} casts ${spell.name}, poisoning ${enemy.name} for ${spell.effect.value}/turn`,
+        ),
+      ];
       break;
     }
 
@@ -365,19 +410,25 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
     case 'revive': {
       const reviveHP = spell.effect.value;
       player = applyHpDelta(player, reviveHP);
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, restoring ${reviveHP} HP!`)];
+      log = [
+        ...log,
+        makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, restoring ${reviveHP} HP!`),
+      ];
       break;
     }
 
     case 'taunt': {
       // Taunt doesn't do anything mechanically in 1v1; matters for multi-enemy
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, drawing enemy attention!`)];
+      log = [
+        ...log,
+        makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, drawing enemy attention!`),
+      ];
       break;
     }
   }
 
   // Check victory
-  if (enemies.every(e => e.stats.health <= 0)) {
+  if (enemies.every((e) => e.stats.health <= 0)) {
     return { ...state, turn, player, enemies, log, rng, phase: victoryPhase(enemies) };
   }
 
@@ -393,7 +444,7 @@ function executePlayerDefend(state: BattleState): BattleState {
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
-  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l))];
+  log = [...log, ...playerTick.log.map((l) => makeLog(turn, 'player', log.length, l))];
 
   if (player.stats.health <= 0) {
     return { ...state, player, log, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
@@ -451,37 +502,42 @@ function executeEnemyTurn(state: BattleState): BattleState {
         health: Math.max(0, enemy.stats.health + enemyTick.hpDelta),
       },
     };
-    log = [...log, ...enemyTick.log.map(l => makeLog(turn, `enemy:${i}`, log.length, l))];
+    log = [...log, ...enemyTick.log.map((l) => makeLog(turn, `enemy:${i}`, log.length, l))];
 
     // Check if enemy died from DoT
     if (updatedEnemy.stats.health <= 0) {
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} was defeated by status effects!`)];
       continue;
     }
 
     // Check stun
     if (isStunned(updatedEnemy.statusEffects)) {
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} is stunned and cannot act!`)];
       continue;
     }
 
     // AI decision
-    const decision = chooseEnemyAction(i, { ...state, enemies: enemies.map((e, j) => j === i ? updatedEnemy : e), rng, log });
+    const decision = chooseEnemyAction(i, {
+      ...state,
+      enemies: enemies.map((e, j) => (j === i ? updatedEnemy : e)),
+      rng,
+      log,
+    });
     rng = decision.rng;
     log = [...log, makeLog(turn, `enemy:${i}`, log.length, decision.log)];
 
     // Handle special off-by-one behaviors
     if (isSkippedTurn(decision)) {
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       continue;
     }
 
     if (isOffByOneHeal(decision)) {
       // Heals player instead of dealing damage
       player = applyHpDelta(player, 5);
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       continue;
     }
 
@@ -491,7 +547,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
         ...updatedEnemy,
         stats: { ...updatedEnemy.stats, health: Math.max(0, updatedEnemy.stats.health - 5) },
       };
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       continue;
     }
 
@@ -503,7 +559,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
       // Self-buff (e.g., memory leak's Heap Growth)
       const buff = createStatusEffect('attack-up', spell.name, spell.effect.value, spell.effect.duration ?? 99, true);
       updatedEnemy = { ...updatedEnemy, statusEffects: applyStatusEffect(updatedEnemy.statusEffects, buff) };
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       continue;
     }
 
@@ -513,14 +569,14 @@ function executeEnemyTurn(state: BattleState): BattleState {
         const stun = createStatusEffect('stun', spell.name, 0, spell.effect.duration ?? 1, false);
         player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, stun) };
       }
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       continue;
     }
 
     if (spell && spell.effect.type === 'dot') {
       const poison = createStatusEffect('poison', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, poison) };
-      enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
       continue;
     }
 
@@ -555,16 +611,24 @@ function executeEnemyTurn(state: BattleState): BattleState {
     if (absorbed > 0) dmgLog += ` (${absorbed} absorbed by shield)`;
     log = [...log, makeLog(turn, `enemy:${i}`, log.length, dmgLog)];
 
-    enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+    enemies = enemies.map((e, j) => (j === i ? updatedEnemy : e));
 
     // Check defeat
     if (player.stats.health <= 0) {
-      return { ...state, turn, player, enemies, log, rng, phase: { type: 'DEFEAT', cause: `Killed by ${updatedEnemy.name}` } };
+      return {
+        ...state,
+        turn,
+        player,
+        enemies,
+        log,
+        rng,
+        phase: { type: 'DEFEAT', cause: `Killed by ${updatedEnemy.name}` },
+      };
     }
   }
 
   // Check victory (enemies may have died from DoTs during their own turn)
-  if (enemies.every(e => e.stats.health <= 0)) {
+  if (enemies.every((e) => e.stats.health <= 0)) {
     return { ...state, turn, player, enemies, log, rng, phase: victoryPhase(enemies) };
   }
 
@@ -582,12 +646,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
 
 // ─── Replay ──────────────────────────────────────────────────
 
-export function replayBattle(
-  player: Character,
-  enemies: Monster[],
-  seed: number,
-  actions: Action[],
-): BattleState {
+export function replayBattle(player: Character, enemies: Monster[], seed: number, actions: Action[]): BattleState {
   let state = initBattle(player, enemies, seed);
   for (const action of actions) {
     state = executeTurn(state, action);
@@ -622,7 +681,7 @@ function victoryPhase(enemies: Monster[]): CombatPhase {
   return { type: 'VICTORY', xpGained, loot: [] };
 }
 
-function makeLog(turn: number, actor: string, idx: number, result: string): ActionLogEntry {
+function makeLog(turn: number, actor: string, _idx: number, result: string): ActionLogEntry {
   return {
     turn,
     actor: actor as ActionLogEntry['actor'],

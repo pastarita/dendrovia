@@ -5,7 +5,7 @@
  * The 3D world provides context; the 2D overlay provides content.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface CodeOverlayProps {
   filePath: string;
@@ -18,8 +18,8 @@ export function CodeOverlay({ filePath, onClose }: CodeOverlayProps) {
   useEffect(() => {
     // In the real version, this would load from OPERATUS
     fetch(`/${filePath}`)
-      .then(res => res.text())
-      .then(text => setContent(text))
+      .then((res) => res.text())
+      .then((text) => setContent(text))
       .catch(() => setContent('// Failed to load file'));
   }, [filePath]);
 

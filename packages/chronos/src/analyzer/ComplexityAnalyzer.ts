@@ -5,7 +5,7 @@
  * Cognitive: structural increment + nesting penalty (SonarSource method)
  */
 
-import { SyntaxKind, type Node, type SourceFile } from 'ts-morph';
+import { type Node, type SourceFile, SyntaxKind } from 'ts-morph';
 
 export interface ComplexityResult {
   cyclomatic: number;
@@ -16,12 +16,12 @@ export interface ComplexityResult {
 }
 
 export type DifficultyTier =
-  | 'trivial'     // 1-5
-  | 'easy'        // 6-10
-  | 'medium'      // 11-20
-  | 'hard'        // 21-50
-  | 'epic'        // 51-100
-  | 'legendary';  // 100+
+  | 'trivial' // 1-5
+  | 'easy' // 6-10
+  | 'medium' // 11-20
+  | 'hard' // 21-50
+  | 'epic' // 51-100
+  | 'legendary'; // 100+
 
 export interface FunctionComplexity {
   name: string;
@@ -44,10 +44,7 @@ const CYCLOMATIC_KINDS = new Set([
 ]);
 
 // Binary operators that increment cyclomatic complexity
-const LOGICAL_OPERATORS = new Set([
-  SyntaxKind.AmpersandAmpersandToken,
-  SyntaxKind.BarBarToken,
-]);
+const LOGICAL_OPERATORS = new Set([SyntaxKind.AmpersandAmpersandToken, SyntaxKind.BarBarToken]);
 
 // Kinds that increment cognitive complexity and add nesting
 const COGNITIVE_NESTING_KINDS = new Set([
@@ -119,11 +116,7 @@ export function analyzeFunctionComplexities(sourceFile: SourceFile): FunctionCom
   // Arrow functions / variable declarations with function expressions
   for (const varDecl of sourceFile.getVariableDeclarations()) {
     const init = varDecl.getInitializer();
-    if (
-      init &&
-      (init.getKind() === SyntaxKind.ArrowFunction ||
-        init.getKind() === SyntaxKind.FunctionExpression)
-    ) {
+    if (init && (init.getKind() === SyntaxKind.ArrowFunction || init.getKind() === SyntaxKind.FunctionExpression)) {
       results.push({
         name: varDecl.getName(),
         startLine: varDecl.getStartLineNumber(),

@@ -11,10 +11,10 @@
  * derived from the trial index, so results are reproducible.
  */
 
-import type { Character, Monster, BattleState, CharacterClass, BugType } from '@dendrovia/shared';
+import type { BattleState, BugType, Character, CharacterClass, Monster } from '@dendrovia/shared';
 import { createCharacter } from '../character/CharacterSystem';
 import { createMonster } from '../combat/MonsterFactory';
-import { initBattle, executeTurn } from '../combat/TurnBasedEngine';
+import { executeTurn, initBattle } from '../combat/TurnBasedEngine';
 import { createRngState } from '../utils/SeededRandom';
 
 // ─── Configuration ──────────────────────────────────────────
@@ -35,8 +35,8 @@ export interface SimulationConfig {
 export const DEFAULT_SIM_CONFIG: SimulationConfig = {
   trials: 1000,
   maxTurns: 100,
-  lowWinThreshold: 0.30,
-  highWinThreshold: 0.80,
+  lowWinThreshold: 0.3,
+  highWinThreshold: 0.8,
   baseSeed: 12345,
 };
 
@@ -90,11 +90,7 @@ export function simulateBattle(
   let state = initBattle(player, [monster], seed);
   let turn = 0;
 
-  while (
-    state.phase.type !== 'VICTORY' &&
-    state.phase.type !== 'DEFEAT' &&
-    turn < maxTurns
-  ) {
+  while (state.phase.type !== 'VICTORY' && state.phase.type !== 'DEFEAT' && turn < maxTurns) {
     const action = chooseAction(state, strategy, turn);
     state = executeTurn(state, action);
     turn++;
@@ -139,7 +135,7 @@ function chooseAction(
 
   if (strategy === 'spell-first') {
     // Try to use first available spell
-    const spell = state.player.spells.find(spellId => {
+    const spell = state.player.spells.find((spellId) => {
       const cd = state.player.cooldowns[spellId] ?? 0;
       return cd <= 0 && state.player.stats.mana >= 15; // rough mana check
     });
@@ -151,7 +147,7 @@ function chooseAction(
 
   // Mixed: alternate attacks and spells
   if (turn % 3 === 0 && state.player.stats.mana >= 20) {
-    const spell = state.player.spells.find(spellId => {
+    const spell = state.player.spells.find((spellId) => {
       const cd = state.player.cooldowns[spellId] ?? 0;
       return cd <= 0;
     });
@@ -195,9 +191,15 @@ export function simulateMatchup(
     const outcome = simulateBattle(player, monster, seed, config.maxTurns, 'mixed');
 
     switch (outcome.result) {
-      case 'victory': victories++; break;
-      case 'defeat': defeats++; break;
-      case 'draw': draws++; break;
+      case 'victory':
+        victories++;
+        break;
+      case 'defeat':
+        defeats++;
+        break;
+      case 'draw':
+        draws++;
+        break;
     }
 
     totalTurns += outcome.turns;
@@ -260,21 +262,14 @@ export function runFullSimulation(
 
   for (const charClass of ALL_CLASSES) {
     for (const bugType of ALL_BUG_TYPES) {
-      const result = simulateMatchup(
-        charClass,
-        playerLevel,
-        bugType,
-        monsterSeverity,
-        monsterComplexity,
-        config,
-      );
+      const result = simulateMatchup(charClass, playerLevel, bugType, monsterSeverity, monsterComplexity, config);
       matchups.push(result);
     }
   }
 
   const totalTrials = matchups.reduce((sum, m) => sum + m.trials, 0);
   const totalWins = matchups.reduce((sum, m) => sum + m.victories, 0);
-  const flaggedMatchups = matchups.filter(m => !m.balanced);
+  const flaggedMatchups = matchups.filter((m) => !m.balanced);
 
   return {
     config,
@@ -298,14 +293,7 @@ export function runProgressionSimulation(
   for (const level of levels) {
     for (const severity of severities) {
       // Use null-pointer as baseline enemy
-      const result = simulateMatchup(
-        charClass,
-        level,
-        'null-pointer',
-        severity,
-        0,
-        config,
-      );
+      const result = simulateMatchup(charClass, level, 'null-pointer', severity, 0, config);
       results.push(result);
     }
   }
@@ -356,8 +344,9 @@ export function formatReport(report: SimulationReport): string {
 /** Format matchup results as a CSV string */
 export function formatCSV(results: MatchupResult[]): string {
   const header = 'class,level,monster,severity,complexity,trials,wins,losses,draws,winRate,avgTurns,medianTurns,flag';
-  const rows = results.map(m =>
-    `${m.playerClass},${m.playerLevel},${m.monsterType},${m.monsterSeverity},${m.monsterComplexity},${m.trials},${m.victories},${m.defeats},${m.draws},${m.winRate.toFixed(4)},${m.avgTurns.toFixed(1)},${m.medianTurns},${m.flag}`
+  const rows = results.map(
+    (m) =>
+      `${m.playerClass},${m.playerLevel},${m.monsterType},${m.monsterSeverity},${m.monsterComplexity},${m.trials},${m.victories},${m.defeats},${m.draws},${m.winRate.toFixed(4)},${m.avgTurns.toFixed(1)},${m.medianTurns},${m.flag}`,
   );
   return [header, ...rows].join('\n');
 }

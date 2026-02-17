@@ -9,9 +9,9 @@
  *   - Local paths  (passthrough)
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { join, resolve } from 'path';
-import { homedir } from 'os';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join, resolve } from 'node:path';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -62,17 +62,13 @@ interface ParsedGitHub {
 
 function parseGitHubUrl(input: string): ParsedGitHub | null {
   // HTTPS: https://github.com/owner/repo or https://github.com/owner/repo.git
-  const httpsMatch = input.match(
-    /^https?:\/\/github\.com\/([^/]+)\/([^/.]+?)(?:\.git)?$/
-  );
+  const httpsMatch = input.match(/^https?:\/\/github\.com\/([^/]+)\/([^/.]+?)(?:\.git)?$/);
   if (httpsMatch) {
     return { owner: httpsMatch[1], repo: httpsMatch[2] };
   }
 
   // SSH: git@github.com:owner/repo.git
-  const sshMatch = input.match(
-    /^git@github\.com:([^/]+)\/([^/.]+?)(?:\.git)?$/
-  );
+  const sshMatch = input.match(/^git@github\.com:([^/]+)\/([^/.]+?)(?:\.git)?$/);
   if (sshMatch) {
     return { owner: sshMatch[1], repo: sshMatch[2] };
   }
@@ -111,12 +107,7 @@ async function runGit(args: string[], cwd?: string): Promise<{ stdout: string; e
 async function cloneRepo(remoteUrl: string, localPath: string): Promise<void> {
   mkdirSync(localPath, { recursive: true });
 
-  const { exitCode } = await runGit([
-    'clone',
-    '--depth', String(CLONE_DEPTH),
-    remoteUrl,
-    localPath,
-  ]);
+  const { exitCode } = await runGit(['clone', '--depth', String(CLONE_DEPTH), remoteUrl, localPath]);
 
   if (exitCode !== 0) {
     throw new Error(`Failed to clone ${remoteUrl} (exit code ${exitCode})`);
@@ -141,7 +132,7 @@ async function refreshRepo(localPath: string): Promise<boolean> {
   return true;
 }
 
-async function getRemoteHeadHash(remoteUrl: string): Promise<string | null> {
+async function _getRemoteHeadHash(remoteUrl: string): Promise<string | null> {
   const { stdout, exitCode } = await runGit(['ls-remote', remoteUrl, 'HEAD']);
   if (exitCode !== 0) return null;
   return stdout.split('\t')[0] || null;
@@ -184,9 +175,7 @@ export function saveRegistry(registry: Registry): void {
 
 export function upsertRegistryEntry(entry: RegistryEntry): void {
   const registry = loadRegistry();
-  const idx = registry.entries.findIndex(
-    e => e.owner === entry.owner && e.repo === entry.repo
-  );
+  const idx = registry.entries.findIndex((e) => e.owner === entry.owner && e.repo === entry.repo);
   if (idx >= 0) {
     registry.entries[idx] = entry;
   } else {
@@ -219,7 +208,7 @@ export async function resolveRepo(input: string): Promise<ResolvedRepo> {
   if (!parsed) {
     throw new Error(
       `Cannot parse input: "${input}"\n` +
-      `Expected: GitHub URL (https://github.com/owner/repo), SSH URL, owner/repo shorthand, or local path`
+        `Expected: GitHub URL (https://github.com/owner/repo), SSH URL, owner/repo shorthand, or local path`,
     );
   }
 

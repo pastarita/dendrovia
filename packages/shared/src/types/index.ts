@@ -427,9 +427,9 @@ export interface AssetManifest {
   topology: string; // Path to topology.json
   checksum: string;
   mycology?: {
-    specimens: string;    // path to specimens.json
-    network: string;      // path to network.json
-    assetDir: string;     // path to svg asset directory
+    specimens: string; // path to specimens.json
+    network: string; // path to network.json
+    assetDir: string; // path to svg asset directory
     specimenCount: number;
   };
   /** Generated mesh assets, keyed by specimen/genus ID → file path */
@@ -502,14 +502,14 @@ export interface SerializedMeshData {
   topology?: {
     halfedges: Array<{ vertex: number; face: number; next: number; prev: number; twin: number }>;
     vertexHalfedges: number[]; // per-vertex outgoing halfedge index
-    faceHalfedges: number[];   // per-face one halfedge index
+    faceHalfedges: number[]; // per-face one halfedge index
   };
   /** Generation metadata for debugging and versioning */
   meta?: {
     genus?: string;
-    pipeline?: string[];  // ordered list of MeshOp names that produced this mesh
+    pipeline?: string[]; // ordered list of MeshOp names that produced this mesh
     generatedAt?: number; // timestamp
-    sourceHash?: string;  // hash of the input parameters (for determinism verification)
+    sourceHash?: string; // hash of the input parameters (for determinism verification)
   };
 }
 

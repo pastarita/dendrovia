@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { OrnateFrame } from '@dendrovia/oculus';
 import type { AssetManifest } from '@dendrovia/shared';
+import { useEffect, useState } from 'react';
 import { ManifestHeader } from './components/ManifestHeader';
-import { ShaderEntries } from './components/ShaderEntries';
-import { PaletteEntries } from './components/PaletteEntries';
 import { MeshEntries } from './components/MeshEntries';
 import { MycologySection } from './components/MycologySection';
+import { PaletteEntries } from './components/PaletteEntries';
+import { ShaderEntries } from './components/ShaderEntries';
 
 const DEMO_MANIFEST: AssetManifest = {
   version: '0.3.0-demo',
@@ -89,26 +89,28 @@ export function ManifestCatalogClient() {
   }, []);
 
   if (loading) {
-    return <div style={{ marginTop: "2rem", opacity: 0.5 }}>Loading manifest...</div>;
+    return <div style={{ marginTop: '2rem', opacity: 0.5 }}>Loading manifest...</div>;
   }
 
   if (!manifest) {
-    return <div style={{ marginTop: "2rem", opacity: 0.5 }}>No manifest available.</div>;
+    return <div style={{ marginTop: '2rem', opacity: 0.5 }}>No manifest available.</div>;
   }
 
   return (
-    <div style={{ marginTop: "1.5rem" }}>
+    <div style={{ marginTop: '1.5rem' }}>
       {isDemo && (
-        <div style={{
-          display: "inline-block",
-          padding: "0.25rem 0.75rem",
-          background: "#3b2d00",
-          border: "1px solid #d97706",
-          borderRadius: "4px",
-          fontSize: "0.75rem",
-          color: "#fbbf24",
-          marginBottom: "1rem",
-        }}>
+        <div
+          style={{
+            display: 'inline-block',
+            padding: '0.25rem 0.75rem',
+            background: '#3b2d00',
+            border: '1px solid #d97706',
+            borderRadius: '4px',
+            fontSize: '0.75rem',
+            color: '#fbbf24',
+            marginBottom: '1rem',
+          }}
+        >
           Demo Data — No manifest.json at /generated/
         </div>
       )}

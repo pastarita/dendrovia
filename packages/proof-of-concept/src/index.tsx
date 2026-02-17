@@ -4,12 +4,12 @@
  * This demonstrates ARCHITECTUS (rendering) + LUDUS (interaction) + OCULUS (UI)
  */
 
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
-import { DendriteBranch } from './components/DendriteBranch';
 import { CodeOverlay } from './components/CodeOverlay';
+import { DendriteBranch } from './components/DendriteBranch';
 import { HUD } from './components/HUD';
 import './index.css';
 
@@ -43,12 +43,7 @@ function App() {
       {/* OCULUS: UI Overlay */}
       <HUD />
 
-      {showCode && selectedFile && (
-        <CodeOverlay
-          filePath={selectedFile}
-          onClose={() => setShowCode(false)}
-        />
-      )}
+      {showCode && selectedFile && <CodeOverlay filePath={selectedFile} onClose={() => setShowCode(false)} />}
 
       {/* Instructions */}
       <div className="instructions">
@@ -65,6 +60,6 @@ if (root) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 }

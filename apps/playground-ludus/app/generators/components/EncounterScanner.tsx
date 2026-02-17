@@ -1,16 +1,64 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { scanAllEncounters, getEncounterDensity, createRngState } from '@dendrovia/ludus';
-import type { ParsedFile, ParsedCommit, Hotspot } from '@dendrovia/shared';
+import { createRngState, getEncounterDensity, scanAllEncounters } from '@dendrovia/ludus';
+import type { Hotspot, ParsedCommit, ParsedFile } from '@dendrovia/shared';
+import { useMemo, useState } from 'react';
 
 const MOCK_FILES: ParsedFile[] = [
-  { path: 'src/legacy/old-parser.ts', hash: 'aaa111', language: 'typescript', complexity: 28, loc: 450, lastModified: new Date('2024-06-10'), author: 'dev@example.com' },
-  { path: 'src/core/engine.ts', hash: 'bbb222', language: 'typescript', complexity: 22, loc: 380, lastModified: new Date('2024-06-11'), author: 'dev@example.com' },
-  { path: 'src/utils/helpers.ts', hash: 'ccc333', language: 'typescript', complexity: 18, loc: 200, lastModified: new Date('2024-06-12'), author: 'dev@example.com' },
-  { path: 'src/combat/spells.ts', hash: 'ddd444', language: 'typescript', complexity: 12, loc: 150, lastModified: new Date('2024-06-13'), author: 'dev@example.com' },
-  { path: 'src/state/store.ts', hash: 'eee555', language: 'typescript', complexity: 8, loc: 90, lastModified: new Date('2024-06-14'), author: 'dev@example.com' },
-  { path: 'src/parser/ast.ts', hash: 'fff666', language: 'typescript', complexity: 15, loc: 220, lastModified: new Date('2024-06-15'), author: 'dev@example.com' },
+  {
+    path: 'src/legacy/old-parser.ts',
+    hash: 'aaa111',
+    language: 'typescript',
+    complexity: 28,
+    loc: 450,
+    lastModified: new Date('2024-06-10'),
+    author: 'dev@example.com',
+  },
+  {
+    path: 'src/core/engine.ts',
+    hash: 'bbb222',
+    language: 'typescript',
+    complexity: 22,
+    loc: 380,
+    lastModified: new Date('2024-06-11'),
+    author: 'dev@example.com',
+  },
+  {
+    path: 'src/utils/helpers.ts',
+    hash: 'ccc333',
+    language: 'typescript',
+    complexity: 18,
+    loc: 200,
+    lastModified: new Date('2024-06-12'),
+    author: 'dev@example.com',
+  },
+  {
+    path: 'src/combat/spells.ts',
+    hash: 'ddd444',
+    language: 'typescript',
+    complexity: 12,
+    loc: 150,
+    lastModified: new Date('2024-06-13'),
+    author: 'dev@example.com',
+  },
+  {
+    path: 'src/state/store.ts',
+    hash: 'eee555',
+    language: 'typescript',
+    complexity: 8,
+    loc: 90,
+    lastModified: new Date('2024-06-14'),
+    author: 'dev@example.com',
+  },
+  {
+    path: 'src/parser/ast.ts',
+    hash: 'fff666',
+    language: 'typescript',
+    complexity: 15,
+    loc: 220,
+    lastModified: new Date('2024-06-15'),
+    author: 'dev@example.com',
+  },
 ];
 
 const MOCK_COMMITS: ParsedCommit[] = [
@@ -80,10 +128,7 @@ export default function EncounterScanner(): React.JSX.Element {
     return scanAllEncounters(MOCK_FILES, MOCK_COMMITS, MOCK_HOTSPOTS, rng);
   }, [scanned]);
 
-  const density = useMemo(
-    () => getEncounterDensity(MOCK_FILES, MOCK_COMMITS, MOCK_HOTSPOTS),
-    [],
-  );
+  const density = useMemo(() => getEncounterDensity(MOCK_FILES, MOCK_COMMITS, MOCK_HOTSPOTS), []);
 
   return (
     <div>
@@ -123,25 +168,45 @@ export default function EncounterScanner(): React.JSX.Element {
                 borderLeft: `3px solid ${TYPE_COLORS[entry.encounter.type] ?? '#555'}`,
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '0.35rem',
+                }}
+              >
                 <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{entry.encounter.monster.name}</div>
-                <span style={{
-                  fontSize: '0.65rem',
-                  padding: '0.1rem 0.35rem',
-                  borderRadius: '3px',
-                  background: TYPE_COLORS[entry.encounter.type] ?? '#333',
-                  color: '#fff',
-                  textTransform: 'uppercase',
-                  fontWeight: 700,
-                }}>
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    padding: '0.1rem 0.35rem',
+                    borderRadius: '3px',
+                    background: TYPE_COLORS[entry.encounter.type] ?? '#333',
+                    color: '#fff',
+                    textTransform: 'uppercase',
+                    fontWeight: 700,
+                  }}
+                >
                   {entry.encounter.type}
                 </span>
               </div>
-              <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)', opacity: 0.5, marginBottom: '0.35rem' }}>
+              <div
+                style={{
+                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-geist-mono)',
+                  opacity: 0.5,
+                  marginBottom: '0.35rem',
+                }}
+              >
                 {entry.file.path}
               </div>
-              <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)' }}>
-                <span style={{ color: ELEMENT_COLORS[entry.encounter.monster.element] }}>{entry.encounter.monster.element}</span>
+              <div
+                style={{ display: 'flex', gap: '0.75rem', fontSize: '0.75rem', fontFamily: 'var(--font-geist-mono)' }}
+              >
+                <span style={{ color: ELEMENT_COLORS[entry.encounter.monster.element] }}>
+                  {entry.encounter.monster.element}
+                </span>
                 <span>HP {entry.encounter.monster.stats.maxHealth}</span>
                 <span>ATK {entry.encounter.monster.stats.attack}</span>
                 <span>DEF {entry.encounter.monster.stats.defense}</span>
@@ -158,7 +223,9 @@ export default function EncounterScanner(): React.JSX.Element {
       )}
 
       {!scanned && (
-        <div style={{ padding: '2rem', border: '1px dashed #333', borderRadius: '8px', textAlign: 'center', opacity: 0.4 }}>
+        <div
+          style={{ padding: '2rem', border: '1px dashed #333', borderRadius: '8px', textAlign: 'center', opacity: 0.4 }}
+        >
           Click "Scan" to analyze mock codebase files for encounter triggers
         </div>
       )}

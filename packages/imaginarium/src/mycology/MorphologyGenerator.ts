@@ -5,20 +5,20 @@
  * source code it represents. Deterministic: same file -> same morphology.
  */
 
-import type { ParsedFile, Hotspot } from '@dendrovia/shared';
-import type {
-  MushroomMorphology,
-  CapShape,
-  GillAttachment,
-  StemForm,
-  SporePrintColor,
-  BioluminescenceLevel,
-  SizeClass,
-  FungalGenus,
-} from './types';
-import type { FileContext } from './GenusMapper';
-import { oklchToHex } from '../utils/color';
+import type { ParsedFile } from '@dendrovia/shared';
 import { getLanguageHue } from '../fallback/DefaultPalettes';
+import { oklchToHex } from '../utils/color';
+import type { FileContext } from './GenusMapper';
+import type {
+  BioluminescenceLevel,
+  CapShape,
+  FungalGenus,
+  GillAttachment,
+  MushroomMorphology,
+  SizeClass,
+  SporePrintColor,
+  StemForm,
+} from './types';
 
 // ---------------------------------------------------------------------------
 // Cap Shape <- complexity profile
@@ -27,19 +27,24 @@ import { getLanguageHue } from '../fallback/DefaultPalettes';
 function deriveCapShape(file: ParsedFile, ctx: FileContext, genus: FungalGenus): CapShape {
   // Genus overrides for characteristic shapes
   switch (genus) {
-    case 'Cantharellus': return 'infundibuliform'; // funnel for event sinks
-    case 'Mycena': return 'campanulate';           // bell for tiny helpers
-    case 'Trametes': return 'plane';               // flat shelf for middleware
-    case 'Ganoderma': return 'plane';              // flat bracket for core modules
-    case 'Morchella': return 'umbonate';           // pitted for complex algorithms
+    case 'Cantharellus':
+      return 'infundibuliform'; // funnel for event sinks
+    case 'Mycena':
+      return 'campanulate'; // bell for tiny helpers
+    case 'Trametes':
+      return 'plane'; // flat shelf for middleware
+    case 'Ganoderma':
+      return 'plane'; // flat bracket for core modules
+    case 'Morchella':
+      return 'umbonate'; // pitted for complex algorithms
   }
 
   // Complexity-driven for other genera
-  if (ctx.dependentCount > 8) return 'depressed';        // heavily consumed
-  if (file.complexity > 15) return 'umbonate';            // dominant function
-  if (file.complexity > 10) return 'campanulate';         // high entry complexity
-  if (ctx.isEntryPoint) return 'convex';                  // standard entry
-  if (ctx.dependentCount > 3) return 'plane';             // many small exports
+  if (ctx.dependentCount > 8) return 'depressed'; // heavily consumed
+  if (file.complexity > 15) return 'umbonate'; // dominant function
+  if (file.complexity > 10) return 'campanulate'; // high entry complexity
+  if (ctx.isEntryPoint) return 'convex'; // standard entry
+  if (ctx.dependentCount > 3) return 'plane'; // many small exports
 
   return 'convex'; // default: balanced
 }
@@ -143,7 +148,7 @@ function deriveGillCount(ctx: FileContext): number {
 // Colors <- language hue + palette
 // ---------------------------------------------------------------------------
 
-function deriveColors(file: ParsedFile, genus: FungalGenus): { scaleColor: string; gillColor: string } {
+function deriveColors(file: ParsedFile, _genus: FungalGenus): { scaleColor: string; gillColor: string } {
   const hue = getLanguageHue(file.language);
 
   // Scale (cap) color: saturated, medium lightness
@@ -168,11 +173,7 @@ function hasSpots(genus: FungalGenus): boolean {
 // Public API
 // ---------------------------------------------------------------------------
 
-export function generateMorphology(
-  file: ParsedFile,
-  ctx: FileContext,
-  genus: FungalGenus,
-): MushroomMorphology {
+export function generateMorphology(file: ParsedFile, ctx: FileContext, genus: FungalGenus): MushroomMorphology {
   const capShape = deriveCapShape(file, ctx, genus);
   const { width: capWidth, height: capHeight } = deriveCapDimensions(file, ctx);
   const gillAttachment = deriveGillAttachment(ctx);

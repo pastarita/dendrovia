@@ -5,26 +5,12 @@
  * to all OCULUS components. Never mutates game state directly.
  */
 
+import type { Bug, Character, DeepWikiEnrichment, FileTreeNode, Hotspot, Quest, Spell } from '@dendrovia/shared';
 import { create } from 'zustand';
-import type {
-  Character,
-  Quest,
-  Bug,
-  Spell,
-  FileTreeNode,
-  Hotspot,
-  HUDState,
-  DeepWikiEnrichment,
-} from '@dendrovia/shared';
 
 // ── Types ──────────────────────────────────────────────
 
-export type ActivePanel =
-  | 'none'
-  | 'quest-log'
-  | 'miller-columns'
-  | 'code-reader'
-  | 'battle-ui';
+export type ActivePanel = 'none' | 'quest-log' | 'miller-columns' | 'code-reader' | 'battle-ui';
 
 export type CameraMode = 'falcon' | 'player';
 
@@ -164,8 +150,7 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   // ── Actions ────────────────────────────────────────
 
-  setActivePanel: (panel) =>
-    set((s) => ({ activePanel: panel, previousPanel: s.activePanel })),
+  setActivePanel: (panel) => set((s) => ({ activePanel: panel, previousPanel: s.activePanel })),
 
   togglePanel: (panel) =>
     set((s) => ({
@@ -174,19 +159,19 @@ export const useOculusStore = create<OculusStore>((set) => ({
     })),
 
   setHealth: (health, maxHealth) =>
-    set((s) => ({
+    set((_s) => ({
       health,
       ...(maxHealth !== undefined ? { maxHealth } : {}),
     })),
 
   setMana: (mana, maxMana) =>
-    set((s) => ({
+    set((_s) => ({
       mana,
       ...(maxMana !== undefined ? { maxMana } : {}),
     })),
 
   setCharacter: (character) =>
-    set((s) => ({
+    set((_s) => ({
       ...(character.stats?.health !== undefined ? { health: character.stats.health } : {}),
       ...(character.stats?.maxHealth !== undefined ? { maxHealth: character.stats.maxHealth } : {}),
       ...(character.stats?.mana !== undefined ? { mana: character.stats.mana } : {}),
@@ -199,13 +184,8 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   updateQuest: (questId, updates) =>
     set((s) => ({
-      quests: s.quests.map((q) =>
-        q.id === questId ? { ...q, ...updates } : q
-      ),
-      activeQuest:
-        s.activeQuest?.id === questId
-          ? { ...s.activeQuest, ...updates }
-          : s.activeQuest,
+      quests: s.quests.map((q) => (q.id === questId ? { ...q, ...updates } : q)),
+      activeQuest: s.activeQuest?.id === questId ? { ...s.activeQuest, ...updates } : s.activeQuest,
     })),
 
   setActiveQuest: (quest) => set({ activeQuest: quest }),

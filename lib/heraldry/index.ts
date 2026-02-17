@@ -6,47 +6,44 @@
  * domains, tinctures, charges, magnitude, and mottos.
  */
 
-// Types and constants
-export {
-  type Domain,
-  type HeraldryTincture,
-  type ChargeType,
-  type ChargeMapping,
-  type ShieldDivision,
-  type Magnitude,
-  type MagnitudeFactors,
-  type SupporterStatus,
-  type Supporter,
-  type PRCoatOfArms,
-  DOMAIN_FILE_PATTERNS,
-  DOMAIN_TINCTURES,
-  COMMIT_TYPE_CHARGES,
-  CHARGE_KEYWORDS,
-  MAGNITUDE_SYMBOLS,
-  SUPPORTER_LABELS,
-  getDivisionForDomainCount,
-  computeMagnitude,
-} from './types.js';
-
 // Analysis
 export {
-  type BranchAnalysis,
   analyzeForHeraldry,
-  detectDomains,
+  type BranchAnalysis,
   countCharges,
+  detectDomains,
   runSupporter,
 } from './analyzer.js';
-
 // Symbols and mottos
 export {
-  selectMotto,
-  PILLAR_SYMBOLS,
   PILLAR_NAMES,
+  PILLAR_SYMBOLS,
+  selectMotto,
 } from './emoji.js';
-
 // Mermaid diagram generation
 export {
   generateDomainDiagram,
-  generatePipelineDiagram,
   generateHeraldryDiagram,
+  generatePipelineDiagram,
 } from './mermaid.js';
+// Types and constants
+export {
+  CHARGE_KEYWORDS,
+  type ChargeMapping,
+  type ChargeType,
+  COMMIT_TYPE_CHARGES,
+  computeMagnitude,
+  DOMAIN_FILE_PATTERNS,
+  DOMAIN_TINCTURES,
+  type Domain,
+  getDivisionForDomainCount,
+  type HeraldryTincture,
+  MAGNITUDE_SYMBOLS,
+  type Magnitude,
+  type MagnitudeFactors,
+  type PRCoatOfArms,
+  type ShieldDivision,
+  SUPPORTER_LABELS,
+  type Supporter,
+  type SupporterStatus,
+} from './types.js';

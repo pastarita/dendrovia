@@ -1,7 +1,7 @@
 'use client';
 
+import type { FrameVariant, PillarId } from '@dendrovia/oculus';
 import { OrnateFrame } from '@dendrovia/oculus';
-import type { PillarId, FrameVariant } from '@dendrovia/oculus';
 import type { ExhibitRenderProps } from '../../_zoo-kit/types';
 
 const PILLARS: PillarId[] = ['oculus', 'chronos', 'architectus', 'ludus', 'imaginarium', 'operatus'];
@@ -49,14 +49,19 @@ export function OrnateFrameExhibit({ controlValues, isInspecting }: ExhibitRende
         <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           Pillar &times; Variant Matrix
         </div>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '0.4rem',
-        }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '0.4rem',
+          }}
+        >
           {/* Column headers */}
           {VARIANTS.map((v) => (
-            <div key={`h-${v}`} style={{ textAlign: 'center', fontSize: '0.6rem', opacity: 0.5, paddingBottom: '0.2rem' }}>
+            <div
+              key={`h-${v}`}
+              style={{ textAlign: 'center', fontSize: '0.6rem', opacity: 0.5, paddingBottom: '0.2rem' }}
+            >
               {v}
             </div>
           ))}
@@ -71,11 +76,9 @@ export function OrnateFrameExhibit({ controlValues, isInspecting }: ExhibitRende
                 header={v === 'modal' ? PILLAR_LABELS[p] : undefined}
                 headerIcon={v === 'modal' ? PILLAR_EMOJIS[p] : undefined}
               >
-                <div style={{ fontSize: '0.55rem', textAlign: 'center', opacity: 0.7 }}>
-                  {PILLAR_EMOJIS[p]}
-                </div>
+                <div style={{ fontSize: '0.55rem', textAlign: 'center', opacity: 0.7 }}>{PILLAR_EMOJIS[p]}</div>
               </OrnateFrame>
-            ))
+            )),
           )}
         </div>
       </div>

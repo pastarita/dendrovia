@@ -6,19 +6,19 @@
  * Renders each major OCULUS view component with mock data.
  */
 
-import { useEffect } from 'react';
-import Link from 'next/link';
 import {
-  Minimap,
-  QuestLog,
   BattleUI,
   CodeReader,
   FalconModeOverlay,
   MillerColumns,
+  Minimap,
+  QuestLog,
   useOculusStore,
 } from '@dendrovia/oculus';
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { MOCK_BATTLE_LOG, MOCK_BUG, MOCK_SPELLS } from '../../components/mock-data';
 import { PlaygroundProvider } from '../../components/PlaygroundProvider';
-import { MOCK_BUG, MOCK_SPELLS, MOCK_BATTLE_LOG } from '../../components/mock-data';
 
 function ViewsContent() {
   // Seed battle state for BattleUI demo
@@ -32,7 +32,7 @@ function ViewsContent() {
     s.openCodeReader(
       'src/components/App.tsx',
       'import React from "react";\n\nexport function App() {\n  return (\n    <div className="app">\n      <h1>Hello Dendrovia</h1>\n    </div>\n  );\n}\n',
-      'typescript'
+      'typescript',
     );
     // Restore panel to none so user can explore
     s.setActivePanel('none');
@@ -118,7 +118,9 @@ function ViewsContent() {
 export default function ViewsPage() {
   return (
     <div>
-      <Link href="/zoos" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; Zoos</Link>
+      <Link href="/zoos" style={{ fontSize: '0.85rem', opacity: 0.5 }}>
+        &larr; Zoos
+      </Link>
       <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', marginBottom: '0.5rem' }}>
         View Components
       </h1>

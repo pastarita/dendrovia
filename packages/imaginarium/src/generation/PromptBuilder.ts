@@ -29,13 +29,9 @@ const LANGUAGE_MATERIALS: Record<string, string> = {
 
 export function buildPrompt(topology: CodeTopology): string {
   const fileCount = topology.files.length;
-  const avgComplexity = fileCount > 0
-    ? topology.files.reduce((s, f) => s + f.complexity, 0) / fileCount
-    : 5;
+  const avgComplexity = fileCount > 0 ? topology.files.reduce((s, f) => s + f.complexity, 0) / fileCount : 5;
   const hotspots = topology.hotspots ?? [];
-  const avgChurn = hotspots.length > 0
-    ? hotspots.reduce((s, h) => s + h.churnRate, 0) / hotspots.length
-    : 0;
+  const avgChurn = hotspots.length > 0 ? hotspots.reduce((s, h) => s + h.churnRate, 0) / hotspots.length : 0;
 
   // Determine structure
   let structure: string;
@@ -81,11 +77,7 @@ export function buildPrompt(topology: CodeTopology): string {
   const dominantLang = [...langCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'default';
   const material = LANGUAGE_MATERIALS[dominantLang] ?? 'abstract digital patterns';
 
-  return [
-    structure,
-    mood,
-    wear,
-    material,
-    'digital art, dark background, glowing edges, SDF aesthetic, no text',
-  ].join(', ');
+  return [structure, mood, wear, material, 'digital art, dark background, glowing edges, SDF aesthetic, no text'].join(
+    ', ',
+  );
 }

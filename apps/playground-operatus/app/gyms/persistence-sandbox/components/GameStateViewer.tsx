@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type OperatusMod = typeof import('@dendrovia/operatus');
 
@@ -30,7 +30,7 @@ export function GameStateViewer({ mod, refreshKey }: { mod: OperatusMod; refresh
     update();
     const unsub = mod.useGameStore.subscribe(update);
     return () => unsub();
-  }, [mod, refreshKey]);
+  }, [mod]);
 
   const toggle = (key: string) => {
     setCollapsed((prev) => {
@@ -44,33 +44,27 @@ export function GameStateViewer({ mod, refreshKey }: { mod: OperatusMod; refresh
   if (!state) return null;
 
   return (
-    <div style={{ padding: "1rem 1.25rem", border: "1px solid #222", borderRadius: "8px" }}>
-      <h3 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.75rem" }}>
-        Game State (live)
-      </h3>
-      <div style={{ fontFamily: "var(--font-geist-mono)", fontSize: "0.8rem", maxHeight: "400px", overflow: "auto" }}>
+    <div style={{ padding: '1rem 1.25rem', border: '1px solid #222', borderRadius: '8px' }}>
+      <h3 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.75rem' }}>Game State (live)</h3>
+      <div style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '0.8rem', maxHeight: '400px', overflow: 'auto' }}>
         {Object.entries(state).map(([key, value]) => {
           const isObject = value !== null && typeof value === 'object';
           const isCollapsed = collapsed.has(key);
 
           return (
-            <div key={key} style={{ marginBottom: "0.25rem" }}>
+            <div key={key} style={{ marginBottom: '0.25rem' }}>
               <div
                 onClick={() => isObject && toggle(key)}
                 style={{
-                  cursor: isObject ? "pointer" : "default",
-                  display: "flex",
-                  gap: "0.5rem",
+                  cursor: isObject ? 'pointer' : 'default',
+                  display: 'flex',
+                  gap: '0.5rem',
                 }}
               >
-                {isObject && (
-                  <span style={{ opacity: 0.4, width: "1ch" }}>{isCollapsed ? '+' : '-'}</span>
-                )}
-                <span style={{ color: "#93c5fd" }}>{key}</span>
+                {isObject && <span style={{ opacity: 0.4, width: '1ch' }}>{isCollapsed ? '+' : '-'}</span>}
+                <span style={{ color: '#93c5fd' }}>{key}</span>
                 <span style={{ opacity: 0.3 }}>:</span>
-                {!isObject && (
-                  <span style={{ color: "#86efac" }}>{JSON.stringify(value)}</span>
-                )}
+                {!isObject && <span style={{ color: '#86efac' }}>{JSON.stringify(value)}</span>}
                 {isObject && isCollapsed && (
                   <span style={{ opacity: 0.3 }}>
                     {Array.isArray(value) ? `[${value.length}]` : `{${Object.keys(value as object).length}}`}
@@ -78,15 +72,17 @@ export function GameStateViewer({ mod, refreshKey }: { mod: OperatusMod; refresh
                 )}
               </div>
               {isObject && !isCollapsed && (
-                <pre style={{
-                  margin: 0,
-                  marginLeft: "1.5ch",
-                  color: "#d1d5db",
-                  opacity: 0.7,
-                  fontSize: "0.75rem",
-                  whiteSpace: "pre-wrap",
-                  wordBreak: "break-all",
-                }}>
+                <pre
+                  style={{
+                    margin: 0,
+                    marginLeft: '1.5ch',
+                    color: '#d1d5db',
+                    opacity: 0.7,
+                    fontSize: '0.75rem',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-all',
+                  }}
+                >
                   {JSON.stringify(value, null, 2)}
                 </pre>
               )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type OperatusMod = typeof import('@dendrovia/operatus');
 type SharedMod = typeof import('@dendrovia/shared');
@@ -33,10 +33,7 @@ export function useOperatusInfrastructure(): OperatusInfrastructure {
 
     async function init() {
       try {
-        const [operatus, shared] = await Promise.all([
-          import('@dendrovia/operatus'),
-          import('@dendrovia/shared'),
-        ]);
+        const [operatus, shared] = await Promise.all([import('@dendrovia/operatus'), import('@dendrovia/shared')]);
 
         if (cancelled) return;
 
@@ -65,7 +62,9 @@ export function useOperatusInfrastructure(): OperatusInfrastructure {
     }
 
     init();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return {

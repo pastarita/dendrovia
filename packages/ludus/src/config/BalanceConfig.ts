@@ -8,7 +8,7 @@
  * Override individual fields via createBalanceConfig({ ... }).
  */
 
-import type { Element, CharacterClass } from '@dendrovia/shared';
+import type { CharacterClass, Element } from '@dendrovia/shared';
 
 // ─── Damage Formula Config ──────────────────────────────────
 
@@ -50,9 +50,16 @@ export interface StatGrowthConfig {
 
 export interface CharacterConfig {
   /** Base stats per class at level 1 */
-  baseStats: Record<CharacterClass, {
-    health: number; mana: number; attack: number; defense: number; speed: number;
-  }>;
+  baseStats: Record<
+    CharacterClass,
+    {
+      health: number;
+      mana: number;
+      attack: number;
+      defense: number;
+      speed: number;
+    }
+  >;
   /** Stat growth per level per class */
   growthRates: Record<CharacterClass, StatGrowthConfig>;
   /** Level cap */
@@ -139,24 +146,24 @@ export const DEFAULT_BALANCE_CONFIG: BalanceConfig = {
 
   elements: {
     effectivenessTable: {
-      fire:  { fire: 0.5, water: 0.5, earth: 1.5, air: 1.0, none: 1.0 },
+      fire: { fire: 0.5, water: 0.5, earth: 1.5, air: 1.0, none: 1.0 },
       water: { fire: 1.5, water: 0.5, earth: 1.0, air: 0.5, none: 1.0 },
       earth: { fire: 1.0, water: 1.5, earth: 0.5, air: 1.5, none: 1.0 },
-      air:   { fire: 1.0, water: 1.5, earth: 0.5, air: 0.5, none: 1.0 },
-      none:  { fire: 1.0, water: 1.0, earth: 1.0, air: 1.0, none: 1.0 },
+      air: { fire: 1.0, water: 1.5, earth: 0.5, air: 0.5, none: 1.0 },
+      none: { fire: 1.0, water: 1.0, earth: 1.0, air: 1.0, none: 1.0 },
     },
   },
 
   characters: {
     baseStats: {
-      tank:   { health: 150, mana: 50,  attack: 5,  defense: 15, speed: 6 },
-      healer: { health: 100, mana: 100, attack: 3,  defense: 8,  speed: 8 },
-      dps:    { health: 80,  mana: 75,  attack: 15, defense: 5,  speed: 7 },
+      tank: { health: 150, mana: 50, attack: 5, defense: 15, speed: 6 },
+      healer: { health: 100, mana: 100, attack: 3, defense: 8, speed: 8 },
+      dps: { health: 80, mana: 75, attack: 15, defense: 5, speed: 7 },
     },
     growthRates: {
-      tank:   { hp: 8,   mana: 2, attack: 1,   defense: 2,   speed: 1   },
-      healer: { hp: 5,   mana: 5, attack: 0.5, defense: 1,   speed: 1.5 },
-      dps:    { hp: 3,   mana: 3, attack: 2,   defense: 0.5, speed: 1   },
+      tank: { hp: 8, mana: 2, attack: 1, defense: 2, speed: 1 },
+      healer: { hp: 5, mana: 5, attack: 0.5, defense: 1, speed: 1.5 },
+      dps: { hp: 3, mana: 3, attack: 2, defense: 0.5, speed: 1 },
     },
     maxLevel: 30,
   },
@@ -194,9 +201,7 @@ export const DEFAULT_BALANCE_CONFIG: BalanceConfig = {
 // ─── Config Factory ─────────────────────────────────────────
 
 /** Create a custom balance config by overriding specific values */
-export function createBalanceConfig(
-  overrides: DeepPartial<BalanceConfig>,
-): BalanceConfig {
+export function createBalanceConfig(overrides: DeepPartial<BalanceConfig>): BalanceConfig {
   return deepMerge(DEFAULT_BALANCE_CONFIG, overrides) as BalanceConfig;
 }
 
@@ -206,7 +211,7 @@ export function createBalanceConfig(
 export const EASY_CONFIG = createBalanceConfig({
   damage: { defenseConstant: 15, baseCritChance: 0.08 },
   combat: { defendDefenseBonus: 8, healAttackRatio: 0.7 },
-  encounters: { randomEncounterChance: 0.10, encounterCooldown: 5 },
+  encounters: { randomEncounterChance: 0.1, encounterCooldown: 5 },
 });
 
 /** Hard mode: monsters hit harder, less healing */

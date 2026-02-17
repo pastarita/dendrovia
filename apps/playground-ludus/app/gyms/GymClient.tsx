@@ -1,25 +1,31 @@
 'use client';
 
-import { useState, useMemo, useCallback, useRef } from 'react';
-import type { Character, Monster, BattleState, CharacterClass, BugType } from '@dendrovia/shared';
 import {
-  createCharacter,
   computeStatsAtLevel,
+  createCharacter,
   createMonster,
   createRngState,
-  initBattle,
   executeTurn,
   getAvailableActions,
-  getSpell,
+  initBattle,
 } from '@dendrovia/ludus';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { CombatStartedEvent, CombatEndedEvent, HealthChangedEvent, ManaChangedEvent } from '@dendrovia/shared';
-import PlayerCard from './components/PlayerCard';
-import EnemyCard from './components/EnemyCard';
+import { OrnateFrame, ProgressBar, StatLabel } from '@dendrovia/oculus';
+import type {
+  BattleState,
+  BugType,
+  CharacterClass,
+  CombatEndedEvent,
+  CombatStartedEvent,
+  HealthChangedEvent,
+  ManaChangedEvent,
+} from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import ActionPanel from './components/ActionPanel';
 import BattleLog from './components/BattleLog';
+import EnemyCard from './components/EnemyCard';
 import MockEventPanel from './components/MockEventPanel';
-import { OrnateFrame, ProgressBar, StatLabel } from '@dendrovia/oculus';
+import PlayerCard from './components/PlayerCard';
 import { useGamePersistence } from './hooks/useGamePersistence';
 
 const CLASS_OPTIONS: { value: CharacterClass; label: string }[] = [
@@ -94,41 +100,44 @@ export default function GymClient(): React.JSX.Element {
     });
   }, [charClass, charName, charLevel, bugType, severity, seed]);
 
-  const doAction = useCallback((action: import('@dendrovia/shared').Action) => {
-    if (!battleState) return;
+  const doAction = useCallback(
+    (action: import('@dendrovia/shared').Action) => {
+      if (!battleState) return;
 
-    let newState = executeTurn(battleState, action);
+      const newState = executeTurn(battleState, action);
 
-    // Emit health/mana changed events
-    const bus = getEventBus();
-    if (newState.player.stats.health !== battleState.player.stats.health) {
-      bus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
-        entityId: newState.player.id,
-        current: newState.player.stats.health,
-        max: newState.player.stats.maxHealth,
-        delta: newState.player.stats.health - battleState.player.stats.health,
-      });
-    }
-    if (newState.player.stats.mana !== battleState.player.stats.mana) {
-      bus.emit<ManaChangedEvent>(GameEvents.MANA_CHANGED, {
-        entityId: newState.player.id,
-        current: newState.player.stats.mana,
-        max: newState.player.stats.maxMana,
-        delta: newState.player.stats.mana - battleState.player.stats.mana,
-      });
-    }
+      // Emit health/mana changed events
+      const bus = getEventBus();
+      if (newState.player.stats.health !== battleState.player.stats.health) {
+        bus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
+          entityId: newState.player.id,
+          current: newState.player.stats.health,
+          max: newState.player.stats.maxHealth,
+          delta: newState.player.stats.health - battleState.player.stats.health,
+        });
+      }
+      if (newState.player.stats.mana !== battleState.player.stats.mana) {
+        bus.emit<ManaChangedEvent>(GameEvents.MANA_CHANGED, {
+          entityId: newState.player.id,
+          current: newState.player.stats.mana,
+          max: newState.player.stats.maxMana,
+          delta: newState.player.stats.mana - battleState.player.stats.mana,
+        });
+      }
 
-    // If terminal, emit combat ended
-    if (newState.phase.type === 'VICTORY' || newState.phase.type === 'DEFEAT') {
-      bus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, {
-        outcome: newState.phase.type === 'VICTORY' ? 'victory' : 'defeat',
-        turns: newState.turn,
-        xpGained: newState.phase.type === 'VICTORY' ? newState.phase.xpGained : undefined,
-      });
-    }
+      // If terminal, emit combat ended
+      if (newState.phase.type === 'VICTORY' || newState.phase.type === 'DEFEAT') {
+        bus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, {
+          outcome: newState.phase.type === 'VICTORY' ? 'victory' : 'defeat',
+          turns: newState.turn,
+          xpGained: newState.phase.type === 'VICTORY' ? newState.phase.xpGained : undefined,
+        });
+      }
 
-    setBattleState(newState);
-  }, [battleState]);
+      setBattleState(newState);
+    },
+    [battleState],
+  );
 
   const resetBattle = useCallback(() => {
     setBattleState(null);
@@ -162,12 +171,15 @@ export default function GymClient(): React.JSX.Element {
     URL.revokeObjectURL(url);
   }, [exportJSON]);
 
-  const handleImport = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const json = await file.text();
-    await importJSON(json);
-  }, [importJSON]);
+  const handleImport = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const json = await file.text();
+      await importJSON(json);
+    },
+    [importJSON],
+  );
 
   const isSetup = battleState === null;
   const isTerminal = battleState?.phase.type === 'VICTORY' || battleState?.phase.type === 'DEFEAT';
@@ -183,25 +195,51 @@ export default function GymClient(): React.JSX.Element {
             <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>Character</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Name</label>
-              <input style={inputStyle} value={charName} onChange={e => setCharName(e.target.value)} />
+              <input style={inputStyle} value={charName} onChange={(e) => setCharName(e.target.value)} />
 
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Class</label>
-              <select style={selectStyle} value={charClass} onChange={e => setCharClass(e.target.value as CharacterClass)}>
-                {CLASS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              <select
+                style={selectStyle}
+                value={charClass}
+                onChange={(e) => setCharClass(e.target.value as CharacterClass)}
+              >
+                {CLASS_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
               </select>
 
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Level: {charLevel}</label>
-              <input type="range" min={1} max={30} value={charLevel} onChange={e => setCharLevel(Number(e.target.value))} />
+              <input
+                type="range"
+                min={1}
+                max={30}
+                value={charLevel}
+                onChange={(e) => setCharLevel(Number(e.target.value))}
+              />
 
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Seed</label>
-              <input style={inputStyle} type="number" value={seed} onChange={e => setSeed(Number(e.target.value))} />
+              <input style={inputStyle} type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} />
             </div>
 
             <div style={{ marginTop: '0.75rem', fontSize: '0.8rem', opacity: 0.6 }}>
               <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>Preview Stats</div>
-              <ProgressBar value={previewStats.maxHealth} max={previewStats.maxHealth} variant="health" showLabel label={`HP ${previewStats.maxHealth}/${previewStats.maxHealth}`} />
+              <ProgressBar
+                value={previewStats.maxHealth}
+                max={previewStats.maxHealth}
+                variant="health"
+                showLabel
+                label={`HP ${previewStats.maxHealth}/${previewStats.maxHealth}`}
+              />
               <div style={{ marginTop: 'var(--oculus-space-xs)' }}>
-                <ProgressBar value={previewStats.maxMana} max={previewStats.maxMana} variant="mana" showLabel label={`MP ${previewStats.maxMana}/${previewStats.maxMana}`} />
+                <ProgressBar
+                  value={previewStats.maxMana}
+                  max={previewStats.maxMana}
+                  variant="mana"
+                  showLabel
+                  label={`MP ${previewStats.maxMana}/${previewStats.maxMana}`}
+                />
               </div>
               <div style={{ marginTop: 'var(--oculus-space-xs)' }}>
                 <StatLabel label="ATK" value={previewStats.attack} />
@@ -216,19 +254,38 @@ export default function GymClient(): React.JSX.Element {
             <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>Enemy</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Bug Type</label>
-              <select style={selectStyle} value={bugType} onChange={e => setBugType(e.target.value as BugType)}>
-                {BUG_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              <select style={selectStyle} value={bugType} onChange={(e) => setBugType(e.target.value as BugType)}>
+                {BUG_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
               </select>
 
               <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Severity: {severity}</label>
-              <select style={selectStyle} value={severity} onChange={e => setSeverity(Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}>
-                {[1, 2, 3, 4, 5].map(s => <option key={s} value={s}>Severity {s}</option>)}
+              <select
+                style={selectStyle}
+                value={severity}
+                onChange={(e) => setSeverity(Number(e.target.value) as 1 | 2 | 3 | 4 | 5)}
+              >
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <option key={s} value={s}>
+                    Severity {s}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div style={{ marginTop: '0.75rem', fontSize: '0.8rem', opacity: 0.6 }}>
               <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>Preview: {previewMonster.name}</div>
-              <ProgressBar value={previewMonster.stats.maxHealth} max={previewMonster.stats.maxHealth} variant="custom" color="#F97316" showLabel label={`HP ${previewMonster.stats.maxHealth}/${previewMonster.stats.maxHealth}`} />
+              <ProgressBar
+                value={previewMonster.stats.maxHealth}
+                max={previewMonster.stats.maxHealth}
+                variant="custom"
+                color="#F97316"
+                showLabel
+                label={`HP ${previewMonster.stats.maxHealth}/${previewMonster.stats.maxHealth}`}
+              />
               <div style={{ marginTop: 'var(--oculus-space-xs)' }}>
                 <StatLabel label="ATK" value={previewMonster.stats.attack} />
                 <StatLabel label="DEF" value={previewMonster.stats.defense} />
@@ -336,7 +393,15 @@ export default function GymClient(): React.JSX.Element {
                     <span> — {battleState.phase.xpGained} XP earned</span>
                   )}
                 </div>
-                <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <div
+                  style={{
+                    marginTop: '1rem',
+                    display: 'flex',
+                    gap: '0.5rem',
+                    justifyContent: 'center',
+                    flexWrap: 'wrap',
+                  }}
+                >
                   <button
                     onClick={resetBattle}
                     style={{
@@ -458,13 +523,7 @@ export default function GymClient(): React.JSX.Element {
             >
               Import Save
             </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".json"
-              onChange={handleImport}
-              style={{ display: 'none' }}
-            />
+            <input ref={fileInputRef} type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />
             {hydrated && savedCharacter && (
               <span style={{ fontSize: '0.75rem', opacity: 0.4, alignSelf: 'center' }}>
                 Last saved: {savedCharacter.name} Lv {savedCharacter.level}
@@ -476,10 +535,7 @@ export default function GymClient(): React.JSX.Element {
 
       {/* Balance Sim link */}
       <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-        <a
-          href="/gyms/balance"
-          style={{ fontSize: '0.8rem', opacity: 0.5, textDecoration: 'underline' }}
-        >
+        <a href="/gyms/balance" style={{ fontSize: '0.8rem', opacity: 0.5, textDecoration: 'underline' }}>
           Balance Simulator →
         </a>
       </div>

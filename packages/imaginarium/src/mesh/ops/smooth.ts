@@ -8,7 +8,7 @@
  */
 
 import type { HalfEdgeMesh } from '../HalfEdgeMesh';
-import { vertexNeighbors, isBoundaryVertex } from '../HalfEdgeMesh';
+import { isBoundaryVertex, vertexNeighbors } from '../HalfEdgeMesh';
 import type { MeshOp } from '../pipeline';
 
 /**
@@ -35,7 +35,9 @@ export function laplacianSmoothOnce(
     if (neighbors.length === 0) return { ...v };
 
     // Compute centroid of neighbors
-    let cx = 0, cy = 0, cz = 0;
+    let cx = 0,
+      cy = 0,
+      cz = 0;
     for (const ni of neighbors) {
       cx += mesh.vertices[ni]!.x;
       cy += mesh.vertices[ni]!.y;
@@ -55,8 +57,8 @@ export function laplacianSmoothOnce(
 
   return {
     vertices: newVertices,
-    halfedges: mesh.halfedges.map(he => ({ ...he })),
-    faces: mesh.faces.map(f => ({ ...f })),
+    halfedges: mesh.halfedges.map((he) => ({ ...he })),
+    faces: mesh.faces.map((f) => ({ ...f })),
   };
 }
 
@@ -84,11 +86,7 @@ export function smooth(iterations: number, factor: number = 0.5): MeshOp {
  * @param lambda      Positive smoothing factor (e.g., 0.5)
  * @param mu          Negative smoothing factor (e.g., -0.53), |mu| > lambda
  */
-export function taubinSmooth(
-  iterations: number,
-  lambda: number = 0.5,
-  mu: number = -0.53,
-): MeshOp {
+export function taubinSmooth(iterations: number, lambda: number = 0.5, mu: number = -0.53): MeshOp {
   return (mesh: HalfEdgeMesh) => {
     let current = mesh;
     for (let i = 0; i < iterations; i++) {

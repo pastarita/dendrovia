@@ -5,9 +5,9 @@
  * If no file specified, lists available files in the output directory.
  */
 
-import { readdir, readFile } from 'fs/promises';
-import { join, basename } from 'path';
-import { existsSync } from 'fs';
+import { existsSync } from 'node:fs';
+import { readdir, readFile } from 'node:fs/promises';
+import { basename, join } from 'node:path';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   if (!file) {
     // List available files
     const entries = await readdir(dir);
-    const jsonFiles = entries.filter(e => e.endsWith('.json'));
+    const jsonFiles = entries.filter((e) => e.endsWith('.json'));
     return Response.json({ files: jsonFiles });
   }
 

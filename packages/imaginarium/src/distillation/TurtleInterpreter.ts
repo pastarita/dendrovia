@@ -22,9 +22,9 @@ export interface TurtleSegment {
 
 interface TurtleState {
   position: [number, number, number];
-  heading: [number, number, number];  // Forward direction
-  up: [number, number, number];       // Up direction
-  right: [number, number, number];    // Right direction
+  heading: [number, number, number]; // Forward direction
+  up: [number, number, number]; // Up direction
+  right: [number, number, number]; // Right direction
   depth: number;
 }
 
@@ -58,17 +58,13 @@ function rotateAroundAxis(
 const TAPER_FACTOR = 0.7;
 const BASE_RADIUS = 0.25;
 
-export function interpret(
-  expanded: string,
-  angle: number,
-  segmentLength: number = 1.0,
-): TurtleSegment[] {
+export function interpret(expanded: string, angle: number, segmentLength: number = 1.0): TurtleSegment[] {
   const segments: TurtleSegment[] = [];
   const stack: TurtleState[] = [];
 
   let state: TurtleState = {
     position: [0, 0, 0],
-    heading: [0, 1, 0],   // Start pointing up
+    heading: [0, 1, 0], // Start pointing up
     up: [0, 0, -1],
     right: [1, 0, 0],
     depth: 0,
@@ -81,7 +77,7 @@ export function interpret(
         const start: [number, number, number] = [...state.position];
         const step = vec3Scale(state.heading, segmentLength);
         state.position = vec3Add(state.position, step);
-        const radius = BASE_RADIUS * Math.pow(TAPER_FACTOR, state.depth);
+        const radius = BASE_RADIUS * TAPER_FACTOR ** state.depth;
 
         segments.push({
           start,

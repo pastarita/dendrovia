@@ -9,10 +9,9 @@
  * This is the "proof" that the architecture works end-to-end.
  */
 
-import { CodeTopology, ProceduralPalette, type ParsedFile } from '@dendrovia/shared';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import { readFileSync, statSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { GameEvents, getEventBus, type ParsedFile, type ProceduralPalette } from '@dendrovia/shared';
 
 const eventBus = getEventBus(true); // Enable debug mode
 
@@ -87,18 +86,9 @@ const outputDir = join(process.cwd(), 'generated');
 // Ensure directory exists
 await Bun.write(join(outputDir, '.gitkeep'), '');
 
-await Bun.write(
-  join(outputDir, 'palette.json'),
-  JSON.stringify(palette, null, 2)
-);
-await Bun.write(
-  join(outputDir, 'dendrite.glsl'),
-  sdfShader.glsl
-);
-await Bun.write(
-  join(outputDir, 'topology.json'),
-  JSON.stringify({ files: [parsedFile] }, null, 2)
-);
+await Bun.write(join(outputDir, 'palette.json'), JSON.stringify(palette, null, 2));
+await Bun.write(join(outputDir, 'dendrite.glsl'), sdfShader.glsl);
+await Bun.write(join(outputDir, 'topology.json'), JSON.stringify({ files: [parsedFile] }, null, 2));
 
 console.log(`  ✓ palette.json`);
 console.log(`  ✓ dendrite.glsl`);
@@ -127,7 +117,7 @@ function hashString(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
   return Math.abs(hash).toString(16).padStart(8, '0');
@@ -142,12 +132,12 @@ function generatePaletteFromFile(file: ParsedFile): ProceduralPalette {
   let hue = (seed * goldenRatio) % 1.0;
 
   const languageColors: Record<string, number> = {
-    'typescript': 0.6,   // Blue
-    'javascript': 0.15,  // Yellow
-    'json': 0.3,         // Green
-    'python': 0.2,       // Yellow-green
-    'rust': 0.03,        // Orange
-    'go': 0.5,           // Cyan
+    typescript: 0.6, // Blue
+    javascript: 0.15, // Yellow
+    json: 0.3, // Green
+    python: 0.2, // Yellow-green
+    rust: 0.03, // Orange
+    go: 0.5, // Cyan
   };
 
   hue = languageColors[file.language] ?? hue;
@@ -166,18 +156,18 @@ function hslToHex(h: number, s: number, l: number): string {
   const hueToRgb = (p: number, q: number, t: number) => {
     if (t < 0) t += 1;
     if (t > 1) t -= 1;
-    if (t < 1/6) return p + (q - p) * 6 * t;
-    if (t < 1/2) return q;
-    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
     return p;
   };
 
   const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
   const p = 2 * l - q;
 
-  const r = Math.round(hueToRgb(p, q, h + 1/3) * 255);
+  const r = Math.round(hueToRgb(p, q, h + 1 / 3) * 255);
   const g = Math.round(hueToRgb(p, q, h) * 255);
-  const b = Math.round(hueToRgb(p, q, h - 1/3) * 255);
+  const b = Math.round(hueToRgb(p, q, h - 1 / 3) * 255);
 
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
@@ -207,13 +197,15 @@ float sdf(vec3 p) {
   float trunk = sdBranch(p, 2.0, 0.1);
 
   // Add complexity-based branches
-  ${Array.from({ length: complexity }).map((_, i) => {
-    const angle = (i / complexity) * 3.14159 * 2;
-    const height = 0.5 + i * 0.2;
-    return `
+  ${Array.from({ length: complexity })
+    .map((_, i) => {
+      const angle = (i / complexity) * Math.PI * 2;
+      const height = 0.5 + i * 0.2;
+      return `
   vec3 p${i} = p - vec3(sin(${angle.toFixed(2)}) * 0.5, ${height.toFixed(2)}, cos(${angle.toFixed(2)}) * 0.5);
   trunk = min(trunk, sdBranch(p${i}, 0.3, 0.05));`;
-  }).join('')}
+    })
+    .join('')}
 
   return trunk;
 }

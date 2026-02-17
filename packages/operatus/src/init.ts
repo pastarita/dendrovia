@@ -26,15 +26,15 @@
  * ```
  */
 
-import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
 import { CacheManager } from './cache/CacheManager';
-import { AssetLoader } from './loader/AssetLoader';
-import { CDNLoader, type CDNConfig } from './loader/CDNLoader';
-import { useGameStore, waitForHydration } from './persistence/GameStore';
-import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave';
-import { CrossTabSync, type CrossTabConfig, type TabRole } from './sync/CrossTabSync';
 import type { LoadProgress } from './loader/AssetLoader';
-import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth';
+import { AssetLoader } from './loader/AssetLoader';
+import { type CDNConfig, CDNLoader } from './loader/CDNLoader';
+import { type ManifestHealthReport, validateManifestStructure } from './manifest/ManifestHealth';
+import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave';
+import { waitForHydration } from './persistence/GameStore';
+import { type CrossTabConfig, CrossTabSync, type TabRole } from './sync/CrossTabSync';
 
 export interface OperatusConfig {
   /** Base path for generated assets (default: '/generated') */
@@ -80,9 +80,7 @@ export interface OperatusContext {
  * This is the primary entry point for consumers.
  * Returns a context object with access to all subsystems.
  */
-export async function initializeOperatus(
-  config: OperatusConfig = {},
-): Promise<OperatusContext> {
+export async function initializeOperatus(config: OperatusConfig = {}): Promise<OperatusContext> {
   const {
     assetBasePath = '/generated',
     manifestPath = '/generated/manifest.json',
@@ -143,17 +141,10 @@ export async function initializeOperatus(
   try {
     await Promise.race([
       waitForHydration(),
-      new Promise<void>((_, reject) =>
-        setTimeout(
-          () => reject(new Error('Hydration timeout')),
-          HYDRATION_TIMEOUT_MS,
-        ),
-      ),
+      new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Hydration timeout')), HYDRATION_TIMEOUT_MS)),
     ]);
   } catch {
-    console.warn(
-      `[OPERATUS] State hydration timed out after ${HYDRATION_TIMEOUT_MS}ms — proceeding with defaults`,
-    );
+    console.warn(`[OPERATUS] State hydration timed out after ${HYDRATION_TIMEOUT_MS}ms — proceeding with defaults`);
   }
 
   // ── Step 5: Cross-tab sync + leader election ───────────────────
@@ -220,11 +211,13 @@ export async function initializeOperatus(
   // GAME_STARTED → confirm asset readiness to other pillars
   const unsubGameStarted = eventBus.on(GameEvents.GAME_STARTED, async () => {
     const stats = await cache.stats();
-    eventBus.emit(GameEvents.ASSETS_LOADED, {
-      assetCount: stats.memory + stats.persistent.entryCount,
-      manifest: null,
-      partial: false,
-    }).catch(() => {});
+    eventBus
+      .emit(GameEvents.ASSETS_LOADED, {
+        assetCount: stats.memory + stats.persistent.entryCount,
+        manifest: null,
+        partial: false,
+      })
+      .catch(() => {});
   });
 
   // LEVEL_LOADED → preload zone-specific assets

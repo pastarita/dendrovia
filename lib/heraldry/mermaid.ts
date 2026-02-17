@@ -5,7 +5,7 @@
  * representing PR domain coverage and architecture.
  */
 
-import type { PRCoatOfArms, Domain } from './types.js';
+import type { Domain, PRCoatOfArms } from './types.js';
 import { DOMAIN_TINCTURES } from './types.js';
 
 /**
@@ -20,14 +20,14 @@ export function generateDomainDiagram(coatOfArms: PRCoatOfArms): string {
 
   // Create nodes for each domain
   for (const domain of domains) {
-    const tincture = DOMAIN_TINCTURES[domain];
+    const _tincture = DOMAIN_TINCTURES[domain];
     const nodeId = domain.toUpperCase();
     lines.push(`    ${nodeId}["${domain}"]`);
   }
 
   // Connect domains in sequence
   if (domains.length > 1) {
-    const ids = domains.map(d => d.toUpperCase());
+    const ids = domains.map((d) => d.toUpperCase());
     lines.push(`    ${ids.join(' --> ')}`);
   }
 
@@ -68,9 +68,16 @@ export function generatePipelineDiagram(touchedDomains: Domain[]): string {
 
   // Style each pillar node
   const nodeMap: Record<Domain, string> = {
-    chronos: 'CHR', imaginarium: 'IMG', architectus: 'ARC',
-    ludus: 'LUD', oculus: 'OCU', operatus: 'OPE',
-    shared: '', app: '', docs: '', infra: '',
+    chronos: 'CHR',
+    imaginarium: 'IMG',
+    architectus: 'ARC',
+    ludus: 'LUD',
+    oculus: 'OCU',
+    operatus: 'OPE',
+    shared: '',
+    app: '',
+    docs: '',
+    infra: '',
   };
 
   for (const pillar of allPillars) {
@@ -97,9 +104,7 @@ export function generateHeraldryDiagram(coatOfArms: PRCoatOfArms): string {
   const { crest, shield, charges, motto } = coatOfArms;
   const primaryTincture = shield.primaryTincture;
 
-  const chargeList = charges
-    .map(c => `${c.symbol} x${c.count}`)
-    .join(', ');
+  const chargeList = charges.map((c) => `${c.symbol} x${c.count}`).join(', ');
 
   const domainList = shield.domains.join(', ');
 

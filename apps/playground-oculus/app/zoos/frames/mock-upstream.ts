@@ -3,23 +3,24 @@
  * Each specimen wraps a real shared type with pillar/variant metadata
  * for the OrnateFrame zoo grid.
  */
+
+import type { FrameVariant, PillarId } from '@dendrovia/oculus';
 import type {
+  AssetManifest,
+  DendriteConfig,
+  FungalSpecimen,
+  GameWorldState,
   Hotspot,
+  Item,
+  MeshManifestEntry,
+  Monster,
   ParsedCommit,
   ParsedFile,
-  Monster,
-  Spell,
-  Quest,
-  Item,
-  FungalSpecimen,
   ProceduralPalette,
+  Quest,
   SDFShader,
-  DendriteConfig,
-  GameWorldState,
-  MeshManifestEntry,
-  AssetManifest,
+  Spell,
 } from '@dendrovia/shared';
-import type { PillarId, FrameVariant } from '@dendrovia/oculus';
 
 /* ------------------------------------------------------------------ */
 /*  Discriminated union for specimen payloads                          */
@@ -269,11 +270,7 @@ const ludusQuest: QuestSpecimen = {
     description: 'Investigate the 3 highest-risk files in the repository',
     type: 'bug-hunt',
     status: 'active',
-    requirements: [
-      'Defeat renderer.ts guardian',
-      'Analyze parser.ts complexity',
-      'Refactor utils.ts coupling',
-    ],
+    requirements: ['Defeat renderer.ts guardian', 'Analyze parser.ts complexity', 'Refactor utils.ts coupling'],
     rewards: [
       { type: 'experience', value: 500 },
       { type: 'knowledge', value: 'cyclomatic-mastery' },

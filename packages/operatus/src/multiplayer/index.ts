@@ -1,7 +1,7 @@
-export { MultiplayerClient } from './MultiplayerClient';
 export type {
-  MultiplayerConfig,
-  PlayerPresence,
   ConnectionState,
+  MultiplayerConfig,
   MultiplayerMessage,
+  PlayerPresence,
 } from './MultiplayerClient';
+export { MultiplayerClient } from './MultiplayerClient';

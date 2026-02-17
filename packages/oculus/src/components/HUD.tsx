@@ -6,15 +6,14 @@
  * pointer-events: none on container; auto only on interactive children.
  */
 
-import React from 'react';
 import { useOculusStore } from '../store/useOculusStore';
+import { BattleUI } from './BattleUI';
+import { Minimap } from './Minimap';
+import { IconBadge } from './primitives/IconBadge';
 import { Panel } from './primitives/Panel';
 import { ProgressBar } from './primitives/ProgressBar';
 import { StatLabel } from './primitives/StatLabel';
-import { IconBadge } from './primitives/IconBadge';
-import { Minimap } from './Minimap';
 import { QuestLog } from './QuestLog';
-import { BattleUI } from './BattleUI';
 
 export function HUD() {
   const health = useOculusStore((s) => s.health);
@@ -30,7 +29,14 @@ export function HUD() {
       {/* ── Top-Left: Player Stats ──────────────────── */}
       <div className="oculus-corner oculus-corner--top-left">
         <Panel compact aria-label="Player stats">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--oculus-space-sm)', marginBottom: 'var(--oculus-space-sm)' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--oculus-space-sm)',
+              marginBottom: 'var(--oculus-space-sm)',
+            }}
+          >
             <IconBadge
               icon={cameraMode === 'falcon' ? '\u{1F985}' : '\u{1F9D9}'}
               label={cameraMode === 'falcon' ? 'Falcon Mode' : 'Player Mode'}
@@ -45,18 +51,36 @@ export function HUD() {
 
           {/* Health */}
           <div style={{ marginBottom: 'var(--oculus-space-xs)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--oculus-font-xs)', marginBottom: 2 }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: 'var(--oculus-font-xs)',
+                marginBottom: 2,
+              }}
+            >
               <span style={{ color: 'var(--oculus-health)' }}>HP</span>
-              <span style={{ color: 'var(--oculus-text-muted)' }}>{Math.round(health)}/{maxHealth}</span>
+              <span style={{ color: 'var(--oculus-text-muted)' }}>
+                {Math.round(health)}/{maxHealth}
+              </span>
             </div>
             <ProgressBar value={health} max={maxHealth} variant="health" height={6} flash />
           </div>
 
           {/* Mana */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--oculus-font-xs)', marginBottom: 2 }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: 'var(--oculus-font-xs)',
+                marginBottom: 2,
+              }}
+            >
               <span style={{ color: 'var(--oculus-mana)' }}>MP</span>
-              <span style={{ color: 'var(--oculus-text-muted)' }}>{Math.round(mana)}/{maxMana}</span>
+              <span style={{ color: 'var(--oculus-text-muted)' }}>
+                {Math.round(mana)}/{maxMana}
+              </span>
             </div>
             <ProgressBar value={mana} max={maxMana} variant="mana" height={6} />
           </div>

@@ -19,7 +19,7 @@ export function ProgressBarExhibit({ controlValues, isInspecting }: ExhibitRende
         <ProgressBar
           value={value}
           max={max}
-          variant={variant as typeof VARIANTS[number]}
+          variant={variant as (typeof VARIANTS)[number]}
           showLabel
           height={height}
           flash={flash}

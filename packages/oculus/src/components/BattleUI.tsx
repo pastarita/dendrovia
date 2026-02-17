@@ -5,19 +5,19 @@
  * User clicks emit SPELL_CAST events → LUDUS handles logic.
  */
 
-import React, { useRef, useEffect } from 'react';
-import { useOculusStore } from '../store/useOculusStore';
-import { useOculus } from '../OculusProvider';
 import { GameEvents } from '@dendrovia/shared';
+import { useEffect, useRef } from 'react';
+import { useOculus } from '../OculusProvider';
+import { useOculusStore } from '../store/useOculusStore';
+import { IconBadge } from './primitives/IconBadge';
 import { Panel } from './primitives/Panel';
 import { ProgressBar } from './primitives/ProgressBar';
-import { IconBadge } from './primitives/IconBadge';
 
 const bugIcons: Record<string, string> = {
-  'null-pointer': '\u{1F4A5}',  // collision
-  'memory-leak': '\u{1F4A7}',   // droplet
-  'race-condition': '\u{26A1}',  // lightning
-  'off-by-one': '\u{1F522}',    // numbers
+  'null-pointer': '\u{1F4A5}', // collision
+  'memory-leak': '\u{1F4A7}', // droplet
+  'race-condition': '\u{26A1}', // lightning
+  'off-by-one': '\u{1F522}', // numbers
 };
 
 const bugColors: Record<string, string> = {
@@ -37,7 +37,7 @@ export function BattleUI() {
   // Auto-scroll battle log
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [battle.log.length]);
+  }, []);
 
   if (!battle.active || !battle.enemy) return null;
 
@@ -72,11 +72,15 @@ export function BattleUI() {
       }}
     >
       {/* ── Enemy Panel ──────────────────────────── */}
-      <div
-        className="oculus-battle__enemy"
-        style={{ marginBottom: 'var(--oculus-space-lg)' }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--oculus-space-sm)', marginBottom: 'var(--oculus-space-sm)' }}>
+      <div className="oculus-battle__enemy" style={{ marginBottom: 'var(--oculus-space-lg)' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--oculus-space-sm)',
+            marginBottom: 'var(--oculus-space-sm)',
+          }}
+        >
           <IconBadge icon={bugIcon} label={enemy.type} color={bugColor} size="lg" />
           <div>
             <div style={{ fontWeight: 600, color: bugColor, textTransform: 'capitalize' }}>
@@ -116,11 +120,13 @@ export function BattleUI() {
             aria-label={`${spell.name} - ${spell.manaCost} mana`}
           >
             {spell.name}
-            <span style={{
-              fontSize: 'var(--oculus-font-xs)',
-              color: 'var(--oculus-mana)',
-              marginLeft: 'var(--oculus-space-xs)',
-            }}>
+            <span
+              style={{
+                fontSize: 'var(--oculus-font-xs)',
+                color: 'var(--oculus-mana)',
+                marginLeft: 'var(--oculus-space-xs)',
+              }}
+            >
               {spell.manaCost}
             </span>
           </button>
@@ -139,7 +145,9 @@ export function BattleUI() {
         aria-label="Battle log"
         aria-live="polite"
       >
-        <div className="oculus-heading" style={{ fontSize: 'var(--oculus-font-xs)' }}>Battle Log</div>
+        <div className="oculus-heading" style={{ fontSize: 'var(--oculus-font-xs)' }}>
+          Battle Log
+        </div>
         {log.map((entry, i) => (
           <div
             key={i}

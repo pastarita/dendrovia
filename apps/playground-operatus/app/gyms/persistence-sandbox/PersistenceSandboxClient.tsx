@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { SaveSlotList } from './components/SaveSlotList';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { GameStateViewer } from './components/GameStateViewer';
 import { ImportExportPanel } from './components/ImportExportPanel';
 import { MigrationTester } from './components/MigrationTester';
+import { SaveSlotList } from './components/SaveSlotList';
 
 type OperatusMod = typeof import('@dendrovia/operatus');
 
@@ -18,33 +18,37 @@ export function PersistenceSandboxClient() {
 
   useEffect(() => {
     let cancelled = false;
-    import('@dendrovia/operatus').then(async (mod) => {
-      if (cancelled) return;
-      modRef.current = mod;
-      await mod.waitForHydration();
-      if (!cancelled) setReady(true);
-    }).catch((err) => {
-      if (!cancelled) setError(err instanceof Error ? err.message : String(err));
-    });
-    return () => { cancelled = true; };
+    import('@dendrovia/operatus')
+      .then(async (mod) => {
+        if (cancelled) return;
+        modRef.current = mod;
+        await mod.waitForHydration();
+        if (!cancelled) setReady(true);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err instanceof Error ? err.message : String(err));
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (error) {
-    return <div style={{ marginTop: "2rem", color: "#ef4444" }}>Error: {error}</div>;
+    return <div style={{ marginTop: '2rem', color: '#ef4444' }}>Error: {error}</div>;
   }
 
   if (!ready || !modRef.current) {
-    return <div style={{ marginTop: "2rem", opacity: 0.5 }}>Initializing OPERATUS persistence...</div>;
+    return <div style={{ marginTop: '2rem', opacity: 0.5 }}>Initializing OPERATUS persistence...</div>;
   }
 
   const mod = modRef.current;
 
   return (
-    <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+    <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* State modifier panel */}
       <StateModifier mod={mod} onModify={refresh} />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
         <SaveSlotList mod={mod} refreshKey={refreshKey} />
         <GameStateViewer mod={mod} refreshKey={refreshKey} />
       </div>
@@ -69,26 +73,22 @@ function StateModifier({ mod, onModify }: { mod: OperatusMod; onModify: () => vo
   }, [store]);
 
   return (
-    <div style={{ padding: "1rem 1.25rem", border: "1px solid #222", borderRadius: "8px" }}>
-      <h3 style={{ fontSize: "0.95rem", fontWeight: 600, marginBottom: "0.75rem" }}>State Modifier</h3>
-      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "flex-end" }}>
+    <div style={{ padding: '1rem 1.25rem', border: '1px solid #222', borderRadius: '8px' }}>
+      <h3 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.75rem' }}>State Modifier</h3>
+      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
         <div>
-          <label style={{ fontSize: "0.7rem", opacity: 0.5, display: "block" }}>Name</label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={inputStyle}
-          />
+          <label style={{ fontSize: '0.7rem', opacity: 0.5, display: 'block' }}>Name</label>
+          <input value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
         </div>
         <div>
-          <label style={{ fontSize: "0.7rem", opacity: 0.5, display: "block" }}>Level</label>
+          <label style={{ fontSize: '0.7rem', opacity: 0.5, display: 'block' }}>Level</label>
           <input
             type="number"
             min={1}
             max={99}
             value={level}
             onChange={(e) => setLevel(Number(e.target.value))}
-            style={{ ...inputStyle, width: "70px" }}
+            style={{ ...inputStyle, width: '70px' }}
           />
         </div>
         <button
@@ -111,21 +111,27 @@ function StateModifier({ mod, onModify }: { mod: OperatusMod; onModify: () => vo
         </button>
         <button
           onClick={() => {
-            store.getState().addItem({ id: `item-${Date.now()}`, name: 'Debug Potion', description: 'A debug potion for testing', type: 'consumable', effect: { type: 'heal-hp', value: 50 } });
+            store.getState().addItem({
+              id: `item-${Date.now()}`,
+              name: 'Debug Potion',
+              description: 'A debug potion for testing',
+              type: 'consumable',
+              effect: { type: 'heal-hp', value: 50 },
+            });
             onModify();
           }}
           style={btnStyle}
         >
           + Item
         </button>
-        <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}>
           <div>
-            <label style={{ fontSize: "0.7rem", opacity: 0.5, display: "block" }}>Flag key</label>
+            <label style={{ fontSize: '0.7rem', opacity: 0.5, display: 'block' }}>Flag key</label>
             <input
               value={flagKey}
               onChange={(e) => setFlagKey(e.target.value)}
               placeholder="e.g. tutorial_done"
-              style={{ ...inputStyle, width: "140px" }}
+              style={{ ...inputStyle, width: '140px' }}
             />
           </div>
           <button
@@ -147,21 +153,21 @@ function StateModifier({ mod, onModify }: { mod: OperatusMod; onModify: () => vo
 }
 
 const inputStyle: React.CSSProperties = {
-  background: "#111",
-  border: "1px solid #333",
-  borderRadius: "4px",
-  padding: "0.4rem 0.6rem",
-  color: "#ededed",
-  fontSize: "0.85rem",
-  fontFamily: "var(--font-geist-mono)",
+  background: '#111',
+  border: '1px solid #333',
+  borderRadius: '4px',
+  padding: '0.4rem 0.6rem',
+  color: '#ededed',
+  fontSize: '0.85rem',
+  fontFamily: 'var(--font-geist-mono)',
 };
 
 const btnStyle: React.CSSProperties = {
-  padding: "0.4rem 0.75rem",
-  background: "#222",
-  border: "1px solid #444",
-  borderRadius: "4px",
-  color: "#ededed",
-  fontSize: "0.8rem",
-  cursor: "pointer",
+  padding: '0.4rem 0.75rem',
+  background: '#222',
+  border: '1px solid #444',
+  borderRadius: '4px',
+  color: '#ededed',
+  fontSize: '0.8rem',
+  cursor: 'pointer',
 };

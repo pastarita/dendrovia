@@ -2,8 +2,7 @@
  * OCULUS ornaments — Eyelid curves, hex iris cells, focus ring arcs
  */
 
-import React from 'react';
-import type { CornerProps, EdgeProps, DefsProps, FrameOrnamentSet } from './types';
+import type { CornerProps, DefsProps, EdgeProps, FrameOrnamentSet } from './types';
 
 function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
   const [flipX, flipY] = mirror;
@@ -39,13 +38,7 @@ function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
         strokeWidth="1"
         opacity="0.5"
       />
-      <circle
-        cx={size * 0.22}
-        cy={size * 0.22}
-        r={size * 0.05}
-        fill={palette.primary}
-        opacity="0.4"
-      />
+      <circle cx={size * 0.22} cy={size * 0.22} r={size * 0.05} fill={palette.primary} opacity="0.4" />
     </g>
   );
 }

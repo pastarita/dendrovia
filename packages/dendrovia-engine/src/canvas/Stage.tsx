@@ -4,10 +4,10 @@
  */
 
 import { Canvas } from '@react-three/fiber';
-import { Skybox } from './Skybox';
-import { Lighting } from './Lighting';
-import { Effects } from './Effects';
 import type { ReactNode } from 'react';
+import { Effects } from './Effects';
+import { Lighting } from './Lighting';
+import { Skybox } from './Skybox';
 
 interface StageProps {
   children?: ReactNode;
@@ -15,11 +15,7 @@ interface StageProps {
   fov?: number;
 }
 
-export function Stage({
-  children,
-  cameraPosition = [0, 50, 100],
-  fov = 75
-}: StageProps) {
+export function Stage({ children, cameraPosition = [0, 50, 100], fov = 75 }: StageProps) {
   return (
     <Canvas
       camera={{

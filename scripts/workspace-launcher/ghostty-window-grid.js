@@ -7,7 +7,7 @@
 ObjC.import('Cocoa');
 ObjC.import('stdlib');
 
-function run(argv) {
+function _run(_argv) {
   // Configuration
   const gridCols = 3;
   const gridRows = 2;
@@ -42,7 +42,7 @@ function run(argv) {
   // Get all windows from window server
   const windowList = $.CGWindowListCopyWindowInfo(
     $.kCGWindowListOptionOnScreenOnly | $.kCGWindowListExcludeDesktopElements,
-    $.kCGNullWindowID
+    $.kCGNullWindowID,
   );
 
   const windowCount = $.CFArrayGetCount(windowList);
@@ -63,7 +63,7 @@ function run(argv) {
       ghosttyWindows.push({
         number: windowNumber,
         name: windowName || 'Untitled',
-        info: windowInfo
+        info: windowInfo,
       });
     }
   }
@@ -82,11 +82,11 @@ function run(argv) {
     [0, 2], // ARCHITECTUS
     [1, 0], // LUDUS
     [1, 1], // OCULUS
-    [1, 2]  // OPERATUS
+    [1, 2], // OPERATUS
   ];
 
   // Position each window using AXUIElement
-  const systemWide = $.AXUIElementCreateSystemWide();
+  const _systemWide = $.AXUIElementCreateSystemWide();
 
   for (let i = 0; i < Math.min(ghosttyWindows.length, 6); i++) {
     const win = ghosttyWindows[i];
@@ -95,13 +95,13 @@ function run(argv) {
     const gridCol = gridPos[1];
 
     // Calculate window position
-    const windowX = usableX + (gridCol * (windowWidth + windowGap));
-    const windowY = usableY + (gridRow * (windowHeight + windowGap));
+    const windowX = usableX + gridCol * (windowWidth + windowGap);
+    const windowY = usableY + gridRow * (windowHeight + windowGap);
 
     console.log(`Positioning window ${i + 1} (${win.name}) at (${Math.round(windowX)}, ${Math.round(windowY)})`);
 
     // Try to position the window using AXUIElement
-    const windowElement = $.AXUIElementCreateApplication($.getpid());
+    const _windowElement = $.AXUIElementCreateApplication($.getpid());
 
     // Note: This approach requires finding the window by its window number
     // and using accessibility API, which Ghostty might not fully support

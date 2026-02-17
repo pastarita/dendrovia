@@ -1,10 +1,6 @@
-import { describe, test, expect, beforeEach } from 'bun:test';
-import {
-  useRendererStore,
-  getQuality,
-  getQualityPreset,
-} from '../src/store/useRendererStore';
+import { beforeEach, describe, expect, test } from 'bun:test';
 import type { QualityTier } from '../src/store/useRendererStore';
+import { getQuality, getQualityPreset, useRendererStore } from '../src/store/useRendererStore';
 
 // Reset the store between tests to avoid state leaking.
 beforeEach(() => {

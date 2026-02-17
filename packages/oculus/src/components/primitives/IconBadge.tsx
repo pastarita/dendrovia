@@ -2,8 +2,6 @@
  * IconBadge — Small badge with icon and optional tooltip
  */
 
-import React from 'react';
-
 export interface IconBadgeProps {
   icon: string;
   label?: string;
@@ -15,13 +13,7 @@ export interface IconBadgeProps {
 const sizes = { sm: 20, md: 28, lg: 36 };
 const fontSizes = { sm: 10, md: 14, lg: 18 };
 
-export function IconBadge({
-  icon,
-  label,
-  color = 'var(--oculus-amber)',
-  size = 'md',
-  className = '',
-}: IconBadgeProps) {
+export function IconBadge({ icon, label, color = 'var(--oculus-amber)', size = 'md', className = '' }: IconBadgeProps) {
   const px = sizes[size];
   const fs = fontSizes[size];
 

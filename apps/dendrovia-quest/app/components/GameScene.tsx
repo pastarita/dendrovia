@@ -5,7 +5,7 @@
  * Client component that renders the R3F canvas
  */
 
-import { Stage, CameraController, Terrain, MurrayTree } from '@dendrovia/engine';
+import { CameraController, MurrayTree, Stage, Terrain } from '@dendrovia/engine';
 
 export function GameScene() {
   return (
@@ -29,9 +29,7 @@ export function GameScene() {
           🌳 DENDROVIA - ARCHAEOLOGIZATION
         </div>
         <div>ARCHITECTUS Checkout Active</div>
-        <div style={{ marginTop: '8px', opacity: 0.7 }}>
-          Controls: WASD = Move | Q/E = Rotate | R/F = Zoom
-        </div>
+        <div style={{ marginTop: '8px', opacity: 0.7 }}>Controls: WASD = Move | Q/E = Rotate | R/F = Zoom</div>
       </div>
 
       {/* 3D Scene */}

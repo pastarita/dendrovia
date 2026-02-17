@@ -5,18 +5,18 @@
  * by analyze.ts (external repos) or any other entry point.
  */
 
-import { join, basename } from 'path';
-import { mkdirSync, existsSync } from 'fs';
-import { parseGitHistory, listFilesAtHead, getHeadHash, extractRepositoryMetadata } from './parser/GitParser.js';
-import { parseFiles, buildStubFile, canParse } from './parser/ASTParser.js';
+import { existsSync, mkdirSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import type { ParsedFile } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer.js';
 import { detectHotspots } from './analyzer/HotspotDetector.js';
 import { profileContributors } from './builder/ContributorProfiler.js';
-import { buildFileTree, countFiles, countDirectories } from './builder/TreeBuilder.js';
-import { buildTopology, writeOutputFiles } from './builder/TopologyBuilder.js';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { ParsedFile } from '@dendrovia/shared';
-import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer.js';
 import type { TopologyOutput } from './builder/TopologyBuilder.js';
+import { buildTopology, writeOutputFiles } from './builder/TopologyBuilder.js';
+import { buildFileTree, countDirectories, countFiles } from './builder/TreeBuilder.js';
+import { buildStubFile, canParse, parseFiles } from './parser/ASTParser.js';
+import { extractRepositoryMetadata, getHeadHash, listFilesAtHead, parseGitHistory } from './parser/GitParser.js';
 
 // ── Default ignore patterns ─────────────────────────────────────────────────
 
@@ -73,18 +73,12 @@ function log(silent: boolean, ...args: unknown[]) {
 // ── Pipeline ─────────────────────────────────────────────────────────────────
 
 export async function runPipeline(options: PipelineOptions): Promise<PipelineResult> {
-  const {
-    repoPath,
-    outputDir,
-    ignorePatterns = DEFAULT_IGNORE_PATTERNS,
-    emitEvents = false,
-    silent = false,
-  } = options;
+  const { repoPath, outputDir, ignorePatterns = DEFAULT_IGNORE_PATTERNS, emitEvents = false, silent = false } = options;
 
   const t0 = performance.now();
 
   function shouldIgnore(path: string): boolean {
-    return ignorePatterns.some(p => p.test(path));
+    return ignorePatterns.some((p) => p.test(path));
   }
 
   // Ensure output directory exists
@@ -113,7 +107,7 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
   log(silent, '[2/6] Building file inventory...');
 
   const allFiles = await listFilesAtHead(repoPath);
-  const relevantFiles = allFiles.filter(f => !shouldIgnore(f));
+  const relevantFiles = allFiles.filter((f) => !shouldIgnore(f));
   log(silent, `  ${allFiles.length} tracked files, ${relevantFiles.length} after filtering`);
 
   const elapsed2 = ((performance.now() - t2) / 1000).toFixed(2);
@@ -123,23 +117,18 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
   const t3 = performance.now();
   log(silent, '[3/6] Parsing code structure (AST)...');
 
-  const parseableFiles = relevantFiles.filter(f => canParse(f));
-  const nonParseableFiles = relevantFiles.filter(f => !canParse(f));
+  const parseableFiles = relevantFiles.filter((f) => canParse(f));
+  const nonParseableFiles = relevantFiles.filter((f) => !canParse(f));
   log(silent, `  ${parseableFiles.length} parseable (TS/JS/Go), ${nonParseableFiles.length} other`);
 
   const astResults = parseFiles(
-    parseableFiles.map(f => join(repoPath, f)),
+    parseableFiles.map((f) => join(repoPath, f)),
     repoPath,
   );
 
-  const stubFiles: ParsedFile[] = nonParseableFiles.map(f =>
-    buildStubFile(f, repoPath),
-  );
+  const stubFiles: ParsedFile[] = nonParseableFiles.map((f) => buildStubFile(f, repoPath));
 
-  const allParsedFiles: ParsedFile[] = [
-    ...astResults.map(r => r.file),
-    ...stubFiles,
-  ];
+  const allParsedFiles: ParsedFile[] = [...astResults.map((r) => r.file), ...stubFiles];
 
   const functionsByFile = new Map<string, FunctionComplexity[]>();
   let totalFunctions = 0;
@@ -165,7 +154,7 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
 
   const { hotspots, temporalCouplings } = detectHotspots(allParsedFiles, commits);
 
-  const dangerZones = hotspots.filter(h => h.riskScore > 0.5).length;
+  const dangerZones = hotspots.filter((h) => h.riskScore > 0.5).length;
   log(silent, `  ${hotspots.length} hotspots ranked, ${dangerZones} in danger zone (risk > 0.5)`);
   log(silent, `  ${temporalCouplings.length} temporal couplings detected`);
 
@@ -197,8 +186,8 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
   const tree = buildFileTree(allParsedFiles, basename(repoPath));
   log(silent, `  Tree: ${countFiles(tree)} files in ${countDirectories(tree)} directories`);
 
-  const uniqueLanguages = [...new Set(allParsedFiles.map(f => f.language))].sort();
-  const uniqueContributors = new Set(commits.map(c => c.author)).size;
+  const uniqueLanguages = [...new Set(allParsedFiles.map((f) => f.language))].sort();
+  const uniqueContributors = new Set(commits.map((c) => c.author)).size;
   const repositoryMetadata = {
     ...repoMetaBase,
     fileCount: allParsedFiles.length,

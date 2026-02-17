@@ -51,7 +51,10 @@ export function CacheEntryTable({
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc(!sortAsc);
-    else { setSortKey(key); setSortAsc(true); }
+    else {
+      setSortKey(key);
+      setSortAsc(true);
+    }
   };
 
   const handleInvalidate = async (path: string) => {
@@ -61,17 +64,19 @@ export function CacheEntryTable({
 
   if (entries.length === 0) {
     return (
-      <div style={{ padding: "2rem", border: "1px dashed #333", borderRadius: "8px", textAlign: "center", opacity: 0.4 }}>
+      <div
+        style={{ padding: '2rem', border: '1px dashed #333', borderRadius: '8px', textAlign: 'center', opacity: 0.4 }}
+      >
         No cache entries. Use &quot;Seed Demo Data&quot; to populate.
       </div>
     );
   }
 
   return (
-    <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+    <div style={{ overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
         <thead>
-          <tr style={{ borderBottom: "1px solid #333" }}>
+          <tr style={{ borderBottom: '1px solid #333' }}>
             <SortableTh label="Path" sortKey="path" active={sortKey} asc={sortAsc} onClick={toggleSort} />
             <SortableTh label="Size" sortKey="size" active={sortKey} asc={sortAsc} onClick={toggleSort} align="right" />
             <th style={thStyle}>Hash</th>
@@ -82,31 +87,30 @@ export function CacheEntryTable({
         </thead>
         <tbody>
           {sorted.map((entry) => (
-            <tr key={entry.path} style={{ borderBottom: "1px solid #1a1a1a" }}>
-              <td style={{ ...tdStyle, fontFamily: "var(--font-geist-mono)", fontSize: "0.8rem" }}>
-                {entry.path}
-              </td>
-              <td style={{ ...tdStyle, textAlign: "right", fontFamily: "var(--font-geist-mono)" }}>
+            <tr key={entry.path} style={{ borderBottom: '1px solid #1a1a1a' }}>
+              <td style={{ ...tdStyle, fontFamily: 'var(--font-geist-mono)', fontSize: '0.8rem' }}>{entry.path}</td>
+              <td style={{ ...tdStyle, textAlign: 'right', fontFamily: 'var(--font-geist-mono)' }}>
                 {formatBytes(entry.size)}
               </td>
-              <td style={{ ...tdStyle, fontFamily: "var(--font-geist-mono)", opacity: 0.5, fontSize: "0.75rem" }}>
+              <td style={{ ...tdStyle, fontFamily: 'var(--font-geist-mono)', opacity: 0.5, fontSize: '0.75rem' }}>
                 {entry.hash ? entry.hash.slice(0, 8) : '-'}
               </td>
-              <td style={{ ...tdStyle, fontSize: "0.8rem", opacity: 0.6 }}>
-                {timeAgo(entry.cachedAt)}
-              </td>
+              <td style={{ ...tdStyle, fontSize: '0.8rem', opacity: 0.6 }}>{timeAgo(entry.cachedAt)}</td>
               <td style={tdStyle}>
-                <div style={{ display: "flex", gap: "0.25rem" }}>
+                <div style={{ display: 'flex', gap: '0.25rem' }}>
                   {entry.tiers.map((tier) => {
                     const style = TIER_BADGE[tier] ?? { bg: '#333', fg: '#aaa' };
                     return (
-                      <span key={tier} style={{
-                        fontSize: "0.6rem",
-                        padding: "0.1rem 0.35rem",
-                        borderRadius: "3px",
-                        background: style.bg,
-                        color: style.fg,
-                      }}>
+                      <span
+                        key={tier}
+                        style={{
+                          fontSize: '0.6rem',
+                          padding: '0.1rem 0.35rem',
+                          borderRadius: '3px',
+                          background: style.bg,
+                          color: style.fg,
+                        }}
+                      >
                         {tier}
                       </span>
                     );
@@ -117,13 +121,13 @@ export function CacheEntryTable({
                 <button
                   onClick={() => handleInvalidate(entry.path)}
                   style={{
-                    background: "none",
-                    border: "1px solid #4a2020",
-                    borderRadius: "3px",
-                    color: "#ef4444",
-                    fontSize: "0.65rem",
-                    padding: "0.1rem 0.35rem",
-                    cursor: "pointer",
+                    background: 'none',
+                    border: '1px solid #4a2020',
+                    borderRadius: '3px',
+                    color: '#ef4444',
+                    fontSize: '0.65rem',
+                    padding: '0.1rem 0.35rem',
+                    cursor: 'pointer',
                   }}
                 >
                   Invalidate
@@ -154,25 +158,22 @@ function SortableTh({
 }) {
   const isActive = active === sortKey;
   return (
-    <th
-      style={{ ...thStyle, cursor: "pointer", textAlign: (align ?? "left") as any }}
-      onClick={() => onClick(sortKey)}
-    >
+    <th style={{ ...thStyle, cursor: 'pointer', textAlign: (align ?? 'left') as any }} onClick={() => onClick(sortKey)}>
       {label} {isActive ? (asc ? '\u2191' : '\u2193') : ''}
     </th>
   );
 }
 
 const thStyle: React.CSSProperties = {
-  textAlign: "left",
-  padding: "0.5rem 0.75rem",
-  fontSize: "0.7rem",
-  textTransform: "uppercase",
-  letterSpacing: "0.05em",
+  textAlign: 'left',
+  padding: '0.5rem 0.75rem',
+  fontSize: '0.7rem',
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
   opacity: 0.5,
   fontWeight: 500,
 };
 
 const tdStyle: React.CSSProperties = {
-  padding: "0.5rem 0.75rem",
+  padding: '0.5rem 0.75rem',
 };

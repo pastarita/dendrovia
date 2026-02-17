@@ -3,8 +3,8 @@
  * Ensures same input -> same output across runs.
  */
 
-import { join } from 'path';
-import { existsSync, mkdirSync, rmSync } from 'fs';
+import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
 import { hashObject, hashString } from '../utils/hash';
 
 interface CacheEntry<T> {

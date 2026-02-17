@@ -7,50 +7,53 @@
  * Also covers: SimulationHarness, SaveSystem, BalanceConfig.
  */
 
-import { describe, it, expect, beforeEach } from 'bun:test';
-
-// All LUDUS modules
-import { createRngState } from '../src/utils/SeededRandom.js';
-import { createCharacter, gainExperience, totalXPForLevel } from '../src/character/CharacterSystem.js';
-import { getSpell, getAllSpells, generateSpell } from '../src/spell/SpellFactory.js';
-import { createMonster, generateBugMonster, generateBoss } from '../src/combat/MonsterFactory.js';
-import { initBattle, executeTurn, getAvailableActions, replayBattle } from '../src/combat/TurnBasedEngine.js';
-import { calculateBasicAttack, calculateDamage } from '../src/combat/CombatMath.js';
-import { createStatusEffect, applyStatusEffect, tickStatusEffects, absorbDamage } from '../src/combat/StatusEffects.js';
-import { chooseEnemyAction } from '../src/combat/EnemyAI.js';
+import { beforeEach, describe, expect, it } from 'bun:test';
+import type { Character, Hotspot, ParsedCommit, ParsedFile, Quest } from '@dendrovia/shared';
+import { createCharacter } from '../src/character/CharacterSystem.js';
+import { createMonster } from '../src/combat/MonsterFactory.js';
+import { createStatusEffect } from '../src/combat/StatusEffects.js';
+import { executeTurn, getAvailableActions, initBattle, replayBattle } from '../src/combat/TurnBasedEngine.js';
+import { createBalanceConfig, DEFAULT_BALANCE_CONFIG, EASY_CONFIG, HARD_CONFIG } from '../src/config/BalanceConfig.js';
 import {
-  generateQuestGraph, generateBugHuntQuests, generateArchaeologyQuests,
-  startQuest, completeQuest, getQuestRewards, resetQuestIds,
+  checkEncounter,
+  createEncounterState,
+  markBossDefeated,
+  scanAllEncounters,
+} from '../src/encounter/EncounterSystem.js';
+import { addItem, createInventory, useItem } from '../src/inventory/InventorySystem.js';
+import {
+  applyBattleRewards,
+  applyQuestRewards,
+  buildVictoryScreen,
+  createBattleStatistics,
+  resolveBattleRewards,
+  updateBattleStatistics,
+} from '../src/progression/ProgressionSystem.js';
+import {
+  completeQuest,
+  generateArchaeologyQuests,
+  generateQuestGraph,
+  getQuestRewards,
+  resetQuestIds,
+  startQuest,
 } from '../src/quest/QuestGenerator.js';
 import {
-  checkEncounter, createEncounterState, scanAllEncounters,
-  markBossDefeated,
-} from '../src/encounter/EncounterSystem.js';
-import {
-  getItem, createInventory, addItem, removeItem, hasItem, useItem,
-  resolveLoot, resolveLootToInventory,
-} from '../src/inventory/InventorySystem.js';
-import {
-  resolveBattleRewards, applyBattleRewards, applyQuestRewards,
-  updateBattleStatistics, createBattleStatistics, buildVictoryScreen,
-} from '../src/progression/ProgressionSystem.js';
-import { createGameStore } from '../src/state/GameStore.js';
-import {
-  createGameSession, wireGameEvents, startBattle, dispatchCombatAction,
-} from '../src/integration/EventWiring.js';
-import {
-  simulateBattle, simulateMatchup, runFullSimulation,
-  formatReport, formatCSV, DEFAULT_SIM_CONFIG,
-} from '../src/simulation/SimulationHarness.js';
-import {
-  serializeGameState, saveToJSON, loadFromJSON, validateSave,
-  createSaveSnapshot, SAVE_VERSION,
+  createSaveSnapshot,
+  loadFromJSON,
+  SAVE_VERSION,
+  serializeGameState,
+  validateSave,
 } from '../src/save/SaveSystem.js';
 import {
-  DEFAULT_BALANCE_CONFIG, createBalanceConfig, EASY_CONFIG, HARD_CONFIG,
-} from '../src/config/BalanceConfig.js';
-
-import type { ParsedCommit, ParsedFile, Hotspot, Character, Monster, Quest, RngState } from '@dendrovia/shared';
+  DEFAULT_SIM_CONFIG,
+  formatCSV,
+  formatReport,
+  runFullSimulation,
+  simulateBattle,
+  simulateMatchup,
+} from '../src/simulation/SimulationHarness.js';
+// All LUDUS modules
+import { createRngState } from '../src/utils/SeededRandom.js';
 
 // ─── Test Data Builders ─────────────────────────────────────
 
@@ -83,7 +86,7 @@ function makeFile(overrides: Partial<ParsedFile> = {}): ParsedFile {
   };
 }
 
-function makeHotspot(overrides: Partial<Hotspot> = {}): Hotspot {
+function _makeHotspot(overrides: Partial<Hotspot> = {}): Hotspot {
   return {
     path: 'src/parser.ts',
     churnRate: 15,
@@ -119,10 +122,7 @@ describe('SimulationHarness', () => {
   });
 
   it('should simulate a matchup with multiple trials', () => {
-    const result = simulateMatchup(
-      'dps', 5, 'null-pointer', 1, 0,
-      { ...DEFAULT_SIM_CONFIG, trials: 50 },
-    );
+    const result = simulateMatchup('dps', 5, 'null-pointer', 1, 0, { ...DEFAULT_SIM_CONFIG, trials: 50 });
     expect(result.trials).toBe(50);
     expect(result.victories + result.defeats + result.draws).toBe(50);
     expect(result.winRate).toBeGreaterThanOrEqual(0);
@@ -132,10 +132,7 @@ describe('SimulationHarness', () => {
 
   it('should flag too-easy matchups', () => {
     // Level 30 DPS vs severity 1 monster should be very easy
-    const result = simulateMatchup(
-      'dps', 30, 'off-by-one', 1, 0,
-      { ...DEFAULT_SIM_CONFIG, trials: 100 },
-    );
+    const result = simulateMatchup('dps', 30, 'off-by-one', 1, 0, { ...DEFAULT_SIM_CONFIG, trials: 100 });
     expect(result.winRate).toBeGreaterThan(0.7);
   });
 
@@ -180,9 +177,7 @@ describe('SaveSystem', () => {
     const battleStats = createBattleStatistics();
     const quests: Quest[] = [];
 
-    const data = serializeGameState(
-      character, inventory, quests, encounterState, battleStats,
-    );
+    const data = serializeGameState(character, inventory, quests, encounterState, battleStats);
 
     expect(data.version).toBe(SAVE_VERSION);
     expect(data.character.name).toBe('SaveHero');
@@ -194,15 +189,27 @@ describe('SaveSystem', () => {
     const inventory = addItem(createInventory(), 'item-debug-log', 5);
     const encounterState = markBossDefeated(createEncounterState(), 'src/boss.ts');
     const battleStats = createBattleStatistics();
-    const quests: Quest[] = [{
-      id: 'q1', title: 'Test', description: 'A test quest',
-      type: 'bug-hunt', status: 'completed', requirements: [],
-      rewards: [{ type: 'experience', value: 100 }],
-    }];
+    const quests: Quest[] = [
+      {
+        id: 'q1',
+        title: 'Test',
+        description: 'A test quest',
+        type: 'bug-hunt',
+        status: 'completed',
+        requirements: [],
+        rewards: [{ type: 'experience', value: 100 }],
+      },
+    ];
 
     const json = createSaveSnapshot(
-      character, inventory, quests, encounterState, battleStats,
-      ['knowledge-abc'], { tutorialDone: true }, 3600000,
+      character,
+      inventory,
+      quests,
+      encounterState,
+      battleStats,
+      ['knowledge-abc'],
+      { tutorialDone: true },
+      3600000,
     );
 
     const result = loadFromJSON(json);
@@ -220,9 +227,7 @@ describe('SaveSystem', () => {
   });
 
   it('should validate save files', () => {
-    const json = createSaveSnapshot(
-      character, createInventory(), [], createEncounterState(), createBattleStatistics(),
-    );
+    const json = createSaveSnapshot(character, createInventory(), [], createEncounterState(), createBattleStatistics());
     const valid = validateSave(json);
     expect(valid.valid).toBe(true);
     expect(valid.version).toBe(SAVE_VERSION);
@@ -319,7 +324,7 @@ describe('BalanceConfig', () => {
   it('should have easy preset', () => {
     expect(EASY_CONFIG.damage.defenseConstant).toBe(15);
     expect(EASY_CONFIG.combat.defendDefenseBonus).toBe(8);
-    expect(EASY_CONFIG.encounters.randomEncounterChance).toBe(0.10);
+    expect(EASY_CONFIG.encounters.randomEncounterChance).toBe(0.1);
   });
 
   it('should have hard preset', () => {
@@ -357,7 +362,14 @@ describe('Full Lifecycle E2E', () => {
     // 2. Generate quests from commits
     const commits = [
       makeCommit({ hash: 'aaa', message: 'fix: null pointer crash', isBugFix: true, insertions: 30, deletions: 10 }),
-      makeCommit({ hash: 'bbb', message: 'feat: add auth system', isBugFix: false, isFeature: true, insertions: 100, deletions: 20 }),
+      makeCommit({
+        hash: 'bbb',
+        message: 'feat: add auth system',
+        isBugFix: false,
+        isFeature: true,
+        insertions: 100,
+        deletions: 20,
+      }),
       makeCommit({ hash: 'ccc', message: 'fix: memory leak in cache', isBugFix: true, insertions: 50, deletions: 30 }),
     ];
     const quests = generateQuestGraph(commits);
@@ -404,7 +416,7 @@ describe('Full Lifecycle E2E', () => {
       const rewardResult = resolveBattleRewards(battle, rng);
       expect(rewardResult).not.toBeNull();
 
-      let inventory = createInventory();
+      const inventory = createInventory();
       const progression = applyBattleRewards(hero, inventory, rewardResult!.rewards);
       expect(progression.rewards.xp).toBeGreaterThan(0);
       expect(progression.log.length).toBeGreaterThan(0);
@@ -508,14 +520,16 @@ describe('Full Lifecycle E2E', () => {
     resetQuestIds();
     const commits: ParsedCommit[] = [];
     for (let i = 0; i < 60; i++) {
-      commits.push(makeCommit({
-        hash: `hash-${i.toString().padStart(3, '0')}`,
-        message: i % 3 === 0 ? `fix: bug ${i}` : `feat: feature ${i}`,
-        isBugFix: i % 3 === 0,
-        isFeature: i % 3 !== 0,
-        insertions: 10 + i * 2,
-        deletions: 5 + i,
-      }));
+      commits.push(
+        makeCommit({
+          hash: `hash-${i.toString().padStart(3, '0')}`,
+          message: i % 3 === 0 ? `fix: bug ${i}` : `feat: feature ${i}`,
+          isBugFix: i % 3 === 0,
+          isFeature: i % 3 !== 0,
+          insertions: 10 + i * 2,
+          deletions: 5 + i,
+        }),
+      );
     }
     const quests = generateQuestGraph(commits);
     expect(quests.length).toBe(60);
@@ -551,7 +565,7 @@ describe('Full Lifecycle E2E', () => {
     ];
     const archQuests = generateArchaeologyQuests(files, 15);
     expect(archQuests).toHaveLength(2);
-    expect(archQuests.every(q => q.type === 'archaeology')).toBe(true);
+    expect(archQuests.every((q) => q.type === 'archaeology')).toBe(true);
 
     // Rewards should scale with complexity
     const r1 = getQuestRewards(archQuests[0]);
@@ -566,14 +580,12 @@ describe('Full Lifecycle E2E', () => {
       makeFile({ path: 'src/parser.ts', complexity: 5 }),
       makeFile({ path: 'src/util.ts', complexity: 3 }),
     ];
-    const commits = [
-      makeCommit({ hash: 'fix1', filesChanged: ['src/parser.ts'], isBugFix: true }),
-    ];
+    const commits = [makeCommit({ hash: 'fix1', filesChanged: ['src/parser.ts'], isBugFix: true })];
     const hotspots: Hotspot[] = [];
 
     const { encounters } = scanAllEncounters(files, commits, hotspots, rng);
     expect(encounters.length).toBeGreaterThanOrEqual(1);
-    expect(encounters.some(e => e.encounter.type === 'boss')).toBe(true);
+    expect(encounters.some((e) => e.encounter.type === 'boss')).toBe(true);
   });
 });
 
@@ -583,48 +595,27 @@ describe('Full Lifecycle E2E', () => {
 
 describe('Balance Sanity Check', () => {
   it('should have DPS winning most fights vs severity-1 monsters', () => {
-    const result = simulateMatchup(
-      'dps', 5, 'null-pointer', 1, 0,
-      { ...DEFAULT_SIM_CONFIG, trials: 100 },
-    );
+    const result = simulateMatchup('dps', 5, 'null-pointer', 1, 0, { ...DEFAULT_SIM_CONFIG, trials: 100 });
     expect(result.winRate).toBeGreaterThan(0.5);
   });
 
   it('should have tank surviving longer than DPS', () => {
-    const tankResult = simulateMatchup(
-      'tank', 5, 'null-pointer', 3, 0,
-      { ...DEFAULT_SIM_CONFIG, trials: 50 },
-    );
-    const dpsResult = simulateMatchup(
-      'dps', 5, 'null-pointer', 3, 0,
-      { ...DEFAULT_SIM_CONFIG, trials: 50 },
-    );
+    const tankResult = simulateMatchup('tank', 5, 'null-pointer', 3, 0, { ...DEFAULT_SIM_CONFIG, trials: 50 });
+    const dpsResult = simulateMatchup('dps', 5, 'null-pointer', 3, 0, { ...DEFAULT_SIM_CONFIG, trials: 50 });
     // Tank should have longer average battles
     expect(tankResult.avgTurns).toBeGreaterThan(dpsResult.avgTurns);
   });
 
   it('should have severity-5 monsters be harder than severity-1', () => {
-    const easy = simulateMatchup(
-      'dps', 5, 'null-pointer', 1, 0,
-      { ...DEFAULT_SIM_CONFIG, trials: 50 },
-    );
-    const hard = simulateMatchup(
-      'dps', 5, 'memory-leak', 5, 8,
-      { ...DEFAULT_SIM_CONFIG, trials: 50 },
-    );
+    const easy = simulateMatchup('dps', 5, 'null-pointer', 1, 0, { ...DEFAULT_SIM_CONFIG, trials: 50 });
+    const hard = simulateMatchup('dps', 5, 'memory-leak', 5, 8, { ...DEFAULT_SIM_CONFIG, trials: 50 });
     // Higher severity + complexity should result in harder fights (more turns or lower win rate)
     expect(hard.avgTurns).toBeGreaterThan(easy.avgTurns);
   });
 
   it('should have higher level players winning more', () => {
-    const low = simulateMatchup(
-      'healer', 1, 'race-condition', 4, 5,
-      { ...DEFAULT_SIM_CONFIG, trials: 50 },
-    );
-    const high = simulateMatchup(
-      'healer', 20, 'race-condition', 4, 5,
-      { ...DEFAULT_SIM_CONFIG, trials: 50 },
-    );
+    const low = simulateMatchup('healer', 1, 'race-condition', 4, 5, { ...DEFAULT_SIM_CONFIG, trials: 50 });
+    const high = simulateMatchup('healer', 20, 'race-condition', 4, 5, { ...DEFAULT_SIM_CONFIG, trials: 50 });
     // Higher level should have equal or better win rate
     expect(high.winRate).toBeGreaterThanOrEqual(low.winRate);
     // Higher level should win more often (or at least not fewer) battles

@@ -10,8 +10,8 @@
  * GameStore for state access.
  */
 
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import { useGameStore, getGameSaveSnapshot } from './GameStore';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { getGameSaveSnapshot, useGameStore } from './GameStore';
 
 export interface AutoSaveConfig {
   /** Interval in ms between auto-saves (default: 30000 = 30s) */
@@ -114,10 +114,12 @@ export class AutoSave {
 
       // Emit SAVE_COMPLETED (fire-and-forget)
       const eventBus = getEventBus();
-      eventBus.emit(GameEvents.SAVE_COMPLETED, {
-        trigger,
-        timestamp: Date.now(),
-      }).catch(() => {});
+      eventBus
+        .emit(GameEvents.SAVE_COMPLETED, {
+          trigger,
+          timestamp: Date.now(),
+        })
+        .catch(() => {});
     } catch (err) {
       console.warn(`[OPERATUS] Auto-save (${trigger}) failed:`, err);
     }
@@ -197,10 +199,7 @@ export class AutoSave {
     // so localStorage is the last resort.
     try {
       const snapshot = getGameSaveSnapshot();
-      localStorage.setItem(
-        this.config.emergencyKey,
-        JSON.stringify(snapshot),
-      );
+      localStorage.setItem(this.config.emergencyKey, JSON.stringify(snapshot));
     } catch {
       // localStorage full or unavailable — nothing we can do
     }

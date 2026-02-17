@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <filter id="organic" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="1" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  </defs>
+  <g>
+    <path d="M 97.4,79.87791606767345 Q 96.4,124.93895803383673 96.88,170 L 103.12,170 Q 103.6,124.93895803383673 102.6,79.87791606767345 Z" fill="#979bc4" filter="url(#organic)"/>
+    <path d="M 79.6,79.87791606767345 L 76.702,99.19791606767345 M 93.19999999999999,79.87791606767345 L 92.234,99.19791606767345 M 106.8,79.87791606767345 L 107.76599999999999,99.19791606767345 M 120.4,79.87791606767345 L 123.298,99.19791606767345" stroke="#979bc4" stroke-width="0.8" fill="none" opacity="0.7"/>
+    <path d="M 74.5,79.87791606767345 Q 74.5,60.55791606767345 92.35,50.89791606767346 L 100,31.577916067673456 L 107.65,50.89791606767346 Q 125.5,60.55791606767345 125.5,79.87791606767345" fill="#3275b4" filter="url(#organic)"/>
+    <circle cx="87.3" cy="46.1" r="3" fill="white" opacity="0.85"/>
+    <circle cx="107.7" cy="41.2" r="2.5" fill="white" opacity="0.85"/>
+    <circle cx="97.5" cy="38.8" r="2" fill="white" opacity="0.85"/>
+    <circle cx="115.3" cy="50.9" r="2" fill="white" opacity="0.85"/>
+    <circle cx="84.7" cy="55.7" r="1.5" fill="white" opacity="0.85"/>
+    <circle cx="102.5" cy="55.7" r="2.5" fill="white" opacity="0.85"/>
+  </g>
+</svg>

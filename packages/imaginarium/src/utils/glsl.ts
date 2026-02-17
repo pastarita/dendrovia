@@ -4,7 +4,7 @@
 
 export function glslFloat(n: number): string {
   const s = n.toString();
-  return s.includes('.') ? s : s + '.0';
+  return s.includes('.') ? s : `${s}.0`;
 }
 
 export function glslVec3(r: number, g: number, b: number): string {
@@ -16,23 +16,14 @@ export function glslVec3FromHex(hex: string): string {
   const r = parseInt(h.substring(0, 2), 16) / 255;
   const g = parseInt(h.substring(2, 4), 16) / 255;
   const b = parseInt(h.substring(4, 6), 16) / 255;
-  return glslVec3(
-    Math.round(r * 1000) / 1000,
-    Math.round(g * 1000) / 1000,
-    Math.round(b * 1000) / 1000,
-  );
+  return glslVec3(Math.round(r * 1000) / 1000, Math.round(g * 1000) / 1000, Math.round(b * 1000) / 1000);
 }
 
 export function glslUniform(name: string, type: string): string {
   return `uniform ${type} ${name};`;
 }
 
-export function glslFunction(
-  name: string,
-  returnType: string,
-  params: string,
-  body: string,
-): string {
+export function glslFunction(name: string, returnType: string, params: string, body: string): string {
   return `${returnType} ${name}(${params}) {\n${body}\n}`;
 }
 
@@ -88,7 +79,7 @@ export function validateGLSL(source: string): GLSLValidationResult {
       line.endsWith('{') ||
       line.endsWith('}') ||
       /^\s*(if|else|for|while)\s*/.test(line) ||
-      /^(uniform|varying|attribute|in|out|flat)\s/.test(line) && line.endsWith(';')
+      (/^(uniform|varying|attribute|in|out|flat)\s/.test(line) && line.endsWith(';'))
     ) {
       continue;
     }

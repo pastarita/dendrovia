@@ -5,11 +5,11 @@
  * and pre-populated store data for playground demos.
  */
 
-import { useMemo, useEffect, type ReactNode } from 'react';
-import { EventBus } from '@dendrovia/shared';
-import { OculusProvider, useOculusStore } from '@dendrovia/oculus';
 import type { OculusConfig } from '@dendrovia/oculus';
-import { MOCK_QUESTS, MOCK_TOPOLOGY, MOCK_HOTSPOTS } from './mock-data';
+import { OculusProvider, useOculusStore } from '@dendrovia/oculus';
+import { EventBus } from '@dendrovia/shared';
+import { type ReactNode, useEffect, useMemo } from 'react';
+import { MOCK_HOTSPOTS, MOCK_QUESTS, MOCK_TOPOLOGY } from './mock-data';
 
 export interface PlaygroundProviderProps {
   children: ReactNode;
@@ -18,11 +18,7 @@ export interface PlaygroundProviderProps {
   seedData?: boolean;
 }
 
-export function PlaygroundProvider({
-  children,
-  config,
-  seedData = true,
-}: PlaygroundProviderProps) {
+export function PlaygroundProvider({ children, config, seedData = true }: PlaygroundProviderProps) {
   const eventBus = useMemo(() => new EventBus(true), []);
 
   useEffect(() => {

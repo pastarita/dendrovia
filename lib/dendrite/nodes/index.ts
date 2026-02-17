@@ -2,9 +2,9 @@
  * Node type registration map for ReactFlow.
  */
 
-import { PipelineRootNode } from "./PipelineRootNode";
-import { PhaseNode } from "./PhaseNode";
-import { SectionNode } from "./SectionNode";
+import { PhaseNode } from './PhaseNode';
+import { PipelineRootNode } from './PipelineRootNode';
+import { SectionNode } from './SectionNode';
 
 export const dendritenodeTypes = {
   pipelineRoot: PipelineRootNode,

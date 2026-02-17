@@ -6,7 +6,7 @@
  * Accessible: aria-label with species name, role="img".
  */
 
-import React from 'react';
+import type React from 'react';
 import type { FungalSpecimen } from '../types';
 import { generateSvg } from './SvgTemplates';
 
@@ -23,12 +23,7 @@ const SIZE_MAP = {
   detail: 512,
 } as const;
 
-export function MushroomSprite({
-  specimen,
-  size = 'card',
-  glow,
-  onClick,
-}: MushroomSpriteProps): React.JSX.Element {
+export function MushroomSprite({ specimen, size = 'card', glow, onClick }: MushroomSpriteProps): React.JSX.Element {
   const px = SIZE_MAP[size];
   const svgString = generateSvg(specimen);
   const speciesName = `${specimen.taxonomy.genus} ${specimen.taxonomy.species}`;
@@ -59,10 +54,7 @@ export function MushroomSprite({
         style={containerStyle}
         onClick={onClick}
         dangerouslySetInnerHTML={{
-          __html: svgString.replace(
-            `width="200" height="200"`,
-            `width="${px}" height="${px}"`,
-          ),
+          __html: svgString.replace(`width="200" height="200"`, `width="${px}" height="${px}"`),
         }}
       />
     </>

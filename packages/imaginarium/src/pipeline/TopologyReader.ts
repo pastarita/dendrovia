@@ -3,7 +3,7 @@
  * Falls back to MockTopology when the file is missing.
  */
 
-import { existsSync } from 'fs';
+import { existsSync } from 'node:fs';
 import type { CodeTopology } from '@dendrovia/shared';
 import { generateMockTopology } from './MockTopology';
 

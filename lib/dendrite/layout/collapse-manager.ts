@@ -4,15 +4,12 @@
  * Collapsed nodes hide their children from the layout.
  */
 
-import type { SourceDiagram, SourceNode } from "../types";
+import type { SourceDiagram, SourceNode } from '../types';
 
 /**
  * Returns the set of node IDs that are descendants of any collapsed node.
  */
-export function getHiddenNodeIds(
-  diagram: SourceDiagram,
-  collapsed: Set<string>
-): Set<string> {
+export function getHiddenNodeIds(diagram: SourceDiagram, collapsed: Set<string>): Set<string> {
   const hidden = new Set<string>();
   const nodeMap = new Map(diagram.nodes.map((n) => [n.id, n]));
 
@@ -36,10 +33,7 @@ export function getHiddenNodeIds(
 /**
  * Returns the visible nodes after applying collapse state.
  */
-export function getVisibleNodes(
-  diagram: SourceDiagram,
-  collapsed: Set<string>
-): SourceNode[] {
+export function getVisibleNodes(diagram: SourceDiagram, collapsed: Set<string>): SourceNode[] {
   const hidden = getHiddenNodeIds(diagram, collapsed);
   return diagram.nodes.filter((n) => !hidden.has(n.id));
 }
@@ -48,9 +42,7 @@ export function getVisibleNodes(
  * Returns all collapsible node IDs (nodes that have children).
  */
 export function getCollapsibleIds(diagram: SourceDiagram): string[] {
-  return diagram.nodes
-    .filter((n) => n.children && n.children.length > 0)
-    .map((n) => n.id);
+  return diagram.nodes.filter((n) => n.children && n.children.length > 0).map((n) => n.id);
 }
 
 /**

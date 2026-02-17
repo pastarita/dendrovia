@@ -3,14 +3,14 @@
  * Eventually driven by repository "mood" (commit frequency, bug density, etc.)
  */
 
-import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Mesh, BackSide, Color } from 'three';
+import { useRef } from 'react';
+import { BackSide, Color, type Mesh } from 'three';
 
 export function Skybox() {
   const meshRef = useRef<Mesh>(null);
 
-  useFrame((state) => {
+  useFrame((_state) => {
     // Subtle rotation for dynamic feel
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.0001;
@@ -20,11 +20,7 @@ export function Skybox() {
   return (
     <mesh ref={meshRef} scale={[1000, 1000, 1000]}>
       <sphereGeometry args={[1, 32, 32]} />
-      <meshBasicMaterial
-        color={new Color(0.1, 0.15, 0.25)}
-        side={BackSide}
-        fog={false}
-      />
+      <meshBasicMaterial color={new Color(0.1, 0.15, 0.25)} side={BackSide} fog={false} />
     </mesh>
   );
 }

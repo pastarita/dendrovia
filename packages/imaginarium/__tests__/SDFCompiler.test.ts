@@ -1,8 +1,8 @@
-import { describe, test, expect } from 'bun:test';
-import { compile } from '../src/distillation/SDFCompiler';
+import { describe, expect, test } from 'bun:test';
+import { extractPalette } from '../src/distillation/ColorExtractor';
 import { compile as compileLSystem } from '../src/distillation/LSystemCompiler';
 import { generate as generateNoise } from '../src/distillation/NoiseGenerator';
-import { extractPalette } from '../src/distillation/ColorExtractor';
+import { compile } from '../src/distillation/SDFCompiler';
 import { generateMockTopology } from '../src/pipeline/MockTopology';
 
 describe('SDFCompiler', () => {

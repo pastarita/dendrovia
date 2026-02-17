@@ -1,7 +1,7 @@
 'use client';
 
+import { IconBadge, OrnateFrame, ProgressBar, StatLabel } from '@dendrovia/oculus';
 import type { Monster } from '@dendrovia/shared';
-import { OrnateFrame, ProgressBar, StatLabel, IconBadge } from '@dendrovia/oculus';
 
 interface EnemyCardProps {
   enemy: Monster;
@@ -57,7 +57,14 @@ export default function EnemyCard({ enemy }: EnemyCardProps): React.JSX.Element 
       </div>
 
       {enemy.statusEffects.length > 0 && (
-        <div style={{ marginTop: 'var(--oculus-space-sm)', display: 'flex', gap: 'var(--oculus-space-xs)', flexWrap: 'wrap' }}>
+        <div
+          style={{
+            marginTop: 'var(--oculus-space-sm)',
+            display: 'flex',
+            gap: 'var(--oculus-space-xs)',
+            flexWrap: 'wrap',
+          }}
+        >
           {enemy.statusEffects.map((fx, i) => (
             <IconBadge key={i} icon={'\u2726'} label={`${fx.name} (${fx.remainingTurns}t)`} color="#EF4444" size="sm" />
           ))}

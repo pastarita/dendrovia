@@ -9,64 +9,56 @@ export const PIPELINE_STAGES = [
     icon: '\u{1F4D6}',
     input: 'topology.json',
     output: 'CodeTopology',
-    description:
-      'Reads CHRONOS output \u2014 file tree, commits, hotspots, language distribution',
+    description: 'Reads CHRONOS output \u2014 file tree, commits, hotspots, language distribution',
   },
   {
     name: 'ColorExtractor',
     icon: '\u{1F3A8}',
     input: 'CodeTopology',
     output: 'ProceduralPalette',
-    description:
-      'Derives OKLCH palettes from language distribution and complexity metrics',
+    description: 'Derives OKLCH palettes from language distribution and complexity metrics',
   },
   {
     name: 'LSystemCompiler',
     icon: '\u{1F33F}',
     input: 'CodeTopology',
     output: 'LSystemRule',
-    description:
-      'Produces branching rules from file tree depth, capped at 5 iterations',
+    description: 'Produces branching rules from file tree depth, capped at 5 iterations',
   },
   {
     name: 'SDFCompiler',
     icon: '\u{1F48E}',
     input: 'LSystemRule + Palette',
     output: 'SDFShader',
-    description:
-      'Generates SDF scene functions with smooth-union branch geometry',
+    description: 'Generates SDF scene functions with smooth-union branch geometry',
   },
   {
     name: 'NoiseGenerator',
     icon: '\u{1F30A}',
     input: 'CodeTopology',
     output: 'NoiseFunction',
-    description:
-      'Creates FBM/Simplex/Perlin/Worley configs from codebase entropy',
+    description: 'Creates FBM/Simplex/Perlin/Worley configs from codebase entropy',
   },
   {
     name: 'VariantGenerator',
     icon: '\u{1F500}',
     input: 'All distilled assets',
     output: '5 GLSL shaders',
-    description:
-      'Produces global, language, complexity, structural, and hotspot shader variants',
+    description: 'Produces global, language, complexity, structural, and hotspot shader variants',
   },
   {
     name: 'MycologyPipeline',
     icon: '\u{1F344}',
     input: 'CodeTopology',
     output: 'FungalSpecimen[]',
-    description:
-      'Catalogs forest-floor specimens \u2014 20 genera mapped to code properties',
+    description: 'Catalogs forest-floor specimens \u2014 20 genera mapped to code properties',
   },
   {
     name: 'ManifestGenerator',
     icon: '\u{1F4CB}',
     input: 'All generated assets',
     output: 'manifest.json',
-    description:
-      'Produces versioned asset manifest with SHA-256 checksums for OPERATUS',
+    description: 'Produces versioned asset manifest with SHA-256 checksums for OPERATUS',
   },
 ] as const;
 

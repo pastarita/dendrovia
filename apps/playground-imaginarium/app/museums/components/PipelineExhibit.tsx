@@ -70,9 +70,7 @@ export default function PipelineExhibit() {
             </div>
 
             {/* Description */}
-            <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.5 }}>
-              {stage.description}
-            </p>
+            <p style={{ margin: 0, fontSize: '0.85rem', opacity: 0.6, lineHeight: 1.5 }}>{stage.description}</p>
           </OrnateFrame>
         </div>
       ))}

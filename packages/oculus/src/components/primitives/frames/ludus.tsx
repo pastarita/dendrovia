@@ -2,8 +2,7 @@
  * LUDUS ornaments — D-pad corner marks, tactical grid dashes
  */
 
-import React from 'react';
-import type { CornerProps, EdgeProps, DefsProps, FrameOrnamentSet } from './types';
+import type { CornerProps, DefsProps, EdgeProps, FrameOrnamentSet } from './types';
 
 function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
   const [flipX, flipY] = mirror;
@@ -13,21 +12,12 @@ function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
   return (
     <g transform={`translate(${x},${y}) scale(${sx},${sy})`}>
       {/* D-pad crosshair corner */}
-      <line
-        x1={0} y1={0}
-        x2={size} y2={0}
-        stroke={palette.primary}
-        strokeWidth="1.5"
-      />
-      <line
-        x1={0} y1={0}
-        x2={0} y2={size}
-        stroke={palette.primary}
-        strokeWidth="1.5"
-      />
+      <line x1={0} y1={0} x2={size} y2={0} stroke={palette.primary} strokeWidth="1.5" />
+      <line x1={0} y1={0} x2={0} y2={size} stroke={palette.primary} strokeWidth="1.5" />
       {/* Center notch — skill tree node */}
       <rect
-        x={2} y={2}
+        x={2}
+        y={2}
         width={size * 0.25}
         height={size * 0.25}
         fill="none"
@@ -36,14 +26,7 @@ function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
         opacity="0.6"
       />
       {/* Tiny inner pip */}
-      <rect
-        x={size * 0.1}
-        y={size * 0.1}
-        width={3}
-        height={3}
-        fill={palette.accent}
-        opacity="0.5"
-      />
+      <rect x={size * 0.1} y={size * 0.1} width={3} height={3} fill={palette.accent} opacity="0.5" />
     </g>
   );
 }
@@ -59,8 +42,10 @@ function EdgeH({ id, x, y, length, palette }: EdgeProps) {
         i % 2 === 0 ? (
           <line
             key={i}
-            x1={i * gap} y1={0}
-            x2={i * gap + gap * 0.6} y2={0}
+            x1={i * gap}
+            y1={0}
+            x2={i * gap + gap * 0.6}
+            y2={0}
             stroke={palette.primary}
             strokeWidth="1"
             opacity="0.25"
@@ -82,8 +67,10 @@ function EdgeV({ id, x, y, length, palette }: EdgeProps) {
         i % 2 === 0 ? (
           <line
             key={i}
-            x1={0} y1={i * gap}
-            x2={0} y2={i * gap + gap * 0.6}
+            x1={0}
+            y1={i * gap}
+            x2={0}
+            y2={i * gap + gap * 0.6}
             stroke={palette.primary}
             strokeWidth="1"
             opacity="0.25"

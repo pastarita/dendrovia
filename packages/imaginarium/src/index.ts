@@ -5,109 +5,168 @@
  * Exports all public modules for consumption by other pillars.
  */
 
-// --- Distillation ---
-export { extractPalette, extractFilePalette } from './distillation/ColorExtractor';
-export { compile as compileSDF, type SDFCompileConfig } from './distillation/SDFCompiler';
-export { compile as compileLSystem, expandLSystem } from './distillation/LSystemCompiler';
-export { generate as generateNoise } from './distillation/NoiseGenerator';
-export { interpret as interpretTurtle, type TurtleSegment } from './distillation/TurtleInterpreter';
-
-// --- Generation ---
-export { generate as generateArt, type ArtGenResult, type ArtGenOptions, type ArtProvider } from './generation/ArtGen';
-export { buildPrompt } from './generation/PromptBuilder';
-
-// --- Shader Assembly ---
-export { assembleShader, buildColorParameters, type AssemblerConfig, type AssembledShader } from './shaders/ShaderAssembler';
-
 // --- Cache ---
 export { DeterministicCache } from './cache/DeterministicCache';
-
+// --- Distillation ---
+export { extractFilePalette, extractPalette } from './distillation/ColorExtractor';
+export { compile as compileLSystem, expandLSystem } from './distillation/LSystemCompiler';
+export { generate as generateNoise } from './distillation/NoiseGenerator';
+export { compile as compileSDF, type SDFCompileConfig } from './distillation/SDFCompiler';
+export { interpret as interpretTurtle, type TurtleSegment } from './distillation/TurtleInterpreter';
 // --- Fallbacks ---
 export { DEFAULT_PALETTES, getDefaultPalette, getLanguageHue, LANGUAGE_HUES } from './fallback/DefaultPalettes';
 export { DEFAULT_SDFS, getDefaultSDF, type SDFTier } from './fallback/DefaultSDFs';
-
-// --- Pipeline ---
-export { distill } from './pipeline/DistillationPipeline';
-export { generateVariants } from './pipeline/VariantGenerator';
-export { generateManifest, type ManifestInput } from './pipeline/ManifestGenerator';
-export { readTopology } from './pipeline/TopologyReader';
-export { generateMockTopology } from './pipeline/MockTopology';
-export { distillSegments } from './pipeline/SegmentPipeline';
-
-// --- Story Arc ---
+// --- Generation ---
+export { type ArtGenOptions, type ArtGenResult, type ArtProvider, generate as generateArt } from './generation/ArtGen';
+export { buildPrompt } from './generation/PromptBuilder';
+export type {
+  AsyncMeshOp,
+  FlatMeshData,
+  HalfEdgeMesh,
+  HEFace,
+  HEHalfEdge,
+  HEVertex,
+  MeshGenerationResult,
+  MeshGenerationStats,
+  MeshOp,
+  PipelineStep,
+  SerializeOptions,
+} from './mesh/index';
+// --- Mesh Pipeline ---
 export {
-  deriveStoryArc,
-  sliceSegments, type RawSegment,
-  mapMood,
-  assignPhases, computeTension, type PhaseAssignment,
-} from './storyarc/index';
-
-// --- Utilities ---
-export {
-  rgbToOklch, oklchToRgb, oklchToHex, hexToRgb, rgbToHex, hexToOklch,
-  harmonize, colorTemperature, blendColors, hslToHex,
-  type OklchColor, type RgbColor, type HarmonyScheme,
-} from './utils/color';
-export { hashString, hashObject, hashFiles } from './utils/hash';
-export {
-  glslFloat, glslVec3, glslVec3FromHex, glslUniform, glslFunction,
-  validateGLSL, countInstructions, type GLSLValidationResult,
-} from './utils/glsl';
-
+  applyPipelineToCylinder,
+  applyPipelineToProfile,
+  buildFromCylinder,
+  // Data structure
+  buildFromIndexed,
+  buildFromProfile,
+  cylinderToHalfEdge,
+  DEFAULT_PIPELINE,
+  deserializeToFlat,
+  deserializeToHalfEdge,
+  deserializeWithFallback,
+  displaceByField,
+  displaceByFunction,
+  displaceByNoise,
+  displaceNormal,
+  faceVertices,
+  fallbackMeshFromCylinder,
+  fallbackMeshFromProfile,
+  // Mesh asset generation
+  generateMeshAssets,
+  // Genus pipelines
+  genusPipeline,
+  halfedgeFrom,
+  isBoundaryVertex,
+  laplacianSmoothOnce,
+  loopSubdivideOnce,
+  MeshPipeline,
+  meshStats,
+  // Pipeline
+  pipe,
+  pipeAsync,
+  // Adapters (bridge MeshGenerator ↔ HalfEdgeMesh)
+  profileToHalfEdge,
+  repeat,
+  STEM_PIPELINE,
+  // Serialization (OPERATUS-compatible)
+  serialize,
+  smooth,
+  specimenToHalfEdge,
+  // Operations
+  subdivide,
+  taubinSmooth,
+  toFlatArrays,
+  vertexFaces,
+  vertexNeighbors,
+  when,
+} from './mesh/index';
+export type {
+  FileContext,
+  FungalGenus,
+  FungalSpecimen,
+  FungalTaxonomy,
+  MushroomLore,
+  MushroomMeshData,
+  MushroomMorphology,
+  MushroomSpriteProps,
+  MycelialNetwork,
+  MycologyCatalogedEvent,
+  MycologyManifest,
+} from './mycology/index';
 // --- Mycology ---
 export {
-  // Pipeline
-  distillMycology,
+  buildCoChurnMap,
+  buildFileContext,
+  // Network
+  buildNetwork,
+  buildTaxonomy,
   // Catalog
   catalogize,
   // Classification
-  classifyGenus, buildTaxonomy, buildFileContext, buildCoChurnMap,
-  // Morphology
-  generateMorphology,
-  // Network
-  buildNetwork,
+  classifyGenus,
+  // Pipeline
+  distillMycology,
   // Lore
   generateLore,
-  // SVG
-  generateSvg, generateSvgBatch,
   // Mesh
   generateMeshData,
+  // Morphology
+  generateMorphology,
+  // SVG
+  generateSvg,
+  generateSvgBatch,
   // TSX
   MushroomSprite,
 } from './mycology/index';
-export type {
-  FungalSpecimen, FungalTaxonomy, FungalGenus,
-  MushroomMorphology, MushroomLore, MycelialNetwork,
-  MycologyManifest, MycologyCatalogedEvent,
-  MushroomMeshData, MushroomSpriteProps,
-  FileContext,
-} from './mycology/index';
-
-// --- Mesh Pipeline ---
+// --- Pipeline ---
+export { distill } from './pipeline/DistillationPipeline';
+export { generateManifest, type ManifestInput } from './pipeline/ManifestGenerator';
+export { generateMockTopology } from './pipeline/MockTopology';
+export { distillSegments } from './pipeline/SegmentPipeline';
+export { readTopology } from './pipeline/TopologyReader';
+export { generateVariants } from './pipeline/VariantGenerator';
+// --- Shader Assembly ---
 export {
-  // Data structure
-  buildFromIndexed, buildFromProfile, buildFromCylinder,
-  vertexNeighbors, vertexFaces, faceVertices, halfedgeFrom,
-  isBoundaryVertex, meshStats, toFlatArrays,
-  // Pipeline
-  pipe, pipeAsync, when, repeat, MeshPipeline,
-  // Operations
-  subdivide, loopSubdivideOnce,
-  smooth, taubinSmooth, laplacianSmoothOnce,
-  displaceNormal, displaceByFunction, displaceByField, displaceByNoise,
-  // Serialization (OPERATUS-compatible)
-  serialize, deserializeToHalfEdge, deserializeToFlat, deserializeWithFallback,
-  // Adapters (bridge MeshGenerator ↔ HalfEdgeMesh)
-  profileToHalfEdge, cylinderToHalfEdge, specimenToHalfEdge,
-  fallbackMeshFromProfile, fallbackMeshFromCylinder,
-  applyPipelineToProfile, applyPipelineToCylinder,
-  // Genus pipelines
-  genusPipeline, DEFAULT_PIPELINE, STEM_PIPELINE,
-  // Mesh asset generation
-  generateMeshAssets,
-} from './mesh/index';
-export type {
-  HEVertex, HEHalfEdge, HEFace, HalfEdgeMesh, FlatMeshData,
-  MeshOp, AsyncMeshOp, PipelineStep, SerializeOptions,
-  MeshGenerationResult, MeshGenerationStats,
-} from './mesh/index';
+  type AssembledShader,
+  type AssemblerConfig,
+  assembleShader,
+  buildColorParameters,
+} from './shaders/ShaderAssembler';
+// --- Story Arc ---
+export {
+  assignPhases,
+  computeTension,
+  deriveStoryArc,
+  mapMood,
+  type PhaseAssignment,
+  type RawSegment,
+  sliceSegments,
+} from './storyarc/index';
+// --- Utilities ---
+export {
+  blendColors,
+  colorTemperature,
+  type HarmonyScheme,
+  harmonize,
+  hexToOklch,
+  hexToRgb,
+  hslToHex,
+  type OklchColor,
+  oklchToHex,
+  oklchToRgb,
+  type RgbColor,
+  rgbToHex,
+  rgbToOklch,
+} from './utils/color';
+export {
+  countInstructions,
+  type GLSLValidationResult,
+  glslFloat,
+  glslFunction,
+  glslUniform,
+  glslVec3,
+  glslVec3FromHex,
+  validateGLSL,
+} from './utils/glsl';
+export { hashFiles, hashObject, hashString } from './utils/hash';

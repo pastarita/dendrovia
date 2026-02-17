@@ -1,4 +1,4 @@
-import { EffectComposer, Bloom, Vignette, ChromaticAberration } from '@react-three/postprocessing';
+import { Bloom, ChromaticAberration, EffectComposer, Vignette } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import { useRendererStore } from '../store/useRendererStore';
 
@@ -21,14 +21,7 @@ import { useRendererStore } from '../store/useRendererStore';
  */
 
 function BloomEffect() {
-  return (
-    <Bloom
-      intensity={1.5}
-      luminanceThreshold={1.0}
-      luminanceSmoothing={0.1}
-      mipmapBlur={true}
-    />
-  );
+  return <Bloom intensity={1.5} luminanceThreshold={1.0} luminanceSmoothing={0.1} mipmapBlur={true} />;
 }
 
 function WithBloom() {
@@ -41,11 +34,7 @@ function WithBloom() {
         radialModulation={true}
         modulationOffset={0.3}
       />
-      <Vignette
-        offset={0.3}
-        darkness={0.5}
-        blendFunction={BlendFunction.NORMAL}
-      />
+      <Vignette offset={0.3} darkness={0.5} blendFunction={BlendFunction.NORMAL} />
     </EffectComposer>
   );
 }
@@ -59,11 +48,7 @@ function WithoutBloom() {
         radialModulation={true}
         modulationOffset={0.3}
       />
-      <Vignette
-        offset={0.3}
-        darkness={0.5}
-        blendFunction={BlendFunction.NORMAL}
-      />
+      <Vignette offset={0.3} darkness={0.5} blendFunction={BlendFunction.NORMAL} />
     </EffectComposer>
   );
 }

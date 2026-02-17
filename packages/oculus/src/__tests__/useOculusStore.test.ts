@@ -2,9 +2,9 @@
  * Tests for the OCULUS Zustand store
  */
 
-import { describe, it, expect, beforeEach } from 'bun:test';
+import { beforeEach, describe, expect, it } from 'bun:test';
+import type { Bug, DeepWikiEnrichment, Quest, Spell } from '@dendrovia/shared';
 import { useOculusStore } from '../store/useOculusStore';
-import type { Quest, Bug, Spell, DeepWikiEnrichment } from '@dendrovia/shared';
 
 function resetStore() {
   useOculusStore.setState({

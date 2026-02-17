@@ -13,8 +13,7 @@
  * All fetched assets are cached locally so repeat loads are instant.
  */
 
-import { CacheManager } from '../cache/CacheManager';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
+import type { CacheManager } from '../cache/CacheManager';
 
 export interface CDNConfig {
   /** CDN base URL (no trailing slash) */
@@ -48,7 +47,6 @@ export class CDNLoader {
   private cache: CacheManager;
   private activeDownloads = 0;
   private queue: Array<() => Promise<void>> = [];
-  private onProgress: ProgressCallback | null = null;
 
   constructor(cache: CacheManager, config: Partial<CDNConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -147,9 +145,7 @@ export class CDNLoader {
   async prefetch(paths: string[]): Promise<void> {
     const tasks = paths.map((path) => () => this.loadBlob(path).then(() => {}));
 
-    await Promise.all(
-      tasks.map((task) => this.enqueue(task)),
-    );
+    await Promise.all(tasks.map((task) => this.enqueue(task)));
   }
 
   /**
@@ -171,10 +167,7 @@ export class CDNLoader {
     for (let attempt = 0; attempt <= this.config.retries; attempt++) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(
-          () => controller.abort(),
-          this.config.timeout,
-        );
+        const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
         const response = await fetch(url, {
           signal: controller.signal,
@@ -192,7 +185,7 @@ export class CDNLoader {
 
         if (attempt < this.config.retries) {
           // Exponential backoff: 1s, 2s, 4s...
-          const delay = 1000 * Math.pow(2, attempt);
+          const delay = 1000 * 2 ** attempt;
           await new Promise((r) => setTimeout(r, delay));
         }
       }

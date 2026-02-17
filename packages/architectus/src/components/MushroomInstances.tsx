@@ -1,8 +1,8 @@
-import { useRef, useMemo, useEffect } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-import type { FungalSpecimen, ProceduralPalette } from '@dendrovia/shared';
 import type { FlatMeshData } from '@dendrovia/imaginarium';
+import type { FungalSpecimen, ProceduralPalette } from '@dendrovia/shared';
+import { useFrame } from '@react-three/fiber';
+import { useEffect, useMemo, useRef } from 'react';
+import * as THREE from 'three';
 
 /**
  * MUSHROOM INSTANCES
@@ -39,10 +39,7 @@ const _color = new THREE.Color();
  * Group specimens by genus. Returns a map of genus -> specimen list,
  * but only for genera that have mesh data available.
  */
-function groupByGenus(
-  specimens: FungalSpecimen[],
-  meshData: Map<string, FlatMeshData>,
-): Map<string, FungalSpecimen[]> {
+function groupByGenus(specimens: FungalSpecimen[], meshData: Map<string, FlatMeshData>): Map<string, FungalSpecimen[]> {
   const groups = new Map<string, FungalSpecimen[]>();
 
   for (const specimen of specimens) {
@@ -70,14 +67,8 @@ function groupByGenus(
 function buildGeometry(flat: FlatMeshData): THREE.BufferGeometry {
   const geometry = new THREE.BufferGeometry();
 
-  geometry.setAttribute(
-    'position',
-    new THREE.BufferAttribute(flat.positions, 3),
-  );
-  geometry.setAttribute(
-    'normal',
-    new THREE.BufferAttribute(flat.normals, 3),
-  );
+  geometry.setAttribute('position', new THREE.BufferAttribute(flat.positions, 3));
+  geometry.setAttribute('normal', new THREE.BufferAttribute(flat.normals, 3));
   geometry.setIndex(new THREE.BufferAttribute(flat.indices, 1));
 
   geometry.computeBoundingSphere();
@@ -118,7 +109,6 @@ function bioluminescenceIntensity(bioluminescence: string): number {
       return 0.3;
     case 'dim':
       return 0.15;
-    case 'none':
     default:
       return 0.05;
   }
@@ -141,10 +131,7 @@ function GenusInstanceGroup({
 }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
 
-  const flat = useMemo(
-    () => resolveMeshData(genus, specimens, meshData),
-    [genus, specimens, meshData],
-  );
+  const flat = useMemo(() => resolveMeshData(genus, specimens, meshData), [genus, specimens, meshData]);
 
   const geometry = useMemo(() => {
     if (!flat) return null;
@@ -185,11 +172,7 @@ function GenusInstanceGroup({
       const placement = specimen.placement;
 
       // Position from placement
-      _position.set(
-        placement.position[0],
-        placement.position[1],
-        placement.position[2],
-      );
+      _position.set(placement.position[0], placement.position[1], placement.position[2]);
 
       // Rotation: Y-axis rotation from placement.rotation
       _euler.set(0, placement.rotation, 0);
@@ -215,39 +198,23 @@ function GenusInstanceGroup({
   // Subtle bioluminescent pulse
   useFrame((state) => {
     if (material) {
-      const pulse =
-        Math.sin(state.clock.elapsedTime * 0.8 + genus.length * 0.5) *
-          0.15 +
-        avgBioluminescence;
+      const pulse = Math.sin(state.clock.elapsedTime * 0.8 + genus.length * 0.5) * 0.15 + avgBioluminescence;
       material.emissiveIntensity = Math.max(0, pulse);
     }
   });
 
   if (!geometry || specimens.length === 0) return null;
 
-  return (
-    <instancedMesh
-      ref={meshRef}
-      args={[geometry, material, specimens.length]}
-      frustumCulled={true}
-    />
-  );
+  return <instancedMesh ref={meshRef} args={[geometry, material, specimens.length]} frustumCulled={true} />;
 }
 
 /**
  * Top-level mushroom renderer. Groups specimens by genus and renders
  * one GenusInstanceGroup per unique genus that has mesh data.
  */
-export function MushroomInstances({
-  specimens,
-  meshData,
-  palette,
-}: MushroomInstancesProps) {
+export function MushroomInstances({ specimens, meshData, palette }: MushroomInstancesProps) {
   // Group specimens by genus (only those with mesh data)
-  const genusGroups = useMemo(
-    () => groupByGenus(specimens, meshData),
-    [specimens, meshData],
-  );
+  const genusGroups = useMemo(() => groupByGenus(specimens, meshData), [specimens, meshData]);
 
   if (genusGroups.size === 0) return null;
 

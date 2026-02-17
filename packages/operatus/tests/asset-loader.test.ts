@@ -7,8 +7,8 @@
  */
 
 import './setup.js';
-import { describe, test, expect, beforeEach } from 'bun:test';
-import { AssetLoader, AssetPriority, type AssetDescriptor } from '../src/loader/AssetLoader.js';
+import { describe, expect, test } from 'bun:test';
+import { type AssetDescriptor, AssetLoader, AssetPriority } from '../src/loader/AssetLoader.js';
 
 describe('AssetLoader — construction', () => {
   test('creates with default basePath', () => {

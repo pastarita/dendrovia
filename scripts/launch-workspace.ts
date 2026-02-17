@@ -10,44 +10,44 @@
  *   bun run launch --dry-run    # Show what would happen
  */
 
-import { parseArgs } from "util";
-import { $ } from "bun";
-import { DENDROVIA_CONFIG } from "./workspace-launcher/pillar-registry";
-import { generateItermAppleScript } from "./workspace-launcher/iterm-launcher";
-import { launchGhosttyWorkspace } from "./workspace-launcher/ghostty-launcher";
-import type { LaunchOptions } from "./workspace-launcher/types";
+import { parseArgs } from 'node:util';
+import { $ } from 'bun';
+import { launchGhosttyWorkspace } from './workspace-launcher/ghostty-launcher';
+import { generateItermAppleScript } from './workspace-launcher/iterm-launcher';
+import { DENDROVIA_CONFIG } from './workspace-launcher/pillar-registry';
+import type { LaunchOptions } from './workspace-launcher/types';
 
 // Parse CLI arguments
 const { values, positionals } = parseArgs({
   args: process.argv.slice(2),
   options: {
     pillars: {
-      type: "string",
-      short: "p",
+      type: 'string',
+      short: 'p',
       multiple: true,
     },
     dev: {
-      type: "boolean",
-      short: "d",
+      type: 'boolean',
+      short: 'd',
       default: false,
     },
-    "dry-run": {
-      type: "boolean",
+    'dry-run': {
+      type: 'boolean',
       default: false,
     },
     help: {
-      type: "boolean",
-      short: "h",
+      type: 'boolean',
+      short: 'h',
       default: false,
     },
     list: {
-      type: "boolean",
-      short: "l",
+      type: 'boolean',
+      short: 'l',
       default: false,
     },
     ghostty: {
-      type: "boolean",
-      short: "g",
+      type: 'boolean',
+      short: 'g',
       default: false,
     },
   },
@@ -102,11 +102,9 @@ Each window has 3 panes:
 
 // List pillars
 if (values.list) {
-  console.log("\n🌳 Available Pillars:\n");
+  console.log('\n🌳 Available Pillars:\n');
   for (const pillar of DENDROVIA_CONFIG.pillars) {
-    console.log(
-      `  ${pillar.emoji} ${pillar.id.padEnd(12)} ${pillar.name.padEnd(20)} ${pillar.description}`
-    );
+    console.log(`  ${pillar.emoji} ${pillar.id.padEnd(12)} ${pillar.name.padEnd(20)} ${pillar.description}`);
     console.log(`     ${pillar.path}`);
     console.log();
   }
@@ -117,7 +115,7 @@ if (values.list) {
 const options: LaunchOptions = {
   pillars: values.pillars as string[] | undefined,
   withDevServers: values.dev as boolean,
-  dryRun: values["dry-run"] as boolean,
+  dryRun: values['dry-run'] as boolean,
 };
 
 const useGhostty = values.ghostty as boolean;
@@ -132,8 +130,8 @@ if (options.pillars) {
   const validIds = DENDROVIA_CONFIG.pillars.map((p) => p.id);
   const invalid = options.pillars.filter((id) => !validIds.includes(id.toUpperCase()));
   if (invalid.length > 0) {
-    console.error(`❌ Invalid pillar names: ${invalid.join(", ")}`);
-    console.error(`   Valid pillars: ${validIds.join(", ")}`);
+    console.error(`❌ Invalid pillar names: ${invalid.join(', ')}`);
+    console.error(`   Valid pillars: ${validIds.join(', ')}`);
     process.exit(1);
   }
   // Normalize to uppercase
@@ -150,34 +148,32 @@ if (useGhostty) {
 
   // Dry run - just show the script
   if (options.dryRun) {
-    console.log("🌳 Dendrovia Workspace Launcher (DRY RUN)\n");
-    console.log("Generated AppleScript:\n");
-    console.log("─".repeat(80));
+    console.log('🌳 Dendrovia Workspace Launcher (DRY RUN)\n');
+    console.log('Generated AppleScript:\n');
+    console.log('─'.repeat(80));
     console.log(script);
-    console.log("─".repeat(80));
+    console.log('─'.repeat(80));
     process.exit(0);
   }
 
   // Execute the AppleScript
-  console.log("🌳 Launching Dendrovia workspaces...\n");
+  console.log('🌳 Launching Dendrovia workspaces...\n');
 
   const pillars = options.pillars
     ? DENDROVIA_CONFIG.pillars.filter((p) => options.pillars?.includes(p.id))
     : DENDROVIA_CONFIG.pillars;
 
   for (const pillar of pillars) {
-    console.log(
-      `  ${pillar.emoji} ${pillar.id} - ${pillar.name}`
-    );
+    console.log(`  ${pillar.emoji} ${pillar.id} - ${pillar.name}`);
   }
 
   console.log();
 
   try {
     await $`osascript -e ${script}`;
-    console.log("\n✅ Workspace launched successfully!");
+    console.log('\n✅ Workspace launched successfully!');
   } catch (error) {
-    console.error("\n❌ Failed to launch workspace:");
+    console.error('\n❌ Failed to launch workspace:');
     console.error(error);
     process.exit(1);
   }

@@ -5,7 +5,7 @@
  * from StatePersistence — the parts that don't require IndexedDB.
  */
 
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { registerMigration, SAVE_VERSION } from '../src/persistence/StatePersistence.js';
 
 describe('StatePersistence', () => {

@@ -14,13 +14,8 @@
  * Emits GameEvents.ASSETS_LOADED when critical assets are ready.
  */
 
-import type {
-  AssetManifest,
-  ProceduralPalette,
-  CodeTopology,
-  SerializedMeshData,
-} from '@dendrovia/shared';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
+import type { AssetManifest, CodeTopology, ProceduralPalette, SerializedMeshData } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
 import { CacheManager } from '../cache/CacheManager';
 
 export enum AssetPriority {
@@ -126,7 +121,7 @@ export class AssetLoader {
     }
 
     // Shaders — critical tier
-    for (const [id, filePath] of Object.entries(this.manifest.shaders ?? {})) {
+    for (const [_id, filePath] of Object.entries(this.manifest.shaders ?? {})) {
       descriptors.push({
         path: filePath,
         priority: AssetPriority.CRITICAL,
@@ -135,7 +130,7 @@ export class AssetLoader {
     }
 
     // Palettes — visible tier
-    for (const [id, filePath] of Object.entries(this.manifest.palettes ?? {})) {
+    for (const [_id, filePath] of Object.entries(this.manifest.palettes ?? {})) {
       descriptors.push({
         path: filePath,
         priority: AssetPriority.VISIBLE,
@@ -144,7 +139,7 @@ export class AssetLoader {
     }
 
     // Meshes — visible tier
-    for (const [id, entry] of Object.entries(this.manifest.meshes ?? {})) {
+    for (const [_id, entry] of Object.entries(this.manifest.meshes ?? {})) {
       descriptors.push({
         path: entry.path,
         hash: entry.hash,
@@ -278,11 +273,7 @@ export class AssetLoader {
   /**
    * Load assets during idle time using requestIdleCallback.
    */
-  private loadInBackground(
-    assets: AssetDescriptor[],
-    total: number,
-    startOffset: number,
-  ): void {
+  private loadInBackground(assets: AssetDescriptor[], total: number, startOffset: number): void {
     let idx = 0;
 
     const loadNext = () => {
@@ -395,18 +386,18 @@ export class AssetLoader {
     if (!this.manifest) return 0;
 
     const descriptors = this.getAssetDescriptors();
-    const validPaths = new Set(descriptors.map(d => d.path));
+    const _validPaths = new Set(descriptors.map((d) => d.path));
 
     // Find all cached paths that aren't in the current manifest
     // We'll use IDB list as the source of truth
-    const cachedPaths = await this.cache.stats();
+    const _cachedPaths = await this.cache.stats();
     let purged = 0;
 
     // Check each descriptor for hash mismatch
     for (const desc of descriptors) {
       if (desc.hash) {
         const valid = await this.cache.isValid(desc.path, desc.hash);
-        if (!valid && await this.cache.has(desc.path)) {
+        if (!valid && (await this.cache.has(desc.path))) {
           await this.cache.delete(desc.path);
           purged++;
         }

@@ -11,19 +11,15 @@
  *   output-dir: ./generated
  */
 
-import { join, resolve } from 'path';
+import { join, resolve } from 'node:path';
 import { distill } from './pipeline/DistillationPipeline';
 
 const args = process.argv.slice(2);
 const packageDir = resolve(import.meta.dir, '..');
 
-const topologyPath = args[0]
-  ? resolve(args[0]!)
-  : join(packageDir, '..', 'chronos', 'generated', 'topology.json');
+const topologyPath = args[0] ? resolve(args[0]!) : join(packageDir, '..', 'chronos', 'generated', 'topology.json');
 
-const outputDir = args[1]
-  ? resolve(args[1]!)
-  : join(packageDir, 'generated');
+const outputDir = args[1] ? resolve(args[1]!) : join(packageDir, 'generated');
 
 console.log('========================================');
 console.log(' IMAGINARIUM - The Compiler');

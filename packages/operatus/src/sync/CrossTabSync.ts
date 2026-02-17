@@ -57,9 +57,8 @@ export class CrossTabSync {
 
   constructor(config: Partial<CrossTabConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
-    this.tabId = typeof crypto !== 'undefined' && crypto.randomUUID
-      ? crypto.randomUUID()
-      : Math.random().toString(36).slice(2);
+    this.tabId =
+      typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
   }
 
   /**
@@ -95,7 +94,7 @@ export class CrossTabSync {
     }
 
     // Subscribe to store changes and broadcast to other tabs
-    this.unsubscribe = useGameStore.subscribe((state, prevState) => {
+    this.unsubscribe = useGameStore.subscribe((state, _prevState) => {
       if (this.role !== 'follower') {
         this.debouncedBroadcast(state);
       }
@@ -160,10 +159,8 @@ export class CrossTabSync {
    * the next waiting tab acquires it.
    */
   private electLeader(): void {
-    navigator.locks.request(
-      this.config.lockName,
-      { mode: 'exclusive' },
-      () => {
+    navigator.locks
+      .request(this.config.lockName, { mode: 'exclusive' }, () => {
         // We acquired the lock — this tab is the leader
         this.setRole('leader');
 
@@ -176,11 +173,11 @@ export class CrossTabSync {
 
         // Hold the lock indefinitely (never resolve the promise)
         return new Promise<void>(() => {});
-      },
-    ).catch(() => {
-      // Could not acquire lock — we're a follower
-      // (This only happens if the API throws, not if we're waiting)
-    });
+      })
+      .catch(() => {
+        // Could not acquire lock — we're a follower
+        // (This only happens if the API throws, not if we're waiting)
+      });
 
     // While waiting for the lock, we're a follower
     this.setRole('follower');
@@ -231,7 +228,16 @@ export class CrossTabSync {
   private debouncedBroadcast(state: any): void {
     // Serialize Set<string> for transport
     const serialized: any = {};
-    const persistKeys = ['character', 'quests', 'visitedNodes', 'unlockedKnowledge', 'worldPosition', 'inventory', 'gameFlags', 'playtimeMs'];
+    const persistKeys = [
+      'character',
+      'quests',
+      'visitedNodes',
+      'unlockedKnowledge',
+      'worldPosition',
+      'inventory',
+      'gameFlags',
+      'playtimeMs',
+    ];
 
     for (const key of persistKeys) {
       const val = state[key];

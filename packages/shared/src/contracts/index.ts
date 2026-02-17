@@ -11,151 +11,151 @@
  * Contains the complete parsed codebase structure.
  */
 export const TopologySchema = {
-  $schema: "http://json-schema.org/draft-07/schema#",
-  type: "object",
-  required: ["version", "files", "commits", "tree"],
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  required: ['version', 'files', 'commits', 'tree'],
   properties: {
-    version: { type: "string" },
-    analyzedAt: { type: "string", format: "date-time" },
+    version: { type: 'string' },
+    analyzedAt: { type: 'string', format: 'date-time' },
     files: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
-        required: ["path", "hash", "language"],
+        type: 'object',
+        required: ['path', 'hash', 'language'],
         properties: {
-          path: { type: "string" },
-          hash: { type: "string" },
-          language: { type: "string" },
-          complexity: { type: "number" },
-          loc: { type: "number" },
-          lastModified: { type: "string", format: "date-time" },
-          author: { type: "string" }
-        }
-      }
+          path: { type: 'string' },
+          hash: { type: 'string' },
+          language: { type: 'string' },
+          complexity: { type: 'number' },
+          loc: { type: 'number' },
+          lastModified: { type: 'string', format: 'date-time' },
+          author: { type: 'string' },
+        },
+      },
     },
     commits: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
-        required: ["hash", "message", "author", "date"],
+        type: 'object',
+        required: ['hash', 'message', 'author', 'date'],
         properties: {
-          hash: { type: "string" },
-          message: { type: "string" },
-          author: { type: "string" },
-          date: { type: "string", format: "date-time" },
-          filesChanged: { type: "array", items: { type: "string" } },
-          insertions: { type: "number" },
-          deletions: { type: "number" },
-          isBugFix: { type: "boolean" },
-          isFeature: { type: "boolean" },
-          isMerge: { type: "boolean" },
-          type: { type: "string" },
-          scope: { type: "string" },
-          isBreaking: { type: "boolean" },
-          confidence: { type: "string", enum: ["high", "medium", "low"] }
-        }
-      }
+          hash: { type: 'string' },
+          message: { type: 'string' },
+          author: { type: 'string' },
+          date: { type: 'string', format: 'date-time' },
+          filesChanged: { type: 'array', items: { type: 'string' } },
+          insertions: { type: 'number' },
+          deletions: { type: 'number' },
+          isBugFix: { type: 'boolean' },
+          isFeature: { type: 'boolean' },
+          isMerge: { type: 'boolean' },
+          type: { type: 'string' },
+          scope: { type: 'string' },
+          isBreaking: { type: 'boolean' },
+          confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
+        },
+      },
     },
-    tree: { type: "object" }, // FileTreeNode (recursive)
+    tree: { type: 'object' }, // FileTreeNode (recursive)
     hotspots: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
-        required: ["path", "churnRate", "complexity", "riskScore"],
+        type: 'object',
+        required: ['path', 'churnRate', 'complexity', 'riskScore'],
         properties: {
-          path: { type: "string" },
-          churnRate: { type: "number" },
-          complexity: { type: "number" },
-          riskScore: { type: "number" }
-        }
-      }
+          path: { type: 'string' },
+          churnRate: { type: 'number' },
+          complexity: { type: 'number' },
+          riskScore: { type: 'number' },
+        },
+      },
     },
     repository: {
-      type: "object",
+      type: 'object',
       properties: {
-        name: { type: "string" },
-        remoteUrl: { type: "string" },
-        currentBranch: { type: "string" },
-        branchCount: { type: "number" },
-        fileCount: { type: "number" },
-        commitCount: { type: "number" },
-        contributorCount: { type: "number" },
-        languages: { type: "array", items: { type: "string" } },
-        analyzedAt: { type: "string", format: "date-time" },
-        headHash: { type: "string" }
-      }
+        name: { type: 'string' },
+        remoteUrl: { type: 'string' },
+        currentBranch: { type: 'string' },
+        branchCount: { type: 'number' },
+        fileCount: { type: 'number' },
+        commitCount: { type: 'number' },
+        contributorCount: { type: 'number' },
+        languages: { type: 'array', items: { type: 'string' } },
+        analyzedAt: { type: 'string', format: 'date-time' },
+        headHash: { type: 'string' },
+      },
     },
     languageDistribution: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
-        required: ["language", "fileCount", "locTotal", "percentage"],
+        type: 'object',
+        required: ['language', 'fileCount', 'locTotal', 'percentage'],
         properties: {
-          language: { type: "string" },
-          fileCount: { type: "number" },
-          locTotal: { type: "number" },
-          percentage: { type: "number" }
-        }
-      }
+          language: { type: 'string' },
+          fileCount: { type: 'number' },
+          locTotal: { type: 'number' },
+          percentage: { type: 'number' },
+        },
+      },
     },
     contributorSummary: {
-      type: "object",
+      type: 'object',
       properties: {
-        totalContributors: { type: "number" },
-        topContributor: { type: "string" },
-        archetypeDistribution: { type: "object", additionalProperties: { type: "number" } }
-      }
+        totalContributors: { type: 'number' },
+        topContributor: { type: 'string' },
+        archetypeDistribution: { type: 'object', additionalProperties: { type: 'number' } },
+      },
     },
     temporalCouplings: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
-        required: ["fileA", "fileB", "coChangeCount", "strength"],
+        type: 'object',
+        required: ['fileA', 'fileB', 'coChangeCount', 'strength'],
         properties: {
-          fileA: { type: "string" },
-          fileB: { type: "string" },
-          coChangeCount: { type: "number" },
-          strength: { type: "number" }
-        }
-      }
+          fileA: { type: 'string' },
+          fileB: { type: 'string' },
+          coChangeCount: { type: 'number' },
+          strength: { type: 'number' },
+        },
+      },
     },
     deepwiki: {
-      type: "object",
-      description: "Optional AI-generated documentation from DeepWiki. Absent when not fetched or unavailable.",
-      required: ["wikiUrl", "fetchedAt"],
+      type: 'object',
+      description: 'Optional AI-generated documentation from DeepWiki. Absent when not fetched or unavailable.',
+      required: ['wikiUrl', 'fetchedAt'],
       properties: {
-        wikiUrl: { type: "string" },
-        overview: { type: "string" },
+        wikiUrl: { type: 'string' },
+        overview: { type: 'string' },
         topics: {
-          type: "array",
+          type: 'array',
           items: {
-            type: "object",
-            required: ["title", "id"],
+            type: 'object',
+            required: ['title', 'id'],
             properties: {
-              title: { type: "string" },
-              id: { type: "string" },
+              title: { type: 'string' },
+              id: { type: 'string' },
               children: {
-                type: "array",
+                type: 'array',
                 items: {
-                  type: "object",
-                  required: ["title", "id"],
+                  type: 'object',
+                  required: ['title', 'id'],
                   properties: {
-                    title: { type: "string" },
-                    id: { type: "string" }
-                  }
-                }
-              }
-            }
-          }
+                    title: { type: 'string' },
+                    id: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
         },
         moduleDocumentation: {
-          type: "object",
-          additionalProperties: { type: "string" }
+          type: 'object',
+          additionalProperties: { type: 'string' },
         },
-        fetchedAt: { type: "string", format: "date-time" }
-      }
-    }
-  }
+        fetchedAt: { type: 'string', format: 'date-time' },
+      },
+    },
+  },
 } as const;
 
 /**
@@ -164,17 +164,17 @@ export const TopologySchema = {
  * Contains the visual style derived from the codebase.
  */
 export const PaletteSchema = {
-  $schema: "http://json-schema.org/draft-07/schema#",
-  type: "object",
-  required: ["primary", "secondary", "accent", "background", "glow", "mood"],
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  required: ['primary', 'secondary', 'accent', 'background', 'glow', 'mood'],
   properties: {
-    primary: { type: "string", pattern: "^#[0-9A-Fa-f]{6}$" },
-    secondary: { type: "string", pattern: "^#[0-9A-Fa-f]{6}$" },
-    accent: { type: "string", pattern: "^#[0-9A-Fa-f]{6}$" },
-    background: { type: "string", pattern: "^#[0-9A-Fa-f]{6}$" },
-    glow: { type: "string", pattern: "^#[0-9A-Fa-f]{6}$" },
-    mood: { type: "string", enum: ["warm", "cool", "neutral"] }
-  }
+    primary: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' },
+    secondary: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' },
+    accent: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' },
+    background: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' },
+    glow: { type: 'string', pattern: '^#[0-9A-Fa-f]{6}$' },
+    mood: { type: 'string', enum: ['warm', 'cool', 'neutral'] },
+  },
 } as const;
 
 /**
@@ -208,20 +208,20 @@ void main() {
  * Lists all generated assets for loading.
  */
 export const ManifestSchema = {
-  $schema: "http://json-schema.org/draft-07/schema#",
-  type: "object",
-  required: ["version", "checksum"],
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  type: 'object',
+  required: ['version', 'checksum'],
   properties: {
-    version: { type: "string" },
-    checksum: { type: "string" },
+    version: { type: 'string' },
+    checksum: { type: 'string' },
     shaders: {
-      type: "object",
-      additionalProperties: { type: "string" }
+      type: 'object',
+      additionalProperties: { type: 'string' },
     },
     palettes: {
-      type: "object",
-      additionalProperties: { type: "string" }
+      type: 'object',
+      additionalProperties: { type: 'string' },
     },
-    topology: { type: "string" }
-  }
+    topology: { type: 'string' },
+  },
 } as const;

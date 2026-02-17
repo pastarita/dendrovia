@@ -5,18 +5,19 @@
  * Uses skipFileDependencyResolution for maximum performance.
  */
 
-import { Project, type SourceFile } from 'ts-morph';
-import { statSync } from 'fs';
-import { extname } from 'path';
+import { statSync } from 'node:fs';
+import { extname } from 'node:path';
 import type { ParsedFile } from '@dendrovia/shared';
-import { analyzeFileComplexity, type FunctionComplexity, analyzeFunctionComplexities } from '../analyzer/ComplexityAnalyzer.js';
+import { Project, type SourceFile } from 'ts-morph';
+import {
+  analyzeFileComplexity,
+  analyzeFunctionComplexities,
+  type FunctionComplexity,
+} from '../analyzer/ComplexityAnalyzer.js';
 import { parseGoFile } from './GoParser.js';
 
 /** Languages we can parse with ts-morph */
-const PARSEABLE_EXTENSIONS = new Set([
-  '.ts', '.tsx', '.js', '.jsx', '.mts', '.cts', '.mjs', '.cjs',
-  '.go',
-]);
+const PARSEABLE_EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mts', '.cts', '.mjs', '.cjs', '.go']);
 
 /** Extension → language name */
 const LANGUAGE_MAP: Record<string, string> = {
@@ -93,11 +94,7 @@ export function canParse(filePath: string): boolean {
 /**
  * Parse a single file and extract its structure + complexity.
  */
-export function parseFile(
-  project: Project,
-  filePath: string,
-  repoRoot: string,
-): ASTParseResult | null {
+export function parseFile(project: Project, filePath: string, repoRoot: string): ASTParseResult | null {
   if (!canParse(filePath)) return null;
 
   // Go files use regex-based parser (not ts-morph)
@@ -129,9 +126,7 @@ export function parseFile(
     const hash = simpleHash(content);
 
     // Make path relative to repo root
-    const relativePath = filePath.startsWith(repoRoot)
-      ? filePath.slice(repoRoot.length).replace(/^\//, '')
-      : filePath;
+    const relativePath = filePath.startsWith(repoRoot) ? filePath.slice(repoRoot.length).replace(/^\//, '') : filePath;
 
     const file: ParsedFile = {
       path: relativePath,
@@ -153,19 +148,14 @@ export function parseFile(
 /**
  * Parse all parseable files from a list of paths.
  */
-export function parseFiles(
-  filePaths: string[],
-  repoRoot: string,
-): ASTParseResult[] {
+export function parseFiles(filePaths: string[], repoRoot: string): ASTParseResult[] {
   const project = createProject();
   const results: ASTParseResult[] = [];
 
   for (const filePath of filePaths) {
     if (!canParse(filePath)) continue;
 
-    const fullPath = filePath.startsWith('/')
-      ? filePath
-      : `${repoRoot}/${filePath}`;
+    const fullPath = filePath.startsWith('/') ? filePath : `${repoRoot}/${filePath}`;
 
     const result = parseFile(project, fullPath, repoRoot);
     if (result) results.push(result);
@@ -178,13 +168,8 @@ export function parseFiles(
  * Build a minimal ParsedFile for files we can't AST-parse
  * (JSON, Markdown, images, etc.)
  */
-export function buildStubFile(
-  filePath: string,
-  repoRoot: string,
-): ParsedFile {
-  const fullPath = filePath.startsWith('/')
-    ? filePath
-    : `${repoRoot}/${filePath}`;
+export function buildStubFile(filePath: string, repoRoot: string): ParsedFile {
+  const fullPath = filePath.startsWith('/') ? filePath : `${repoRoot}/${filePath}`;
 
   let loc = 0;
   let lastModified = new Date();
@@ -195,16 +180,14 @@ export function buildStubFile(
     lastModified = stat.mtime;
 
     // Count lines for text files
-    const content = require('fs').readFileSync(fullPath, 'utf-8');
+    const content = require('node:fs').readFileSync(fullPath, 'utf-8');
     loc = content.split('\n').length;
     hash = simpleHash(content);
   } catch {
     // Binary file or doesn't exist
   }
 
-  const relativePath = filePath.startsWith(repoRoot)
-    ? filePath.slice(repoRoot.length).replace(/^\//, '')
-    : filePath;
+  const relativePath = filePath.startsWith(repoRoot) ? filePath.slice(repoRoot.length).replace(/^\//, '') : filePath;
 
   return {
     path: relativePath,
@@ -221,7 +204,7 @@ export function simpleHash(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return Math.abs(hash).toString(16).padStart(8, '0');

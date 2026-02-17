@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import SpellCatalog from './components/SpellCatalog';
-import MonsterBestiary from './components/MonsterBestiary';
 import ClassComparison from './components/ClassComparison';
-import StatusEffectReference from './components/StatusEffectReference';
 import ItemRegistry from './components/ItemRegistry';
+import MonsterBestiary from './components/MonsterBestiary';
+import SpellCatalog from './components/SpellCatalog';
+import StatusEffectReference from './components/StatusEffectReference';
 
 const TABS = [
   { id: 'spells', label: 'Spells' },
@@ -15,7 +15,7 @@ const TABS = [
   { id: 'items', label: 'Items' },
 ] as const;
 
-type TabId = typeof TABS[number]['id'];
+type TabId = (typeof TABS)[number]['id'];
 
 export default function ZooClient(): React.JSX.Element {
   const [tab, setTab] = useState<TabId>('spells');
@@ -23,8 +23,16 @@ export default function ZooClient(): React.JSX.Element {
   return (
     <div>
       {/* Tab Nav */}
-      <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1.5rem', borderBottom: '1px solid #222', paddingBottom: '0.5rem' }}>
-        {TABS.map(t => (
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.25rem',
+          marginBottom: '1.5rem',
+          borderBottom: '1px solid #222',
+          paddingBottom: '0.5rem',
+        }}
+      >
+        {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}

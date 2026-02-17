@@ -8,22 +8,11 @@
  * when a value changes).
  */
 
-import { useState, useEffect, useRef } from 'react';
 import { useOculusStore } from '@dendrovia/oculus';
-import {
-  stateDashContainerStyle,
-  stateDashHeaderStyle,
-  stateDashListStyle,
-  stateDashRowStyle,
-} from './gym-styles';
+import { useEffect, useRef, useState } from 'react';
+import { stateDashContainerStyle, stateDashHeaderStyle, stateDashListStyle, stateDashRowStyle } from './gym-styles';
 
-const DEFAULT_KEYS = [
-  'health', 'maxHealth',
-  'mana', 'maxMana',
-  'level', 'experience',
-  'cameraMode',
-  'activePanel',
-];
+const DEFAULT_KEYS = ['health', 'maxHealth', 'mana', 'maxMana', 'level', 'experience', 'cameraMode', 'activePanel'];
 
 function formatValue(val: unknown): string {
   if (val === null || val === undefined) return 'null';
@@ -70,7 +59,7 @@ export function GymStateDash({ watchedKeys, collapsed = false }: GymStateDashPro
       const timer = setTimeout(() => setChangedKeys(new Set()), 400);
       return () => clearTimeout(timer);
     }
-  }, [JSON.stringify(storeValues)]);
+  }, [keys, storeValues]);
 
   if (isCollapsed) {
     return (
@@ -87,9 +76,16 @@ export function GymStateDash({ watchedKeys, collapsed = false }: GymStateDashPro
   return (
     <div style={stateDashContainerStyle}>
       <div style={stateDashHeaderStyle}>
-        <span style={{ cursor: 'pointer' }} onClick={() => setIsCollapsed(true)}>State</span>
+        <span style={{ cursor: 'pointer' }} onClick={() => setIsCollapsed(true)}>
+          State
+        </span>
         <span style={{ opacity: 0.4, fontSize: '0.7rem' }}>({keys.length} keys)</span>
-        <span style={{ marginLeft: 'auto', opacity: 0.4, cursor: 'pointer', fontSize: '0.8rem' }} onClick={() => setIsCollapsed(true)}>-</span>
+        <span
+          style={{ marginLeft: 'auto', opacity: 0.4, cursor: 'pointer', fontSize: '0.8rem' }}
+          onClick={() => setIsCollapsed(true)}
+        >
+          -
+        </span>
       </div>
       <div style={stateDashListStyle}>
         {keys.map((key) => (

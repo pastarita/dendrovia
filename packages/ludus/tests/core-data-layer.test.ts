@@ -1,23 +1,13 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import {
-  SeededRandom,
-  rngNext,
-  createRngState,
-  rngRange,
-  rngChance,
-} from '../src/utils/SeededRandom';
-import {
+  computeStatsAtLevel,
   createCharacter,
   gainExperience,
-  computeStatsAtLevel,
   totalXPForLevel,
   xpToNextLevel,
-  GROWTH_RATES,
-  BASE_STATS,
 } from '../src/character/CharacterSystem';
-import {
-  createGameStore,
-} from '../src/state/GameStore';
+import { createGameStore } from '../src/state/GameStore';
+import { createRngState, rngNext, rngRange, SeededRandom } from '../src/utils/SeededRandom';
 
 // ─── PRNG Tests ──────────────────────────────────────────────
 
@@ -97,7 +87,9 @@ describe('SeededRandom', () => {
 
   test('getState/setState preserves sequence', () => {
     const rng = new SeededRandom(42);
-    rng.next(); rng.next(); rng.next();
+    rng.next();
+    rng.next();
+    rng.next();
     const snapshot = rng.getState();
     const v1 = rng.next();
 
@@ -112,7 +104,7 @@ describe('rngNext (pure functional)', () => {
   test('deterministic with state passing', () => {
     const state = createRngState(42);
     const [v1, s1] = rngNext(state);
-    const [v2, s2] = rngNext(state); // same input state
+    const [v2, _s2] = rngNext(state); // same input state
     expect(v1).toBe(v2);
 
     // Advancing state produces new value
@@ -263,7 +255,9 @@ describe('GameStore', () => {
     });
 
     let callCount = 0;
-    store.subscribe(() => { callCount++; });
+    store.subscribe(() => {
+      callCount++;
+    });
 
     store.setState({ gameFlags: { testFlag: true } });
     expect(callCount).toBe(1);
@@ -282,7 +276,9 @@ describe('GameStore', () => {
     });
 
     let callCount = 0;
-    const unsub = store.subscribe(() => { callCount++; });
+    const unsub = store.subscribe(() => {
+      callCount++;
+    });
 
     store.setState({ gameFlags: { a: true } });
     expect(callCount).toBe(1);

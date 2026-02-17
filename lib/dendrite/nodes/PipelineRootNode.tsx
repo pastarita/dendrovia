@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { memo } from "react";
-import { Handle, Position } from "@xyflow/react";
-import type { NodeProps } from "@xyflow/react";
-import { DT } from "../design-tokens";
+import type { NodeProps } from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
+import { memo } from 'react';
+import { DT } from '../design-tokens';
 
 function PipelineRootNodeInner({ data }: NodeProps) {
   const fill = (data.fill as string) ?? DT.accent;
-  const textColor = (data.textColor as string) ?? "#000000";
+  const textColor = (data.textColor as string) ?? '#000000';
 
   return (
     <div
       style={{
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: fill,
-        borderWidth: "2px",
-        borderStyle: "solid",
+        borderWidth: '2px',
+        borderStyle: 'solid',
         borderColor: DT.accent,
-        borderRadius: "8px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        borderRadius: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         fontWeight: 700,
-        fontSize: "0.85rem",
+        fontSize: '0.85rem',
         color: textColor,
-        letterSpacing: "0.04em",
+        letterSpacing: '0.04em',
       }}
     >
       {data.label as string}

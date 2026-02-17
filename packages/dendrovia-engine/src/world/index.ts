@@ -1,2 +1,2 @@
-export { Terrain } from './Terrain';
 export { MurrayTree } from './MurrayTree';
+export { Terrain } from './Terrain';

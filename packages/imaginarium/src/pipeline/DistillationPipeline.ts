@@ -6,25 +6,32 @@
  * Target: <5 seconds for 100-file topology.
  */
 
-import { join } from 'path';
-import { mkdirSync, existsSync } from 'fs';
-import type { CodeTopology, ProceduralPalette, SDFShader, NoiseFunction, LSystemRule, StoryArc, SegmentAssets } from '@dendrovia/shared';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import { readTopology } from './TopologyReader';
-import { generateVariants } from './VariantGenerator';
-import { generateManifest, type ManifestInput } from './ManifestGenerator';
+import { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import type {
+  CodeTopology,
+  LSystemRule,
+  MeshManifestEntry,
+  NoiseFunction,
+  ProceduralPalette,
+  SDFShader,
+  SegmentAssets,
+  StoryArc,
+} from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { DeterministicCache } from '../cache/DeterministicCache';
 import { extractPalette } from '../distillation/ColorExtractor';
 import { compile as compileLSystem } from '../distillation/LSystemCompiler';
 import { generate as generateNoise } from '../distillation/NoiseGenerator';
 import { generate as generateArt } from '../generation/ArtGen';
-import { DeterministicCache } from '../cache/DeterministicCache';
-import { hashString } from '../utils/hash';
-import { distillMycology } from '../mycology/MycologyPipeline';
 import { generateMeshAssets } from '../mesh/generateMeshAssets';
-import { deriveStoryArc } from '../storyarc/StoryArcDeriver';
-import { distillSegments } from './SegmentPipeline';
+import { distillMycology } from '../mycology/MycologyPipeline';
 import type { FungalSpecimen } from '../mycology/types';
-import type { MeshManifestEntry } from '@dendrovia/shared';
+import { deriveStoryArc } from '../storyarc/StoryArcDeriver';
+import { generateManifest, type ManifestInput } from './ManifestGenerator';
+import { distillSegments } from './SegmentPipeline';
+import { readTopology } from './TopologyReader';
+import { generateVariants } from './VariantGenerator';
 
 export interface PipelineResult {
   palettes: Array<{ id: string; palette: ProceduralPalette; path: string }>;
@@ -35,10 +42,7 @@ export interface PipelineResult {
   durationMs: number;
 }
 
-export async function distill(
-  topologyPath: string,
-  outputDir: string,
-): Promise<PipelineResult> {
+export async function distill(topologyPath: string, outputDir: string): Promise<PipelineResult> {
   const startTime = performance.now();
   const eventBus = getEventBus();
 
@@ -56,7 +60,7 @@ export async function distill(
   console.log(`[IMAGINARIUM]   Files: ${topology.files.length}, Hotspots: ${topology.hotspots.length}`);
 
   // 2. Init cache
-  const cache = new DeterministicCache(outputDir);
+  const _cache = new DeterministicCache(outputDir);
 
   // 3. Extract global palette
   const globalPalette = extractPalette(topology);
@@ -80,12 +84,12 @@ export async function distill(
 
   // Per-language palettes
   for (const lang of topLanguages) {
-    const langFiles = topology.files.filter(f => f.language === lang);
+    const langFiles = topology.files.filter((f) => f.language === lang);
     const langTopology: CodeTopology = {
       files: langFiles,
       commits: topology.commits,
       tree: topology.tree,
-      hotspots: topology.hotspots.filter(h => langFiles.some(f => f.path === h.path)),
+      hotspots: topology.hotspots.filter((h) => langFiles.some((f) => f.path === h.path)),
     };
     const palette = extractPalette(langTopology);
     const palettePath = join(outputDir, 'palettes', `${lang}.json`);
@@ -166,7 +170,9 @@ export async function distill(
       networkEdgeCount: mycologyManifest.networkEdgeCount,
       manifestPath: 'mycology/manifest.json',
     });
-    console.log(`[IMAGINARIUM]   Mycology: ${mycologyManifest.specimenCount} specimens, ${mycologyManifest.networkEdgeCount} network edges`);
+    console.log(
+      `[IMAGINARIUM]   Mycology: ${mycologyManifest.specimenCount} specimens, ${mycologyManifest.networkEdgeCount} network edges`,
+    );
   } catch (e) {
     console.log(`[IMAGINARIUM]   Mycology: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
   }
@@ -185,7 +191,9 @@ export async function distill(
       const specimensOutPath = join(outputDir, mycologyData.specimens);
       await Bun.write(specimensOutPath, JSON.stringify(specimens, null, 2));
 
-      console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.successCount} specimens, ${meshResult.stats.totalVertices} total vertices (${meshResult.stats.durationMs}ms)`);
+      console.log(
+        `[IMAGINARIUM]   Meshes: ${meshResult.stats.successCount} specimens, ${meshResult.stats.totalVertices} total vertices (${meshResult.stats.durationMs}ms)`,
+      );
       if (meshResult.stats.failCount > 0) {
         console.log(`[IMAGINARIUM]   Meshes: ${meshResult.stats.failCount} specimens failed (fallback to SVG)`);
       }
@@ -196,18 +204,20 @@ export async function distill(
 
   // 9. Generate manifest
   const manifestInput: ManifestInput = {
-    shaders: shaderResults.map(s => ({ id: s.id, path: s.path })),
-    palettes: paletteResults.map(p => ({ id: p.id, path: p.path })),
+    shaders: shaderResults.map((s) => ({ id: s.id, path: s.path })),
+    palettes: paletteResults.map((p) => ({ id: p.id, path: p.path })),
     topologyPath: topologyPath,
     noisePath: 'noise/global.json',
     lsystemPath: 'lsystems/global.json',
     mycology: mycologyData,
     meshes: meshEntries,
-    storyArc: storyArcData ? {
-      arc: 'story-arc.json',
-      segmentAssets: 'segment-assets.json',
-      segmentCount: storyArcData.arc.segments.length,
-    } : undefined,
+    storyArc: storyArcData
+      ? {
+          arc: 'story-arc.json',
+          segmentAssets: 'segment-assets.json',
+          segmentCount: storyArcData.arc.segments.length,
+        }
+      : undefined,
   };
   const manifest = generateManifest(manifestInput);
   const manifestPath = join(outputDir, 'manifest.json');

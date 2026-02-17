@@ -6,9 +6,9 @@
  */
 
 import type { CodeTopology } from '@dendrovia/shared';
-import { buildPrompt } from './PromptBuilder';
-import { hashString } from '../utils/hash';
 import { DeterministicCache } from '../cache/DeterministicCache';
+import { hashString } from '../utils/hash';
+import { buildPrompt } from './PromptBuilder';
 
 export type ArtProvider = 'stability' | 'flux' | 'local' | 'skip';
 
@@ -25,10 +25,7 @@ export interface ArtGenResult {
   cached: boolean;
 }
 
-export async function generate(
-  topology: CodeTopology,
-  options?: ArtGenOptions,
-): Promise<ArtGenResult> {
+export async function generate(topology: CodeTopology, options?: ArtGenOptions): Promise<ArtGenResult> {
   const provider = options?.provider ?? (process.env.IMAGINARIUM_PROVIDER as ArtProvider) ?? 'skip';
   const prompt = buildPrompt(topology);
   const seedStr = hashString(prompt);
@@ -83,7 +80,7 @@ async function callStabilityAPI(prompt: string, seed: number): Promise<Uint8Arra
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       text_prompts: [{ text: prompt }],
@@ -95,10 +92,10 @@ async function callStabilityAPI(prompt: string, seed: number): Promise<Uint8Arra
   });
 
   if (!response.ok) return null;
-  const data = await response.json() as { artifacts: Array<{ base64: string }> };
+  const data = (await response.json()) as { artifacts: Array<{ base64: string }> };
   if (!data.artifacts?.[0]) return null;
 
-  return Uint8Array.from(atob(data.artifacts[0]!.base64), c => c.charCodeAt(0));
+  return Uint8Array.from(atob(data.artifacts[0]!.base64), (c) => c.charCodeAt(0));
 }
 
 async function callFluxAPI(prompt: string, seed: number): Promise<Uint8Array | null> {
@@ -115,7 +112,7 @@ async function callFluxAPI(prompt: string, seed: number): Promise<Uint8Array | n
   });
 
   if (!response.ok) return null;
-  const data = await response.json() as { sample: string };
+  const data = (await response.json()) as { sample: string };
   if (!data.sample) return null;
 
   // Flux returns a URL — fetch the image

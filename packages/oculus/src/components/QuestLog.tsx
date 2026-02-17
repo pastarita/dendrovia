@@ -6,12 +6,11 @@
  * (b) Full: expandable overlay listing all quests
  */
 
-import React, { useState, useCallback } from 'react';
-import { useOculusStore } from '../store/useOculusStore';
 import type { Quest } from '@dendrovia/shared';
-import { Panel } from './primitives/Panel';
-import { ProgressBar } from './primitives/ProgressBar';
+import { useCallback, useState } from 'react';
+import { useOculusStore } from '../store/useOculusStore';
 import { IconBadge } from './primitives/IconBadge';
+import { Panel } from './primitives/Panel';
 
 const questIcons: Record<string, string> = {
   'bug-hunt': '\u{1F41B}',
@@ -34,11 +33,7 @@ const statusIcons: Record<string, string> = {
   completed: '\u{2705}',
 };
 
-function QuestItem({ quest, expanded, onToggle }: {
-  quest: Quest;
-  expanded: boolean;
-  onToggle: () => void;
-}) {
+function QuestItem({ quest, expanded, onToggle }: { quest: Quest; expanded: boolean; onToggle: () => void }) {
   const icon = questIcons[quest.type] || '\u{2753}';
   const color = questColors[quest.type] || 'var(--oculus-amber)';
   const isLocked = quest.status === 'locked';
@@ -68,12 +63,8 @@ function QuestItem({ quest, expanded, onToggle }: {
         }}
       >
         <IconBadge icon={icon} color={color} size="sm" />
-        <span style={{ flex: 1, fontSize: 'var(--oculus-font-sm)' }}>
-          {quest.title}
-        </span>
-        <span style={{ fontSize: 'var(--oculus-font-xs)' }}>
-          {statusIcons[quest.status]}
-        </span>
+        <span style={{ flex: 1, fontSize: 'var(--oculus-font-sm)' }}>{quest.title}</span>
+        <span style={{ fontSize: 'var(--oculus-font-xs)' }}>{statusIcons[quest.status]}</span>
       </button>
 
       {expanded && !isLocked && (
@@ -101,9 +92,8 @@ function QuestItem({ quest, expanded, onToggle }: {
           {/* Rewards */}
           {quest.rewards.length > 0 && (
             <div style={{ marginTop: 'var(--oculus-space-sm)', color: 'var(--oculus-xp)' }}>
-              Rewards: {quest.rewards.map((r) =>
-                r.type === 'experience' ? `${r.value} XP` : String(r.value)
-              ).join(', ')}
+              Rewards:{' '}
+              {quest.rewards.map((r) => (r.type === 'experience' ? `${r.value} XP` : String(r.value))).join(', ')}
             </div>
           )}
         </div>
@@ -135,7 +125,9 @@ export function QuestLog() {
           style={{ width: '100%', textAlign: 'left', marginBottom: activeQuest ? 'var(--oculus-space-xs)' : 0 }}
           aria-label="Open quest log"
         >
-          <span className="oculus-heading" style={{ margin: 0 }}>Quests</span>
+          <span className="oculus-heading" style={{ margin: 0 }}>
+            Quests
+          </span>
         </button>
 
         {activeQuest && (
@@ -182,8 +174,17 @@ export function QuestLog() {
           flexDirection: 'column',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--oculus-space-md)' }}>
-          <span className="oculus-heading" style={{ margin: 0 }}>Quest Log</span>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 'var(--oculus-space-md)',
+          }}
+        >
+          <span className="oculus-heading" style={{ margin: 0 }}>
+            Quest Log
+          </span>
           <button className="oculus-button" onClick={handleToggle} aria-label="Close quest log">
             Esc
           </button>
@@ -192,34 +193,89 @@ export function QuestLog() {
         <div className="oculus-scrollable" style={{ flex: 1 }} role="list" aria-label="Quest list">
           {grouped.active.length > 0 && (
             <div style={{ marginBottom: 'var(--oculus-space-md)' }}>
-              <div style={{ fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-success)', marginBottom: 'var(--oculus-space-xs)', textTransform: 'uppercase', letterSpacing: 1 }}>Active</div>
+              <div
+                style={{
+                  fontSize: 'var(--oculus-font-xs)',
+                  color: 'var(--oculus-success)',
+                  marginBottom: 'var(--oculus-space-xs)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                }}
+              >
+                Active
+              </div>
               {grouped.active.map((q) => (
-                <QuestItem key={q.id} quest={q} expanded={expandedId === q.id} onToggle={() => setExpandedId(expandedId === q.id ? null : q.id)} />
+                <QuestItem
+                  key={q.id}
+                  quest={q}
+                  expanded={expandedId === q.id}
+                  onToggle={() => setExpandedId(expandedId === q.id ? null : q.id)}
+                />
               ))}
             </div>
           )}
 
           {grouped.available.length > 0 && (
             <div style={{ marginBottom: 'var(--oculus-space-md)' }}>
-              <div style={{ fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-xp)', marginBottom: 'var(--oculus-space-xs)', textTransform: 'uppercase', letterSpacing: 1 }}>Available</div>
+              <div
+                style={{
+                  fontSize: 'var(--oculus-font-xs)',
+                  color: 'var(--oculus-xp)',
+                  marginBottom: 'var(--oculus-space-xs)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                }}
+              >
+                Available
+              </div>
               {grouped.available.map((q) => (
-                <QuestItem key={q.id} quest={q} expanded={expandedId === q.id} onToggle={() => setExpandedId(expandedId === q.id ? null : q.id)} />
+                <QuestItem
+                  key={q.id}
+                  quest={q}
+                  expanded={expandedId === q.id}
+                  onToggle={() => setExpandedId(expandedId === q.id ? null : q.id)}
+                />
               ))}
             </div>
           )}
 
           {grouped.completed.length > 0 && (
             <div style={{ marginBottom: 'var(--oculus-space-md)' }}>
-              <div style={{ fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-text-muted)', marginBottom: 'var(--oculus-space-xs)', textTransform: 'uppercase', letterSpacing: 1 }}>Completed</div>
+              <div
+                style={{
+                  fontSize: 'var(--oculus-font-xs)',
+                  color: 'var(--oculus-text-muted)',
+                  marginBottom: 'var(--oculus-space-xs)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                }}
+              >
+                Completed
+              </div>
               {grouped.completed.map((q) => (
-                <QuestItem key={q.id} quest={q} expanded={expandedId === q.id} onToggle={() => setExpandedId(expandedId === q.id ? null : q.id)} />
+                <QuestItem
+                  key={q.id}
+                  quest={q}
+                  expanded={expandedId === q.id}
+                  onToggle={() => setExpandedId(expandedId === q.id ? null : q.id)}
+                />
               ))}
             </div>
           )}
 
           {grouped.locked.length > 0 && (
             <div>
-              <div style={{ fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-text-muted)', marginBottom: 'var(--oculus-space-xs)', textTransform: 'uppercase', letterSpacing: 1 }}>Locked</div>
+              <div
+                style={{
+                  fontSize: 'var(--oculus-font-xs)',
+                  color: 'var(--oculus-text-muted)',
+                  marginBottom: 'var(--oculus-space-xs)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                }}
+              >
+                Locked
+              </div>
               {grouped.locked.map((q) => (
                 <QuestItem key={q.id} quest={q} expanded={false} onToggle={() => {}} />
               ))}

@@ -14,9 +14,7 @@ export function PanelExhibit({ controlValues, isInspecting }: ExhibitRenderProps
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {/* Live preview with current controls */}
         <Panel compact={compact} glow={glow} noPadding={noPadding} aria-label="Controlled panel">
-          <p style={{ margin: 0, fontSize: '0.85rem' }}>
-            Panel with current settings
-          </p>
+          <p style={{ margin: 0, fontSize: '0.85rem' }}>Panel with current settings</p>
         </Panel>
 
         {/* 2x2 boolean combination grid */}

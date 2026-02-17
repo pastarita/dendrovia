@@ -1,6 +1,5 @@
-import { describe, test, expect, beforeEach } from 'bun:test';
+import { beforeEach, describe, expect, test } from 'bun:test';
 import { TurtleInterpreter } from '../src/systems/TurtleInterpreter';
-import type { TreeGeometry } from '../src/systems/TurtleInterpreter';
 
 let turtle: TurtleInterpreter;
 
@@ -166,14 +165,8 @@ describe('rotation commands', () => {
     // Compare against explicit 45
     const withExplicit = t.interpret('+(45)F(1)');
 
-    expect(withDefault.branches[0].end.x).toBeCloseTo(
-      withExplicit.branches[0].end.x,
-      5,
-    );
-    expect(withDefault.branches[0].end.y).toBeCloseTo(
-      withExplicit.branches[0].end.y,
-      5,
-    );
+    expect(withDefault.branches[0].end.x).toBeCloseTo(withExplicit.branches[0].end.x, 5);
+    expect(withDefault.branches[0].end.y).toBeCloseTo(withExplicit.branches[0].end.y, 5);
   });
 });
 

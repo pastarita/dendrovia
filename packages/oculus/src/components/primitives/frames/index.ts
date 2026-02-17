@@ -2,13 +2,13 @@
  * Frame ornament registry — maps PillarId to FrameOrnamentSet
  */
 
-import type { PillarId, FrameOrnamentSet } from './types';
-import { oculus } from './oculus';
-import { chronos } from './chronos';
 import { architectus } from './architectus';
-import { ludus } from './ludus';
+import { chronos } from './chronos';
 import { imaginarium } from './imaginarium';
+import { ludus } from './ludus';
+import { oculus } from './oculus';
 import { operatus } from './operatus';
+import type { FrameOrnamentSet, PillarId } from './types';
 
 export const FRAME_ORNAMENTS: Record<PillarId, FrameOrnamentSet> = {
   oculus,
@@ -20,14 +20,14 @@ export const FRAME_ORNAMENTS: Record<PillarId, FrameOrnamentSet> = {
 };
 
 export { PILLAR_PALETTES } from './palettes';
-export { FRAME_REGISTRY, VARIANT_SPECS, PILLAR_SPECS } from './registry';
-export type { VariantSpec, PillarSpec } from './registry';
+export type { PillarSpec, VariantSpec } from './registry';
+export { FRAME_REGISTRY, PILLAR_SPECS, VARIANT_SPECS } from './registry';
 export type {
-  PillarId,
-  FrameVariant,
-  PillarPalette,
-  FrameOrnamentSet,
   CornerProps,
-  EdgeProps,
   DefsProps,
+  EdgeProps,
+  FrameOrnamentSet,
+  FrameVariant,
+  PillarId,
+  PillarPalette,
 } from './types';

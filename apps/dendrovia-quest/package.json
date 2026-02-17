@@ -4,10 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3010",
+    "dev": "next dev --port 3010 --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
@@ -31,13 +30,11 @@
     "immer": "^10.1.1"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@types/three": "^0.171.0",
-    "eslint": "^9.39.1",
     "typescript": "5.9.2"
   }
 }

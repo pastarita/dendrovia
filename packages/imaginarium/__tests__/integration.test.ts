@@ -1,6 +1,6 @@
-import { describe, test, expect, beforeAll, afterAll } from 'bun:test';
-import { join } from 'path';
-import { existsSync, rmSync } from 'fs';
+import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import { existsSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
 import { distill } from '../src/pipeline/DistillationPipeline';
 import { generateMockTopology } from '../src/pipeline/MockTopology';
 import { validateGLSL } from '../src/utils/glsl';
@@ -12,7 +12,7 @@ describe('Full Pipeline Integration', () => {
   beforeAll(async () => {
     // Create mock topology file
     if (!existsSync(TEST_OUTPUT_DIR)) {
-      const { mkdirSync } = await import('fs');
+      const { mkdirSync } = await import('node:fs');
       mkdirSync(TEST_OUTPUT_DIR, { recursive: true });
     }
     const topology = generateMockTopology(100, ['typescript', 'javascript', 'json'], 42);

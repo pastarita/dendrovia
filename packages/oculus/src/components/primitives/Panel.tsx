@@ -2,7 +2,7 @@
  * Panel — Glass-morphism container with optional border glow
  */
 
-import React, { type ReactNode, type CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { useInputCapture } from '../../hooks/useInputCapture';
 
 export interface PanelProps {

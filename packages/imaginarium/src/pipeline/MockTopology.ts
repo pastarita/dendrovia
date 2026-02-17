@@ -3,9 +3,9 @@
  * when CHRONOS isn't ready or topology.json is missing.
  */
 
-import type { CodeTopology, ParsedFile, ParsedCommit, FileTreeNode, Hotspot } from '@dendrovia/shared';
+import type { CodeTopology, FileTreeNode, Hotspot, ParsedCommit, ParsedFile } from '@dendrovia/shared';
 
-const LANGUAGES = ['typescript', 'javascript', 'json', 'css', 'html', 'python', 'rust', 'go'];
+const _LANGUAGES = ['typescript', 'javascript', 'json', 'css', 'html', 'python', 'rust', 'go'];
 
 const FILE_EXTENSIONS: Record<string, string> = {
   typescript: '.ts',
@@ -52,7 +52,7 @@ export function generateMockTopology(
 
     const file: ParsedFile = {
       path,
-      hash: `mock-${seed}-${i}-${(rng() * 0xffffffff >>> 0).toString(16)}`,
+      hash: `mock-${seed}-${i}-${((rng() * 0xffffffff) >>> 0).toString(16)}`,
       language: lang,
       complexity,
       loc,
@@ -67,19 +67,20 @@ export function generateMockTopology(
         path,
         churnRate: Math.floor(rng() * 30) + 5,
         complexity,
-        riskScore: complexity * (Math.floor(rng() * 30) + 5) / 10,
+        riskScore: (complexity * (Math.floor(rng() * 30) + 5)) / 10,
       });
     }
   }
 
   // Generate mock commits
   for (let i = 0; i < Math.min(fileCount * 2, 100); i++) {
-    const changedFiles = Array.from({ length: Math.floor(rng() * 5) + 1 }, () =>
-      files[Math.floor(rng() * files.length)]!.path,
+    const changedFiles = Array.from(
+      { length: Math.floor(rng() * 5) + 1 },
+      () => files[Math.floor(rng() * files.length)]!.path,
     );
 
     commits.push({
-      hash: `commit-${seed}-${i}-${(rng() * 0xffffffff >>> 0).toString(16)}`,
+      hash: `commit-${seed}-${i}-${((rng() * 0xffffffff) >>> 0).toString(16)}`,
       message: `Mock commit ${i}`,
       author: `dev-${Math.floor(rng() * 5)}`,
       date: new Date(Date.now() - Math.floor(rng() * 90 * 24 * 60 * 60 * 1000)),
@@ -117,7 +118,7 @@ function buildMockTree(files: ParsedFile[]): FileTreeNode {
           metadata: file,
         });
       } else {
-        let dir = current.children!.find(c => c.name === part && c.type === 'directory');
+        let dir = current.children!.find((c) => c.name === part && c.type === 'directory');
         if (!dir) {
           dir = {
             name: part,

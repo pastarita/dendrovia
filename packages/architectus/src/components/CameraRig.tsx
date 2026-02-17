@@ -1,12 +1,12 @@
-import { useRef, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import * as THREE from 'three';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { PlayerMovedEvent } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { OrbitControls } from '@react-three/drei';
+import { useFrame, useThree } from '@react-three/fiber';
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 import { useRendererStore } from '../store/useRendererStore';
 
-type OrbitControlsImpl = {
+type _OrbitControlsImpl = {
   target: THREE.Vector3;
   update: () => void;
 };
@@ -97,18 +97,12 @@ export function CameraRig() {
     const progress = Math.min(t.elapsed / TRANSITION_DURATION, 1);
 
     // Smooth ease-in-out
-    const ease = progress < 0.5
-      ? 4 * progress * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    const ease = progress < 0.5 ? 4 * progress * progress * progress : 1 - (-2 * progress + 2) ** 3 / 2;
 
     camera.position.lerpVectors(t.startPosition, t.endPosition, ease);
 
     if (controlsRef.current) {
-      controlsRef.current.target.lerpVectors(
-        t.startTarget,
-        t.endTarget,
-        ease
-      );
+      controlsRef.current.target.lerpVectors(t.startTarget, t.endTarget, ease);
     }
 
     if (progress >= 1) {

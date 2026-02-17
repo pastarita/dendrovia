@@ -6,10 +6,10 @@
  * Deterministic: same file properties -> identical lore.
  */
 
-import type { ParsedFile, Hotspot, CodeTopology } from '@dendrovia/shared';
-import type { MushroomLore, LoreTier, FungalGenus, FungalTaxonomy } from './types';
-import type { FileContext } from './GenusMapper';
+import type { ParsedFile } from '@dendrovia/shared';
 import { hashString } from '../utils/hash';
+import type { FileContext } from './GenusMapper';
+import type { FungalGenus, FungalTaxonomy, LoreTier, MushroomLore } from './types';
 
 // ---------------------------------------------------------------------------
 // Tier assignment
@@ -56,7 +56,7 @@ function assignTier(file: ParsedFile, ctx: FileContext, genus: FungalGenus): Lor
 // ---------------------------------------------------------------------------
 
 function generateTitle(taxonomy: FungalTaxonomy, file: ParsedFile): string {
-  const genusLower = taxonomy.genus.toLowerCase();
+  const _genusLower = taxonomy.genus.toLowerCase();
   const langSuffix = file.language ? `var. ${file.language}` : '';
   return `${taxonomy.genus} ${taxonomy.species} ${langSuffix}`.trim();
 }
@@ -84,7 +84,7 @@ const FLAVOR_TEMPLATES: Record<FungalGenus, string[]> = {
   ],
   Russula: [
     'Brightly colored but brittle, it snaps cleanly when the configuration changes.',
-    'Its rigid structure holds the forest\'s constants in crystalline certainty.',
+    "Its rigid structure holds the forest's constants in crystalline certainty.",
   ],
   Lactarius: [
     'When disturbed, it weeps a steady stream of colored latex — data flowing without end.',
@@ -92,7 +92,7 @@ const FLAVOR_TEMPLATES: Record<FungalGenus, string[]> = {
   ],
   Coprinus: [
     'Already dissolving into ink, this ephemeral specimen will be gone by morning.',
-    'Its cap deliquesces into dark liquid, a fleeting presence in the forest\'s churn.',
+    "Its cap deliquesces into dark liquid, a fleeting presence in the forest's churn.",
   ],
   Mycena: [
     'A tiny, translucent bell barely visible among the leaf litter, glowing faintly in darkness.',
@@ -112,7 +112,7 @@ const FLAVOR_TEMPLATES: Record<FungalGenus, string[]> = {
   ],
   Cordyceps: [
     'Bright orange stalks erupt from its host, a transformation both beautiful and unsettling.',
-    'It has rewritten its host\'s behavior, bending it to serve a new purpose.',
+    "It has rewritten its host's behavior, bending it to serve a new purpose.",
   ],
   Morchella: [
     'Its honeycomb cap conceals labyrinthine passages of extraordinary complexity.',
@@ -160,7 +160,7 @@ function generateFlavorText(genus: FungalGenus, file: ParsedFile): string {
 // Code insight generation
 // ---------------------------------------------------------------------------
 
-function generateCodeInsight(file: ParsedFile, ctx: FileContext, genus: FungalGenus): string {
+function generateCodeInsight(file: ParsedFile, ctx: FileContext, _genus: FungalGenus): string {
   const parts: string[] = [];
 
   // Basic stats
@@ -188,23 +188,31 @@ function generateCodeInsight(file: ParsedFile, ctx: FileContext, genus: FungalGe
 // ---------------------------------------------------------------------------
 
 const PATTERN_HINTS: Array<{ pattern: RegExp; knowledge: string }> = [
-  { pattern: /observer|event.*emitter|pubsub|subscribe/i, knowledge: 'Implements the Observer pattern via event emission' },
-  { pattern: /factory|create.*instance|build/i, knowledge: 'Factory pattern — creates instances without exposing construction logic' },
+  {
+    pattern: /observer|event.*emitter|pubsub|subscribe/i,
+    knowledge: 'Implements the Observer pattern via event emission',
+  },
+  {
+    pattern: /factory|create.*instance|build/i,
+    knowledge: 'Factory pattern — creates instances without exposing construction logic',
+  },
   { pattern: /singleton|instance|global.*bus/i, knowledge: 'Singleton pattern — ensures a single shared instance' },
   { pattern: /adapter|wrapper|bridge|compat/i, knowledge: 'Adapter pattern — bridges incompatible interfaces' },
-  { pattern: /middleware|pipeline|chain/i, knowledge: 'Pipeline/Middleware pattern — processes data through sequential stages' },
+  {
+    pattern: /middleware|pipeline|chain/i,
+    knowledge: 'Pipeline/Middleware pattern — processes data through sequential stages',
+  },
   { pattern: /cache|memoize|store/i, knowledge: 'Caching strategy — trades memory for computation speed' },
   { pattern: /decorator|enhance|augment/i, knowledge: 'Decorator pattern — extends behavior without modifying source' },
   { pattern: /strategy|policy|algorithm/i, knowledge: 'Strategy pattern — encapsulates interchangeable algorithms' },
-  { pattern: /reducer|state.*machine|finite/i, knowledge: 'State machine — manages transitions between discrete states' },
+  {
+    pattern: /reducer|state.*machine|finite/i,
+    knowledge: 'State machine — manages transitions between discrete states',
+  },
   { pattern: /proxy|intercept|trap/i, knowledge: 'Proxy pattern — controls access to the underlying object' },
 ];
 
-function generateDomainKnowledge(
-  file: ParsedFile,
-  ctx: FileContext,
-  tier: LoreTier,
-): string | undefined {
+function generateDomainKnowledge(file: ParsedFile, ctx: FileContext, tier: LoreTier): string | undefined {
   if (tier === 'common' || tier === 'uncommon') return undefined;
 
   // Pattern detection
@@ -237,7 +245,11 @@ function generateDomainKnowledge(
 function generateCodeSnippet(file: ParsedFile): string | undefined {
   // We don't have file contents in CodeTopology, so generate a representative signature
   const ext = file.path.split('.').pop() ?? '';
-  const name = file.path.split('/').pop()?.replace(/\.[^.]+$/, '') ?? 'module';
+  const name =
+    file.path
+      .split('/')
+      .pop()
+      ?.replace(/\.[^.]+$/, '') ?? 'module';
 
   switch (ext) {
     case 'ts':
@@ -261,11 +273,7 @@ function generateCodeSnippet(file: ParsedFile): string | undefined {
 // Public API
 // ---------------------------------------------------------------------------
 
-export function generateLore(
-  file: ParsedFile,
-  ctx: FileContext,
-  taxonomy: FungalTaxonomy,
-): MushroomLore {
+export function generateLore(file: ParsedFile, ctx: FileContext, taxonomy: FungalTaxonomy): MushroomLore {
   const tier = assignTier(file, ctx, taxonomy.genus);
   const title = generateTitle(taxonomy, file);
   const flavorText = generateFlavorText(taxonomy.genus, file);

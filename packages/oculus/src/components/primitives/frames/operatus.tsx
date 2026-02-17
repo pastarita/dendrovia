@@ -2,8 +2,7 @@
  * OPERATUS ornaments — Gear tooth notches, pipeline connector dots
  */
 
-import React from 'react';
-import type { CornerProps, EdgeProps, DefsProps, FrameOrnamentSet } from './types';
+import type { CornerProps, DefsProps, EdgeProps, FrameOrnamentSet } from './types';
 
 function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
   const [flipX, flipY] = mirror;
@@ -22,14 +21,7 @@ function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
         strokeLinejoin="miter"
       />
       {/* Inner gear pip */}
-      <rect
-        x={tooth * 0.6}
-        y={tooth * 0.6}
-        width={3}
-        height={3}
-        fill={palette.secondary}
-        opacity="0.5"
-      />
+      <rect x={tooth * 0.6} y={tooth * 0.6} width={3} height={3} fill={palette.secondary} opacity="0.5" />
     </g>
   );
 }
@@ -43,14 +35,7 @@ function EdgeH({ id, x, y, length, palette }: EdgeProps) {
     <g transform={`translate(${x},${y})`}>
       {/* Pipeline connector dots */}
       {Array.from({ length: dots }, (_, i) => (
-        <circle
-          key={i}
-          cx={(i + 1) * gap}
-          cy={0}
-          r={1.5}
-          fill={palette.primary}
-          opacity="0.3"
-        />
+        <circle key={i} cx={(i + 1) * gap} cy={0} r={1.5} fill={palette.primary} opacity="0.3" />
       ))}
     </g>
   );
@@ -64,14 +49,7 @@ function EdgeV({ id, x, y, length, palette }: EdgeProps) {
   return (
     <g transform={`translate(${x},${y})`}>
       {Array.from({ length: dots }, (_, i) => (
-        <circle
-          key={i}
-          cx={0}
-          cy={(i + 1) * gap}
-          r={1.5}
-          fill={palette.primary}
-          opacity="0.3"
-        />
+        <circle key={i} cx={0} cy={(i + 1) * gap} r={1.5} fill={palette.primary} opacity="0.3" />
       ))}
     </g>
   );

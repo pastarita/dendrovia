@@ -1,81 +1,81 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import type { StoreApi } from "zustand";
-import { useStore } from "zustand";
-import type { RuntimeStoreState } from "../store/runtime-store";
-import { DT, RUNTIME_HEALTH_COLORS } from "../design-tokens";
-import type { NodeAction, RuntimeHealth } from "../types";
+import { useState } from 'react';
+import type { StoreApi } from 'zustand';
+import { useStore } from 'zustand';
+import { DT, RUNTIME_HEALTH_COLORS } from '../design-tokens';
+import type { RuntimeStoreState } from '../store/runtime-store';
+import type { NodeAction, RuntimeHealth } from '../types';
 
 // ---------------------------------------------------------------------------
 // Styles
 // ---------------------------------------------------------------------------
 
 const sectionStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.5rem",
-  borderTopWidth: "1px",
-  borderTopStyle: "solid",
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.5rem',
+  borderTopWidth: '1px',
+  borderTopStyle: 'solid',
   borderTopColor: DT.panelBorder,
-  paddingTop: "0.5rem",
+  paddingTop: '0.5rem',
 };
 
 const headerStyle: React.CSSProperties = {
   fontWeight: 600,
-  fontSize: "0.7rem",
+  fontSize: '0.7rem',
   color: DT.textMuted,
-  display: "flex",
-  alignItems: "center",
-  gap: "0.4rem",
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.4rem',
 };
 
 const metricsGrid: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "0.3rem",
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '0.3rem',
 };
 
 const metricCell: React.CSSProperties = {
-  fontSize: "0.68rem",
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.1rem",
-  padding: "0.25rem 0.35rem",
+  fontSize: '0.68rem',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.1rem',
+  padding: '0.25rem 0.35rem',
   backgroundColor: DT.surface,
   borderRadius: 3,
 };
 
 const metricKey: React.CSSProperties = {
   color: DT.textDim,
-  fontSize: "0.62rem",
+  fontSize: '0.62rem',
 };
 
 const metricValue: React.CSSProperties = {
   color: DT.text,
   fontWeight: 600,
-  fontFamily: "monospace",
+  fontFamily: 'monospace',
 };
 
 function actionBtnStyle(category: string): React.CSSProperties {
   const base: React.CSSProperties = {
-    paddingTop: "0.2rem",
-    paddingBottom: "0.2rem",
-    paddingLeft: "0.45rem",
-    paddingRight: "0.45rem",
+    paddingTop: '0.2rem',
+    paddingBottom: '0.2rem',
+    paddingLeft: '0.45rem',
+    paddingRight: '0.45rem',
     borderRadius: 3,
-    borderWidth: "1px",
-    borderStyle: "solid",
-    fontSize: "0.66rem",
-    cursor: "pointer",
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    fontSize: '0.66rem',
+    cursor: 'pointer',
     fontWeight: 500,
   };
 
   switch (category) {
-    case "danger":
-      return { ...base, backgroundColor: "#7f1d1d", borderColor: "#991b1b", color: "#fca5a5" };
-    case "info":
-      return { ...base, backgroundColor: "#1e3a5f", borderColor: "#1e40af", color: "#93c5fd" };
+    case 'danger':
+      return { ...base, backgroundColor: '#7f1d1d', borderColor: '#991b1b', color: '#fca5a5' };
+    case 'info':
+      return { ...base, backgroundColor: '#1e3a5f', borderColor: '#1e40af', color: '#93c5fd' };
     default:
       return { ...base, backgroundColor: DT.surface, borderColor: DT.border, color: DT.text };
   }
@@ -109,22 +109,18 @@ export function LiveMetricsSection({ nodeId, runtimeStore }: LiveMetricsSectionP
           style={{
             width: 8,
             height: 8,
-            borderRadius: "50%",
+            borderRadius: '50%',
             backgroundColor: healthColor.fill,
             flexShrink: 0,
           }}
         />
         Live Status
-        <span style={{ fontSize: "0.6rem", color: DT.textDim, marginLeft: "auto" }}>
-          {nodeState.health}
-        </span>
+        <span style={{ fontSize: '0.6rem', color: DT.textDim, marginLeft: 'auto' }}>{nodeState.health}</span>
       </div>
 
       {/* Status text */}
       {nodeState.statusText && (
-        <div style={{ fontSize: "0.66rem", color: DT.accent, fontStyle: "italic" }}>
-          {nodeState.statusText}
-        </div>
+        <div style={{ fontSize: '0.66rem', color: DT.accent, fontStyle: 'italic' }}>{nodeState.statusText}</div>
       )}
 
       {/* Metrics grid */}
@@ -144,11 +140,11 @@ export function LiveMetricsSection({ nodeId, runtimeStore }: LiveMetricsSectionP
 
       {/* Actions */}
       {actions && actions.length > 0 && (
-        <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap" }}>
+        <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
           {actions.map((a: NodeAction) => (
             <button
               key={a.id}
-              style={actionBtnStyle(a.category ?? "default")}
+              style={actionBtnStyle(a.category ?? 'default')}
               onClick={() => {
                 if (a.confirm) {
                   if (window.confirm(a.confirm)) {
@@ -170,27 +166,27 @@ export function LiveMetricsSection({ nodeId, runtimeStore }: LiveMetricsSectionP
         <div>
           <button
             style={{
-              background: "none",
-              border: "none",
+              background: 'none',
+              border: 'none',
               color: DT.textMuted,
-              fontSize: "0.66rem",
-              cursor: "pointer",
+              fontSize: '0.66rem',
+              cursor: 'pointer',
               padding: 0,
               fontWeight: 600,
             }}
             onClick={() => setEventsExpanded(!eventsExpanded)}
           >
-            {eventsExpanded ? "- " : "+ "}Events ({events.length})
+            {eventsExpanded ? '- ' : '+ '}Events ({events.length})
           </button>
           {eventsExpanded && (
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.2rem",
-                marginTop: "0.25rem",
-                maxHeight: "120px",
-                overflowY: "auto",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.2rem',
+                marginTop: '0.25rem',
+                maxHeight: '120px',
+                overflowY: 'auto',
               }}
             >
               {events.map((e, i) => {
@@ -199,10 +195,10 @@ export function LiveMetricsSection({ nodeId, runtimeStore }: LiveMetricsSectionP
                   <div
                     key={`${e.event}-${i}`}
                     style={{
-                      fontSize: "0.62rem",
+                      fontSize: '0.62rem',
                       color: DT.textDim,
-                      display: "flex",
-                      justifyContent: "space-between",
+                      display: 'flex',
+                      justifyContent: 'space-between',
                     }}
                   >
                     <span style={{ color: DT.textMuted }}>{e.event}</span>
@@ -216,9 +212,7 @@ export function LiveMetricsSection({ nodeId, runtimeStore }: LiveMetricsSectionP
       )}
 
       {/* Footer */}
-      <div style={{ fontSize: "0.6rem", color: DT.textDim }}>
-        Last updated: {ago}s ago
-      </div>
+      <div style={{ fontSize: '0.6rem', color: DT.textDim }}>Last updated: {ago}s ago</div>
     </div>
   );
 }

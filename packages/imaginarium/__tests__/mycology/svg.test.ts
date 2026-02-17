@@ -1,8 +1,8 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { generateSvg, generateSvgBatch } from '../../src/mycology/assets/SvgTemplates';
 import { catalogize } from '../../src/mycology/SpecimenCatalog';
+import type { CapShape, FungalSpecimen, MushroomMorphology } from '../../src/mycology/types';
 import { generateMockTopology } from '../../src/pipeline/MockTopology';
-import type { FungalSpecimen, MushroomMorphology, CapShape } from '../../src/mycology/types';
 
 function makeSpecimen(overrides: Partial<MushroomMorphology> = {}): FungalSpecimen {
   return {
@@ -132,16 +132,20 @@ describe('SVG spots', () => {
 
 describe('SVG ring', () => {
   test('ringed stem has ellipse element', () => {
-    const svg = generateSvg(makeSpecimen({
-      stem: { height: 0.5, thickness: 0.3, bulbous: false, rooting: false, ringed: true },
-    }));
+    const svg = generateSvg(
+      makeSpecimen({
+        stem: { height: 0.5, thickness: 0.3, bulbous: false, rooting: false, ringed: true },
+      }),
+    );
     expect(svg).toContain('<ellipse');
   });
 
   test('non-ringed has no ellipse', () => {
-    const svg = generateSvg(makeSpecimen({
-      stem: { height: 0.5, thickness: 0.3, bulbous: false, rooting: false, ringed: false },
-    }));
+    const svg = generateSvg(
+      makeSpecimen({
+        stem: { height: 0.5, thickness: 0.3, bulbous: false, rooting: false, ringed: false },
+      }),
+    );
     expect(svg).not.toContain('<ellipse');
   });
 });
@@ -165,7 +169,7 @@ describe('SVG batch generation', () => {
     const batch = generateSvgBatch(specimens);
 
     expect(batch.size).toBe(specimens.length);
-    for (const [id, svg] of batch) {
+    for (const [_id, svg] of batch) {
       expect(svg).toContain('<svg');
       expect(svg).toContain('</svg>');
     }

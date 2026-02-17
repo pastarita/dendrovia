@@ -23,12 +23,14 @@ export function EventFilters({
   onClear: () => void;
 }) {
   return (
-    <div style={{
-      display: "flex",
-      gap: "0.75rem",
-      alignItems: "center",
-      flexWrap: "wrap",
-    }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: '0.75rem',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+      }}
+    >
       {PILLARS.map((p) => {
         const enabled = enabledPillars.has(p.name);
         return (
@@ -36,14 +38,14 @@ export function EventFilters({
             key={p.name}
             onClick={() => onTogglePillar(p.name)}
             style={{
-              padding: "0.3rem 0.6rem",
-              borderRadius: "4px",
-              fontSize: "0.7rem",
+              padding: '0.3rem 0.6rem',
+              borderRadius: '4px',
+              fontSize: '0.7rem',
               fontWeight: 500,
               border: `1px solid ${enabled ? p.color : '#333'}`,
-              background: enabled ? p.color + '22' : 'transparent',
+              background: enabled ? `${p.color}22` : 'transparent',
               color: enabled ? p.color : '#555',
-              cursor: "pointer",
+              cursor: 'pointer',
             }}
           >
             {p.name}
@@ -56,28 +58,28 @@ export function EventFilters({
         onChange={(e) => onTextFilterChange(e.target.value)}
         placeholder="Filter events..."
         style={{
-          background: "#111",
-          border: "1px solid #333",
-          borderRadius: "4px",
-          padding: "0.3rem 0.6rem",
-          color: "#ededed",
-          fontSize: "0.8rem",
-          fontFamily: "var(--font-geist-mono)",
-          width: "160px",
+          background: '#111',
+          border: '1px solid #333',
+          borderRadius: '4px',
+          padding: '0.3rem 0.6rem',
+          color: '#ededed',
+          fontSize: '0.8rem',
+          fontFamily: 'var(--font-geist-mono)',
+          width: '160px',
         }}
       />
 
       <button
         onClick={onClear}
         style={{
-          padding: "0.3rem 0.6rem",
-          background: "#222",
-          border: "1px solid #444",
-          borderRadius: "4px",
-          color: "#ededed",
-          fontSize: "0.75rem",
-          cursor: "pointer",
-          marginLeft: "auto",
+          padding: '0.3rem 0.6rem',
+          background: '#222',
+          border: '1px solid #444',
+          borderRadius: '4px',
+          color: '#ededed',
+          fontSize: '0.75rem',
+          cursor: 'pointer',
+          marginLeft: 'auto',
         }}
       >
         Clear Log

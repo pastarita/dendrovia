@@ -13,7 +13,7 @@
  */
 
 import './setup.js';
-import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import { CacheManager } from '../src/cache/CacheManager.js';
 
 // CacheManager uses IndexedDB internally, which may or may not

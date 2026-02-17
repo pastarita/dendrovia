@@ -7,19 +7,11 @@
  * Format: JSON with a version tag for forward-compatibility.
  */
 
-import type {
-  Character,
-  Quest,
-  GameSaveState,
-  CharacterStats,
-  StatusEffect,
-} from '@dendrovia/shared';
-import type { Inventory, InventorySlot } from '../inventory/InventorySystem';
+import type { Character, CharacterStats, Quest } from '@dendrovia/shared';
 import type { EncounterState } from '../encounter/EncounterSystem';
+import type { Inventory, InventorySlot } from '../inventory/InventorySystem';
 import type { BattleStatistics } from '../progression/ProgressionSystem';
 import { createBattleStatistics } from '../progression/ProgressionSystem';
-import { createEncounterState } from '../encounter/EncounterSystem';
-import { createInventory } from '../inventory/InventorySystem';
 
 // ─── Save Format ────────────────────────────────────────────
 
@@ -88,11 +80,11 @@ export function serializeGameState(
       spells: [...character.spells],
     },
     inventory: {
-      items: inventory.items.map(s => ({ ...s })),
+      items: inventory.items.map((s) => ({ ...s })),
       maxSlots: inventory.maxSlots,
     },
-    quests: quests.map(q => ({ ...q, rewards: [...q.rewards] })),
-    completedQuestIds: quests.filter(q => q.status === 'completed').map(q => q.id),
+    quests: quests.map((q) => ({ ...q, rewards: [...q.rewards] })),
+    completedQuestIds: quests.filter((q) => q.status === 'completed').map((q) => q.id),
     encounterState: {
       stepsSinceLastEncounter: encounterState.stepsSinceLastEncounter,
       defeatedBosses: Array.from(encounterState.defeatedBosses),
@@ -175,7 +167,7 @@ export function deserializeGameState(raw: unknown): LoadResult {
   const invData = data.inventory as Record<string, unknown> | undefined;
   const inventory: Inventory = {
     items: Array.isArray(invData?.items)
-      ? (invData!.items as Array<Record<string, unknown>>).map(s => ({
+      ? (invData!.items as Array<Record<string, unknown>>).map((s) => ({
           itemId: String(s.itemId),
           quantity: Number(s.quantity ?? 1),
         }))
@@ -185,14 +177,14 @@ export function deserializeGameState(raw: unknown): LoadResult {
 
   // Validate quests
   const quests: Quest[] = Array.isArray(data.quests)
-    ? (data.quests as Array<Record<string, unknown>>).map(q => ({
+    ? (data.quests as Array<Record<string, unknown>>).map((q) => ({
         id: String(q.id),
         title: String(q.title ?? ''),
         description: String(q.description ?? ''),
         type: String(q.type ?? 'bug-hunt') as Quest['type'],
         status: String(q.status ?? 'locked') as Quest['status'],
         requirements: Array.isArray(q.requirements) ? q.requirements.map(String) : [],
-        rewards: Array.isArray(q.rewards) ? q.rewards as Quest['rewards'] : [],
+        rewards: Array.isArray(q.rewards) ? (q.rewards as Quest['rewards']) : [],
       }))
     : [];
 
@@ -201,20 +193,23 @@ export function deserializeGameState(raw: unknown): LoadResult {
   const encounterState: EncounterState = {
     stepsSinceLastEncounter: Number(encData?.stepsSinceLastEncounter ?? 0),
     defeatedBosses: new Set(Array.isArray(encData?.defeatedBosses) ? (encData!.defeatedBosses as string[]) : []),
-    defeatedMinibosses: new Set(Array.isArray(encData?.defeatedMinibosses) ? (encData!.defeatedMinibosses as string[]) : []),
+    defeatedMinibosses: new Set(
+      Array.isArray(encData?.defeatedMinibosses) ? (encData!.defeatedMinibosses as string[]) : [],
+    ),
     defeatedBugs: new Set(Array.isArray(encData?.defeatedBugs) ? (encData!.defeatedBugs as string[]) : []),
   };
 
   // Battle stats (use defaults for missing fields)
   const battleStats: BattleStatistics = {
     ...createBattleStatistics(),
-    ...(typeof data.battleStats === 'object' && data.battleStats !== null ? data.battleStats as Partial<BattleStatistics> : {}),
+    ...(typeof data.battleStats === 'object' && data.battleStats !== null
+      ? (data.battleStats as Partial<BattleStatistics>)
+      : {}),
   };
 
   const knowledge = Array.isArray(data.knowledge) ? data.knowledge.map(String) : [];
-  const gameFlags = typeof data.gameFlags === 'object' && data.gameFlags !== null
-    ? data.gameFlags as Record<string, boolean>
-    : {};
+  const gameFlags =
+    typeof data.gameFlags === 'object' && data.gameFlags !== null ? (data.gameFlags as Record<string, boolean>) : {};
   const playtimeMs = Number(data.playtimeMs ?? 0);
 
   return {
@@ -259,8 +254,14 @@ export function createSaveSnapshot(
   playtimeMs: number = 0,
 ): string {
   const data = serializeGameState(
-    character, inventory, quests, encounterState,
-    battleStats, knowledge, gameFlags, playtimeMs,
+    character,
+    inventory,
+    quests,
+    encounterState,
+    battleStats,
+    knowledge,
+    gameFlags,
+    playtimeMs,
   );
   return saveToJSON(data);
 }

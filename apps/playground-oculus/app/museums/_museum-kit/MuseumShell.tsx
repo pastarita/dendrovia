@@ -12,13 +12,13 @@
  * Handles filtering, searching, grouping, selection, and Escape to close.
  */
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import type { MuseumPageConfig, MuseumExhibitDescriptor } from './types';
-import { MuseumFilterBar } from './MuseumFilterBar';
-import { MuseumExhibitRow } from './MuseumExhibitRow';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MuseumDetailPanel } from './MuseumDetailPanel';
+import { MuseumExhibitRow } from './MuseumExhibitRow';
+import { MuseumFilterBar } from './MuseumFilterBar';
 import { groupHeaderStyle } from './museum-styles';
+import type { MuseumExhibitDescriptor, MuseumPageConfig } from './types';
 
 interface MuseumShellProps<T = unknown> {
   config: MuseumPageConfig<T>;
@@ -56,9 +56,7 @@ export function MuseumShell<T>({ config }: MuseumShellProps<T>) {
       map.set(item.group, list);
     }
     // Preserve group order from config
-    return groups
-      .filter((g) => map.has(g.id))
-      .map((g) => ({ group: g, items: map.get(g.id)! }));
+    return groups.filter((g) => map.has(g.id)).map((g) => ({ group: g, items: map.get(g.id)! }));
   }, [filtered, groups]);
 
   // Keyboard: Escape closes detail
@@ -114,9 +112,7 @@ export function MuseumShell<T>({ config }: MuseumShellProps<T>) {
             </div>
           ))}
           {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '3rem', opacity: 0.4 }}>
-              No items match your search
-            </div>
+            <div style={{ textAlign: 'center', padding: '3rem', opacity: 0.4 }}>No items match your search</div>
           )}
         </div>
 

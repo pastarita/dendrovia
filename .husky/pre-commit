@@ -213,7 +213,7 @@ if [ $EXPEDITION_MODE -eq 0 ]; then
 
         # Linting
         echo "  ▸ Running linter..."
-        if bun run lint 2>/dev/null; then
+        if bun run check 2>/dev/null; then
             echo "  ✓ Lint passed"
         else
             echo "  ⚠ Lint issues found (advisory)"

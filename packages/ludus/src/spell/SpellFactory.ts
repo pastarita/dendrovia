@@ -5,7 +5,7 @@
  * Symbol-driven procedural generation for runtime spell creation.
  */
 
-import type { Spell, SpellSymbol, Element } from '@dendrovia/shared';
+import type { Element, Spell, SpellSymbol } from '@dendrovia/shared';
 
 // ─── Spell Registry ──────────────────────────────────────────
 
@@ -423,7 +423,7 @@ register({
 
 // ─── Symbol-Driven Spell Generation ─────────────────────────
 
-const BASE_EFFECTS: Record<SpellSymbol['shape'], SpellSymbol['shape'] extends 'circle' ? 'heal' : string> = {
+const _BASE_EFFECTS: Record<SpellSymbol['shape'], SpellSymbol['shape'] extends 'circle' ? 'heal' : string> = {
   circle: 'heal',
   triangle: 'damage',
   square: 'shield',

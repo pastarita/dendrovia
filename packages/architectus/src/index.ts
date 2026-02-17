@@ -7,30 +7,26 @@
 
 // Core app
 export { App } from './App';
-
-// Store
-export { useRendererStore } from './store/useRendererStore';
-
+export { BranchInstances } from './components/BranchInstances';
+export { CameraRig } from './components/CameraRig';
 // Components
 export { DendriteWorld } from './components/DendriteWorld';
-export { BranchInstances } from './components/BranchInstances';
-export { NodeInstances } from './components/NodeInstances';
-export { MushroomInstances } from './components/MushroomInstances';
-export { CameraRig } from './components/CameraRig';
-export { PostProcessing } from './components/PostProcessing';
 export { Lighting } from './components/Lighting';
+export { MushroomInstances } from './components/MushroomInstances';
+export { NodeInstances } from './components/NodeInstances';
 export { PerformanceMonitor } from './components/PerformanceMonitor';
-
-// Systems
-export { LSystem } from './systems/LSystem';
-export { TurtleInterpreter } from './systems/TurtleInterpreter';
-export type { BranchSegment, NodeMarker, TreeGeometry, TurtleState } from './systems/TurtleInterpreter';
-export type { QualityTier } from './store/useRendererStore';
-
-// Loader — IMAGINARIUM asset bridge
-export { loadGeneratedAssets } from './loader/AssetBridge';
+export { PostProcessing } from './components/PostProcessing';
 export type {
-  GeneratedAssets,
   CacheableAssetLoader,
+  GeneratedAssets,
   LoadGeneratedAssetsOptions,
 } from './loader/AssetBridge';
+// Loader — IMAGINARIUM asset bridge
+export { loadGeneratedAssets } from './loader/AssetBridge';
+export type { QualityTier } from './store/useRendererStore';
+// Store
+export { useRendererStore } from './store/useRendererStore';
+// Systems
+export { LSystem } from './systems/LSystem';
+export type { BranchSegment, NodeMarker, TreeGeometry, TurtleState } from './systems/TurtleInterpreter';
+export { TurtleInterpreter } from './systems/TurtleInterpreter';

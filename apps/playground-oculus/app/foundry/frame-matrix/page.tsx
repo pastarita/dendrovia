@@ -1,8 +1,8 @@
 'use client';
 
-import { Fragment } from 'react';
+import { FRAME_REGISTRY, type FrameVariant, OrnateFrame } from '@dendrovia/oculus';
 import Link from 'next/link';
-import { OrnateFrame, FRAME_REGISTRY, type FrameVariant } from '@dendrovia/oculus';
+import { Fragment } from 'react';
 
 const { pillars, variants } = FRAME_REGISTRY;
 const pillarList = Object.values(pillars);
@@ -11,12 +11,13 @@ const variantEntries = Object.entries(variants) as [FrameVariant, (typeof varian
 export default function FrameMatrixPage() {
   return (
     <div>
-      <Link href="/foundry" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; Foundry</Link>
-      <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', marginBottom: '0.5rem' }}>
-        Frame Matrix
-      </h1>
+      <Link href="/foundry" style={{ fontSize: '0.85rem', opacity: 0.5 }}>
+        &larr; Foundry
+      </Link>
+      <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', marginBottom: '0.5rem' }}>Frame Matrix</h1>
       <p style={{ opacity: 0.5, marginBottom: '2rem' }}>
-        {pillarList.length} pillars &times; {variantEntries.length} variants — all {FRAME_REGISTRY.totalCombinations} OrnateFrame combinations
+        {pillarList.length} pillars &times; {variantEntries.length} variants — all {FRAME_REGISTRY.totalCombinations}{' '}
+        OrnateFrame combinations
       </p>
 
       {/* Grid: label column + variant columns */}
@@ -74,15 +75,24 @@ export default function FrameMatrixPage() {
       </div>
 
       {/* Legend */}
-      <div style={{ marginTop: '2.5rem', padding: '1rem', border: '1px solid #222', borderRadius: 8, fontSize: '0.8rem' }}>
+      <div
+        style={{ marginTop: '2.5rem', padding: '1rem', border: '1px solid #222', borderRadius: 8, fontSize: '0.8rem' }}
+      >
         <div style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Legend</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', opacity: 0.6 }}>
-          <div><strong>Modal / Panel:</strong> Corner + edge ornaments visible</div>
-          <div><strong>Compact:</strong> Small corners only, no edge ornaments</div>
-          <div><strong>Tooltip:</strong> Minimal corners, no edge ornaments</div>
+          <div>
+            <strong>Modal / Panel:</strong> Corner + edge ornaments visible
+          </div>
+          <div>
+            <strong>Compact:</strong> Small corners only, no edge ornaments
+          </div>
+          <div>
+            <strong>Tooltip:</strong> Minimal corners, no edge ornaments
+          </div>
         </div>
         <div style={{ marginTop: '0.75rem', opacity: 0.4 }}>
-          {pillarList.length} pillars &times; {variantEntries.length} variants = {FRAME_REGISTRY.totalCombinations} combinations
+          {pillarList.length} pillars &times; {variantEntries.length} variants = {FRAME_REGISTRY.totalCombinations}{' '}
+          combinations
         </div>
       </div>
     </div>

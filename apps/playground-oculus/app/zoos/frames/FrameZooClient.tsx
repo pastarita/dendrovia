@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import type { FrameVariant, PillarId } from '@dendrovia/oculus';
 import Link from 'next/link';
-import type { PillarId, FrameVariant } from '@dendrovia/oculus';
-import { ALL_SPECIMENS, PILLAR_LABELS, PILLAR_EMOJIS } from './mock-upstream';
+import { useMemo, useState } from 'react';
 import { FrameSpecimen } from './FrameSpecimen';
+import { ALL_SPECIMENS, PILLAR_EMOJIS, PILLAR_LABELS } from './mock-upstream';
 
 const PILLARS: PillarId[] = ['chronos', 'imaginarium', 'architectus', 'ludus', 'oculus', 'operatus'];
 const VARIANTS: FrameVariant[] = ['modal', 'panel', 'compact', 'tooltip'];
@@ -34,9 +34,20 @@ export function FrameZooClient() {
 
   return (
     <div>
-      <Link href="/zoos" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; Zoos</Link>
+      <Link href="/zoos" style={{ fontSize: '0.85rem', opacity: 0.5 }}>
+        &larr; Zoos
+      </Link>
 
-      <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <h1
+        style={{
+          fontSize: '1.75rem',
+          fontWeight: 700,
+          marginTop: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}
+      >
         <span>{'\u{1F5BC}'}</span> Ornate Frames
       </h1>
       <p style={{ opacity: 0.5, marginTop: '0.5rem', marginBottom: '1.5rem' }}>
@@ -45,20 +56,11 @@ export function FrameZooClient() {
 
       {/* Pillar tabs */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}>
-        <button
-          type="button"
-          style={tabStyle(pillarFilter === 'all')}
-          onClick={() => setPillarFilter('all')}
-        >
+        <button type="button" style={tabStyle(pillarFilter === 'all')} onClick={() => setPillarFilter('all')}>
           All
         </button>
         {PILLARS.map((p) => (
-          <button
-            key={p}
-            type="button"
-            style={tabStyle(pillarFilter === p)}
-            onClick={() => setPillarFilter(p)}
-          >
+          <button key={p} type="button" style={tabStyle(pillarFilter === p)} onClick={() => setPillarFilter(p)}>
             {PILLAR_EMOJIS[p]} {PILLAR_LABELS[p]}
           </button>
         ))}
@@ -66,20 +68,11 @@ export function FrameZooClient() {
 
       {/* Variant filter */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.5rem', alignItems: 'center' }}>
-        <button
-          type="button"
-          style={tabStyle(variantFilter === 'all')}
-          onClick={() => setVariantFilter('all')}
-        >
+        <button type="button" style={tabStyle(variantFilter === 'all')} onClick={() => setVariantFilter('all')}>
           All
         </button>
         {VARIANTS.map((v) => (
-          <button
-            key={v}
-            type="button"
-            style={tabStyle(variantFilter === v)}
-            onClick={() => setVariantFilter(v)}
-          >
+          <button key={v} type="button" style={tabStyle(variantFilter === v)} onClick={() => setVariantFilter(v)}>
             {v}
           </button>
         ))}
@@ -89,20 +82,20 @@ export function FrameZooClient() {
       </div>
 
       {/* Dense grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-        gap: '1rem',
-      }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '1rem',
+        }}
+      >
         {filtered.map((specimen) => (
           <FrameSpecimen key={specimen.id} specimen={specimen} />
         ))}
       </div>
 
       {filtered.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '3rem', opacity: 0.4 }}>
-          No specimens match the current filters
-        </div>
+        <div style={{ textAlign: 'center', padding: '3rem', opacity: 0.4 }}>No specimens match the current filters</div>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ import type { CSSProperties } from 'react';
 
 // ── Accent ───────────────────────────────────────────
 
-const ACCENT = 'var(--pillar-accent, #f5a97f)';
+const _ACCENT = 'var(--pillar-accent, #f5a97f)';
 const ACCENT_15 = 'rgba(245,169,127,0.15)';
 const ACCENT_60 = 'rgba(245,169,127,0.6)';
 

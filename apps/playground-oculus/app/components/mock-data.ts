@@ -3,7 +3,7 @@
  * Provides realistic sample data for all OCULUS components.
  */
 
-import type { Quest, Bug, Spell, FileTreeNode, Hotspot } from '@dendrovia/shared';
+import type { Bug, FileTreeNode, Hotspot, Quest, Spell } from '@dendrovia/shared';
 
 // ── Quests ──────────────────────────────────────────────
 
@@ -24,7 +24,10 @@ export const MOCK_QUESTS: Quest[] = [
     type: 'refactor',
     status: 'available',
     requirements: ['Read gateway.ts', 'Reduce complexity below 10'],
-    rewards: [{ type: 'experience', value: 200 }, { type: 'knowledge', value: 'middleware-patterns' }],
+    rewards: [
+      { type: 'experience', value: 200 },
+      { type: 'knowledge', value: 'middleware-patterns' },
+    ],
   },
   {
     id: 'q3',
@@ -97,9 +100,48 @@ export const MOCK_TOPOLOGY: FileTreeNode = {
           path: 'src/components',
           type: 'directory',
           children: [
-            { name: 'App.tsx', path: 'src/components/App.tsx', type: 'file', metadata: { path: 'src/components/App.tsx', hash: 'a1', language: 'typescript', complexity: 5, loc: 120, lastModified: new Date(), author: 'explorer' } },
-            { name: 'Header.tsx', path: 'src/components/Header.tsx', type: 'file', metadata: { path: 'src/components/Header.tsx', hash: 'a2', language: 'typescript', complexity: 3, loc: 45, lastModified: new Date(), author: 'explorer' } },
-            { name: 'Footer.tsx', path: 'src/components/Footer.tsx', type: 'file', metadata: { path: 'src/components/Footer.tsx', hash: 'a3', language: 'typescript', complexity: 2, loc: 30, lastModified: new Date(), author: 'explorer' } },
+            {
+              name: 'App.tsx',
+              path: 'src/components/App.tsx',
+              type: 'file',
+              metadata: {
+                path: 'src/components/App.tsx',
+                hash: 'a1',
+                language: 'typescript',
+                complexity: 5,
+                loc: 120,
+                lastModified: new Date(),
+                author: 'explorer',
+              },
+            },
+            {
+              name: 'Header.tsx',
+              path: 'src/components/Header.tsx',
+              type: 'file',
+              metadata: {
+                path: 'src/components/Header.tsx',
+                hash: 'a2',
+                language: 'typescript',
+                complexity: 3,
+                loc: 45,
+                lastModified: new Date(),
+                author: 'explorer',
+              },
+            },
+            {
+              name: 'Footer.tsx',
+              path: 'src/components/Footer.tsx',
+              type: 'file',
+              metadata: {
+                path: 'src/components/Footer.tsx',
+                hash: 'a3',
+                language: 'typescript',
+                complexity: 2,
+                loc: 30,
+                lastModified: new Date(),
+                author: 'explorer',
+              },
+            },
           ],
         },
         {
@@ -107,11 +149,50 @@ export const MOCK_TOPOLOGY: FileTreeNode = {
           path: 'src/utils',
           type: 'directory',
           children: [
-            { name: 'helpers.ts', path: 'src/utils/helpers.ts', type: 'file', metadata: { path: 'src/utils/helpers.ts', hash: 'b1', language: 'typescript', complexity: 8, loc: 200, lastModified: new Date(), author: 'explorer' } },
-            { name: 'api.ts', path: 'src/utils/api.ts', type: 'file', metadata: { path: 'src/utils/api.ts', hash: 'b2', language: 'typescript', complexity: 12, loc: 350, lastModified: new Date(), author: 'explorer' } },
+            {
+              name: 'helpers.ts',
+              path: 'src/utils/helpers.ts',
+              type: 'file',
+              metadata: {
+                path: 'src/utils/helpers.ts',
+                hash: 'b1',
+                language: 'typescript',
+                complexity: 8,
+                loc: 200,
+                lastModified: new Date(),
+                author: 'explorer',
+              },
+            },
+            {
+              name: 'api.ts',
+              path: 'src/utils/api.ts',
+              type: 'file',
+              metadata: {
+                path: 'src/utils/api.ts',
+                hash: 'b2',
+                language: 'typescript',
+                complexity: 12,
+                loc: 350,
+                lastModified: new Date(),
+                author: 'explorer',
+              },
+            },
           ],
         },
-        { name: 'index.ts', path: 'src/index.ts', type: 'file', metadata: { path: 'src/index.ts', hash: 'c1', language: 'typescript', complexity: 1, loc: 10, lastModified: new Date(), author: 'explorer' } },
+        {
+          name: 'index.ts',
+          path: 'src/index.ts',
+          type: 'file',
+          metadata: {
+            path: 'src/index.ts',
+            hash: 'c1',
+            language: 'typescript',
+            complexity: 1,
+            loc: 10,
+            lastModified: new Date(),
+            author: 'explorer',
+          },
+        },
       ],
     },
     { name: 'package.json', path: 'package.json', type: 'file' },

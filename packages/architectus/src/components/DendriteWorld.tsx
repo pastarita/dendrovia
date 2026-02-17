@@ -1,15 +1,14 @@
-import { useMemo, useRef } from 'react';
+import type { BranchEnteredEvent, FileTreeNode, Hotspot, LSystemRule, ProceduralPalette } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import type { FileTreeNode, Hotspot, ProceduralPalette, LSystemRule } from '@dendrovia/shared';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { BranchEnteredEvent } from '@dendrovia/shared';
-import { LSystem } from '../systems/LSystem';
-import { TurtleInterpreter, type NodeMarker } from '../systems/TurtleInterpreter';
-import { BranchInstances } from './BranchInstances';
-import { NodeInstances } from './NodeInstances';
-import { MushroomInstances } from './MushroomInstances';
 import { useRendererStore } from '../store/useRendererStore';
+import { LSystem } from '../systems/LSystem';
+import { type NodeMarker, TurtleInterpreter } from '../systems/TurtleInterpreter';
+import { BranchInstances } from './BranchInstances';
+import { MushroomInstances } from './MushroomInstances';
+import { NodeInstances } from './NodeInstances';
 
 /**
  * DENDRITE WORLD
@@ -141,11 +140,7 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
 
       {/* Mushroom specimens — instanced meshes from IMAGINARIUM mycology */}
       {mushroomSpecimens && mushroomSpecimens.length > 0 && mushroomMeshes && mushroomMeshes.size > 0 && (
-        <MushroomInstances
-          specimens={mushroomSpecimens}
-          meshData={mushroomMeshes}
-          palette={palette}
-        />
+        <MushroomInstances specimens={mushroomSpecimens} meshData={mushroomMeshes} palette={palette} />
       )}
     </group>
   );

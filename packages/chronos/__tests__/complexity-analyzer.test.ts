@@ -1,11 +1,6 @@
-import { describe, test, expect } from 'bun:test';
-import { Project, SyntaxKind } from 'ts-morph';
-import {
-  analyzeFileComplexity,
-  analyzeFunctionComplexities,
-  type ComplexityResult,
-  type DifficultyTier,
-} from '../src/analyzer/ComplexityAnalyzer';
+import { describe, expect, test } from 'bun:test';
+import { Project } from 'ts-morph';
+import { analyzeFileComplexity, analyzeFunctionComplexities } from '../src/analyzer/ComplexityAnalyzer';
 
 /**
  * Helper: create a ts-morph SourceFile from raw TypeScript source text.
@@ -72,8 +67,9 @@ describe('difficulty tier assignment', () => {
 
   test('cyclomatic 10 -> easy', () => {
     // 9 if statements -> 1 + 9 = 10
-    const ifs = Array.from({ length: 9 }, (_, i) =>
-      `if (x > ${(9 - i) * 10}) return '${String.fromCharCode(97 + i)}';`
+    const ifs = Array.from(
+      { length: 9 },
+      (_, i) => `if (x > ${(9 - i) * 10}) return '${String.fromCharCode(97 + i)}';`,
     ).join('\n        ');
     const sf = createSourceFile(`
       function classify(x: number) {
@@ -87,8 +83,9 @@ describe('difficulty tier assignment', () => {
   });
 
   test('cyclomatic 11 -> medium', () => {
-    const ifs = Array.from({ length: 10 }, (_, i) =>
-      `if (x > ${(10 - i) * 10}) return '${String.fromCharCode(97 + i)}';`
+    const ifs = Array.from(
+      { length: 10 },
+      (_, i) => `if (x > ${(10 - i) * 10}) return '${String.fromCharCode(97 + i)}';`,
     ).join('\n        ');
     const sf = createSourceFile(`
       function classify(x: number) {
@@ -350,11 +347,11 @@ describe('analyzeFunctionComplexities', () => {
     const fns = analyzeFunctionComplexities(sf);
     expect(fns.length).toBe(2);
 
-    const simple = fns.find(f => f.name === 'simple');
+    const simple = fns.find((f) => f.name === 'simple');
     expect(simple).toBeDefined();
     expect(simple!.complexity.cyclomatic).toBe(1);
 
-    const branchy = fns.find(f => f.name === 'branchy');
+    const branchy = fns.find((f) => f.name === 'branchy');
     expect(branchy).toBeDefined();
     expect(branchy!.complexity.cyclomatic).toBe(3);
   });
@@ -372,11 +369,11 @@ describe('analyzeFunctionComplexities', () => {
     const fns = analyzeFunctionComplexities(sf);
     expect(fns.length).toBe(2);
 
-    const add = fns.find(f => f.name === 'Calculator.add');
+    const add = fns.find((f) => f.name === 'Calculator.add');
     expect(add).toBeDefined();
     expect(add!.complexity.cyclomatic).toBe(1);
 
-    const divide = fns.find(f => f.name === 'Calculator.divide');
+    const divide = fns.find((f) => f.name === 'Calculator.divide');
     expect(divide).toBeDefined();
     expect(divide!.complexity.cyclomatic).toBe(2);
   });
@@ -392,11 +389,11 @@ describe('analyzeFunctionComplexities', () => {
     const fns = analyzeFunctionComplexities(sf);
     expect(fns.length).toBe(2);
 
-    const isPos = fns.find(f => f.name === 'isPositive');
+    const isPos = fns.find((f) => f.name === 'isPositive');
     expect(isPos).toBeDefined();
     expect(isPos!.complexity.cyclomatic).toBe(1);
 
-    const classify = fns.find(f => f.name === 'classify');
+    const classify = fns.find((f) => f.name === 'classify');
     expect(classify).toBeDefined();
     expect(classify!.complexity.cyclomatic).toBe(2);
   });
@@ -413,9 +410,7 @@ describe('analyzeFunctionComplexities', () => {
   });
 
   test('each function gets its own difficulty tier', () => {
-    const ifs = Array.from({ length: 10 }, (_, i) =>
-      `if (x > ${i}) console.log(${i});`
-    ).join('\n        ');
+    const ifs = Array.from({ length: 10 }, (_, i) => `if (x > ${i}) console.log(${i});`).join('\n        ');
     const sf = createSourceFile(`
       function simple() { return 1; }
       function complex(x: number) {
@@ -423,8 +418,8 @@ describe('analyzeFunctionComplexities', () => {
       }
     `);
     const fns = analyzeFunctionComplexities(sf);
-    const simple = fns.find(f => f.name === 'simple')!;
-    const complex = fns.find(f => f.name === 'complex')!;
+    const simple = fns.find((f) => f.name === 'simple')!;
+    const complex = fns.find((f) => f.name === 'complex')!;
     expect(simple.complexity.difficulty).toBe('trivial');
     // 1 + 10 = 11 -> medium
     expect(complex.complexity.difficulty).toBe('medium');

@@ -11,8 +11,8 @@
  * Returns SSE stream with pipeline progress, then final result.
  */
 
-import { spawn } from 'child_process';
-import { resolve } from 'path';
+import { spawn } from 'node:child_process';
+import { resolve } from 'node:path';
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -77,15 +77,15 @@ export async function POST(request: Request) {
           }
           // Parse final summary stats
           else if (trimmed.startsWith('Files parsed:')) {
-            stats.fileCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
+            stats.fileCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
           } else if (trimmed.startsWith('Commits:') && !trimmed.includes('parsed')) {
-            stats.commitCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
+            stats.commitCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
           } else if (trimmed.startsWith('Hotspots:')) {
-            stats.hotspotCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
+            stats.hotspotCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
           } else if (trimmed.startsWith('Contributors:')) {
-            stats.contributorCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
+            stats.contributorCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
           } else if (trimmed.startsWith('Languages:')) {
-            stats.languageCount = parseInt(trimmed.split(':')[1] ?? '') || 0;
+            stats.languageCount = parseInt(trimmed.split(':')[1] ?? '', 10) || 0;
           } else if (trimmed.startsWith('Total time:')) {
             stats.duration = parseFloat(trimmed.split(':')[1] ?? '') || 0;
           } else if (trimmed.startsWith('Output:')) {

@@ -6,8 +6,8 @@
  * Boundary vertices use special rules to preserve mesh edges.
  */
 
-import type { HalfEdgeMesh, HEVertex, HEHalfEdge, HEFace } from '../HalfEdgeMesh';
-import { vertexNeighbors, isBoundaryVertex, buildFromIndexed } from '../HalfEdgeMesh';
+import type { HalfEdgeMesh, HEFace, HEHalfEdge, HEVertex } from '../HalfEdgeMesh';
+import { buildFromIndexed, isBoundaryVertex, vertexNeighbors } from '../HalfEdgeMesh';
 import type { MeshOp } from '../pipeline';
 
 /**
@@ -43,9 +43,7 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
     }
 
     // Loop's beta weight
-    const beta = n === 3
-      ? 3 / 16
-      : 3 / (8 * n);
+    const beta = n === 3 ? 3 / 16 : 3 / (8 * n);
 
     const weight = 1 - n * beta;
     let nx = v.x * weight;
@@ -78,11 +76,7 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
     // Find the two opposite vertices (for interior edges)
     // For simplicity, use simple midpoint (3/8 + 3/8 + 1/8 + 1/8 rule requires face info)
     // This is the "butterfly-lite" approach — midpoint with slight pull toward neighbors
-    oddPositions.push([
-      (va.x + vb.x) / 2,
-      (va.y + vb.y) / 2,
-      (va.z + vb.z) / 2,
-    ]);
+    oddPositions.push([(va.x + vb.x) / 2, (va.y + vb.y) / 2, (va.z + vb.z) / 2]);
 
     edgeMidpoints.set(key, newIdx);
     return newIdx;
@@ -91,8 +85,8 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
   // ── Phase 3: Build new topology ──
 
   const newVertices: HEVertex[] = [];
-  const newHalfedges: HEHalfEdge[] = [];
-  const newFaces: HEFace[] = [];
+  const _newHalfedges: HEHalfEdge[] = [];
+  const _newFaces: HEFace[] = [];
 
   // Add even vertices
   for (const [x, y, z] of evenPositions) {
@@ -104,11 +98,11 @@ export function loopSubdivideOnce(mesh: HalfEdgeMesh): HalfEdgeMesh {
   for (let fi = 0; fi < faces.length; fi++) {
     const he0 = faces[fi]!.halfedge;
     const he1 = halfedges[he0]!.next;
-    const he2 = halfedges[he1]!.next;
+    const _he2 = halfedges[he1]!.next;
 
-    const v0 = halfedges[halfedges[he0]!.prev]!.vertex;
-    const v1 = halfedges[he0]!.vertex;
-    const v2 = halfedges[he1]!.vertex;
+    const _v0 = halfedges[halfedges[he0]!.prev]!.vertex;
+    const _v1 = halfedges[he0]!.vertex;
+    const _v2 = halfedges[he1]!.vertex;
 
     // Wait — we need the "from" vertex of he0.
     // halfedge he0 points TO v1. The "from" is the vertex of the previous halfedge's target...

@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 
 /**
  * The classifyTier function is module-private in detectGPU.ts, and the
@@ -11,12 +11,7 @@ import { describe, test, expect } from 'bun:test';
 
 type QualityTier = 'ultra' | 'high' | 'medium' | 'low' | 'potato';
 
-function classifyTier(
-  maxTextureSize: number,
-  maxBufferSize: number,
-  memoryGB: number,
-  isMobile: boolean,
-): QualityTier {
+function classifyTier(maxTextureSize: number, maxBufferSize: number, memoryGB: number, isMobile: boolean): QualityTier {
   if (isMobile) {
     if (memoryGB >= 6) return 'medium';
     if (memoryGB >= 4) return 'low';
@@ -24,11 +19,7 @@ function classifyTier(
   }
 
   // Desktop classification
-  if (
-    maxTextureSize >= 16384 &&
-    memoryGB >= 16 &&
-    maxBufferSize >= 2_147_483_648
-  ) {
+  if (maxTextureSize >= 16384 && memoryGB >= 16 && maxBufferSize >= 2_147_483_648) {
     return 'ultra';
   }
   if (maxTextureSize >= 8192 && memoryGB >= 8) {

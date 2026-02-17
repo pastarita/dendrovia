@@ -7,8 +7,8 @@
  * tabbed filtering with auto-counted tabs.
  */
 
-import type { MuseumFilter, MuseumExhibitDescriptor } from './types';
-import { tabStyle, searchContainerStyle, searchInputStyle, countStyle } from './museum-styles';
+import { countStyle, searchContainerStyle, searchInputStyle, tabStyle } from './museum-styles';
+import type { MuseumExhibitDescriptor, MuseumFilter } from './types';
 
 interface MuseumFilterBarProps {
   filters: MuseumFilter[];
@@ -38,11 +38,7 @@ export function MuseumFilterBar({
         {filters.map((f) => {
           const count = exhibits.filter(f.predicate).length;
           return (
-            <button
-              key={f.id}
-              onClick={() => onFilterChange(f.id)}
-              style={tabStyle(activeFilter === f.id)}
-            >
+            <button key={f.id} onClick={() => onFilterChange(f.id)} style={tabStyle(activeFilter === f.id)}>
               {f.label} ({count})
             </button>
           );

@@ -18,13 +18,13 @@
  *   </GymShell>
  */
 
-import Link from 'next/link';
-import type { GymPageConfig, GymSlots } from './types';
 import type { EventBus } from '@dendrovia/shared';
+import Link from 'next/link';
 import { GymProvider } from './GymProvider';
+import { GymStateDash } from './GymStateDash';
 import { GymViewport } from './GymViewport';
 import { GymWiretap } from './GymWiretap';
-import { GymStateDash } from './GymStateDash';
+import type { GymPageConfig, GymSlots } from './types';
 
 interface GymShellProps {
   config: GymPageConfig;
@@ -55,10 +55,7 @@ export function GymShell({ config, seed, children }: GymShellProps) {
               {slots.controls}
 
               {/* Viewport slot */}
-              <GymViewport
-                gradient={config.viewportGradient}
-                watermark={config.viewportWatermark}
-              >
+              <GymViewport gradient={config.viewportGradient} watermark={config.viewportWatermark}>
                 {slots.viewport}
               </GymViewport>
 

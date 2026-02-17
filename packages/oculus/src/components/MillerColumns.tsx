@@ -5,13 +5,11 @@
  * Keyboard navigation: arrows to browse, Enter to select, Esc to close.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { FileTreeNode, Hotspot } from '@dendrovia/shared';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useOculusStore } from '../store/useOculusStore';
-import { useOculus } from '../OculusProvider';
-import type { FileTreeNode, Hotspot, DeepWikiEnrichment } from '@dendrovia/shared';
 import { Panel } from './primitives/Panel';
-import { IconBadge } from './primitives/IconBadge';
 
 const typeIcons: Record<string, string> = {
   directory: '\u{1F4C1}',
@@ -115,7 +113,16 @@ function VirtualColumn({
                 {item.name}
               </span>
               {isHotspot && (
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--oculus-danger)', flexShrink: 0 }} title="Hotspot" />
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: '50%',
+                    background: 'var(--oculus-danger)',
+                    flexShrink: 0,
+                  }}
+                  title="Hotspot"
+                />
               )}
               {item.metadata?.complexity !== undefined && item.metadata.complexity > 10 && (
                 <span style={{ fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-warning)' }}>
@@ -123,7 +130,9 @@ function VirtualColumn({
                 </span>
               )}
               {deepwikiPaths.has(item.path) && (
-                <span style={{ fontSize: 'var(--oculus-font-xs)' }} title="AI documentation available">{'\u{1F4D6}'}</span>
+                <span style={{ fontSize: 'var(--oculus-font-xs)' }} title="AI documentation available">
+                  {'\u{1F4D6}'}
+                </span>
               )}
               {item.type === 'directory' && item.children && (
                 <span style={{ color: 'var(--oculus-text-muted)', fontSize: 'var(--oculus-font-xs)' }}>&rsaquo;</span>
@@ -148,14 +157,11 @@ export function MillerColumns() {
 
   const [activeColumn, setActiveColumn] = useState(0);
 
-  const hotspotPaths = useMemo(
-    () => new Set(hotspots.map((h: Hotspot) => h.path)),
-    [hotspots]
-  );
+  const hotspotPaths = useMemo(() => new Set(hotspots.map((h: Hotspot) => h.path)), [hotspots]);
 
   const deepwikiPaths = useMemo(
     () => new Set(deepwiki?.moduleDocumentation ? Object.keys(deepwiki.moduleDocumentation) : []),
-    [deepwiki]
+    [deepwiki],
   );
 
   // Build columns from selection state
@@ -225,7 +231,7 @@ export function MillerColumns() {
         openCodeReader(item.path, '', item.metadata?.language || 'typescript');
       }
     },
-    [columns, millerSelection, setMillerSelection, openCodeReader]
+    [columns, millerSelection, setMillerSelection, openCodeReader],
   );
 
   // Keyboard navigation
@@ -333,9 +339,7 @@ export function MillerColumns() {
           {breadcrumb.map((part, i) => (
             <React.Fragment key={i}>
               {i > 0 && <span>/</span>}
-              <span style={i === breadcrumb.length - 1 ? { color: 'var(--oculus-amber)' } : undefined}>
-                {part}
-              </span>
+              <span style={i === breadcrumb.length - 1 ? { color: 'var(--oculus-amber)' } : undefined}>{part}</span>
             </React.Fragment>
           ))}
 
@@ -351,13 +355,17 @@ export function MillerColumns() {
         </div>
 
         {/* Columns */}
-        <div
-          style={{ display: 'flex', flex: 1, minHeight: 0 }}
-          role="tree"
-          aria-label="File tree"
-        >
+        <div style={{ display: 'flex', flex: 1, minHeight: 0 }} role="tree" aria-label="File tree">
           {columns.length === 0 && (
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--oculus-text-muted)' }}>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--oculus-text-muted)',
+              }}
+            >
               No topology loaded
             </div>
           )}

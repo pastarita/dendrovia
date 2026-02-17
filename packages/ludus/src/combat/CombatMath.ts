@@ -10,7 +10,7 @@
  * Zero calls to Math.random().
  */
 
-import type { Element, RngState, DamageResult, CharacterStats } from '@dendrovia/shared';
+import type { CharacterStats, DamageResult, Element, RngState } from '@dendrovia/shared';
 import { rngNext } from '../utils/SeededRandom';
 
 // ─── Constants ───────────────────────────────────────────────
@@ -37,11 +37,11 @@ export const VARIANCE_RANGE = 0.15;
 // ─── Element Effectiveness Table ─────────────────────────────
 
 export const ELEMENT_TABLE: Record<Element, Record<Element, number>> = {
-  fire:  { fire: 0.5, water: 0.5, earth: 1.5, air: 1.0, none: 1.0 },
+  fire: { fire: 0.5, water: 0.5, earth: 1.5, air: 1.0, none: 1.0 },
   water: { fire: 1.5, water: 0.5, earth: 1.0, air: 0.5, none: 1.0 },
   earth: { fire: 1.0, water: 1.5, earth: 0.5, air: 1.5, none: 1.0 },
-  air:   { fire: 1.0, water: 1.5, earth: 0.5, air: 0.5, none: 1.0 },
-  none:  { fire: 1.0, water: 1.0, earth: 1.0, air: 1.0, none: 1.0 },
+  air: { fire: 1.0, water: 1.5, earth: 0.5, air: 0.5, none: 1.0 },
+  none: { fire: 1.0, water: 1.0, earth: 1.0, air: 1.0, none: 1.0 },
 };
 
 export function getElementMultiplier(attackElement: Element, defenderElement: Element): number {
@@ -60,10 +60,7 @@ export function effectiveDefense(stats: CharacterStats, defenseMod: number): num
 
 // ─── Critical Hit Roll ──────────────────────────────────────
 
-export function rollCritical(
-  attackerSpeed: number,
-  rng: RngState,
-): [boolean, number, RngState] {
+export function rollCritical(attackerSpeed: number, rng: RngState): [boolean, number, RngState] {
   const critChance = Math.min(BASE_CRIT_CHANCE + attackerSpeed * CRIT_PER_SPEED, MAX_CRIT_CHANCE);
   const [roll, newRng] = rngNext(rng);
   const isCrit = roll < critChance;
@@ -81,18 +78,8 @@ export interface DamageInput {
   defenderElement: Element;
 }
 
-export function calculateDamage(
-  input: DamageInput,
-  rng: RngState,
-): [DamageResult, RngState] {
-  const {
-    attackerAttack,
-    attackerSpeed,
-    spellPower,
-    defenderDefense,
-    attackElement,
-    defenderElement,
-  } = input;
+export function calculateDamage(input: DamageInput, rng: RngState): [DamageResult, RngState] {
+  const { attackerAttack, attackerSpeed, spellPower, defenderDefense, attackElement, defenderElement } = input;
 
   // Core formula: (Power + ATK) * C/(C + DEF)
   const rawPower = spellPower + attackerAttack;
@@ -172,11 +159,7 @@ export function xpRewardForMonster(severity: number, complexity: number = 0): nu
 
 // ─── Monster Stat Scaling ────────────────────────────────────
 
-export function scaleMonsterStat(
-  baseStat: number,
-  severity: number,
-  complexity: number = 0,
-): number {
+export function scaleMonsterStat(baseStat: number, severity: number, complexity: number = 0): number {
   const severityMult = 1 + 0.35 * (severity - 1);
   const complexityMult = 1 + 0.1 * complexity;
   return Math.floor(baseStat * severityMult * complexityMult);

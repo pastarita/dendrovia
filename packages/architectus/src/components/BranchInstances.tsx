@@ -1,5 +1,5 @@
-import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import type { BranchSegment } from '../systems/TurtleInterpreter';
 
@@ -87,10 +87,7 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
 
       // Depth-based color variation (reuse temp colors — no allocation)
       const depthFactor = Math.max(0, 1 - branch.depth * 0.15);
-      _colorA.set(palette.primary).lerp(
-        _colorB.set(palette.secondary),
-        1 - depthFactor
-      );
+      _colorA.set(palette.primary).lerp(_colorB.set(palette.secondary), 1 - depthFactor);
       mesh.setColorAt(i, _colorA);
     }
 
@@ -109,11 +106,5 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
 
   if (branches.length === 0) return null;
 
-  return (
-    <instancedMesh
-      ref={meshRef}
-      args={[geometry, material, branches.length]}
-      frustumCulled={true}
-    />
-  );
+  return <instancedMesh ref={meshRef} args={[geometry, material, branches.length]} frustumCulled={true} />;
 }

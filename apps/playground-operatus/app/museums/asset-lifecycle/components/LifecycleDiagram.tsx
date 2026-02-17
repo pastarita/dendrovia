@@ -12,15 +12,23 @@ export function LifecycleDiagram({
   onSelectStage: (id: string) => void;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {/* Asset Track */}
       <div>
-        <div style={{ fontSize: "0.7rem", textTransform: "uppercase", opacity: 0.4, marginBottom: "0.5rem", letterSpacing: "0.1em" }}>
+        <div
+          style={{
+            fontSize: '0.7rem',
+            textTransform: 'uppercase',
+            opacity: 0.4,
+            marginBottom: '0.5rem',
+            letterSpacing: '0.1em',
+          }}
+        >
           Asset Loading Track
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
           {ASSET_STAGES.map((stage, i) => (
-            <div key={stage.id} style={{ display: "flex", alignItems: "center" }}>
+            <div key={stage.id} style={{ display: 'flex', alignItems: 'center' }}>
               <StageBox
                 id={stage.id}
                 label={stage.label}
@@ -37,12 +45,20 @@ export function LifecycleDiagram({
 
       {/* Persist Track */}
       <div>
-        <div style={{ fontSize: "0.7rem", textTransform: "uppercase", opacity: 0.4, marginBottom: "0.5rem", letterSpacing: "0.1em" }}>
+        <div
+          style={{
+            fontSize: '0.7rem',
+            textTransform: 'uppercase',
+            opacity: 0.4,
+            marginBottom: '0.5rem',
+            letterSpacing: '0.1em',
+          }}
+        >
           State Persistence Track
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
           {PERSIST_STAGES.map((stage, i) => (
-            <div key={stage.id} style={{ display: "flex", alignItems: "center" }}>
+            <div key={stage.id} style={{ display: 'flex', alignItems: 'center' }}>
               <StageBox
                 id={stage.id}
                 label={stage.label}
@@ -79,17 +95,17 @@ function StageBox({
     <button
       onClick={onClick}
       style={{
-        padding: "0.6rem 0.8rem",
-        borderRadius: "6px",
-        border: selected ? `2px solid ${color}` : "1px solid #333",
-        background: active ? color + '33' : '#111',
+        padding: '0.6rem 0.8rem',
+        borderRadius: '6px',
+        border: selected ? `2px solid ${color}` : '1px solid #333',
+        background: active ? `${color}33` : '#111',
         color: active ? color : '#aaa',
-        fontSize: "0.75rem",
+        fontSize: '0.75rem',
         fontWeight: 500,
-        cursor: "pointer",
-        minWidth: "90px",
-        textAlign: "center",
-        transition: "all 0.3s ease",
+        cursor: 'pointer',
+        minWidth: '90px',
+        textAlign: 'center',
+        transition: 'all 0.3s ease',
         boxShadow: active ? `0 0 12px ${color}44` : 'none',
         animation: active ? 'pulse 1s ease-in-out infinite' : 'none',
       }}
@@ -107,23 +123,27 @@ function StageBox({
 
 function Arrow() {
   return (
-    <div style={{
-      width: "24px",
-      height: "2px",
-      background: "#333",
-      position: "relative",
-      flexShrink: 0,
-    }}>
-      <div style={{
-        position: "absolute",
-        right: 0,
-        top: "-3px",
-        width: 0,
-        height: 0,
-        borderTop: "4px solid transparent",
-        borderBottom: "4px solid transparent",
-        borderLeft: "6px solid #333",
-      }} />
+    <div
+      style={{
+        width: '24px',
+        height: '2px',
+        background: '#333',
+        position: 'relative',
+        flexShrink: 0,
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: '-3px',
+          width: 0,
+          height: 0,
+          borderTop: '4px solid transparent',
+          borderBottom: '4px solid transparent',
+          borderLeft: '6px solid #333',
+        }}
+      />
     </div>
   );
 }

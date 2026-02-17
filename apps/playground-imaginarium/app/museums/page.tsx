@@ -1,15 +1,10 @@
-import Link from "next/link";
-import {
-  classifyGenus,
-  buildTaxonomy,
-  generateMorphology,
-  generateLore,
-} from '@dendrovia/imaginarium';
-import type { ParsedFile } from '@dendrovia/shared';
 import type { FileContext } from '@dendrovia/imaginarium';
-import MuseumsClient from "./MuseumsClient";
-import { SPECIMEN_FILES } from "./museum-fixtures";
-import type { SpecimenData } from "./components/MycologyExhibit";
+import { buildTaxonomy, classifyGenus, generateLore, generateMorphology } from '@dendrovia/imaginarium';
+import type { ParsedFile } from '@dendrovia/shared';
+import Link from 'next/link';
+import type { SpecimenData } from './components/MycologyExhibit';
+import MuseumsClient from './MuseumsClient';
+import { SPECIMEN_FILES } from './museum-fixtures';
 
 function buildMockParsedFile(data: (typeof SPECIMEN_FILES)[number]): ParsedFile {
   return {
@@ -85,12 +80,25 @@ export default function MuseumsPage() {
 
   return (
     <div>
-      <Link href="/" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; IMAGINARIUM Dashboard</Link>
-      <h1 style={{ fontSize: "1.75rem", fontWeight: 700, marginTop: "1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+      <Link href="/" style={{ fontSize: '0.85rem', opacity: 0.5 }}>
+        &larr; IMAGINARIUM Dashboard
+      </Link>
+      <h1
+        style={{
+          fontSize: '1.75rem',
+          fontWeight: 700,
+          marginTop: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}
+      >
         <span>🏛️</span> Museums — Procedural Art Exhibitions
       </h1>
-      <p style={{ opacity: 0.5, marginTop: "0.5rem" }}>Explore palettes, shaders, pipeline stages, and mycology specimens.</p>
-      <div style={{ marginTop: "1.5rem" }}>
+      <p style={{ opacity: 0.5, marginTop: '0.5rem' }}>
+        Explore palettes, shaders, pipeline stages, and mycology specimens.
+      </p>
+      <div style={{ marginTop: '1.5rem' }}>
         <MuseumsClient specimens={specimens} />
       </div>
     </div>

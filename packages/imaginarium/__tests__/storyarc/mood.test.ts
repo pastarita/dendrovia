@@ -1,6 +1,6 @@
-import { describe, test, expect } from 'bun:test';
-import { mapMood } from '../../src/storyarc/MoodMapper';
+import { describe, expect, test } from 'bun:test';
 import type { SegmentMetrics } from '@dendrovia/shared';
+import { mapMood } from '../../src/storyarc/MoodMapper';
 
 function makeMetrics(overrides: Partial<SegmentMetrics> = {}): SegmentMetrics {
   return {
@@ -18,52 +18,62 @@ function makeMetrics(overrides: Partial<SegmentMetrics> = {}): SegmentMetrics {
 
 describe('MoodMapper', () => {
   test('serene: low complexity, no hotspots', () => {
-    const mood = mapMood(makeMetrics({
-      avgComplexity: 3,
-      hotspotCount: 0,
-      encounterDensity: 0,
-      avgChurn: 0,
-    }));
+    const mood = mapMood(
+      makeMetrics({
+        avgComplexity: 3,
+        hotspotCount: 0,
+        encounterDensity: 0,
+        avgChurn: 0,
+      }),
+    );
     expect(mood).toBe('serene');
   });
 
   test('tense: moderate complexity or some hotspots', () => {
-    const mood = mapMood(makeMetrics({
-      avgComplexity: 7,
-      hotspotCount: 2,
-      encounterDensity: 0.2,
-      avgChurn: 8,
-    }));
+    const mood = mapMood(
+      makeMetrics({
+        avgComplexity: 7,
+        hotspotCount: 2,
+        encounterDensity: 0.2,
+        avgChurn: 8,
+      }),
+    );
     expect(mood).toBe('tense');
   });
 
   test('chaotic: high complexity + many hotspots + high encounter density', () => {
-    const mood = mapMood(makeMetrics({
-      avgComplexity: 15,
-      hotspotCount: 5,
-      encounterDensity: 0.5,
-      avgChurn: 20,
-    }));
+    const mood = mapMood(
+      makeMetrics({
+        avgComplexity: 15,
+        hotspotCount: 5,
+        encounterDensity: 0.5,
+        avgChurn: 20,
+      }),
+    );
     expect(mood).toBe('chaotic');
   });
 
   test('triumphant: high complexity but stable (low churn, few hotspots)', () => {
-    const mood = mapMood(makeMetrics({
-      avgComplexity: 14,
-      hotspotCount: 0,
-      encounterDensity: 0,
-      avgChurn: 2,
-    }));
+    const mood = mapMood(
+      makeMetrics({
+        avgComplexity: 14,
+        hotspotCount: 0,
+        encounterDensity: 0,
+        avgChurn: 2,
+      }),
+    );
     expect(mood).toBe('triumphant');
   });
 
   test('mysterious: high complexity + low encounter density', () => {
-    const mood = mapMood(makeMetrics({
-      avgComplexity: 10,
-      hotspotCount: 1,
-      encounterDensity: 0.05,
-      avgChurn: 3,
-    }));
+    const mood = mapMood(
+      makeMetrics({
+        avgComplexity: 10,
+        hotspotCount: 1,
+        encounterDensity: 0.05,
+        avgChurn: 3,
+      }),
+    );
     expect(mood).toBe('mysterious');
   });
 

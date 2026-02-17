@@ -11,10 +11,7 @@ import type { OperatusInfrastructure } from './useOperatusInfrastructure';
  * Dynamic imports `@dendrovia/operatus/dendrite` (SSR-safe).
  * Creates bridge, attaches subsystem references, starts on mount, stops on cleanup.
  */
-export function useOperatusBridge(
-  runtimeStore: StoreApi<RuntimeStoreState>,
-  infra: OperatusInfrastructure,
-): void {
+export function useOperatusBridge(runtimeStore: StoreApi<RuntimeStoreState>, infra: OperatusInfrastructure): void {
   const bridgeRef = useRef<any>(null);
 
   useEffect(() => {
@@ -73,5 +70,5 @@ export function useOperatusBridge(
         bridgeRef.current = null;
       }
     };
-  }, [infra.ready, infra.cacheManager, infra.assetLoader, runtimeStore]);
+  }, [infra.ready, infra.cacheManager, infra.assetLoader, runtimeStore, infra.eventBus, infra.gameEvents]);
 }

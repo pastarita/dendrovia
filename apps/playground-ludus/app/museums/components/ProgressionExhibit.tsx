@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
-import { totalXPForLevel, xpToNextLevel, computeStatsAtLevel, createCharacter } from '@dendrovia/ludus';
+import { computeStatsAtLevel, createCharacter, totalXPForLevel, xpToNextLevel } from '@dendrovia/ludus';
 import type { CharacterClass } from '@dendrovia/shared';
+import { useMemo } from 'react';
 
 const CLASSES: CharacterClass[] = ['tank', 'healer', 'dps'];
 const KEY_LEVELS = [1, 5, 10, 15, 20, 25, 30];
@@ -35,11 +35,21 @@ export default function ProgressionExhibit(): React.JSX.Element {
 
   // Stat growth per class
   const statGrowth = useMemo(() => {
-    const data: Record<string, Array<{ level: number; health: number; mana: number; attack: number; defense: number; speed: number }>> = {};
+    const data: Record<
+      string,
+      Array<{ level: number; health: number; mana: number; attack: number; defense: number; speed: number }>
+    > = {};
     for (const cls of CLASSES) {
-      data[cls] = KEY_LEVELS.map(level => {
+      data[cls] = KEY_LEVELS.map((level) => {
         const stats = computeStatsAtLevel(cls, level);
-        return { level, health: stats.maxHealth, mana: stats.maxMana, attack: stats.attack, defense: stats.defense, speed: stats.speed };
+        return {
+          level,
+          health: stats.maxHealth,
+          mana: stats.maxMana,
+          attack: stats.attack,
+          defense: stats.defense,
+          speed: stats.speed,
+        };
       });
     }
     return data;
@@ -53,7 +63,7 @@ export default function ProgressionExhibit(): React.JSX.Element {
       let prevSpells: string[] = [];
       for (const level of KEY_LEVELS) {
         const char = createCharacter(cls, 'test', level);
-        const newSpells = char.spells.filter(s => !prevSpells.includes(s));
+        const newSpells = char.spells.filter((s) => !prevSpells.includes(s));
         if (newSpells.length > 0) {
           unlocks.push({ level, spells: newSpells });
         }
@@ -64,8 +74,20 @@ export default function ProgressionExhibit(): React.JSX.Element {
     return data;
   }, []);
 
-  const thStyle: React.CSSProperties = { textAlign: 'right', padding: '0.3rem 0.5rem', borderBottom: '1px solid #333', fontSize: '0.7rem', opacity: 0.5 };
-  const tdStyle: React.CSSProperties = { textAlign: 'right', padding: '0.25rem 0.5rem', fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', borderBottom: '1px solid #1a1a1a' };
+  const thStyle: React.CSSProperties = {
+    textAlign: 'right',
+    padding: '0.3rem 0.5rem',
+    borderBottom: '1px solid #333',
+    fontSize: '0.7rem',
+    opacity: 0.5,
+  };
+  const tdStyle: React.CSSProperties = {
+    textAlign: 'right',
+    padding: '0.25rem 0.5rem',
+    fontFamily: 'var(--font-geist-mono)',
+    fontSize: '0.75rem',
+    borderBottom: '1px solid #1a1a1a',
+  };
 
   return (
     <div>
@@ -85,7 +107,7 @@ export default function ProgressionExhibit(): React.JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {xpTable.map(row => (
+              {xpTable.map((row) => (
                 <tr key={row.level}>
                   <td style={{ ...tdStyle, textAlign: 'left', fontWeight: 600 }}>{row.level}</td>
                   <td style={tdStyle}>{row.totalXP.toLocaleString()}</td>
@@ -101,7 +123,7 @@ export default function ProgressionExhibit(): React.JSX.Element {
       <div style={{ marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Stat Growth per Class</h3>
         <div style={{ display: 'grid', gap: '1rem' }}>
-          {CLASSES.map(cls => (
+          {CLASSES.map((cls) => (
             <div key={cls}>
               <div style={{ fontWeight: 600, fontSize: '0.85rem', color: CLASS_COLORS[cls], marginBottom: '0.35rem' }}>
                 {CLASS_LABELS[cls]}
@@ -119,7 +141,7 @@ export default function ProgressionExhibit(): React.JSX.Element {
                     </tr>
                   </thead>
                   <tbody>
-                    {statGrowth[cls].map(row => (
+                    {statGrowth[cls].map((row) => (
                       <tr key={row.level}>
                         <td style={{ ...tdStyle, textAlign: 'left', fontWeight: 600 }}>{row.level}</td>
                         <td style={tdStyle}>{row.health}</td>
@@ -141,18 +163,34 @@ export default function ProgressionExhibit(): React.JSX.Element {
       <div>
         <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.75rem' }}>Spell Unlock Timeline</h3>
         <div style={{ display: 'grid', gap: '1rem' }}>
-          {CLASSES.map(cls => (
+          {CLASSES.map((cls) => (
             <div key={cls}>
               <div style={{ fontWeight: 600, fontSize: '0.85rem', color: CLASS_COLORS[cls], marginBottom: '0.35rem' }}>
                 {CLASS_LABELS[cls]}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                {spellUnlocks[cls].map(unlock => (
-                  <div key={unlock.level} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.8rem', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', opacity: 0.5, minWidth: '40px' }}>Lv{unlock.level}</span>
+                {spellUnlocks[cls].map((unlock) => (
+                  <div
+                    key={unlock.level}
+                    style={{ display: 'flex', gap: '0.5rem', fontSize: '0.8rem', alignItems: 'center' }}
+                  >
+                    <span style={{ fontFamily: 'var(--font-geist-mono)', opacity: 0.5, minWidth: '40px' }}>
+                      Lv{unlock.level}
+                    </span>
                     <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
-                      {unlock.spells.map(s => (
-                        <span key={s} style={{ padding: '0.15rem 0.4rem', borderRadius: '3px', background: '#1a1a1a', border: '1px solid #333', fontSize: '0.75rem' }}>{s}</span>
+                      {unlock.spells.map((s) => (
+                        <span
+                          key={s}
+                          style={{
+                            padding: '0.15rem 0.4rem',
+                            borderRadius: '3px',
+                            background: '#1a1a1a',
+                            border: '1px solid #333',
+                            fontSize: '0.75rem',
+                          }}
+                        >
+                          {s}
+                        </span>
                       ))}
                     </div>
                   </div>

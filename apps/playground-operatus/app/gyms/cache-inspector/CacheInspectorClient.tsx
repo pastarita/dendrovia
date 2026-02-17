@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
 import { OrnateFrame } from '@dendrovia/oculus';
-import { StorageQuotaBar } from './components/StorageQuotaBar';
-import { CacheEntryTable } from './components/CacheEntryTable';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CacheActionToolbar } from './components/CacheActionToolbar';
+import { CacheEntryTable } from './components/CacheEntryTable';
+import { StorageQuotaBar } from './components/StorageQuotaBar';
 
 type OperatusMod = typeof import('@dendrovia/operatus');
 type CacheEntryInfo = import('@dendrovia/operatus').CacheEntryInfo;
@@ -22,11 +22,7 @@ export function CacheInspectorClient() {
   const refresh = useCallback(async () => {
     const cache = cacheRef.current;
     if (!cache) return;
-    const [list, q, stats] = await Promise.all([
-      cache.listEntries(),
-      cache.getStorageQuota(),
-      cache.stats(),
-    ]);
+    const [list, q, stats] = await Promise.all([cache.listEntries(), cache.getStorageQuota(), cache.stats()]);
     setEntries(list);
     setQuota(q);
     setOpfsActive(stats.opfsAvailable);
@@ -35,41 +31,46 @@ export function CacheInspectorClient() {
 
   useEffect(() => {
     let cancelled = false;
-    import('@dendrovia/operatus').then(async (mod) => {
-      if (cancelled) return;
-      const cache = new mod.CacheManager();
-      await cache.init();
-      cacheRef.current = cache;
-      setReady(true);
-      await refresh();
-    }).catch((err) => {
-      if (!cancelled) setError(err instanceof Error ? err.message : String(err));
-    });
-    return () => { cancelled = true; };
+    import('@dendrovia/operatus')
+      .then(async (mod) => {
+        if (cancelled) return;
+        const cache = new mod.CacheManager();
+        await cache.init();
+        cacheRef.current = cache;
+        setReady(true);
+        await refresh();
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err instanceof Error ? err.message : String(err));
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [refresh]);
 
   if (error) {
-    return <div style={{ marginTop: "2rem", color: "#ef4444" }}>Error: {error}</div>;
+    return <div style={{ marginTop: '2rem', color: '#ef4444' }}>Error: {error}</div>;
   }
 
   if (!ready) {
-    return <div style={{ marginTop: "2rem", opacity: 0.5 }}>Initializing cache manager...</div>;
+    return <div style={{ marginTop: '2rem', opacity: 0.5 }}>Initializing cache manager...</div>;
   }
 
   const cache = cacheRef.current!;
   const totalBytes = entries.reduce((sum, e) => sum + e.size, 0);
   const persistentCount = entries.length;
-  const oldest = entries.length > 0
-    ? entries.reduce((oldest, e) => new Date(e.cachedAt) < new Date(oldest.cachedAt) ? e : oldest).cachedAt
-    : null;
+  const oldest =
+    entries.length > 0
+      ? entries.reduce((oldest, e) => (new Date(e.cachedAt) < new Date(oldest.cachedAt) ? e : oldest)).cachedAt
+      : null;
 
   return (
-    <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <StorageQuotaBar quota={quota} opfsActive={opfsActive} />
 
       {/* Stats summary */}
       <OrnateFrame pillar="operatus" variant="compact">
-        <div style={{ display: "flex", gap: "2rem", fontSize: "0.85rem" }}>
+        <div style={{ display: 'flex', gap: '2rem', fontSize: '0.85rem' }}>
           <Stat label="Memory entries" value={String(memoryCount)} />
           <Stat label="Persistent entries" value={String(persistentCount)} />
           <Stat label="Total size" value={formatBytes(totalBytes)} />
@@ -88,8 +89,8 @@ export function CacheInspectorClient() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <span style={{ opacity: 0.4, fontSize: "0.7rem", textTransform: "uppercase" }}>{label}</span>
-      <div style={{ fontFamily: "var(--font-geist-mono)", fontWeight: 600 }}>{value}</div>
+      <span style={{ opacity: 0.4, fontSize: '0.7rem', textTransform: 'uppercase' }}>{label}</span>
+      <div style={{ fontFamily: 'var(--font-geist-mono)', fontWeight: 600 }}>{value}</div>
     </div>
   );
 }

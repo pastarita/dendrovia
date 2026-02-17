@@ -6,20 +6,20 @@
  * ASTParseResult shape as the ts-morph TS/JS path.
  */
 
-import { readFileSync, statSync } from 'fs';
-import { extname } from 'path';
+import { readFileSync, statSync } from 'node:fs';
+import { extname } from 'node:path';
 import type { ParsedFile } from '@dendrovia/shared';
-import type { ASTParseResult } from './ASTParser.js';
 import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer.js';
 import { toDifficulty } from '../analyzer/ComplexityAnalyzer.js';
+import type { ASTParseResult } from './ASTParser.js';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
 interface GoFunction {
   name: string;
   startLine: number; // 1-based
-  endLine: number;   // 1-based
-  body: string;      // raw source of the function body (between braces)
+  endLine: number; // 1-based
+  body: string; // raw source of the function body (between braces)
   bodyLines: string[];
 }
 
@@ -45,7 +45,7 @@ export function parseGoFile(filePath: string, repoRoot: string): ASTParseResult 
   const cleaned = stripGoCommentsAndStrings(source);
   const functions = findFunctions(source, cleaned);
 
-  const funcResults: FunctionComplexity[] = functions.map(fn => {
+  const funcResults: FunctionComplexity[] = functions.map((fn) => {
     const cleanedBody = stripGoCommentsAndStrings(fn.body);
     const cyc = countCyclomatic(cleanedBody);
     const cog = countCognitive(fn.bodyLines);
@@ -74,9 +74,7 @@ export function parseGoFile(filePath: string, repoRoot: string): ASTParseResult 
 
   const hash = simpleHash(source);
 
-  const relativePath = filePath.startsWith(repoRoot)
-    ? filePath.slice(repoRoot.length).replace(/^\//, '')
-    : filePath;
+  const relativePath = filePath.startsWith(repoRoot) ? filePath.slice(repoRoot.length).replace(/^\//, '') : filePath;
 
   const file: ParsedFile = {
     path: relativePath,
@@ -169,10 +167,10 @@ export function stripGoCommentsAndStrings(source: string): string {
     }
 
     // Rune literal (single quote)
-    if (source[i] === '\'') {
+    if (source[i] === "'") {
       result.push(' ');
       i++;
-      while (i < source.length && source[i] !== '\'') {
+      while (i < source.length && source[i] !== "'") {
         if (source[i] === '\\') {
           result.push(' ');
           i++;
@@ -213,7 +211,7 @@ const FUNC_RE = /^func\s+(?:\([^)]*\)\s+)?(\w+)\s*(?:\[.*?\])?\s*\(/gm;
  * via brace matching on the original source.
  */
 export function findFunctions(source: string, cleaned: string): GoFunction[] {
-  const lines = source.split('\n');
+  const _lines = source.split('\n');
   const functions: GoFunction[] = [];
 
   let match: RegExpExecArray | null;
@@ -289,9 +287,9 @@ function findMatchingBrace(source: string, openPos: number): number {
     }
 
     // Skip rune literals
-    if (ch === '\'') {
+    if (ch === "'") {
       i++;
-      while (i < source.length && source[i] !== '\'') {
+      while (i < source.length && source[i] !== "'") {
         if (source[i] === '\\') i++;
         i++;
       }
@@ -368,7 +366,7 @@ function simpleHash(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return Math.abs(hash).toString(16).padStart(8, '0');

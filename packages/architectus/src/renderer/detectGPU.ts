@@ -78,12 +78,7 @@ export async function detectGPU(): Promise<GPUCapabilities> {
   };
 }
 
-function classifyTier(
-  maxTextureSize: number,
-  maxBufferSize: number,
-  memoryGB: number,
-  isMobile: boolean
-): QualityTier {
+function classifyTier(maxTextureSize: number, maxBufferSize: number, memoryGB: number, isMobile: boolean): QualityTier {
   if (isMobile) {
     if (memoryGB >= 6) return 'medium';
     if (memoryGB >= 4) return 'low';

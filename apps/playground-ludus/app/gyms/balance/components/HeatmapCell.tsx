@@ -7,10 +7,10 @@ interface HeatmapCellProps {
 }
 
 function getColor(winRate: number): string {
-  if (winRate >= 0.80) return '#991B1B'; // too easy - dark red
+  if (winRate >= 0.8) return '#991B1B'; // too easy - dark red
   if (winRate >= 0.65) return '#F97316'; // slightly easy - orange
   if (winRate >= 0.55) return '#22C55E'; // balanced - green
-  if (winRate >= 0.30) return '#EAB308'; // slightly hard - yellow
+  if (winRate >= 0.3) return '#EAB308'; // slightly hard - yellow
   return '#EF4444'; // too hard - red
 }
 

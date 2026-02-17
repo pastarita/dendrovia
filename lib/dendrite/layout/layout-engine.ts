@@ -7,19 +7,13 @@
  *   3. buildDendriteLayout()    — orchestrates the full pipeline
  */
 
-import type { Node, Edge } from "@xyflow/react";
-import dagre from "@dagrejs/dagre";
-import type {
-  SourceDiagram,
-  SourceEdge,
-  LayoutDirection,
-  ColorMode,
-  RuntimeHealth,
-} from "../types";
-import { resolveNodeColor } from "../coloring";
-import { resolveRuntimeColor } from "../coloring/modes";
-import { getVisibleNodes, getHiddenNodeIds } from "./collapse-manager";
-import { DT } from "../design-tokens";
+import dagre from '@dagrejs/dagre';
+import type { Edge, Node } from '@xyflow/react';
+import { resolveNodeColor } from '../coloring';
+import { resolveRuntimeColor } from '../coloring/modes';
+import { DT } from '../design-tokens';
+import type { ColorMode, LayoutDirection, RuntimeHealth, SourceDiagram, SourceEdge } from '../types';
+import { getHiddenNodeIds, getVisibleNodes } from './collapse-manager';
 
 // ---------------------------------------------------------------------------
 // Dimension lookup by node kind
@@ -27,9 +21,9 @@ import { DT } from "../design-tokens";
 
 function getDimensions(kind: string): { width: number; height: number } {
   switch (kind) {
-    case "root":
+    case 'root':
       return { width: DT.rootWidth, height: DT.rootHeight };
-    case "phase":
+    case 'phase':
       return { width: DT.phaseWidth, height: DT.phaseHeight };
     default:
       return { width: DT.sectionWidth, height: DT.sectionHeight };
@@ -45,23 +39,18 @@ export function transformFixtureToFlow(
   collapsed: Set<string>,
   colorMode: ColorMode,
   phaseFilter: string | null,
-  runtimeHealthMap?: Map<string, RuntimeHealth>
+  runtimeHealthMap?: Map<string, RuntimeHealth>,
 ): { nodes: Node[]; edges: Edge[] } {
   const hidden = getHiddenNodeIds(diagram, collapsed);
   let visible = getVisibleNodes(diagram, collapsed);
 
   // Apply phase filter: if set, only show root + matching phase + its children
   if (phaseFilter) {
-    const phaseNode = diagram.nodes.find(
-      (n) => n.id === phaseFilter && n.kind === "phase"
-    );
+    const phaseNode = diagram.nodes.find((n) => n.id === phaseFilter && n.kind === 'phase');
     if (phaseNode) {
       const phaseChildIds = new Set(phaseNode.children ?? []);
       visible = visible.filter(
-        (n) =>
-          n.kind === "root" ||
-          n.id === phaseFilter ||
-          (phaseChildIds.has(n.id) && !hidden.has(n.id))
+        (n) => n.kind === 'root' || n.id === phaseFilter || (phaseChildIds.has(n.id) && !hidden.has(n.id)),
       );
     }
   }
@@ -76,13 +65,13 @@ export function transformFixtureToFlow(
 
     // In runtime mode, override colors with runtime health if available
     const runtimeHealth = runtimeHealthMap?.get(sn.id);
-    if (colorMode === "runtime" && runtimeHealth) {
+    if (colorMode === 'runtime' && runtimeHealth) {
       colors = resolveRuntimeColor(runtimeHealth);
     }
 
     return {
       id: sn.id,
-      type: sn.kind === "root" ? "pipelineRoot" : sn.kind,
+      type: sn.kind === 'root' ? 'pipelineRoot' : sn.kind,
       position: { x: 0, y: 0 }, // dagre will set this
       data: {
         label: sn.label,
@@ -116,13 +105,13 @@ function toFlowEdge(se: SourceEdge): Edge {
     id: `${se.source}->${se.target}`,
     source: se.source,
     target: se.target,
-    type: "flowEdge",
+    type: 'flowEdge',
     data: {
       relation: se.relation,
       label: se.label,
       contracts: se.contracts,
     },
-    animated: se.relation === "pipeline-flow",
+    animated: se.relation === 'pipeline-flow',
   };
 }
 
@@ -130,11 +119,7 @@ function toFlowEdge(se: SourceEdge): Edge {
 // Step 2: Dagre layout
 // ---------------------------------------------------------------------------
 
-export function applyDagreLayout(
-  nodes: Node[],
-  edges: Edge[],
-  direction: LayoutDirection
-): Node[] {
+export function applyDagreLayout(nodes: Node[], edges: Edge[], direction: LayoutDirection): Node[] {
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
   g.setGraph({
@@ -181,15 +166,9 @@ export function buildDendriteLayout(
   direction: LayoutDirection,
   colorMode: ColorMode,
   phaseFilter: string | null,
-  runtimeHealthMap?: Map<string, RuntimeHealth>
+  runtimeHealthMap?: Map<string, RuntimeHealth>,
 ): { nodes: Node[]; edges: Edge[] } {
-  const { nodes, edges } = transformFixtureToFlow(
-    diagram,
-    collapsed,
-    colorMode,
-    phaseFilter,
-    runtimeHealthMap
-  );
+  const { nodes, edges } = transformFixtureToFlow(diagram, collapsed, colorMode, phaseFilter, runtimeHealthMap);
   const positioned = applyDagreLayout(nodes, edges, direction);
   return { nodes: positioned, edges };
 }

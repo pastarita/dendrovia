@@ -6,18 +6,18 @@
  */
 
 import type {
-  Monster,
   BugType,
-  Element,
   CharacterStats,
+  Element,
+  Hotspot,
   LootEntry,
+  Monster,
   ParsedCommit,
   ParsedFile,
-  Hotspot,
   RngState,
 } from '@dendrovia/shared';
+import { rngPick } from '../utils/SeededRandom';
 import { scaleMonsterStat, xpRewardForMonster } from './CombatMath';
-import { rngNext, rngPick } from '../utils/SeededRandom';
 
 // ─── Base Monster Templates ─────────────────────────────────
 
@@ -83,20 +83,26 @@ const TEMPLATES: Record<BugType, MonsterTemplate> = {
 // ─── Name Generation ─────────────────────────────────────────
 
 const ADJECTIVES = [
-  'Recursive', 'Polymorphic', 'Async', 'Deprecated', 'Volatile',
-  'Orphaned', 'Dangling', 'Corrupted', 'Uninitialized', 'Phantom',
-  'Legacy', 'Stale', 'Circular', 'Transient', 'Persistent',
+  'Recursive',
+  'Polymorphic',
+  'Async',
+  'Deprecated',
+  'Volatile',
+  'Orphaned',
+  'Dangling',
+  'Corrupted',
+  'Uninitialized',
+  'Phantom',
+  'Legacy',
+  'Stale',
+  'Circular',
+  'Transient',
+  'Persistent',
 ];
 
-const BOSS_PREFIXES = [
-  'Catastrophic', 'Critical', 'Fatal', 'Systemic', 'Cascading',
-];
+const BOSS_PREFIXES = ['Catastrophic', 'Critical', 'Fatal', 'Systemic', 'Cascading'];
 
-function generateMonsterName(
-  template: MonsterTemplate,
-  severity: number,
-  rng: RngState,
-): [string, RngState] {
+function generateMonsterName(template: MonsterTemplate, severity: number, rng: RngState): [string, RngState] {
   if (severity >= 4) {
     const [prefix, rng1] = rngPick(rng, BOSS_PREFIXES);
     return [`${prefix} ${template.baseName}`, rng1];
@@ -111,9 +117,7 @@ function generateMonsterName(
 // ─── Loot Table Generation ───────────────────────────────────
 
 function generateLootTable(severity: number): LootEntry[] {
-  const entries: LootEntry[] = [
-    { itemId: 'item-debug-log', chance: 0.5 },
-  ];
+  const entries: LootEntry[] = [{ itemId: 'item-debug-log', chance: 0.5 }];
 
   if (severity >= 2) {
     entries.push({ itemId: 'item-stack-trace', chance: 0.3 });
@@ -133,11 +137,7 @@ function generateLootTable(severity: number): LootEntry[] {
 
 // ─── Scale stats from template ──────────────────────────────
 
-function scaleStats(
-  template: MonsterTemplate,
-  severity: 1 | 2 | 3 | 4 | 5,
-  complexity: number,
-): CharacterStats {
+function scaleStats(template: MonsterTemplate, severity: 1 | 2 | 3 | 4 | 5, complexity: number): CharacterStats {
   const maxHealth = scaleMonsterStat(template.baseHP, severity, complexity);
   return {
     health: maxHealth,
@@ -188,10 +188,7 @@ export function generateBugMonster(
 }
 
 /** Generate a boss from a high-complexity file */
-export function generateBoss(
-  file: ParsedFile,
-  rng: RngState,
-): [Monster, RngState] {
+export function generateBoss(file: ParsedFile, rng: RngState): [Monster, RngState] {
   // High complexity files produce bosses
   const bugType = inferBugTypeFromLanguage(file.language);
   const template = TEMPLATES[bugType];
@@ -217,10 +214,7 @@ export function generateBoss(
 }
 
 /** Generate a miniboss from a hotspot */
-export function generateMiniboss(
-  hotspot: Hotspot,
-  rng: RngState,
-): [Monster, RngState] {
+export function generateMiniboss(hotspot: Hotspot, rng: RngState): [Monster, RngState] {
   const bugType = hotspot.riskScore > 7 ? 'memory-leak' : 'null-pointer';
   const template = TEMPLATES[bugType];
   const severity: 1 | 2 | 3 | 4 | 5 = Math.min(5, Math.max(1, Math.floor(hotspot.riskScore / 2))) as 1 | 2 | 3 | 4 | 5;
@@ -276,8 +270,10 @@ function inferBugType(commitMessage: string): BugType {
   const msg = commitMessage.toLowerCase();
   if (msg.includes('null') || msg.includes('undefined') || msg.includes('typeerror')) return 'null-pointer';
   if (msg.includes('memory') || msg.includes('leak') || msg.includes('gc')) return 'memory-leak';
-  if (msg.includes('race') || msg.includes('concurrent') || msg.includes('async') || msg.includes('deadlock')) return 'race-condition';
-  if (msg.includes('off-by') || msg.includes('index') || msg.includes('bound') || msg.includes('fence')) return 'off-by-one';
+  if (msg.includes('race') || msg.includes('concurrent') || msg.includes('async') || msg.includes('deadlock'))
+    return 'race-condition';
+  if (msg.includes('off-by') || msg.includes('index') || msg.includes('bound') || msg.includes('fence'))
+    return 'off-by-one';
   // Default: null-pointer is the most common
   return 'null-pointer';
 }
@@ -295,12 +291,16 @@ function inferBugTypeFromLanguage(language: string): BugType {
   switch (language.toLowerCase()) {
     case 'c':
     case 'c++':
-    case 'rust': return 'memory-leak';
+    case 'rust':
+      return 'memory-leak';
     case 'go':
-    case 'java': return 'race-condition';
+    case 'java':
+      return 'race-condition';
     case 'python':
     case 'javascript':
-    case 'typescript': return 'null-pointer';
-    default: return 'off-by-one';
+    case 'typescript':
+      return 'null-pointer';
+    default:
+      return 'off-by-one';
   }
 }

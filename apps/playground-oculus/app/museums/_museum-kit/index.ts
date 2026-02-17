@@ -8,21 +8,18 @@
  * - Sticky detail panel via render props
  */
 
-// Shell
-export { MuseumShell } from './MuseumShell';
-
+export { MuseumDetailPanel } from './MuseumDetailPanel';
+export { MuseumExhibitRow } from './MuseumExhibitRow';
 // Sub-components (for advanced composition)
 export { MuseumFilterBar } from './MuseumFilterBar';
-export { MuseumExhibitRow } from './MuseumExhibitRow';
-export { MuseumDetailPanel } from './MuseumDetailPanel';
-
+// Shell
+export { MuseumShell } from './MuseumShell';
+// Styles
+export * from './museum-styles';
 // Types
 export type {
   MuseumExhibitDescriptor,
-  MuseumGroup,
   MuseumFilter,
+  MuseumGroup,
   MuseumPageConfig,
 } from './types';
-
-// Styles
-export * from './museum-styles';

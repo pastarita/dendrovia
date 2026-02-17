@@ -5,76 +5,159 @@
 /* ── Entrances ────────────────────────────────────── */
 
 @keyframes oculus-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes oculus-slide-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes oculus-slide-down {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes oculus-slide-left {
-  from { opacity: 0; transform: translateX(12px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes oculus-slide-right {
-  from { opacity: 0; transform: translateX(-12px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes oculus-scale-in {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ── Effects ──────────────────────────────────────── */
 
 @keyframes oculus-pulse-glow {
-  0%, 100% { box-shadow: 0 0 10px var(--oculus-glow); }
-  50%      { box-shadow: 0 0 25px var(--oculus-glow), 0 0 50px rgba(245, 169, 127, 0.1); }
+  0%,
+  100% {
+    box-shadow: 0 0 10px var(--oculus-glow);
+  }
+  50% {
+    box-shadow:
+      0 0 25px var(--oculus-glow),
+      0 0 50px rgba(245, 169, 127, 0.1);
+  }
 }
 
 @keyframes oculus-damage-flash {
-  0%   { filter: brightness(1); }
-  15%  { filter: brightness(2) saturate(2); }
-  100% { filter: brightness(1); }
+  0% {
+    filter: brightness(1);
+  }
+  15% {
+    filter: brightness(2) saturate(2);
+  }
+  100% {
+    filter: brightness(1);
+  }
 }
 
 @keyframes oculus-ripple {
-  0%   { transform: scale(0); opacity: 0.6; }
-  100% { transform: scale(2.5); opacity: 0; }
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
 }
 
 @keyframes oculus-checkmark {
-  0%   { stroke-dashoffset: 24; }
-  100% { stroke-dashoffset: 0; }
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes oculus-bar-fill {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /* ── Stagger Utility ──────────────────────────────── */
 
-.oculus-stagger > * { animation: oculus-slide-up var(--oculus-transition-base) both; }
-.oculus-stagger > *:nth-child(1)  { animation-delay: 0ms; }
-.oculus-stagger > *:nth-child(2)  { animation-delay: 30ms; }
-.oculus-stagger > *:nth-child(3)  { animation-delay: 60ms; }
-.oculus-stagger > *:nth-child(4)  { animation-delay: 90ms; }
-.oculus-stagger > *:nth-child(5)  { animation-delay: 120ms; }
-.oculus-stagger > *:nth-child(6)  { animation-delay: 150ms; }
-.oculus-stagger > *:nth-child(7)  { animation-delay: 180ms; }
-.oculus-stagger > *:nth-child(8)  { animation-delay: 210ms; }
-.oculus-stagger > *:nth-child(9)  { animation-delay: 240ms; }
-.oculus-stagger > *:nth-child(10) { animation-delay: 270ms; }
+.oculus-stagger > * {
+  animation: oculus-slide-up var(--oculus-transition-base) both;
+}
+.oculus-stagger > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.oculus-stagger > *:nth-child(2) {
+  animation-delay: 30ms;
+}
+.oculus-stagger > *:nth-child(3) {
+  animation-delay: 60ms;
+}
+.oculus-stagger > *:nth-child(4) {
+  animation-delay: 90ms;
+}
+.oculus-stagger > *:nth-child(5) {
+  animation-delay: 120ms;
+}
+.oculus-stagger > *:nth-child(6) {
+  animation-delay: 150ms;
+}
+.oculus-stagger > *:nth-child(7) {
+  animation-delay: 180ms;
+}
+.oculus-stagger > *:nth-child(8) {
+  animation-delay: 210ms;
+}
+.oculus-stagger > *:nth-child(9) {
+  animation-delay: 240ms;
+}
+.oculus-stagger > *:nth-child(10) {
+  animation-delay: 270ms;
+}
 
 /* ── Exit animations (applied via JS) ─────────────── */
 

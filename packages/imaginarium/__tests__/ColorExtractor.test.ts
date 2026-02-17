@@ -1,7 +1,7 @@
-import { describe, test, expect } from 'bun:test';
-import { extractPalette, extractFilePalette } from '../src/distillation/ColorExtractor';
-import { generateMockTopology } from '../src/pipeline/MockTopology';
+import { describe, expect, test } from 'bun:test';
 import type { ParsedFile } from '@dendrovia/shared';
+import { extractFilePalette, extractPalette } from '../src/distillation/ColorExtractor';
+import { generateMockTopology } from '../src/pipeline/MockTopology';
 
 const HEX_PATTERN = /^#[0-9a-f]{6}$/;
 

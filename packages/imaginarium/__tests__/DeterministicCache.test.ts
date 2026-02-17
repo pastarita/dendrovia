@@ -1,7 +1,7 @@
-import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import { existsSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
 import { DeterministicCache } from '../src/cache/DeterministicCache';
-import { join } from 'path';
-import { rmSync, existsSync } from 'fs';
 
 const TEST_CACHE_DIR = join(import.meta.dir, '.test-cache');
 

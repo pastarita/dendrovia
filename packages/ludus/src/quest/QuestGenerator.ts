@@ -12,13 +12,7 @@
  *   archaeology  → Old/untouched files: explore legacy code
  */
 
-import type {
-  Quest,
-  QuestReward,
-  ParsedCommit,
-  ParsedFile,
-  Hotspot,
-} from '@dendrovia/shared';
+import type { Hotspot, ParsedCommit, ParsedFile, Quest, QuestReward } from '@dendrovia/shared';
 
 // ─── Quest ID Generation ────────────────────────────────────
 
@@ -72,9 +66,9 @@ const ARCHAEOLOGY_VERBS = ['Explore', 'Excavate', 'Unearth', 'Discover', 'Decode
 function generateQuestTitle(type: Quest['type'], commitMessage: string): string {
   const verbs = {
     'bug-hunt': BUG_HUNT_VERBS,
-    'feature': FEATURE_VERBS,
-    'refactor': REFACTOR_VERBS,
-    'archaeology': ARCHAEOLOGY_VERBS,
+    feature: FEATURE_VERBS,
+    refactor: REFACTOR_VERBS,
+    archaeology: ARCHAEOLOGY_VERBS,
   };
 
   // Extract the subject from conventional commit format: "type: subject" or "type(scope): subject"
@@ -119,9 +113,7 @@ export function generateQuestGraph(commits: ParsedCommit[]): Quest[] {
     const type = inferQuestType(commit);
     const id = nextQuestId();
 
-    const rewards: QuestReward[] = [
-      { type: 'experience', value: xpForCommit(commit) },
-    ];
+    const rewards: QuestReward[] = [{ type: 'experience', value: xpForCommit(commit) }];
 
     const itemReward = itemRewardForCommit(commit);
     if (itemReward) rewards.push(itemReward);
@@ -150,16 +142,13 @@ export function generateQuestGraph(commits: ParsedCommit[]): Quest[] {
 
 /** Generate quests specifically from bug-fix commits */
 export function generateBugHuntQuests(commits: ParsedCommit[]): Quest[] {
-  const bugCommits = commits.filter(c => c.isBugFix);
+  const bugCommits = commits.filter((c) => c.isBugFix);
   return generateQuestGraph(bugCommits);
 }
 
 /** Generate archaeology quests from old/high-complexity files */
-export function generateArchaeologyQuests(
-  files: ParsedFile[],
-  complexityThreshold: number = 15,
-): Quest[] {
-  const complexFiles = files.filter(f => f.complexity > complexityThreshold);
+export function generateArchaeologyQuests(files: ParsedFile[], complexityThreshold: number = 15): Quest[] {
+  const complexFiles = files.filter((f) => f.complexity > complexityThreshold);
   const quests: Quest[] = [];
 
   for (const file of complexFiles) {
@@ -212,13 +201,10 @@ export function generateHotspotQuests(hotspots: Hotspot[]): Quest[] {
 // ─── Quest State Management ─────────────────────────────────
 
 /** Unlock quests whose prerequisites are all completed */
-export function unlockAvailableQuests(
-  quests: Quest[],
-  completedIds: Set<string>,
-): Quest[] {
-  return quests.map(quest => {
+export function unlockAvailableQuests(quests: Quest[], completedIds: Set<string>): Quest[] {
+  return quests.map((quest) => {
     if (quest.status !== 'locked') return quest;
-    const allMet = quest.requirements.every(reqId => completedIds.has(reqId));
+    const allMet = quest.requirements.every((reqId) => completedIds.has(reqId));
     if (allMet) {
       return { ...quest, status: 'available' };
     }
@@ -228,31 +214,21 @@ export function unlockAvailableQuests(
 
 /** Start a quest (available → active) */
 export function startQuest(quests: Quest[], questId: string): Quest[] {
-  return quests.map(q =>
-    q.id === questId && q.status === 'available'
-      ? { ...q, status: 'active' }
-      : q
-  );
+  return quests.map((q) => (q.id === questId && q.status === 'available' ? { ...q, status: 'active' } : q));
 }
 
 /** Complete a quest (active → completed) and unlock dependents */
 export function completeQuest(quests: Quest[], questId: string): Quest[] {
-  const updated = quests.map(q =>
-    q.id === questId && q.status === 'active'
-      ? { ...q, status: 'completed' }
-      : q
-  );
+  const updated = quests.map((q) => (q.id === questId && q.status === 'active' ? { ...q, status: 'completed' } : q));
 
-  const completedIds = new Set(
-    updated.filter(q => q.status === 'completed').map(q => q.id)
-  );
+  const completedIds = new Set(updated.filter((q) => q.status === 'completed').map((q) => q.id));
 
   return unlockAvailableQuests(updated, completedIds);
 }
 
 /** Get all quests in a given status */
 export function getQuestsByStatus(quests: Quest[], status: Quest['status']): Quest[] {
-  return quests.filter(q => q.status === status);
+  return quests.filter((q) => q.status === status);
 }
 
 /** Get the reward totals from a quest */

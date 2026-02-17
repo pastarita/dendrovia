@@ -4,8 +4,8 @@
  * Foundation layout, glass panels, and scrollbar theming.
  */
 
-@import './tokens.css';
-@import './animations.css';
+@import "./tokens.css";
+@import "./animations.css";
 
 /* ── Root Container ───────────────────────────────── */
 
@@ -48,11 +48,29 @@
   pointer-events: auto;
 }
 
-.oculus-corner--top-left     { grid-area: top-left; align-self: start; }
-.oculus-corner--top-right    { grid-area: top-right; align-self: start; justify-self: end; }
-.oculus-corner--bottom-left  { grid-area: bottom-left; align-self: end; }
-.oculus-corner--bottom-right { grid-area: bottom-right; align-self: end; justify-self: end; }
-.oculus-center               { grid-area: center; place-self: center; pointer-events: auto; }
+.oculus-corner--top-left {
+  grid-area: top-left;
+  align-self: start;
+}
+.oculus-corner--top-right {
+  grid-area: top-right;
+  align-self: start;
+  justify-self: end;
+}
+.oculus-corner--bottom-left {
+  grid-area: bottom-left;
+  align-self: end;
+}
+.oculus-corner--bottom-right {
+  grid-area: bottom-right;
+  align-self: end;
+  justify-self: end;
+}
+.oculus-center {
+  grid-area: center;
+  place-self: center;
+  pointer-events: auto;
+}
 
 /* ── Glass Panel ──────────────────────────────────── */
 
@@ -216,8 +234,8 @@
   .oculus-root *,
   .oculus-root *::before,
   .oculus-root *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
 }

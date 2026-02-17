@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
 import { OrnateFrame } from '@dendrovia/oculus';
-import { EventLog } from './components/EventLog';
-import { EventFilters } from './components/EventFilters';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { EventEmitter } from './components/EventEmitter';
+import { EventFilters } from './components/EventFilters';
+import { EventLog } from './components/EventLog';
 import { EventPayloadModal } from './components/EventPayloadModal';
 
 export interface EventEntry {
@@ -56,7 +56,7 @@ export function EventStreamClient() {
   const [entries, setEntries] = useState<EventEntry[]>([]);
   const [selectedEntry, setSelectedEntry] = useState<EventEntry | null>(null);
   const [enabledPillars, setEnabledPillars] = useState<Set<string>>(
-    new Set(['ARCHITECTUS', 'LUDUS', 'CHRONOS', 'IMAGINARIUM', 'OPERATUS', 'OCULUS', 'UNKNOWN'])
+    new Set(['ARCHITECTUS', 'LUDUS', 'CHRONOS', 'IMAGINARIUM', 'OPERATUS', 'OCULUS', 'UNKNOWN']),
   );
   const [textFilter, setTextFilter] = useState('');
 
@@ -79,33 +79,37 @@ export function EventStreamClient() {
 
   useEffect(() => {
     let cancelled = false;
-    import('@dendrovia/shared').then((shared) => {
-      if (cancelled) return;
-      const bus = shared.getEventBus();
-      busRef.current = bus;
-      eventsRef.current = shared.GameEvents;
+    import('@dendrovia/shared')
+      .then((shared) => {
+        if (cancelled) return;
+        const bus = shared.getEventBus();
+        busRef.current = bus;
+        eventsRef.current = shared.GameEvents;
 
-      const unsub = bus.onAny((event: string, data?: unknown) => {
-        const pillar = detectPillar(event);
-        const entry: EventEntry = {
-          id: idCounter.current++,
-          timestamp: Date.now(),
-          event,
-          pillar: pillar.name,
-          color: pillar.color,
-          payload: data,
+        const unsub = bus.onAny((event: string, data?: unknown) => {
+          const pillar = detectPillar(event);
+          const entry: EventEntry = {
+            id: idCounter.current++,
+            timestamp: Date.now(),
+            event,
+            pillar: pillar.name,
+            color: pillar.color,
+            payload: data,
+          };
+          pendingRef.current.push(entry);
+          if (rafRef.current === null) {
+            rafRef.current = requestAnimationFrame(flushPending);
+          }
+        });
+
+        setReady(true);
+        return () => {
+          unsub();
         };
-        pendingRef.current.push(entry);
-        if (rafRef.current === null) {
-          rafRef.current = requestAnimationFrame(flushPending);
-        }
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err instanceof Error ? err.message : String(err));
       });
-
-      setReady(true);
-      return () => { unsub(); };
-    }).catch((err) => {
-      if (!cancelled) setError(err instanceof Error ? err.message : String(err));
-    });
     return () => {
       cancelled = true;
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
@@ -113,11 +117,11 @@ export function EventStreamClient() {
   }, [flushPending]);
 
   if (error) {
-    return <div style={{ marginTop: "2rem", color: "#ef4444" }}>Error: {error}</div>;
+    return <div style={{ marginTop: '2rem', color: '#ef4444' }}>Error: {error}</div>;
   }
 
   if (!ready) {
-    return <div style={{ marginTop: "2rem", opacity: 0.5 }}>Connecting to EventBus...</div>;
+    return <div style={{ marginTop: '2rem', opacity: 0.5 }}>Connecting to EventBus...</div>;
   }
 
   const filtered = entries.filter((e) => {
@@ -127,7 +131,7 @@ export function EventStreamClient() {
   });
 
   return (
-    <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <EventEmitter bus={busRef.current!} gameEvents={eventsRef.current!} />
       <EventFilters
         enabledPillars={enabledPillars}
@@ -147,9 +151,7 @@ export function EventStreamClient() {
         <EventLog entries={filtered} onSelect={setSelectedEntry} />
       </OrnateFrame>
 
-      {selectedEntry && (
-        <EventPayloadModal entry={selectedEntry} onClose={() => setSelectedEntry(null)} />
-      )}
+      {selectedEntry && <EventPayloadModal entry={selectedEntry} onClose={() => setSelectedEntry(null)} />}
     </div>
   );
 }

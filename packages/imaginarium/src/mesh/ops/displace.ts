@@ -7,7 +7,6 @@
  */
 
 import type { HalfEdgeMesh } from '../HalfEdgeMesh';
-import { vertexNeighbors } from '../HalfEdgeMesh';
 import type { MeshOp } from '../pipeline';
 
 // ---------------------------------------------------------------------------
@@ -20,7 +19,7 @@ function computeVertexNormals(mesh: HalfEdgeMesh): [number, number, number][] {
   for (const face of mesh.faces) {
     const he0 = face.halfedge;
     const he1 = mesh.halfedges[he0]!.next;
-    const he2 = mesh.halfedges[he1]!.next;
+    const _he2 = mesh.halfedges[he1]!.next;
 
     // Get 3 vertex indices from the face loop
     const vis: number[] = [];
@@ -87,8 +86,8 @@ export function displaceNormal(amount: number): MeshOp {
     }));
     return {
       vertices: newVertices,
-      halfedges: mesh.halfedges.map(he => ({ ...he })),
-      faces: mesh.faces.map(f => ({ ...f })),
+      halfedges: mesh.halfedges.map((he) => ({ ...he })),
+      faces: mesh.faces.map((f) => ({ ...f })),
     };
   };
 }
@@ -100,9 +99,7 @@ export function displaceNormal(amount: number): MeshOp {
  *   // Sinusoidal displacement
  *   const op = displaceByFunction((x, y, z) => 0.1 * Math.sin(y * 10));
  */
-export function displaceByFunction(
-  fn: (x: number, y: number, z: number) => number,
-): MeshOp {
+export function displaceByFunction(fn: (x: number, y: number, z: number) => number): MeshOp {
   return (mesh: HalfEdgeMesh) => {
     const normals = computeVertexNormals(mesh);
     const newVertices = mesh.vertices.map((v, i) => {
@@ -116,8 +113,8 @@ export function displaceByFunction(
     });
     return {
       vertices: newVertices,
-      halfedges: mesh.halfedges.map(he => ({ ...he })),
-      faces: mesh.faces.map(f => ({ ...f })),
+      halfedges: mesh.halfedges.map((he) => ({ ...he })),
+      faces: mesh.faces.map((f) => ({ ...f })),
     };
   };
 }
@@ -130,10 +127,7 @@ export function displaceByFunction(
  *   // ... populate field ...
  *   const op = displaceByField(field, 0.1);
  */
-export function displaceByField(
-  field: ArrayLike<number>,
-  scale: number = 1.0,
-): MeshOp {
+export function displaceByField(field: ArrayLike<number>, scale: number = 1.0): MeshOp {
   return (mesh: HalfEdgeMesh) => {
     const normals = computeVertexNormals(mesh);
     const newVertices = mesh.vertices.map((v, i) => {
@@ -147,8 +141,8 @@ export function displaceByField(
     });
     return {
       vertices: newVertices,
-      halfedges: mesh.halfedges.map(he => ({ ...he })),
-      faces: mesh.faces.map(f => ({ ...f })),
+      halfedges: mesh.halfedges.map((he) => ({ ...he })),
+      faces: mesh.faces.map((f) => ({ ...f })),
     };
   };
 }
@@ -168,8 +162,12 @@ export function displaceByNoise(amplitude: number, frequency: number = 4.0): Mes
   }
 
   function noise3d(x: number, y: number, z: number): number {
-    const ix = Math.floor(x), iy = Math.floor(y), iz = Math.floor(z);
-    const fx = x - ix, fy = y - iy, fz = z - iz;
+    const ix = Math.floor(x),
+      iy = Math.floor(y),
+      iz = Math.floor(z);
+    const fx = x - ix,
+      fy = y - iy,
+      fz = z - iz;
     // Smoothstep
     const sx = fx * fx * (3 - 2 * fx);
     const sy = fy * fy * (3 - 2 * fy);
@@ -193,7 +191,5 @@ export function displaceByNoise(amplitude: number, frequency: number = 4.0): Mes
     return (y0 + sz * (y1 - y0)) * 2 - 1; // range [-1, 1]
   }
 
-  return displaceByFunction((x, y, z) =>
-    amplitude * noise3d(x * frequency, y * frequency, z * frequency),
-  );
+  return displaceByFunction((x, y, z) => amplitude * noise3d(x * frequency, y * frequency, z * frequency));
 }

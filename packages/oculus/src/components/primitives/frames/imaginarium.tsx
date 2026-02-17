@@ -2,8 +2,7 @@
  * IMAGINARIUM ornaments — Prism facets, spectrum gradient band
  */
 
-import React from 'react';
-import type { CornerProps, EdgeProps, DefsProps, FrameOrnamentSet } from './types';
+import type { CornerProps, DefsProps, EdgeProps, FrameOrnamentSet } from './types';
 
 function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
   const [flipX, flipY] = mirror;
@@ -29,13 +28,7 @@ function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
         opacity="0.5"
       />
       {/* Spectrum dot */}
-      <circle
-        cx={size * 0.25}
-        cy={size * 0.25}
-        r={size * 0.08}
-        fill={`url(#${id}-grad)`}
-        opacity="0.6"
-      />
+      <circle cx={size * 0.25} cy={size * 0.25} r={size * 0.08} fill={`url(#${id}-grad)`} opacity="0.6" />
     </g>
   );
 }
@@ -46,26 +39,11 @@ function EdgeH({ id, x, y, length, palette }: EdgeProps) {
   return (
     <g transform={`translate(${x},${y})`}>
       {/* Spectrum gradient band */}
-      <line
-        x1={0} y1={0}
-        x2={length} y2={0}
-        stroke={`url(#${id}-grad)`}
-        strokeWidth="1.5"
-        opacity="0.3"
-      />
+      <line x1={0} y1={0} x2={length} y2={0} stroke={`url(#${id}-grad)`} strokeWidth="1.5" opacity="0.3" />
       {/* Refraction scatter dots */}
       {Array.from({ length: Math.max(2, Math.floor(length / 50)) }, (_, i) => {
         const cx = ((i + 1) / (Math.floor(length / 50) + 1)) * length;
-        return (
-          <circle
-            key={i}
-            cx={cx}
-            cy={0}
-            r={1.5}
-            fill={palette.accent}
-            opacity={0.2 + 0.15 * (i % 2)}
-          />
-        );
+        return <circle key={i} cx={cx} cy={0} r={1.5} fill={palette.accent} opacity={0.2 + 0.15 * (i % 2)} />;
       })}
     </g>
   );
@@ -76,25 +54,10 @@ function EdgeV({ id, x, y, length, palette }: EdgeProps) {
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <line
-        x1={0} y1={0}
-        x2={0} y2={length}
-        stroke={`url(#${id}-grad)`}
-        strokeWidth="1.5"
-        opacity="0.3"
-      />
+      <line x1={0} y1={0} x2={0} y2={length} stroke={`url(#${id}-grad)`} strokeWidth="1.5" opacity="0.3" />
       {Array.from({ length: Math.max(2, Math.floor(length / 50)) }, (_, i) => {
         const cy = ((i + 1) / (Math.floor(length / 50) + 1)) * length;
-        return (
-          <circle
-            key={i}
-            cx={0}
-            cy={cy}
-            r={1.5}
-            fill={palette.accent}
-            opacity={0.2 + 0.15 * (i % 2)}
-          />
-        );
+        return <circle key={i} cx={0} cy={cy} r={1.5} fill={palette.accent} opacity={0.2 + 0.15 * (i % 2)} />;
       })}
     </g>
   );

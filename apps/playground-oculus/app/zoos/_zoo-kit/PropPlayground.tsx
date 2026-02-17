@@ -79,7 +79,9 @@ export function PropPlayground({ controls, values, onChange }: PropPlaygroundPro
                   style={{ ...inputStyle, flex: 1 }}
                 >
                   {ctrl.options.map((opt) => (
-                    <option key={opt} value={opt}>{opt}</option>
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -108,9 +110,7 @@ export function PropPlayground({ controls, values, onChange }: PropPlaygroundPro
                   style={{ width: 24, height: 24, border: 'none', background: 'none', cursor: 'pointer' }}
                 />
                 <span>{ctrl.label}</span>
-                <span style={{ fontSize: '0.7rem', opacity: 0.5, fontFamily: 'monospace' }}>
-                  {val as string}
-                </span>
+                <span style={{ fontSize: '0.7rem', opacity: 0.5, fontFamily: 'monospace' }}>{val as string}</span>
               </label>
             );
         }

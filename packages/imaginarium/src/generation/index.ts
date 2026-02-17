@@ -1,2 +1,2 @@
-export { generate as generateArt, type ArtGenResult, type ArtGenOptions, type ArtProvider } from './ArtGen';
+export { type ArtGenOptions, type ArtGenResult, type ArtProvider, generate as generateArt } from './ArtGen';
 export { buildPrompt } from './PromptBuilder';

@@ -1,30 +1,25 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef } from "react";
-import {
-  ReactFlow,
-  Background,
-  BackgroundVariant,
-  useReactFlow,
-} from "@xyflow/react";
-import type { Node, Edge } from "@xyflow/react";
-import type { StoreApi } from "zustand";
-import { useStore } from "zustand";
-import type { DendriteState } from "../types";
-import type { RuntimeStoreState } from "../store/runtime-store";
-import { dendritenodeTypes } from "../nodes";
-import { dendriteEdgeTypes } from "../edges";
-import { DT } from "../design-tokens";
-import { ColorLegend } from "../panels/ColorLegend";
-import { NodeDetailPanel } from "../panels/NodeDetailPanel";
-import { ContractDetailPanel } from "../panels/ContractDetailPanel";
+import type { Edge, Node } from '@xyflow/react';
+import { Background, BackgroundVariant, ReactFlow, useReactFlow } from '@xyflow/react';
+import { useCallback, useEffect, useRef } from 'react';
+import type { StoreApi } from 'zustand';
+import { useStore } from 'zustand';
+import { DT } from '../design-tokens';
+import { dendriteEdgeTypes } from '../edges';
+import { dendritenodeTypes } from '../nodes';
+import { ColorLegend } from '../panels/ColorLegend';
+import { ContractDetailPanel } from '../panels/ContractDetailPanel';
+import { NodeDetailPanel } from '../panels/NodeDetailPanel';
+import type { RuntimeStoreState } from '../store/runtime-store';
+import type { DendriteState } from '../types';
 
 // ---------------------------------------------------------------------------
 // FitView helper — watches fitViewTrigger counter
 // ---------------------------------------------------------------------------
 
 function FitViewHelper({ store }: { store: StoreApi<DendriteState> }) {
-  const fitViewTrigger = useStore(store, (s) => s.fitViewTrigger);
+  const _fitViewTrigger = useStore(store, (s) => s.fitViewTrigger);
   const { fitView } = useReactFlow();
   const initial = useRef(true);
 
@@ -38,7 +33,7 @@ function FitViewHelper({ store }: { store: StoreApi<DendriteState> }) {
     }
     const t = setTimeout(() => fitView({ padding: 0.15, duration: 300 }), 50);
     return () => clearTimeout(t);
-  }, [fitViewTrigger, fitView]);
+  }, [fitView]);
 
   return null;
 }
@@ -79,21 +74,21 @@ export function DendriteCanvas({ store, runtimeStore }: DendriteCanvasProps) {
 
   const handleNodeClick = useCallback(
     (_event: React.MouseEvent, node: Node) => {
-      if (node.data.hasChildren && node.data.kind === "phase") {
+      if (node.data.hasChildren && node.data.kind === 'phase') {
         toggleCollapse(node.id);
       }
       selectNode(node.id);
     },
-    [toggleCollapse, selectNode]
+    [toggleCollapse, selectNode],
   );
 
   const handleEdgeClick = useCallback(
     (_event: React.MouseEvent, edge: Edge) => {
-      if (edge.data?.relation === "pipeline-flow" && edge.data?.contracts) {
+      if (edge.data?.relation === 'pipeline-flow' && edge.data?.contracts) {
         selectEdge(edge.id);
       }
     },
-    [selectEdge]
+    [selectEdge],
   );
 
   const handlePaneClick = useCallback(() => {
@@ -103,10 +98,10 @@ export function DendriteCanvas({ store, runtimeStore }: DendriteCanvasProps) {
   return (
     <div
       style={{
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
         backgroundColor: DT.bg,
-        position: "relative",
+        position: 'relative',
       }}
     >
       <style>{THEME_CSS}</style>
@@ -125,23 +120,14 @@ export function DendriteCanvas({ store, runtimeStore }: DendriteCanvasProps) {
         proOptions={{ hideAttribution: true }}
         minZoom={0.1}
         maxZoom={2}
-        defaultEdgeOptions={{ type: "flowEdge" }}
+        defaultEdgeOptions={{ type: 'flowEdge' }}
       >
-        <Background
-          variant={BackgroundVariant.Dots}
-          gap={20}
-          size={1}
-          color={DT.border}
-        />
+        <Background variant={BackgroundVariant.Dots} gap={20} size={1} color={DT.border} />
         <FitViewHelper store={store} />
       </ReactFlow>
       <ColorLegend store={store} />
-      {selectedNodeId && !selectedEdgeId && (
-        <NodeDetailPanel store={store} runtimeStore={runtimeStore} />
-      )}
-      {selectedEdgeId && !selectedNodeId && (
-        <ContractDetailPanel store={store} />
-      )}
+      {selectedNodeId && !selectedEdgeId && <NodeDetailPanel store={store} runtimeStore={runtimeStore} />}
+      {selectedEdgeId && !selectedNodeId && <ContractDetailPanel store={store} />}
     </div>
   );
 }

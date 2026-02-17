@@ -5,9 +5,9 @@
  * registry and renders <ZooShell> for the primitives gallery.
  */
 
-import { ZooShell } from '../_zoo-kit';
 import type { ZooPageConfig } from '../_zoo-kit';
-import { EXHIBIT_REGISTRY, CATEGORIES, SORT_DIMENSIONS } from './exhibits';
+import { ZooShell } from '../_zoo-kit';
+import { CATEGORIES, EXHIBIT_REGISTRY, SORT_DIMENSIONS } from './exhibits';
 
 const CONFIG: ZooPageConfig = {
   title: 'Primitives Gallery',

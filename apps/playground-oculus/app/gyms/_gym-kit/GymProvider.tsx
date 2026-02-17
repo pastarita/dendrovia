@@ -8,10 +8,10 @@
  * Zustand store with mock data.
  */
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import { EventBus } from '@dendrovia/shared';
 import { OculusProvider, useOculusStore } from '@dendrovia/oculus';
-import { MOCK_QUESTS, MOCK_TOPOLOGY, MOCK_HOTSPOTS } from '../../components/mock-data';
+import { EventBus } from '@dendrovia/shared';
+import { createContext, type ReactNode, useContext, useMemo } from 'react';
+import { MOCK_HOTSPOTS, MOCK_QUESTS, MOCK_TOPOLOGY } from '../../components/mock-data';
 
 interface GymProviderProps {
   /** Custom store seed function. If omitted, seeds with standard mock data. */
@@ -49,9 +49,7 @@ export function GymProvider({ seed, children }: GymProviderProps) {
 
   return (
     <GymEventBusContext.Provider value={eventBus}>
-      <OculusProvider eventBus={eventBus}>
-        {children(eventBus)}
-      </OculusProvider>
+      <OculusProvider eventBus={eventBus}>{children(eventBus)}</OculusProvider>
     </GymEventBusContext.Provider>
   );
 }

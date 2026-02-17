@@ -8,16 +8,9 @@
  * Species epithet = deterministic hash of file path + properties.
  */
 
-import type { ParsedFile, Hotspot, CodeTopology } from '@dendrovia/shared';
+import type { CodeTopology, Hotspot, ParsedFile } from '@dendrovia/shared';
 import { hashString } from '../utils/hash';
-import type {
-  FungalGenus,
-  FungalTaxonomy,
-  FungalDivision,
-  FungalClass,
-  FungalOrder,
-  FungalFamily,
-} from './types';
+import type { FungalClass, FungalDivision, FungalFamily, FungalGenus, FungalOrder, FungalTaxonomy } from './types';
 
 // ---------------------------------------------------------------------------
 // Genus scoring criteria
@@ -33,13 +26,13 @@ export interface FileContext {
   isConfig: boolean;
   isTest: boolean;
   isDeprecated: boolean;
-  dependentCount: number;  // how many files import this
+  dependentCount: number; // how many files import this
   dependencyCount: number; // how many files this imports
   hotspot: Hotspot | undefined;
   avgComplexity: number;
   maxLoc: number;
-  fileAge: number;         // ms since last modified (relative to newest)
-  commitCount: number;     // how many commits touched this file
+  fileAge: number; // ms since last modified (relative to newest)
+  commitCount: number; // how many commits touched this file
 }
 
 const ENTRY_POINT_PATTERNS = /\/(index|main|app|server|entry|boot)\.[^/]+$/i;
@@ -87,7 +80,7 @@ const GENUS_PROFILES: GenusProfile[] = [
   },
   {
     genus: 'Cantharellus',
-    score: (f, ctx) => {
+    score: (f, _ctx) => {
       let s = 0;
       if (EVENT_PATTERNS.test(f.path)) s += 45;
       if (f.path.match(/observable|subject|signal/i)) s += 25;
@@ -106,7 +99,7 @@ const GENUS_PROFILES: GenusProfile[] = [
   },
   {
     genus: 'Lactarius',
-    score: (f, ctx) => {
+    score: (f, _ctx) => {
       let s = 0;
       if (f.path.match(/stream|generator|iterator|async.*gen|observable/i)) s += 45;
       if (PIPELINE_PATTERNS.test(f.path)) s += 15;
@@ -125,7 +118,7 @@ const GENUS_PROFILES: GenusProfile[] = [
   },
   {
     genus: 'Mycena',
-    score: (f, ctx) => {
+    score: (f, _ctx) => {
       let s = 0;
       if (f.loc < 50) s += 40;
       if (f.complexity <= 3) s += 15;
@@ -165,7 +158,7 @@ const GENUS_PROFILES: GenusProfile[] = [
   },
   {
     genus: 'Cordyceps',
-    score: (f, ctx) => {
+    score: (f, _ctx) => {
       let s = 0;
       if (f.path.match(/decorator|patch|monkey|plugin|extend|mixin|hook/i)) s += 45;
       if (f.path.match(/override|inject|intercept/i)) s += 20;
@@ -174,7 +167,7 @@ const GENUS_PROFILES: GenusProfile[] = [
   },
   {
     genus: 'Morchella',
-    score: (f, ctx) => {
+    score: (f, _ctx) => {
       let s = 0;
       if (f.complexity > 20) s += 40;
       if (f.complexity > 12 && f.loc > 100) s += 20;
@@ -183,7 +176,7 @@ const GENUS_PROFILES: GenusProfile[] = [
   },
   {
     genus: 'Pleurotus',
-    score: (f, ctx) => {
+    score: (f, _ctx) => {
       let s = 0;
       if (LOG_PATTERNS.test(f.path)) s += 50;
       if (f.path.match(/side.?effect|effect/i)) s += 15;
@@ -258,16 +251,53 @@ const GENUS_PROFILES: GenusProfile[] = [
 // ---------------------------------------------------------------------------
 
 const SPECIES_PREFIXES = [
-  'albi', 'aureo', 'brevi', 'calci', 'digi', 'erythr', 'ferr',
-  'glabr', 'holo', 'infra', 'junct', 'lati', 'macro', 'nigr',
-  'oligo', 'poly', 'quasi', 'rubr', 'semi', 'tenu', 'ultra',
-  'vari', 'xero', 'zygo',
+  'albi',
+  'aureo',
+  'brevi',
+  'calci',
+  'digi',
+  'erythr',
+  'ferr',
+  'glabr',
+  'holo',
+  'infra',
+  'junct',
+  'lati',
+  'macro',
+  'nigr',
+  'oligo',
+  'poly',
+  'quasi',
+  'rubr',
+  'semi',
+  'tenu',
+  'ultra',
+  'vari',
+  'xero',
+  'zygo',
 ];
 
 const SPECIES_SUFFIXES = [
-  'ensis', 'oides', 'iana', 'ata', 'ica', 'alis', 'osa',
-  'ella', 'ula', 'ina', 'aria', 'ista', 'fera', 'gena',
-  'phila', 'cola', 'morpha', 'spora', 'carpa', 'derma',
+  'ensis',
+  'oides',
+  'iana',
+  'ata',
+  'ica',
+  'alis',
+  'osa',
+  'ella',
+  'ula',
+  'ina',
+  'aria',
+  'ista',
+  'fera',
+  'gena',
+  'phila',
+  'cola',
+  'morpha',
+  'spora',
+  'carpa',
+  'derma',
 ];
 
 function generateSpeciesEpithet(filePath: string, genus: FungalGenus): string {
@@ -281,11 +311,18 @@ function generateSpeciesEpithet(filePath: string, genus: FungalGenus): string {
 // Taxonomy derivation
 // ---------------------------------------------------------------------------
 
-function deriveDivision(genus: FungalGenus, ctx: FileContext): FungalDivision {
+function deriveDivision(genus: FungalGenus, _ctx: FileContext): FungalDivision {
   // Basidiomycota: broad, visible interfaces (many exports / dependents)
   const basidioGenera: FungalGenus[] = [
-    'Amanita', 'Agaricus', 'Boletus', 'Cantharellus', 'Russula',
-    'Lactarius', 'Coprinus', 'Mycena', 'Armillaria',
+    'Amanita',
+    'Agaricus',
+    'Boletus',
+    'Cantharellus',
+    'Russula',
+    'Lactarius',
+    'Coprinus',
+    'Mycena',
+    'Armillaria',
   ];
   // Zygomycota: bridging modules
   const zygoGenera: FungalGenus[] = ['Trametes', 'Clavaria'];
@@ -367,9 +404,9 @@ export function buildFileContext(
   topology: CodeTopology,
   coChurnMap: Map<string, Set<string>>,
 ): FileContext {
-  const hotspot = topology.hotspots.find(h => h.path === file.path);
+  const hotspot = topology.hotspots.find((h) => h.path === file.path);
   const newestFile = topology.files.reduce((a, b) =>
-    new Date(a.lastModified).getTime() > new Date(b.lastModified).getTime() ? a : b
+    new Date(a.lastModified).getTime() > new Date(b.lastModified).getTime() ? a : b,
   );
   const fileAge = new Date(newestFile.lastModified).getTime() - new Date(file.lastModified).getTime();
 
@@ -379,19 +416,17 @@ export function buildFileContext(
 
   // Estimate dependency count from directory siblings
   const dir = file.path.split('/').slice(0, -1).join('/');
-  const siblings = topology.files.filter(f => {
+  const siblings = topology.files.filter((f) => {
     const fDir = f.path.split('/').slice(0, -1).join('/');
     return fDir === dir && f.path !== file.path;
   });
   const dependencyCount = Math.min(siblings.length, 10);
 
   // Count commits touching this file
-  const commitCount = topology.commits.filter(c =>
-    c.filesChanged.includes(file.path)
-  ).length;
+  const commitCount = topology.commits.filter((c) => c.filesChanged.includes(file.path)).length;
 
   const avgComplexity = topology.files.reduce((s, f) => s + f.complexity, 0) / topology.files.length;
-  const maxLoc = Math.max(...topology.files.map(f => f.loc));
+  const maxLoc = Math.max(...topology.files.map((f) => f.loc));
 
   return {
     isEntryPoint: ENTRY_POINT_PATTERNS.test(file.path),

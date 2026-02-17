@@ -12,11 +12,11 @@
  */
 
 import type { FungalGenus } from '../mycology/types';
+import { displaceByNoise, displaceNormal } from './ops/displace';
+import { smooth } from './ops/smooth';
+import { subdivide } from './ops/subdivide';
 import type { MeshOp } from './pipeline';
 import { pipe } from './pipeline';
-import { subdivide } from './ops/subdivide';
-import { smooth } from './ops/smooth';
-import { displaceByNoise, displaceNormal } from './ops/displace';
 
 // ---------------------------------------------------------------------------
 // Default fallback pipeline (unknown genera)
@@ -45,13 +45,7 @@ const TIER_1_GENERA: readonly FungalGenus[] = [
 ] as const;
 
 /** Tier 2: 5 organic genera — more complex detail */
-const TIER_2_GENERA: readonly FungalGenus[] = [
-  'Lactarius',
-  'Armillaria',
-  'Cordyceps',
-  'Xylaria',
-  'Phallus',
-] as const;
+const TIER_2_GENERA: readonly FungalGenus[] = ['Lactarius', 'Armillaria', 'Cordyceps', 'Xylaria', 'Phallus'] as const;
 
 const TIER_1_PIPELINE: MeshOp = pipe(subdivide(1), smooth(2));
 const TIER_2_PIPELINE: MeshOp = pipe(subdivide(2), smooth(3), displaceByNoise(0.02, 6));

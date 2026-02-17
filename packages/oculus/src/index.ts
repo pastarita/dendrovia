@@ -7,66 +7,62 @@
  * @packageDocumentation
  */
 
-// ── Provider ─────────────────────────────────────────
-export { OculusProvider, useOculus } from './OculusProvider';
-export type { OculusProviderProps, OculusConfig } from './OculusProvider';
-
-// ── Store ────────────────────────────────────────────
-export { useOculusStore } from './store/useOculusStore';
-export type {
-  OculusState,
-  OculusActions,
-  OculusStore,
-  ActivePanel,
-  CameraMode,
-  BattleState,
-  CodeReaderState,
-} from './store/useOculusStore';
-
+export { BattleUI } from './components/BattleUI';
+export type { Billboard3DProps } from './components/Billboard3D';
+export { Billboard3D } from './components/Billboard3D';
+export type { CodeReaderProps } from './components/CodeReader';
+export { CodeReader } from './components/CodeReader';
+export { FalconModeOverlay } from './components/FalconModeOverlay';
 // ── Components ───────────────────────────────────────
 export { HUD } from './components/HUD';
-export { Minimap } from './components/Minimap';
-export { BattleUI } from './components/BattleUI';
-export { QuestLog } from './components/QuestLog';
 export { MillerColumns } from './components/MillerColumns';
-export { CodeReader } from './components/CodeReader';
-export type { CodeReaderProps } from './components/CodeReader';
-export { FalconModeOverlay } from './components/FalconModeOverlay';
-export { Billboard3D } from './components/Billboard3D';
-export type { Billboard3DProps } from './components/Billboard3D';
-
-// ── Primitives ───────────────────────────────────────
-export {
-  Panel,
-  ProgressBar,
-  IconBadge,
-  StatLabel,
-  Tooltip,
-  OrnateFrame,
-  PILLAR_PALETTES,
-  FRAME_REGISTRY,
-  VARIANT_SPECS,
-  PILLAR_SPECS,
-} from './components/primitives';
+export { Minimap } from './components/Minimap';
 export type {
+  FrameOrnamentSet,
+  FrameVariant,
+  IconBadgeProps,
+  OrnateFrameProps,
   PanelProps,
+  PillarId,
+  PillarPalette,
+  PillarSpec,
   ProgressBarProps,
   ProgressBarVariant,
-  IconBadgeProps,
   StatLabelProps,
   TooltipProps,
-  OrnateFrameProps,
-  PillarId,
-  FrameVariant,
-  PillarPalette,
-  FrameOrnamentSet,
   VariantSpec,
-  PillarSpec,
 } from './components/primitives';
-
+// ── Primitives ───────────────────────────────────────
+export {
+  FRAME_REGISTRY,
+  IconBadge,
+  OrnateFrame,
+  Panel,
+  PILLAR_PALETTES,
+  PILLAR_SPECS,
+  ProgressBar,
+  StatLabel,
+  Tooltip,
+  VARIANT_SPECS,
+} from './components/primitives';
+export { QuestLog } from './components/QuestLog';
+export type { CodeLoaderOptions } from './hooks/useCodeLoader';
+export { useCodeLoader } from './hooks/useCodeLoader';
+export { useEventSubscriptions } from './hooks/useEventSubscriptions';
 // ── Hooks ────────────────────────────────────────────
 export { useInputCapture, useIsUiHovered } from './hooks/useInputCapture';
-export { useEventSubscriptions } from './hooks/useEventSubscriptions';
 export { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
-export { useCodeLoader } from './hooks/useCodeLoader';
-export type { CodeLoaderOptions } from './hooks/useCodeLoader';
+export type { OculusConfig, OculusProviderProps } from './OculusProvider';
+// ── Provider ─────────────────────────────────────────
+export { OculusProvider, useOculus } from './OculusProvider';
+export type {
+  ActivePanel,
+  BattleState,
+  CameraMode,
+  CodeReaderState,
+  OculusActions,
+  OculusState,
+  OculusStore,
+} from './store/useOculusStore';
+// ── Store ────────────────────────────────────────────
+export { useOculusStore } from './store/useOculusStore';

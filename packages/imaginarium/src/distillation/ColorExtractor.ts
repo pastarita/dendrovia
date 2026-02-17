@@ -6,8 +6,8 @@
  */
 
 import type { CodeTopology, ParsedFile, ProceduralPalette } from '@dendrovia/shared';
-import { oklchToHex, harmonize, type OklchColor, type HarmonyScheme } from '../utils/color';
 import { getDefaultPalette, getLanguageHue } from '../fallback/DefaultPalettes';
+import { type HarmonyScheme, harmonize, type OklchColor, oklchToHex } from '../utils/color';
 
 export interface PaletteOverrides {
   harmonyScheme?: HarmonyScheme;
@@ -31,26 +31,22 @@ export function extractPalette(topology: CodeTopology, overrides?: PaletteOverri
     // Compute aggregate metrics
     const avgComplexity = files.reduce((sum, f) => sum + f.complexity, 0) / files.length;
     const hotspots = topology.hotspots ?? [];
-    const avgChurn = hotspots.length > 0
-      ? hotspots.reduce((sum, h) => sum + h.churnRate, 0) / hotspots.length
-      : 0;
+    const avgChurn = hotspots.length > 0 ? hotspots.reduce((sum, h) => sum + h.churnRate, 0) / hotspots.length : 0;
 
     // Base hue from dominant language (+ optional shift)
     const baseHue = (getLanguageHue(dominantLang) + (overrides?.hueShift ?? 0) + 360) % 360;
 
     // Saturation from complexity: low complexity = muted, high = vivid
-    const saturation = Math.max(0.05, Math.min(0.35,
-      (0.05 + avgComplexity * 0.01) * (overrides?.saturationMultiplier ?? 1),
-    ));
+    const saturation = Math.max(
+      0.05,
+      Math.min(0.35, (0.05 + avgComplexity * 0.01) * (overrides?.saturationMultiplier ?? 1)),
+    );
 
     // Lightness from churn: high churn = darker/moodier
-    const lightness = Math.max(0.3, Math.min(0.8,
-      0.65 - avgChurn * 0.01 + (overrides?.lightnessOffset ?? 0),
-    ));
+    const lightness = Math.max(0.3, Math.min(0.8, 0.65 - avgChurn * 0.01 + (overrides?.lightnessOffset ?? 0)));
 
     // Generate harmony
-    const scheme: HarmonyScheme = overrides?.harmonyScheme
-      ?? (files.length < 20 ? 'analogous' : 'split-complementary');
+    const scheme: HarmonyScheme = overrides?.harmonyScheme ?? (files.length < 20 ? 'analogous' : 'split-complementary');
     const hues = harmonize(baseHue, scheme);
 
     const primary: OklchColor = { L: lightness, C: saturation, h: hues[0]! };
@@ -61,9 +57,7 @@ export function extractPalette(topology: CodeTopology, overrides?: PaletteOverri
 
     // Mood from temperature
     const mood: ProceduralPalette['mood'] =
-      baseHue >= 0 && baseHue < 60 ? 'warm' :
-      baseHue >= 60 && baseHue < 180 ? 'neutral' :
-      'cool';
+      baseHue >= 0 && baseHue < 60 ? 'warm' : baseHue >= 60 && baseHue < 180 ? 'neutral' : 'cool';
 
     return {
       primary: oklchToHex(primary),

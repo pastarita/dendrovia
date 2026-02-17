@@ -1,7 +1,7 @@
-import { describe, test, expect } from 'bun:test';
-import type { ParsedFile, CodeTopology } from '@dendrovia/shared';
+import { describe, expect, test } from 'bun:test';
+import type { CodeTopology, ParsedFile } from '@dendrovia/shared';
+import { buildCoChurnMap, buildFileContext, buildTaxonomy } from '../../src/mycology/GenusMapper';
 import { generateLore } from '../../src/mycology/LoreGenerator';
-import { buildTaxonomy, buildFileContext, buildCoChurnMap } from '../../src/mycology/GenusMapper';
 import type { LoreTier } from '../../src/mycology/types';
 import { generateMockTopology } from '../../src/pipeline/MockTopology';
 
@@ -49,16 +49,23 @@ describe('Lore tier assignment', () => {
       loc: 800,
       lastModified: new Date('2023-01-01'), // old
     });
-    const files = [hub, ...Array.from({ length: 15 }, (_, i) =>
-      makeFile({ path: `src/consumer${i}.ts`, hash: `h${i}` })
-    )];
+    const files = [
+      hub,
+      ...Array.from({ length: 15 }, (_, i) => makeFile({ path: `src/consumer${i}.ts`, hash: `h${i}` })),
+    ];
     const topology: CodeTopology = {
       files,
       commits: files.map((f, i) => ({
-        hash: `c${i}`, message: 'feat', author: 'dev', date: new Date(),
+        hash: `c${i}`,
+        message: 'feat',
+        author: 'dev',
+        date: new Date(),
         filesChanged: [hub.path, f.path],
-        insertions: 10, deletions: 0,
-        isBugFix: false, isFeature: true, isMerge: false,
+        insertions: 10,
+        deletions: 0,
+        isBugFix: false,
+        isFeature: true,
+        isMerge: false,
       })),
       tree: { name: 'root', path: '', type: 'directory' },
       hotspots: [{ path: hub.path, churnRate: 15, complexity: 25, riskScore: 0.9 }],
@@ -102,9 +109,7 @@ describe('Lore content', () => {
 
   test('uncommon+ tier has code snippet', () => {
     const file = makeFile({ complexity: 20, loc: 500 });
-    const topology = makeTopology([file], [
-      { path: file.path, churnRate: 10, complexity: 20, riskScore: 0.7 },
-    ]);
+    const topology = makeTopology([file], [{ path: file.path, churnRate: 10, complexity: 20, riskScore: 0.7 }]);
     const lore = getLore(file, topology);
     if (lore.tier !== 'common') {
       expect(lore.codeSnippet).toBeTruthy();
@@ -136,7 +141,11 @@ describe('Tier distribution', () => {
     const topology = generateMockTopology(80, ['typescript', 'javascript', 'json'], 42);
     const coChurnMap = buildCoChurnMap(topology);
     const tierCounts: Record<LoreTier, number> = {
-      common: 0, uncommon: 0, rare: 0, epic: 0, legendary: 0,
+      common: 0,
+      uncommon: 0,
+      rare: 0,
+      epic: 0,
+      legendary: 0,
     };
 
     for (const file of topology.files) {
@@ -160,9 +169,7 @@ describe('Domain knowledge', () => {
       complexity: 12,
       loc: 300,
     });
-    const topology = makeTopology([file], [
-      { path: file.path, churnRate: 8, complexity: 12, riskScore: 0.6 },
-    ]);
+    const topology = makeTopology([file], [{ path: file.path, churnRate: 8, complexity: 12, riskScore: 0.6 }]);
     const lore = getLore(file, topology);
     // If tier is rare+, domain knowledge should mention Observer
     if (lore.tier === 'rare' || lore.tier === 'epic' || lore.tier === 'legendary') {

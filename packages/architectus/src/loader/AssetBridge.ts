@@ -16,19 +16,19 @@
  *     through the 4-tier cache (memory → OPFS → IDB → network).
  */
 
+import type { FlatMeshData } from '@dendrovia/imaginarium';
+import { deserializeToFlat } from '@dendrovia/imaginarium';
 import type {
   AssetManifest,
-  ProceduralPalette,
-  LSystemRule,
-  NoiseFunction,
   FungalSpecimen,
+  LSystemRule,
   MycelialNetwork,
+  NoiseFunction,
+  ProceduralPalette,
+  SegmentAssets,
   SerializedMeshData,
   StoryArc,
-  SegmentAssets,
 } from '@dendrovia/shared';
-import { deserializeToFlat } from '@dendrovia/imaginarium';
-import type { FlatMeshData } from '@dendrovia/imaginarium';
 
 /** The typed shape returned to consumers. Every field is optional — callers
  *  must fall back to their own defaults when a field is null/undefined. */
@@ -210,15 +210,13 @@ export async function loadGeneratedAssets(
     return null;
   }
 
-  console.log('[ARCHITECTUS] Loaded asset manifest v' + manifest.version);
+  console.log(`[ARCHITECTUS] Loaded asset manifest v${manifest.version}`);
 
   // 2. Load palettes (global + per-language) in parallel.
   const paletteEntries = Object.entries(manifest.palettes);
   const paletteResults = await Promise.all(
     paletteEntries.map(async ([id, path]) => {
-      const palette = await loadJson<ProceduralPalette>(
-        path, manifestPath, loader, PRIORITY.VISIBLE, 'palette',
-      );
+      const palette = await loadJson<ProceduralPalette>(path, manifestPath, loader, PRIORITY.VISIBLE, 'palette');
       return [id, palette] as const;
     }),
   );
@@ -239,9 +237,7 @@ export async function loadGeneratedAssets(
   const shaderEntries = Object.entries(manifest.shaders);
   const shaderResults = await Promise.all(
     shaderEntries.map(async ([id, path]) => {
-      const source = await loadText(
-        path, manifestPath, loader, PRIORITY.CRITICAL,
-      );
+      const source = await loadText(path, manifestPath, loader, PRIORITY.CRITICAL);
       return [id, source] as const;
     }),
   );
@@ -255,26 +251,16 @@ export async function loadGeneratedAssets(
 
   // 4. Load L-system and noise configs (small files, parallel).
   const [lsystem, noise] = await Promise.all([
-    loadJson<LSystemRule>(
-      'lsystems/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json',
-    ),
-    loadJson<NoiseFunction>(
-      'noise/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json',
-    ),
+    loadJson<LSystemRule>('lsystems/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json'),
+    loadJson<NoiseFunction>('noise/global.json', manifestPath, loader, PRIORITY.VISIBLE, 'json'),
   ]);
 
   // 5. Load mycology data if referenced in the manifest.
   let mycology: GeneratedAssets['mycology'] = null;
   if (manifest.mycology) {
     const [specimens, network] = await Promise.all([
-      loadJson<FungalSpecimen[]>(
-        manifest.mycology.specimens, manifestPath, loader,
-        PRIORITY.VISIBLE, 'json',
-      ),
-      loadJson<MycelialNetwork>(
-        manifest.mycology.network, manifestPath, loader,
-        PRIORITY.VISIBLE, 'json',
-      ),
+      loadJson<FungalSpecimen[]>(manifest.mycology.specimens, manifestPath, loader, PRIORITY.VISIBLE, 'json'),
+      loadJson<MycelialNetwork>(manifest.mycology.network, manifestPath, loader, PRIORITY.VISIBLE, 'json'),
     ]);
     mycology = {
       specimens: specimens ?? [],
@@ -294,8 +280,13 @@ export async function loadGeneratedAssets(
     const meshResults = await Promise.all(
       meshEntries.map(async ([id, entry]) => {
         const raw = await loadJson<SerializedMeshData>(
-          entry.path, manifestPath, loader,
-          PRIORITY.VISIBLE, 'mesh', entry.hash, entry.size,
+          entry.path,
+          manifestPath,
+          loader,
+          PRIORITY.VISIBLE,
+          'mesh',
+          entry.hash,
+          entry.size,
         );
         if (!raw) return [id, null] as const;
         const flat = deserializeToFlat(raw);
@@ -319,14 +310,8 @@ export async function loadGeneratedAssets(
   let segmentAssets: SegmentAssets[] | null = null;
   if (manifest.storyArc) {
     [storyArc, segmentAssets] = await Promise.all([
-      loadJson<StoryArc>(
-        manifest.storyArc.arc, manifestPath, loader,
-        PRIORITY.VISIBLE, 'json',
-      ),
-      loadJson<SegmentAssets[]>(
-        manifest.storyArc.segmentAssets, manifestPath, loader,
-        PRIORITY.VISIBLE, 'json',
-      ),
+      loadJson<StoryArc>(manifest.storyArc.arc, manifestPath, loader, PRIORITY.VISIBLE, 'json'),
+      loadJson<SegmentAssets[]>(manifest.storyArc.segmentAssets, manifestPath, loader, PRIORITY.VISIBLE, 'json'),
     ]);
     if (storyArc) {
       console.log(`[ARCHITECTUS] Loaded story arc with ${storyArc.segments.length} segments`);

@@ -11,20 +11,20 @@
  *   bun run analyze .                                  # local repo
  */
 
-import { resolve, basename, join } from 'path';
-import { resolveRepo, upsertRegistryEntry, getOutputDirForRepo } from './resolver/index.js';
-import { runPipeline } from './pipeline.js';
+import { basename, join, resolve } from 'node:path';
+import { writeOutputFiles } from './builder/TopologyBuilder.js';
 import { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher.js';
 import { enrichTopology } from './enrichment/TopologyEnricher.js';
-import { writeOutputFiles } from './builder/TopologyBuilder.js';
+import { runPipeline } from './pipeline.js';
 import type { RegistryEntry } from './resolver/index.js';
+import { getOutputDirForRepo, resolveRepo, upsertRegistryEntry } from './resolver/index.js';
 
 // ── Argument parsing ─────────────────────────────────────────────────────────
 
 const rawArgs = process.argv.slice(2);
 const noDeepwiki = rawArgs.includes('--no-deepwiki');
 const emitEvents = rawArgs.includes('--emit-events');
-const positionalArgs = rawArgs.filter(a => !a.startsWith('--'));
+const positionalArgs = rawArgs.filter((a) => !a.startsWith('--'));
 
 const input = positionalArgs[0];
 const outputOverride = positionalArgs[1];
@@ -49,9 +49,7 @@ async function main() {
   const resolved = await resolveRepo(input);
 
   const isRemote = !resolved.isLocal;
-  const displayName = isRemote
-    ? `${resolved.owner}/${resolved.repo}`
-    : basename(resolved.localPath);
+  const displayName = isRemote ? `${resolved.owner}/${resolved.repo}` : basename(resolved.localPath);
 
   console.log(`  Repo:   ${displayName}`);
   console.log(`  Path:   ${resolved.localPath}`);
@@ -142,7 +140,7 @@ async function main() {
   console.log();
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('CHRONOS analyze failed:', err);
   process.exit(1);
 });

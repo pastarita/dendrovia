@@ -78,7 +78,8 @@
 /* ── Glow pulse animation ────────────────────────────── */
 
 @keyframes oculus-frame-glow-pulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 var(--oculus-frame-glow-size) var(--frame-glow, var(--oculus-glow)));
   }
   50% {

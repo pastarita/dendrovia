@@ -1,12 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import {
-  DEFAULT_SDFS,
-  type SDFTier,
-} from '@dendrovia/imaginarium/fallbacks';
+import { DEFAULT_SDFS, type SDFTier } from '@dendrovia/imaginarium/fallbacks';
 import { countInstructions } from '@dendrovia/imaginarium/utils/glsl';
 import { OrnateFrame } from '@dendrovia/oculus';
+import { useState } from 'react';
 
 const TIER_ORDER: { tier: SDFTier; threshold: string }[] = [
   { tier: 'simple-trunk', threshold: '\u22643' },
@@ -50,12 +47,9 @@ function highlightGlsl(source: string): React.ReactNode[] {
 function highlightLine(text: string): React.ReactNode[] {
   const tokens: React.ReactNode[] = [];
   let lastIndex = 0;
-  const combined = new RegExp(
-    `(${GLSL_KEYWORDS.source})|(${GLSL_NUMBERS.source})`,
-    'g',
-  );
+  const combined = new RegExp(`(${GLSL_KEYWORDS.source})|(${GLSL_NUMBERS.source})`, 'g');
 
-  let match;
+  let match: RegExpExecArray | null;
   while ((match = combined.exec(text)) !== null) {
     if (match.index > lastIndex) {
       tokens.push(text.slice(lastIndex, match.index));
@@ -116,9 +110,7 @@ export default function ShaderExhibit() {
                 flexWrap: 'wrap',
               }}
             >
-              <span style={{ fontWeight: 700, fontSize: '0.95rem', minWidth: 140 }}>
-                {tier}
-              </span>
+              <span style={{ fontWeight: 700, fontSize: '0.95rem', minWidth: 140 }}>{tier}</span>
 
               <span
                 style={{
@@ -155,12 +147,11 @@ export default function ShaderExhibit() {
               >
                 {prims.capsules} capsule{prims.capsules !== 1 ? 's' : ''}
                 {prims.spheres > 0 && ` + ${prims.spheres} sphere${prims.spheres !== 1 ? 's' : ''}`}
-                {' + '}{prims.unions} union{prims.unions !== 1 ? 's' : ''}
+                {' + '}
+                {prims.unions} union{prims.unions !== 1 ? 's' : ''}
               </span>
 
-              <span style={{ fontSize: '0.75rem', opacity: 0.4 }}>
-                {isExpanded ? '\u25B2' : '\u25BC'}
-              </span>
+              <span style={{ fontSize: '0.75rem', opacity: 0.4 }}>{isExpanded ? '\u25B2' : '\u25BC'}</span>
             </div>
 
             {/* GLSL Source */}

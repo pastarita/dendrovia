@@ -4,9 +4,9 @@
  * This is a simple placeholder - will evolve into L-Systems
  */
 
-import { useRef } from 'react';
-import { Mesh, CylinderGeometry, MeshStandardMaterial, Color } from 'three';
 import { useFrame } from '@react-three/fiber';
+import { useRef } from 'react';
+import { Color } from 'three';
 
 interface MurrayTreeProps {
   position?: [number, number, number];
@@ -14,11 +14,7 @@ interface MurrayTreeProps {
   complexity?: number;
 }
 
-export function MurrayTree({
-  position = [0, 0, 0],
-  height = 10,
-  complexity = 1,
-}: MurrayTreeProps) {
+export function MurrayTree({ position = [0, 0, 0], height = 10, complexity = 1 }: MurrayTreeProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   // Simple rotation for now

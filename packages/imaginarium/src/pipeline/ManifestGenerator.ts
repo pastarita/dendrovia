@@ -2,7 +2,7 @@
  * ManifestGenerator — collects artifact paths and writes manifest.json.
  */
 
-import type { AssetManifest, SDFShader, ProceduralPalette, MeshManifestEntry } from '@dendrovia/shared';
+import type { AssetManifest, MeshManifestEntry } from '@dendrovia/shared';
 import { hashString } from '../utils/hash';
 
 export interface ManifestInput {
@@ -38,8 +38,8 @@ export function generateManifest(input: ManifestInput): AssetManifest {
 
   // Compute overall checksum from all artifact paths
   const allPaths = [
-    ...input.shaders.map(s => s.path),
-    ...input.palettes.map(p => p.path),
+    ...input.shaders.map((s) => s.path),
+    ...input.palettes.map((p) => p.path),
     input.topologyPath,
     input.noisePath ?? '',
     input.lsystemPath ?? '',

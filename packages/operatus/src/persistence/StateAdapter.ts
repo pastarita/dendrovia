@@ -13,7 +13,7 @@
  *   OPERATUS: quests[] (all statuses in one flat array)
  */
 
-import type { Character, Quest, Item } from '@dendrovia/shared';
+import type { Character, Item, Quest } from '@dendrovia/shared';
 import { useGameStore, waitForHydration } from './GameStore';
 
 // ── Types ────────────────────────────────────────────────────
@@ -110,12 +110,8 @@ export class StateAdapter {
     const operatus = useGameStore.getState();
 
     // Split OPERATUS flat quests into active/completed for LUDUS
-    const activeQuests = operatus.quests.filter(
-      (q) => q.status === 'active' || q.status === 'available',
-    );
-    const completedQuests = operatus.quests.filter(
-      (q) => q.status === 'completed',
-    );
+    const activeQuests = operatus.quests.filter((q) => q.status === 'active' || q.status === 'available');
+    const completedQuests = operatus.quests.filter((q) => q.status === 'completed');
 
     this.syncing = true;
     try {
@@ -135,10 +131,7 @@ export class StateAdapter {
    * Debounced sync: LUDUS store → OPERATUS Zustand store.
    * Batches rapid changes (e.g., combat ticks) into a single write.
    */
-  private debouncedSyncToOperatus(
-    state: LudusGameState,
-    _prev: LudusGameState,
-  ): void {
+  private debouncedSyncToOperatus(state: LudusGameState, _prev: LudusGameState): void {
     if (this.debounceTimer !== null) {
       clearTimeout(this.debounceTimer);
     }
@@ -154,10 +147,7 @@ export class StateAdapter {
    */
   private syncToOperatus(ludusState: LudusGameState): void {
     // Merge activeQuests + completedQuests into flat quests array
-    const quests: Quest[] = [
-      ...ludusState.activeQuests,
-      ...ludusState.completedQuests,
-    ];
+    const quests: Quest[] = [...ludusState.activeQuests, ...ludusState.completedQuests];
 
     this.syncing = true;
     try {
@@ -177,11 +167,7 @@ export class StateAdapter {
    * Only fires on significant changes (save import, manual reset).
    * Skips battleState-adjacent fields since OPERATUS doesn't track combat.
    */
-  private syncToLudus(
-    ludusStore: LudusGameStore,
-    operatus: any,
-    prev: any,
-  ): void {
+  private syncToLudus(ludusStore: LudusGameStore, operatus: any, prev: any): void {
     // Only sync if character or quests actually changed reference
     const characterChanged = operatus.character !== prev.character;
     const questsChanged = operatus.quests !== prev.quests;
@@ -199,12 +185,8 @@ export class StateAdapter {
     }
 
     if (questsChanged) {
-      patch.activeQuests = operatus.quests.filter(
-        (q: Quest) => q.status === 'active' || q.status === 'available',
-      );
-      patch.completedQuests = operatus.quests.filter(
-        (q: Quest) => q.status === 'completed',
-      );
+      patch.activeQuests = operatus.quests.filter((q: Quest) => q.status === 'active' || q.status === 'available');
+      patch.completedQuests = operatus.quests.filter((q: Quest) => q.status === 'completed');
     }
 
     if (inventoryChanged) {

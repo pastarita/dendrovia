@@ -16,18 +16,18 @@
  * - Cleaner configuration
  */
 
-import type { DendroviaConfig, Pillar } from "./pillar-registry";
-import type { LaunchOptions } from "./types";
-import { $ } from "bun";
+import { $ } from 'bun';
+import type { DendroviaConfig, Pillar } from './pillar-registry';
+import type { LaunchOptions } from './types';
 
 // Ghostty theme mappings for each pillar (using custom Dendrovia themes)
 const PILLAR_THEMES: Record<string, string> = {
-  CHRONOS: "dendrovia-chronos",          // Archaeological amber
-  IMAGINARIUM: "dendrovia-imaginarium",  // Alchemical violet
-  ARCHITECTUS: "dendrovia-architectus",  // Computational blue
-  LUDUS: "dendrovia-ludus",              // Tactical green
-  OCULUS: "dendrovia-oculus",            // Observational amber
-  OPERATUS: "dendrovia-operatus",        // Industrial grey
+  CHRONOS: 'dendrovia-chronos', // Archaeological amber
+  IMAGINARIUM: 'dendrovia-imaginarium', // Alchemical violet
+  ARCHITECTUS: 'dendrovia-architectus', // Computational blue
+  LUDUS: 'dendrovia-ludus', // Tactical green
+  OCULUS: 'dendrovia-oculus', // Observational amber
+  OPERATUS: 'dendrovia-operatus', // Industrial grey
 };
 
 /**
@@ -36,7 +36,7 @@ const PILLAR_THEMES: Record<string, string> = {
 function generateGhosttyCommand(pillar: Pillar, options: LaunchOptions = {}): string {
   const { withDevServers = false } = options;
 
-  const theme = PILLAR_THEMES[pillar.id] || "Nord";
+  const theme = PILLAR_THEMES[pillar.id] || 'Nord';
 
   // Build initial command
   let command = `cd '${pillar.path}'`;
@@ -60,28 +60,25 @@ function generateGhosttyCommand(pillar: Pillar, options: LaunchOptions = {}): st
 
   // Build Ghostty launch command
   const args: string[] = [
-    "-na",
-    "Ghostty.app",
-    "--args",
+    '-na',
+    'Ghostty.app',
+    '--args',
     `--theme="${theme}"`,
     `--title="${pillar.emoji} ${pillar.shortCode} - ${pillar.name}"`,
-    "-e",
-    "$SHELL",
-    "-c",
+    '-e',
+    '$SHELL',
+    '-c',
     `"${command}"`,
   ];
 
-  return `open ${args.join(" ")}`;
+  return `open ${args.join(' ')}`;
 }
 
 /**
  * Launch Dendrovia workspace in Ghostty
  */
-export async function launchGhosttyWorkspace(
-  config: DendroviaConfig,
-  options: LaunchOptions = {}
-): Promise<void> {
-  const { pillars: pillarIds, withDevServers = false, dryRun = false } = options;
+export async function launchGhosttyWorkspace(config: DendroviaConfig, options: LaunchOptions = {}): Promise<void> {
+  const { pillars: pillarIds, withDevServers: _withDevServers = false, dryRun: _dryRun = false } = options;
 
   // Filter pillars
   let pillars = config.pillars;
@@ -89,7 +86,7 @@ export async function launchGhosttyWorkspace(
     pillars = config.pillars.filter((p) => pillarIds.includes(p.id));
   }
 
-  console.log("🌳 Launching Dendrovia workspaces in Ghostty...\\n");
+  console.log('🌳 Launching Dendrovia workspaces in Ghostty...\\n');
 
   for (const pillar of pillars) {
     console.log(`  ${pillar.emoji} ${pillar.id} - ${pillar.name} (${PILLAR_THEMES[pillar.id]})`);
@@ -98,7 +95,7 @@ export async function launchGhosttyWorkspace(
   console.log();
 
   if (dryRun) {
-    console.log("📋 Generated Commands:\\n");
+    console.log('📋 Generated Commands:\\n');
     for (const pillar of pillars) {
       console.log(`# ${pillar.name}`);
       console.log(generateGhosttyCommand(pillar, options));
@@ -124,38 +121,38 @@ export async function launchGhosttyWorkspace(
     }
   }
 
-  console.log("\\n✅ Workspace launched in Ghostty!");
+  console.log('\\n✅ Workspace launched in Ghostty!');
 
   // Note about grid layout limitation
   if (options.gridLayout !== false) {
-    console.log("\\n⚠️  Note: Ghostty does not support automated window positioning");
-    console.log("   Please arrange windows manually using:");
-    console.log("   - Rectangle app (brew install --cask rectangle)");
-    console.log("   - macOS Stage Manager or Split View");
-    console.log("   - See GHOSTTY_WINDOW_LIMITATIONS.md for details");
+    console.log('\\n⚠️  Note: Ghostty does not support automated window positioning');
+    console.log('   Please arrange windows manually using:');
+    console.log('   - Rectangle app (brew install --cask rectangle)');
+    console.log('   - macOS Stage Manager or Split View');
+    console.log('   - See GHOSTTY_WINDOW_LIMITATIONS.md for details');
   }
 
   // Auto-configure splits if requested
   if (options.autoSplits !== false) {
-    console.log("\\n📐 Configuring window splits...");
+    console.log('\\n📐 Configuring window splits...');
     try {
       await $`./scripts/workspace-launcher/setup-ghostty-splits.sh`;
-    } catch (error) {
-      console.warn("⚠️  Could not auto-configure splits. You can run manually:");
-      console.warn("   ./scripts/workspace-launcher/setup-ghostty-splits.sh");
+    } catch (_error) {
+      console.warn('⚠️  Could not auto-configure splits. You can run manually:');
+      console.warn('   ./scripts/workspace-launcher/setup-ghostty-splits.sh');
     }
   }
 
-  console.log("\\n💡 Tips:");
-  console.log("  - Each window has 70/30 split (top: main, bottom: commands/secondary)");
-  console.log("  - Arrange windows manually in 3x2 grid for best layout");
-  console.log("  - cmd+option+arrows: Resize splits");
-  console.log("  - cmd+[ / cmd+]: Navigate splits");
-  console.log("  - cmd+shift+enter: Toggle split zoom");
-  console.log("\\n🪟 Window positioning:");
-  console.log("  - Use Rectangle app for keyboard-based positioning");
-  console.log("  - Use macOS Stage Manager for auto-arrangement");
-  console.log("  - See GHOSTTY_WINDOW_LIMITATIONS.md for details");
-  console.log("\\n🎛️  Options:");
-  console.log("  --no-auto-splits: Skip automatic split configuration");
+  console.log('\\n💡 Tips:');
+  console.log('  - Each window has 70/30 split (top: main, bottom: commands/secondary)');
+  console.log('  - Arrange windows manually in 3x2 grid for best layout');
+  console.log('  - cmd+option+arrows: Resize splits');
+  console.log('  - cmd+[ / cmd+]: Navigate splits');
+  console.log('  - cmd+shift+enter: Toggle split zoom');
+  console.log('\\n🪟 Window positioning:');
+  console.log('  - Use Rectangle app for keyboard-based positioning');
+  console.log('  - Use macOS Stage Manager for auto-arrangement');
+  console.log('  - See GHOSTTY_WINDOW_LIMITATIONS.md for details');
+  console.log('\\n🎛️  Options:');
+  console.log('  --no-auto-splits: Skip automatic split configuration');
 }

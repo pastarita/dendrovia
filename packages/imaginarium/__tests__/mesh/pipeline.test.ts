@@ -2,19 +2,19 @@
  * Tests for the composable mesh pipeline and operations.
  */
 
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import {
   buildFromIndexed,
   buildFromProfile,
+  type HalfEdgeMesh,
+  type MeshOp,
+  MeshPipeline,
   pipe,
   repeat,
   when,
-  MeshPipeline,
-  type HalfEdgeMesh,
-  type MeshOp,
 } from '../../src/mesh/index.js';
+import { displaceByFunction, displaceByNoise, displaceNormal } from '../../src/mesh/ops/displace.js';
 import { smooth, taubinSmooth } from '../../src/mesh/ops/smooth.js';
-import { displaceNormal, displaceByFunction, displaceByNoise } from '../../src/mesh/ops/displace.js';
 import { subdivide } from '../../src/mesh/ops/subdivide.js';
 
 // ---------------------------------------------------------------------------
@@ -23,16 +23,18 @@ import { subdivide } from '../../src/mesh/ops/subdivide.js';
 
 function simpleMesh(): HalfEdgeMesh {
   // Two triangles forming a quad
-  return buildFromIndexed(
-    new Float32Array([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0]),
-    new Uint32Array([0, 1, 2, 0, 2, 3]),
-  );
+  return buildFromIndexed(new Float32Array([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0]), new Uint32Array([0, 1, 2, 0, 2, 3]));
 }
 
 function profileMesh(): HalfEdgeMesh {
   // Cap-like profile: 4 points, 8 segments
   return buildFromProfile(
-    [[0, 1], [0.3, 0.8], [0.5, 0.3], [0.2, 0]],
+    [
+      [0, 1],
+      [0.3, 0.8],
+      [0.5, 0.3],
+      [0.2, 0],
+    ],
     8,
   );
 }
@@ -69,10 +71,12 @@ describe('pipe', () => {
 
   test('multiple ops: pipe composes left to right', () => {
     const ops: string[] = [];
-    const logOp = (name: string): MeshOp => (mesh) => {
-      ops.push(name);
-      return mesh;
-    };
+    const logOp =
+      (name: string): MeshOp =>
+      (mesh) => {
+        ops.push(name);
+        return mesh;
+      };
 
     pipe(logOp('a'), logOp('b'), logOp('c'))(simpleMesh());
     expect(ops).toEqual(['a', 'b', 'c']);
@@ -86,14 +90,20 @@ describe('pipe', () => {
 describe('repeat', () => {
   test('repeat(0) returns unchanged mesh', () => {
     let count = 0;
-    const countOp: MeshOp = (mesh) => { count++; return mesh; };
+    const countOp: MeshOp = (mesh) => {
+      count++;
+      return mesh;
+    };
     repeat(0, countOp)(simpleMesh());
     expect(count).toBe(0);
   });
 
   test('repeat(3) calls op 3 times', () => {
     let count = 0;
-    const countOp: MeshOp = (mesh) => { count++; return mesh; };
+    const countOp: MeshOp = (mesh) => {
+      count++;
+      return mesh;
+    };
     repeat(3, countOp)(simpleMesh());
     expect(count).toBe(3);
   });
@@ -106,23 +116,26 @@ describe('repeat', () => {
 describe('when', () => {
   test('applies op when predicate is true', () => {
     let applied = false;
-    const op: MeshOp = (mesh) => { applied = true; return mesh; };
+    const op: MeshOp = (mesh) => {
+      applied = true;
+      return mesh;
+    };
     when(() => true, op)(simpleMesh());
     expect(applied).toBe(true);
   });
 
   test('skips op when predicate is false', () => {
     let applied = false;
-    const op: MeshOp = (mesh) => { applied = true; return mesh; };
+    const op: MeshOp = (mesh) => {
+      applied = true;
+      return mesh;
+    };
     when(() => false, op)(simpleMesh());
     expect(applied).toBe(false);
   });
 
   test('predicate receives the mesh', () => {
-    const op = when(
-      (mesh) => mesh.faces.length === 2,
-      smooth(1),
-    );
+    const op = when((mesh) => mesh.faces.length === 2, smooth(1));
     const mesh = simpleMesh();
     expect(mesh.faces.length).toBe(2);
     const result = op(mesh);
@@ -144,24 +157,26 @@ describe('MeshPipeline', () => {
   });
 
   test('tracks step count', () => {
-    const pipeline = new MeshPipeline()
-      .add('smooth', smooth(1))
-      .add('displace', displaceNormal(0.01));
+    const pipeline = new MeshPipeline().add('smooth', smooth(1)).add('displace', displaceNormal(0.01));
     expect(pipeline.length).toBe(2);
   });
 
   test('tracks step names', () => {
-    const pipeline = new MeshPipeline()
-      .add('step-a', smooth(1))
-      .add('step-b', displaceNormal(0.01));
+    const pipeline = new MeshPipeline().add('step-a', smooth(1)).add('step-b', displaceNormal(0.01));
     expect(pipeline.names).toEqual(['step-a', 'step-b']);
   });
 
   test('executes steps in order', () => {
     const order: string[] = [];
     const pipeline = new MeshPipeline()
-      .add('first', (mesh) => { order.push('first'); return mesh; })
-      .add('second', (mesh) => { order.push('second'); return mesh; });
+      .add('first', (mesh) => {
+        order.push('first');
+        return mesh;
+      })
+      .add('second', (mesh) => {
+        order.push('second');
+        return mesh;
+      });
     pipeline.execute(simpleMesh());
     expect(order).toEqual(['first', 'second']);
   });
@@ -261,7 +276,7 @@ describe('displaceNormal', () => {
 describe('displaceByFunction', () => {
   test('sinusoidal displacement varies by position', () => {
     const mesh = profileMesh();
-    const result = displaceByFunction((x, y, z) => 0.1 * Math.sin(y * 10))(mesh);
+    const result = displaceByFunction((_x, y, _z) => 0.1 * Math.sin(y * 10))(mesh);
 
     let moved = 0;
     for (let i = 0; i < mesh.vertices.length; i++) {
@@ -346,11 +361,7 @@ describe('subdivide', () => {
 describe('integrated pipeline', () => {
   test('subdivide + smooth + displace composes correctly', () => {
     const mesh = profileMesh();
-    const pipeline = pipe(
-      subdivide(1),
-      smooth(3, 0.3),
-      displaceByNoise(0.02, 5),
-    );
+    const pipeline = pipe(subdivide(1), smooth(3, 0.3), displaceByNoise(0.02, 5));
     const result = pipeline(mesh);
 
     // Should have more faces than original (subdivided)
@@ -367,11 +378,7 @@ describe('integrated pipeline', () => {
 
   test('pipeline is deterministic', () => {
     const mesh = profileMesh();
-    const pipeline = pipe(
-      subdivide(1),
-      smooth(2),
-      displaceByNoise(0.03, 8),
-    );
+    const pipeline = pipe(subdivide(1), smooth(2), displaceByNoise(0.03, 8));
     const r1 = pipeline(mesh);
     const r2 = pipeline(mesh);
 
@@ -387,10 +394,7 @@ describe('integrated pipeline', () => {
     const mesh = profileMesh();
 
     const piped = pipe(smooth(2), displaceNormal(0.05))(mesh);
-    const built = new MeshPipeline()
-      .add('smooth', smooth(2))
-      .add('displace', displaceNormal(0.05))
-      .execute(mesh);
+    const built = new MeshPipeline().add('smooth', smooth(2)).add('displace', displaceNormal(0.05)).execute(mesh);
 
     expect(piped.vertices.length).toBe(built.vertices.length);
     for (let i = 0; i < piped.vertices.length; i++) {

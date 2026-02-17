@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import type { ActionLogEntry } from '@dendrovia/shared';
 import { OrnateFrame } from '@dendrovia/oculus';
+import type { ActionLogEntry } from '@dendrovia/shared';
+import { useEffect, useRef } from 'react';
 
 interface BattleLogProps {
   log: ActionLogEntry[];
@@ -13,7 +13,7 @@ export default function BattleLog({ log }: BattleLogProps): React.JSX.Element {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [log.length]);
+  }, []);
 
   return (
     <OrnateFrame pillar="ludus" variant="panel">
@@ -26,12 +26,18 @@ export default function BattleLog({ log }: BattleLogProps): React.JSX.Element {
           fontSize: '0.8rem',
         }}
       >
-        <div style={{ fontSize: '0.7rem', opacity: 0.4, marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div
+          style={{
+            fontSize: '0.7rem',
+            opacity: 0.4,
+            marginBottom: '0.5rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+          }}
+        >
           Battle Log
         </div>
-        {log.length === 0 && (
-          <div style={{ opacity: 0.3, fontStyle: 'italic' }}>No actions yet...</div>
-        )}
+        {log.length === 0 && <div style={{ opacity: 0.3, fontStyle: 'italic' }}>No actions yet...</div>}
         {log.map((entry, i) => (
           <div
             key={i}

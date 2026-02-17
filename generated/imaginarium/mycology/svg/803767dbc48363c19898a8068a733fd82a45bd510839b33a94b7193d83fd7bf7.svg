@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <filter id="organic" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="1" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  </defs>
+  <g>
+    <path d="M 96.8,88.0759901643724 Q 95.8,129.0379950821862 96.16,170 L 103.84,170 Q 104.2,129.0379950821862 103.2,88.0759901643724 Z" fill="#979bc4" filter="url(#organic)"/>
+    <ellipse cx="100" cy="112.65319311506067" rx="4.800000000000001" ry="1.4400000000000002" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+    <path d="M 73.72,88.0759901643724 L 71.389,103.6159901643724 M 79.56,88.0759901643724 L 77.747,103.6159901643724 M 85.4,88.0759901643724 L 84.105,103.6159901643724 M 91.24,88.0759901643724 L 90.463,103.6159901643724 M 97.08,88.0759901643724 L 96.821,103.6159901643724 M 102.92,88.0759901643724 L 103.179,103.6159901643724 M 108.75999999999999,88.0759901643724 L 109.53699999999999,103.6159901643724 M 114.6,88.0759901643724 L 115.895,103.6159901643724 M 120.44,88.0759901643724 L 122.253,103.6159901643724 M 126.28,88.0759901643724 L 128.611,103.6159901643724" stroke="#979bc4" stroke-width="0.8" fill="none" opacity="0.7"/>
+    <path d="M 67.15,88.0759901643724 Q 73.72,60.8809901643724 100,49.2259901643724 Q 126.28,60.8809901643724 132.85,88.0759901643724" fill="#3275b4" filter="url(#organic)"/>
+    <circle cx="83.6" cy="60.9" r="3" fill="white" opacity="0.85"/>
+    <circle cx="109.9" cy="57.0" r="2.5" fill="white" opacity="0.85"/>
+    <circle cx="96.7" cy="55.1" r="2" fill="white" opacity="0.85"/>
+    <circle cx="119.7" cy="64.8" r="2" fill="white" opacity="0.85"/>
+    <circle cx="80.3" cy="68.7" r="1.5" fill="white" opacity="0.85"/>
+    <circle cx="103.3" cy="68.7" r="2.5" fill="white" opacity="0.85"/>
+  </g>
+</svg>

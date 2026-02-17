@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LifecycleDiagram } from './components/LifecycleDiagram';
 import { LiveEventOverlay } from './components/LiveEventOverlay';
 import { StageDetail } from './components/StageDetail';
@@ -14,19 +14,79 @@ export interface Stage {
 }
 
 export const ASSET_STAGES: Stage[] = [
-  { id: 'manifest', label: 'Manifest', description: 'Parse manifest.json to discover all assets', api: 'AssetLoader.loadManifest()', track: 'asset' },
-  { id: 'priority', label: 'Priority Sort', description: 'Sort assets by priority (critical > high > medium > low)', api: 'AssetPriority enum', track: 'asset' },
-  { id: 'cache-check', label: 'Cache Check', description: 'Check memory → OPFS → IDB tiers for cached copy', api: 'CacheManager.get(path)', track: 'asset' },
-  { id: 'fetch', label: 'Fetch / Hit', description: 'Fetch from network on miss, return cached data on hit', api: 'CacheManager.set() + fetch()', track: 'asset' },
-  { id: 'parse', label: 'Parse', description: 'Decode asset data (JSON, GLSL, binary mesh)', api: 'AssetLoader.load()', track: 'asset' },
-  { id: 'consumer', label: 'Consumer Ready', description: 'Asset available for rendering/gameplay', api: 'EventBus.emit(ASSETS_LOADED)', track: 'asset' },
+  {
+    id: 'manifest',
+    label: 'Manifest',
+    description: 'Parse manifest.json to discover all assets',
+    api: 'AssetLoader.loadManifest()',
+    track: 'asset',
+  },
+  {
+    id: 'priority',
+    label: 'Priority Sort',
+    description: 'Sort assets by priority (critical > high > medium > low)',
+    api: 'AssetPriority enum',
+    track: 'asset',
+  },
+  {
+    id: 'cache-check',
+    label: 'Cache Check',
+    description: 'Check memory → OPFS → IDB tiers for cached copy',
+    api: 'CacheManager.get(path)',
+    track: 'asset',
+  },
+  {
+    id: 'fetch',
+    label: 'Fetch / Hit',
+    description: 'Fetch from network on miss, return cached data on hit',
+    api: 'CacheManager.set() + fetch()',
+    track: 'asset',
+  },
+  {
+    id: 'parse',
+    label: 'Parse',
+    description: 'Decode asset data (JSON, GLSL, binary mesh)',
+    api: 'AssetLoader.load()',
+    track: 'asset',
+  },
+  {
+    id: 'consumer',
+    label: 'Consumer Ready',
+    description: 'Asset available for rendering/gameplay',
+    api: 'EventBus.emit(ASSETS_LOADED)',
+    track: 'asset',
+  },
 ];
 
 export const PERSIST_STAGES: Stage[] = [
-  { id: 'game-state', label: 'Game State', description: 'Live Zustand store with character, quests, inventory', api: 'useGameStore.getState()', track: 'persist' },
-  { id: 'zustand-persist', label: 'Zustand Persist', description: 'Middleware serializes state on every mutation', api: 'createDendroviaStorage()', track: 'persist' },
-  { id: 'idb-write', label: 'IndexedDB', description: 'Persisted to IndexedDB via custom storage engine', api: 'IDBCache.write()', track: 'persist' },
-  { id: 'state-persisted', label: 'STATE_PERSISTED', description: 'Confirmation event emitted to all pillars', api: 'EventBus.emit(STATE_PERSISTED)', track: 'persist' },
+  {
+    id: 'game-state',
+    label: 'Game State',
+    description: 'Live Zustand store with character, quests, inventory',
+    api: 'useGameStore.getState()',
+    track: 'persist',
+  },
+  {
+    id: 'zustand-persist',
+    label: 'Zustand Persist',
+    description: 'Middleware serializes state on every mutation',
+    api: 'createDendroviaStorage()',
+    track: 'persist',
+  },
+  {
+    id: 'idb-write',
+    label: 'IndexedDB',
+    description: 'Persisted to IndexedDB via custom storage engine',
+    api: 'IDBCache.write()',
+    track: 'persist',
+  },
+  {
+    id: 'state-persisted',
+    label: 'STATE_PERSISTED',
+    description: 'Confirmation event emitted to all pillars',
+    api: 'EventBus.emit(STATE_PERSISTED)',
+    track: 'persist',
+  },
 ];
 
 export const ALL_STAGES = [...ASSET_STAGES, ...PERSIST_STAGES];
@@ -75,7 +135,9 @@ export function AssetLifecycleClient() {
 
       return () => unsub();
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleSimulate = async () => {
@@ -96,7 +158,9 @@ export function AssetLifecycleClient() {
     ];
 
     for (const step of sequence) {
-      await new Promise<void>((resolve) => setTimeout(resolve, step.delay === 0 ? 0 : step.delay - (sequence[sequence.indexOf(step) - 1]?.delay ?? 0)));
+      await new Promise<void>((resolve) =>
+        setTimeout(resolve, step.delay === 0 ? 0 : step.delay - (sequence[sequence.indexOf(step) - 1]?.delay ?? 0)),
+      );
       setActiveStages((prev) => new Set(prev).add(step.stage));
 
       const id = toastId.current++;
@@ -114,18 +178,18 @@ export function AssetLifecycleClient() {
   };
 
   return (
-    <div style={{ marginTop: "1.5rem" }}>
-      <div style={{ marginBottom: "1rem" }}>
+    <div style={{ marginTop: '1.5rem' }}>
+      <div style={{ marginBottom: '1rem' }}>
         <button
           onClick={handleSimulate}
           style={{
-            padding: "0.5rem 1rem",
-            background: "#1e3a5f",
-            border: "1px solid #3b82f6",
-            borderRadius: "4px",
-            color: "#ededed",
-            fontSize: "0.85rem",
-            cursor: "pointer",
+            padding: '0.5rem 1rem',
+            background: '#1e3a5f',
+            border: '1px solid #3b82f6',
+            borderRadius: '4px',
+            color: '#ededed',
+            fontSize: '0.85rem',
+            cursor: 'pointer',
             fontWeight: 500,
           }}
         >
@@ -143,9 +207,7 @@ export function AssetLifecycleClient() {
         }}
       />
 
-      {selectedStage && (
-        <StageDetail stage={selectedStage} onClose={() => setSelectedStage(null)} />
-      )}
+      {selectedStage && <StageDetail stage={selectedStage} onClose={() => setSelectedStage(null)} />}
     </div>
   );
 }

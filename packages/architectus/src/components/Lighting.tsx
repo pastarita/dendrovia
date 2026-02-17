@@ -31,16 +31,10 @@ export function Lighting() {
       />
 
       {/* Fill light from below — gives the "floating in void" feel */}
-      <directionalLight
-        position={[-5, -10, 5]}
-        intensity={0.1}
-        color="#00ffff"
-      />
+      <directionalLight position={[-5, -10, 5]} intensity={0.1} color="#00ffff" />
 
       {/* Hemisphere: dark ground, slightly blue sky */}
-      <hemisphereLight
-        args={['#1a1a3e', '#0a0a0a', 0.2]}
-      />
+      <hemisphereLight args={['#1a1a3e', '#0a0a0a', 0.2]} />
     </>
   );
 }

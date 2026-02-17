@@ -55,15 +55,33 @@ export default function ConfigSliders({ config, onChange }: ConfigSlidersProps):
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {Object.entries(sections).map(([section, sliders]) => (
-        <div key={section} style={{ padding: '0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}>
-          <div style={{ fontSize: '0.75rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+        <div
+          key={section}
+          style={{ padding: '0.75rem', border: '1px solid #222', borderRadius: '6px', background: '#111' }}
+        >
+          <div
+            style={{
+              fontSize: '0.75rem',
+              opacity: 0.5,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '0.5rem',
+            }}
+          >
             {section}
           </div>
-          {sliders.map(slider => {
+          {sliders.map((slider) => {
             const value = getNestedValue(config, slider.section, slider.key);
             return (
               <div key={slider.key} style={{ marginBottom: '0.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.15rem' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: '0.75rem',
+                    marginBottom: '0.15rem',
+                  }}
+                >
                   <span style={{ opacity: 0.7 }}>{slider.label}</span>
                   <span style={{ fontFamily: 'var(--font-geist-mono)', opacity: 0.8 }}>
                     {slider.step < 1 ? value.toFixed(2) : value}
@@ -75,7 +93,7 @@ export default function ConfigSliders({ config, onChange }: ConfigSlidersProps):
                   max={slider.max}
                   step={slider.step}
                   value={value}
-                  onChange={e => onChange(slider.section, slider.key, Number(e.target.value))}
+                  onChange={(e) => onChange(slider.section, slider.key, Number(e.target.value))}
                   style={sliderInputStyle}
                 />
               </div>

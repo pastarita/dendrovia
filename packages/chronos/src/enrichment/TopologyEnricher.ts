@@ -12,10 +12,7 @@ import type { TopologyOutput } from '../builder/TopologyBuilder.js';
  * Enrich a TopologyOutput with DeepWiki documentation data.
  * Returns a new TopologyOutput with the `deepwiki` field attached.
  */
-export function enrichTopology(
-  output: TopologyOutput,
-  deepwiki: DeepWikiEnrichment,
-): TopologyOutput {
+export function enrichTopology(output: TopologyOutput, deepwiki: DeepWikiEnrichment): TopologyOutput {
   return {
     ...output,
     topology: {

@@ -1,4 +1,4 @@
-export { Stage } from './Stage';
-export { Skybox } from './Skybox';
-export { Lighting } from './Lighting';
 export { Effects } from './Effects';
+export { Lighting } from './Lighting';
+export { Skybox } from './Skybox';
+export { Stage } from './Stage';

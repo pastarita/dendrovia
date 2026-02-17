@@ -8,17 +8,8 @@
  * (OCULUS, ARCHITECTUS) receive updates without direct coupling.
  */
 
-import type {
-  Character,
-  Quest,
-  BattleState,
-  Item,
-  Action,
-} from '@dendrovia/shared';
-import {
-  getEventBus,
-  GameEvents,
-} from '@dendrovia/shared';
+import type { BattleState, Character, Item, Quest } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
 
 export interface GameState {
   character: Character;
@@ -49,12 +40,14 @@ export function createGameStore(initialState: GameState): GameStore {
     setState(partial: Partial<GameState>) {
       const prev = state;
       state = { ...state, ...partial };
-      listeners.forEach(fn => fn(state, prev));
+      listeners.forEach((fn) => fn(state, prev));
     },
 
     subscribe(listener: Listener) {
       listeners.add(listener);
-      return () => { listeners.delete(listener); };
+      return () => {
+        listeners.delete(listener);
+      };
     },
   };
 }
@@ -110,9 +103,7 @@ export function bridgeStoreToEventBus(store: GameStore): () => void {
 
     // Quest updates
     if (state.activeQuests !== prev.activeQuests) {
-      const newQuests = state.activeQuests.filter(
-        q => !prev.activeQuests.some(pq => pq.id === q.id)
-      );
+      const newQuests = state.activeQuests.filter((q) => !prev.activeQuests.some((pq) => pq.id === q.id));
       for (const quest of newQuests) {
         bus.emit(GameEvents.QUEST_UPDATED, {
           questId: quest.id,

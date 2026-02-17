@@ -6,22 +6,18 @@
  */
 
 import type { CodeTopology, ParsedFile } from '@dendrovia/shared';
-import type {
-  FungalSpecimen,
-  MushroomPlacement,
-  SubstrateType,
-  FungalGenus,
-} from './types';
-import { buildTaxonomy, buildFileContext, buildCoChurnMap, type FileContext } from './GenusMapper';
-import { generateMorphology } from './MorphologyGenerator';
-import { generateLore } from './LoreGenerator';
 import { hashString } from '../utils/hash';
+import { buildCoChurnMap, buildFileContext, buildTaxonomy, type FileContext } from './GenusMapper';
+import { generateLore } from './LoreGenerator';
+import { generateMorphology } from './MorphologyGenerator';
+import type { FungalGenus, FungalSpecimen, MushroomPlacement, SubstrateType } from './types';
 
 // ---------------------------------------------------------------------------
 // File filtering — skip trivial files
 // ---------------------------------------------------------------------------
 
-const TRIVIAL_PATTERNS = /(^|\/)(\.gitignore|\.editorconfig|\.prettierrc|\.eslintignore|LICENSE|CHANGELOG|yarn\.lock|package-lock|bun\.lockb)/i;
+const TRIVIAL_PATTERNS =
+  /(^|\/)(\.gitignore|\.editorconfig|\.prettierrc|\.eslintignore|LICENSE|CHANGELOG|yarn\.lock|package-lock|bun\.lockb)/i;
 const MIN_LOC = 3; // at least 3 lines to be cataloged
 
 function shouldCatalog(file: ParsedFile): boolean {
@@ -38,8 +34,8 @@ function derivePlacement(
   file: ParsedFile,
   ctx: FileContext,
   genus: FungalGenus,
-  index: number,
-  totalFiles: number,
+  _index: number,
+  _totalFiles: number,
 ): MushroomPlacement {
   // Deterministic positioning using file hash
   const hash = hashString(file.path);
@@ -48,8 +44,8 @@ function derivePlacement(
   const h3 = parseInt(hash.slice(16, 24), 16);
 
   // Spread specimens in a circular forest layout
-  const angle = (h1 / 0xFFFFFFFF) * Math.PI * 2;
-  const radius = 5 + (h2 / 0xFFFFFFFF) * 45; // 5-50 units from center
+  const angle = (h1 / 0xffffffff) * Math.PI * 2;
+  const radius = 5 + (h2 / 0xffffffff) * 45; // 5-50 units from center
   const x = Math.cos(angle) * radius;
   const z = Math.sin(angle) * radius;
   const y = 0; // ground level (adjusted by substrate)
@@ -61,7 +57,7 @@ function derivePlacement(
   const clusterSize = deriveClusterSize(genus, file);
 
   // Rotation from hash
-  const rotation = (h3 / 0xFFFFFFFF) * Math.PI * 2;
+  const rotation = (h3 / 0xffffffff) * Math.PI * 2;
 
   // Scale based on LOC
   const baseScale = file.loc < 50 ? 0.5 : file.loc < 200 ? 0.8 : file.loc < 500 ? 1.0 : 1.3;

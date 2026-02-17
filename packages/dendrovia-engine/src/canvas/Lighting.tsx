@@ -24,18 +24,10 @@ export function Lighting() {
       />
 
       {/* Fill light for softer shadows */}
-      <directionalLight
-        position={[-30, 50, -30]}
-        intensity={0.3}
-      />
+      <directionalLight position={[-30, 50, -30]} intensity={0.3} />
 
       {/* Magical accent light (for special areas) */}
-      <pointLight
-        position={[0, 20, 0]}
-        intensity={0.5}
-        color="#9d4edd"
-        distance={100}
-      />
+      <pointLight position={[0, 20, 0]} intensity={0.5} color="#9d4edd" distance={100} />
     </>
   );
 }

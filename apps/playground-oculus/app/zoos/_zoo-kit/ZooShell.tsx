@@ -10,11 +10,11 @@
  * and a per-exhibit control values map.
  */
 
-import { useState, useReducer, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import type { ZooPageConfig, ZooViewMode, PropControl } from './types';
-import { ZooFilterBar } from './ZooFilterBar';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import type { PropControl, ZooPageConfig, ZooViewMode } from './types';
 import { ZooExhibitCard } from './ZooExhibitCard';
+import { ZooFilterBar } from './ZooFilterBar';
 import { ZooInspector } from './ZooInspector';
 import { emptyStateStyle } from './zoo-styles';
 
@@ -142,10 +142,13 @@ export function ZooShell({ config }: ZooShellProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedId, filtered]);
 
-  const handleControlChange = useCallback((key: string, value: unknown) => {
-    if (!selectedId) return;
-    dispatch({ type: 'set', exhibitId: selectedId, key, value });
-  }, [selectedId]);
+  const handleControlChange = useCallback(
+    (key: string, value: unknown) => {
+      if (!selectedId) return;
+      dispatch({ type: 'set', exhibitId: selectedId, key, value });
+    },
+    [selectedId],
+  );
 
   // Responsive: detect narrow viewport
   const [isNarrow, setIsNarrow] = useState(false);
@@ -163,20 +166,20 @@ export function ZooShell({ config }: ZooShellProps) {
       <Link href={config.backHref} style={{ fontSize: '0.85rem', opacity: 0.5 }}>
         &larr; {config.backLabel}
       </Link>
-      <h1 style={{
-        fontSize: '1.75rem',
-        fontWeight: 700,
-        marginTop: '1rem',
-        marginBottom: '0.25rem',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-      }}>
+      <h1
+        style={{
+          fontSize: '1.75rem',
+          fontWeight: 700,
+          marginTop: '1rem',
+          marginBottom: '0.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}
+      >
         <span>{config.icon}</span> {config.title}
       </h1>
-      <p style={{ opacity: 0.5, marginBottom: '1.5rem' }}>
-        {config.subtitle}
-      </p>
+      <p style={{ opacity: 0.5, marginBottom: '1.5rem' }}>{config.subtitle}</p>
 
       {/* Filter bar */}
       <ZooFilterBar
@@ -192,19 +195,23 @@ export function ZooShell({ config }: ZooShellProps) {
       />
 
       {/* Main area: grid/list + inspector */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isNarrow ? 'column' : 'row',
-        gap: isNarrow ? '1.5rem' : 0,
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: isNarrow ? 'column' : 'row',
+          gap: isNarrow ? '1.5rem' : 0,
+        }}
+      >
         {/* Grid / List */}
         <div style={{ flex: 1, minWidth: 0 }}>
           {viewMode === 'grid' ? (
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-              gap: '1rem',
-            }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '1rem',
+              }}
+            >
               {filtered.map((exhibit) => (
                 <ZooExhibitCard
                   key={exhibit.id}
@@ -231,11 +238,7 @@ export function ZooShell({ config }: ZooShellProps) {
             </div>
           )}
 
-          {filtered.length === 0 && (
-            <div style={emptyStateStyle}>
-              No exhibits match the current filters
-            </div>
-          )}
+          {filtered.length === 0 && <div style={emptyStateStyle}>No exhibits match the current filters</div>}
         </div>
 
         {/* Inspector */}

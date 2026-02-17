@@ -9,7 +9,7 @@
  * Output goes to ./generated/
  */
 
-import { resolve, join } from 'path';
+import { join, resolve } from 'node:path';
 import { runPipeline } from './pipeline.js';
 
 // ---------------------------------------------------------------------------
@@ -18,7 +18,7 @@ import { runPipeline } from './pipeline.js';
 
 const rawArgs = process.argv.slice(2);
 const emitEvents = rawArgs.includes('--emit-events');
-const positionalArgs = rawArgs.filter(a => !a.startsWith('--'));
+const positionalArgs = rawArgs.filter((a) => !a.startsWith('--'));
 
 const repoPath = resolve(positionalArgs[0] || process.cwd());
 const outputDir = resolve(positionalArgs[1] || join(process.cwd(), 'generated'));
@@ -55,7 +55,7 @@ async function main() {
   console.log();
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error('CHRONOS failed:', err);
   process.exit(1);
 });

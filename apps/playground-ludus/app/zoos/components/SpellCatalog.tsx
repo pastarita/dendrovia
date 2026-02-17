@@ -1,12 +1,24 @@
 'use client';
 
-import { useState, useMemo } from 'react';
 import { getAllSpells } from '@dendrovia/ludus';
-import type { Element } from '@dendrovia/shared';
 import { OrnateFrame } from '@dendrovia/oculus';
+import type { Element } from '@dendrovia/shared';
+import { useMemo, useState } from 'react';
 
 const ELEMENTS: (Element | 'all')[] = ['all', 'fire', 'water', 'earth', 'air', 'none'];
-const EFFECT_TYPES = ['all', 'damage', 'heal', 'shield', 'buff', 'debuff', 'dot', 'aoe-damage', 'cleanse', 'taunt', 'revive'];
+const EFFECT_TYPES = [
+  'all',
+  'damage',
+  'heal',
+  'shield',
+  'buff',
+  'debuff',
+  'dot',
+  'aoe-damage',
+  'cleanse',
+  'taunt',
+  'revive',
+];
 
 const ELEMENT_COLORS: Record<string, string> = {
   fire: '#EF4444',
@@ -32,7 +44,7 @@ export default function SpellCatalog(): React.JSX.Element {
   const allSpells = useMemo(() => getAllSpells(), []);
 
   const filtered = useMemo(() => {
-    return allSpells.filter(s => {
+    return allSpells.filter((s) => {
       if (elementFilter !== 'all' && s.element !== elementFilter) return false;
       if (effectFilter !== 'all' && s.effect.type !== effectFilter) return false;
       return true;
@@ -43,12 +55,20 @@ export default function SpellCatalog(): React.JSX.Element {
     <div>
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', alignItems: 'center' }}>
         <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Element:</label>
-        <select style={selectStyle} value={elementFilter} onChange={e => setElementFilter(e.target.value)}>
-          {ELEMENTS.map(e => <option key={e} value={e}>{e === 'all' ? 'All' : e}</option>)}
+        <select style={selectStyle} value={elementFilter} onChange={(e) => setElementFilter(e.target.value)}>
+          {ELEMENTS.map((e) => (
+            <option key={e} value={e}>
+              {e === 'all' ? 'All' : e}
+            </option>
+          ))}
         </select>
         <label style={{ fontSize: '0.75rem', opacity: 0.5 }}>Effect:</label>
-        <select style={selectStyle} value={effectFilter} onChange={e => setEffectFilter(e.target.value)}>
-          {EFFECT_TYPES.map(e => <option key={e} value={e}>{e === 'all' ? 'All' : e}</option>)}
+        <select style={selectStyle} value={effectFilter} onChange={(e) => setEffectFilter(e.target.value)}>
+          {EFFECT_TYPES.map((e) => (
+            <option key={e} value={e}>
+              {e === 'all' ? 'All' : e}
+            </option>
+          ))}
         </select>
         <span style={{ fontSize: '0.75rem', opacity: 0.4, marginLeft: 'auto' }}>{filtered.length} spells</span>
       </div>
@@ -67,7 +87,7 @@ export default function SpellCatalog(): React.JSX.Element {
             </tr>
           </thead>
           <tbody>
-            {filtered.map(spell => (
+            {filtered.map((spell) => (
               <tr key={spell.id} style={{ borderBottom: '1px solid #1a1a1a' }}>
                 <td style={{ padding: '0.4rem 0.5rem', fontWeight: 600 }}>{spell.name}</td>
                 <td style={{ padding: '0.4rem 0.5rem' }}>
@@ -75,9 +95,29 @@ export default function SpellCatalog(): React.JSX.Element {
                 </td>
                 <td style={{ padding: '0.4rem 0.5rem', opacity: 0.8 }}>{spell.effect.type}</td>
                 <td style={{ padding: '0.4rem 0.5rem', opacity: 0.6, fontSize: '0.75rem' }}>{spell.effect.target}</td>
-                <td style={{ padding: '0.4rem 0.5rem', textAlign: 'right', fontFamily: 'var(--font-geist-mono)' }}>{spell.effect.value}</td>
-                <td style={{ padding: '0.4rem 0.5rem', textAlign: 'right', fontFamily: 'var(--font-geist-mono)', color: '#3B82F6' }}>{spell.manaCost}</td>
-                <td style={{ padding: '0.4rem 0.5rem', textAlign: 'right', fontFamily: 'var(--font-geist-mono)', opacity: 0.5 }}>{spell.cooldown}</td>
+                <td style={{ padding: '0.4rem 0.5rem', textAlign: 'right', fontFamily: 'var(--font-geist-mono)' }}>
+                  {spell.effect.value}
+                </td>
+                <td
+                  style={{
+                    padding: '0.4rem 0.5rem',
+                    textAlign: 'right',
+                    fontFamily: 'var(--font-geist-mono)',
+                    color: '#3B82F6',
+                  }}
+                >
+                  {spell.manaCost}
+                </td>
+                <td
+                  style={{
+                    padding: '0.4rem 0.5rem',
+                    textAlign: 'right',
+                    fontFamily: 'var(--font-geist-mono)',
+                    opacity: 0.5,
+                  }}
+                >
+                  {spell.cooldown}
+                </td>
               </tr>
             ))}
           </tbody>

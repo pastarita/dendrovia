@@ -14,62 +14,42 @@
  *   LUDUS → all:         LEVEL_UP, LOOT_DROPPED, EXPERIENCE_GAINED
  */
 
-import type {
-  ParsedFile,
-  ParsedCommit,
-  Hotspot,
-  Character,
-  BattleState,
-  Quest,
-  Action,
-  RngState,
-} from '@dendrovia/shared';
+import type { Action, BattleState, Hotspot, ParsedCommit, ParsedFile, Quest, RngState } from '@dendrovia/shared';
 import {
-  EventBus,
-  getEventBus,
-  GameEvents,
-  type PlayerMovedEvent,
-  type NodeClickedEvent,
-  type BranchEnteredEvent,
-  type SpellCastEvent,
-  type CombatStartedEvent,
   type CombatEndedEvent,
+  type CombatStartedEvent,
   type EncounterTriggeredEvent,
-  type LootDroppedEvent,
+  type EventBus,
   type ExperienceGainedEvent,
-  type LevelUpEvent,
+  GameEvents,
+  getEventBus,
   type ItemUsedEvent,
+  type LevelUpEvent,
+  type LootDroppedEvent,
+  type NodeClickedEvent,
+  type PlayerMovedEvent,
+  type SpellCastEvent,
 } from '@dendrovia/shared';
-import { type GameStore, type GameState } from '../state/GameStore';
-import { initBattle, executeTurn } from '../combat/TurnBasedEngine';
+import { executeTurn, initBattle } from '../combat/TurnBasedEngine';
 import {
   checkEncounter,
   createEncounterState,
-  markBossDefeated,
-  markMinibossDefeated,
-  markBugDefeated,
-  type EncounterState,
-  type EncounterConfig,
   DEFAULT_CONFIG,
+  type EncounterConfig,
+  type EncounterState,
+  markBossDefeated,
+  markBugDefeated,
+  markMinibossDefeated,
 } from '../encounter/EncounterSystem';
+import { createInventory, type Inventory, useItem as useItemFromInventory } from '../inventory/InventorySystem';
 import {
-  resolveBattleRewards,
   applyBattleRewards,
-  updateBattleStatistics,
-  createBattleStatistics,
   type BattleStatistics,
+  createBattleStatistics,
+  resolveBattleRewards,
+  updateBattleStatistics,
 } from '../progression/ProgressionSystem';
-import {
-  completeQuest,
-  startQuest,
-  getQuestsByStatus,
-} from '../quest/QuestGenerator';
-import {
-  useItem as useItemFromInventory,
-  resolveLootToInventory,
-  createInventory,
-  type Inventory,
-} from '../inventory/InventorySystem';
+import type { GameStore } from '../state/GameStore';
 import { createRngState } from '../utils/SeededRandom';
 
 // ─── Game Session ───────────────────────────────────────────
@@ -122,25 +102,33 @@ export function wireGameEvents(session: GameSession): () => void {
 
   // ── ARCHITECTUS → LUDUS: Player moved to a new location ──
 
-  unsubs.push(bus.on<NodeClickedEvent>(GameEvents.NODE_CLICKED, (event) => {
-    handleNodeClicked(session, event, bus);
-  }));
+  unsubs.push(
+    bus.on<NodeClickedEvent>(GameEvents.NODE_CLICKED, (event) => {
+      handleNodeClicked(session, event, bus);
+    }),
+  );
 
-  unsubs.push(bus.on<PlayerMovedEvent>(GameEvents.PLAYER_MOVED, (event) => {
-    handlePlayerMoved(session, event, bus);
-  }));
+  unsubs.push(
+    bus.on<PlayerMovedEvent>(GameEvents.PLAYER_MOVED, (event) => {
+      handlePlayerMoved(session, event, bus);
+    }),
+  );
 
   // ── OCULUS → LUDUS: Player casts a spell in combat ──
 
-  unsubs.push(bus.on<SpellCastEvent>(GameEvents.SPELL_CAST, (event) => {
-    handleSpellCast(session, event, bus);
-  }));
+  unsubs.push(
+    bus.on<SpellCastEvent>(GameEvents.SPELL_CAST, (event) => {
+      handleSpellCast(session, event, bus);
+    }),
+  );
 
   // ── OCULUS → LUDUS: Player uses an item ──
 
-  unsubs.push(bus.on<ItemUsedEvent>(GameEvents.ITEM_USED, (event) => {
-    handleItemUsed(session, event, bus);
-  }));
+  unsubs.push(
+    bus.on<ItemUsedEvent>(GameEvents.ITEM_USED, (event) => {
+      handleItemUsed(session, event, bus);
+    }),
+  );
 
   return () => {
     for (const unsub of unsubs) unsub();
@@ -149,12 +137,8 @@ export function wireGameEvents(session: GameSession): () => void {
 
 // ─── Event Handlers ─────────────────────────────────────────
 
-function handleNodeClicked(
-  session: GameSession,
-  event: NodeClickedEvent,
-  bus: EventBus,
-): void {
-  const file = session.files.find(f => f.path === event.filePath);
+function handleNodeClicked(session: GameSession, event: NodeClickedEvent, bus: EventBus): void {
+  const file = session.files.find((f) => f.path === event.filePath);
   if (!file) return;
 
   // Check for encounter
@@ -192,11 +176,7 @@ function handleNodeClicked(
   }
 }
 
-function handlePlayerMoved(
-  session: GameSession,
-  event: PlayerMovedEvent,
-  _bus: EventBus,
-): void {
+function handlePlayerMoved(session: GameSession, _event: PlayerMovedEvent, _bus: EventBus): void {
   // Update step counter for encounter cooldown
   session.encounterState = {
     ...session.encounterState,
@@ -204,11 +184,7 @@ function handlePlayerMoved(
   };
 }
 
-function handleSpellCast(
-  session: GameSession,
-  event: SpellCastEvent,
-  bus: EventBus,
-): void {
+function handleSpellCast(session: GameSession, event: SpellCastEvent, bus: EventBus): void {
   const state = session.store.getState();
   if (!state.battleState) return;
 
@@ -225,11 +201,7 @@ function handleSpellCast(
   checkBattleEnd(session, newBattle, bus);
 }
 
-function handleItemUsed(
-  session: GameSession,
-  event: ItemUsedEvent,
-  bus: EventBus,
-): void {
+function handleItemUsed(session: GameSession, event: ItemUsedEvent, _bus: EventBus): void {
   const state = session.store.getState();
 
   // Use item on character
@@ -241,11 +213,7 @@ function handleItemUsed(
 
 // ─── Battle Resolution ──────────────────────────────────────
 
-function checkBattleEnd(
-  session: GameSession,
-  battleState: BattleState,
-  bus: EventBus,
-): void {
+function checkBattleEnd(session: GameSession, battleState: BattleState, bus: EventBus): void {
   if (battleState.phase.type !== 'VICTORY' && battleState.phase.type !== 'DEFEAT') {
     return;
   }
@@ -257,14 +225,10 @@ function checkBattleEnd(
     const rewardResult = resolveBattleRewards(battleState, session.rng);
     if (rewardResult) {
       session.rng = rewardResult.rng;
-      const progression = applyBattleRewards(
-        state.character,
-        session.inventory,
-        rewardResult.rewards,
-      );
+      const progression = applyBattleRewards(state.character, session.inventory, rewardResult.rewards);
 
       session.inventory = progression.inventory;
-      const levelBefore = state.character.level;
+      const _levelBefore = state.character.level;
 
       // Update store
       session.store.setState({
@@ -273,11 +237,7 @@ function checkBattleEnd(
       });
 
       // Update stats
-      session.battleStats = updateBattleStatistics(
-        session.battleStats,
-        battleState,
-        rewardResult.rewards,
-      );
+      session.battleStats = updateBattleStatistics(session.battleStats, battleState, rewardResult.rewards);
 
       // Mark encounter defeated
       for (const enemy of battleState.enemies) {
@@ -313,7 +273,7 @@ function checkBattleEnd(
       if (rewardResult.rewards.lootItems.length > 0) {
         bus.emit<LootDroppedEvent>(GameEvents.LOOT_DROPPED, {
           monsterId: battleState.enemies[0].id,
-          items: rewardResult.rewards.lootItems.map(id => ({ itemId: id, name: id })),
+          items: rewardResult.rewards.lootItems.map((id) => ({ itemId: id, name: id })),
         });
       }
     }
@@ -333,10 +293,7 @@ function checkBattleEnd(
 // ─── Public API for Direct Combat Actions ───────────────────
 
 /** Execute a player combat action directly (for non-EventBus usage) */
-export function dispatchCombatAction(
-  session: GameSession,
-  action: Action,
-): BattleState | null {
+export function dispatchCombatAction(session: GameSession, action: Action): BattleState | null {
   const state = session.store.getState();
   if (!state.battleState) return null;
 

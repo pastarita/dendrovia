@@ -1,5 +1,5 @@
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const monorepoRoot = resolve(__dirname, '../..');
@@ -9,12 +9,7 @@ const nextConfig = {
   turbopack: {
     root: monorepoRoot,
   },
-  transpilePackages: [
-    '@dendrovia/shared',
-    '@dendrovia/operatus',
-    '@dendrovia/dendrite',
-    '@dendrovia/oculus',
-  ],
+  transpilePackages: ['@dendrovia/shared', '@dendrovia/operatus', '@dendrovia/dendrite', '@dendrovia/oculus'],
   webpack: (config) => {
     config.resolve.extensionAlias = {
       '.js': ['.ts', '.tsx', '.js'],

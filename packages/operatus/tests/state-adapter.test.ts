@@ -6,10 +6,10 @@
  */
 
 import './setup.js';
-import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
-import { StateAdapter } from '../src/persistence/StateAdapter.js';
+import { beforeEach, describe, expect, test } from 'bun:test';
+import type { Character, Item, Quest } from '@dendrovia/shared';
 import { useGameStore } from '../src/persistence/GameStore.js';
-import type { Character, Quest, Item } from '@dendrovia/shared';
+import { StateAdapter } from '../src/persistence/StateAdapter.js';
 
 // Mock LUDUS GameStore
 function createMockLudusStore() {
@@ -67,12 +67,18 @@ describe('StateAdapter — connect with hydration', () => {
     useGameStore.getState().setCharacter({ name: 'TestHero' });
     useGameStore.getState().addItem({ id: 'sw1', name: 'Sword', type: 'weapon', rarity: 'common' });
     useGameStore.getState().addQuest({
-      id: 'q1', title: 'Test', description: 'A test quest',
-      status: 'active', objectives: [],
+      id: 'q1',
+      title: 'Test',
+      description: 'A test quest',
+      status: 'active',
+      objectives: [],
     });
     useGameStore.getState().addQuest({
-      id: 'q2', title: 'Done', description: 'A completed quest',
-      status: 'completed', objectives: [],
+      id: 'q2',
+      title: 'Done',
+      description: 'A completed quest',
+      status: 'completed',
+      objectives: [],
     });
     useGameStore.getState().setGameFlag('tutorial', true);
     // Mark hydrated so waitForHydration resolves
@@ -155,8 +161,11 @@ describe('StateAdapter — OPERATUS → LUDUS sync', () => {
 
     // Add quests to OPERATUS
     useGameStore.getState().addQuest({
-      id: 'q1', title: 'Active', description: '',
-      status: 'active', objectives: [],
+      id: 'q1',
+      title: 'Active',
+      description: '',
+      status: 'active',
+      objectives: [],
     });
 
     let ludusState = ludus.getState();

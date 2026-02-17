@@ -5,9 +5,9 @@
  * available for targeted tree walks when needed.
  */
 
+import { basename } from 'node:path';
 import type { ParsedCommit, RepositoryMetadata } from '@dendrovia/shared';
 import { classifyCommit, commitFlags } from '../classifier/CommitClassifier.js';
-import { basename } from 'path';
 
 // Sentinel separating fields within a single commit record
 const FIELD_SEP = '|||';
@@ -15,13 +15,13 @@ const FIELD_SEP = '|||';
 const RECORD_SEP = '<<<COMMIT>>>';
 
 const LOG_FORMAT = [
-  '%H',   // hash
-  '%P',   // parent hashes (space-separated)
-  '%an',  // author name
-  '%ae',  // author email
-  '%at',  // author timestamp (unix)
-  '%s',   // subject
-  '%b',   // body
+  '%H', // hash
+  '%P', // parent hashes (space-separated)
+  '%an', // author name
+  '%ae', // author email
+  '%at', // author timestamp (unix)
+  '%s', // subject
+  '%b', // body
 ].join(FIELD_SEP);
 
 export interface GitParserOptions {
@@ -51,10 +51,7 @@ export interface RawCommit {
 /**
  * Parse the full git history of a repository using native git CLI via Bun.spawn.
  */
-export async function parseGitHistory(
-  repoPath: string,
-  opts: GitParserOptions = {},
-): Promise<ParsedCommit[]> {
+export async function parseGitHistory(repoPath: string, opts: GitParserOptions = {}): Promise<ParsedCommit[]> {
   const raw = await extractRawCommits(repoPath, opts);
   return raw.map(toCommit);
 }
@@ -62,15 +59,8 @@ export async function parseGitHistory(
 /**
  * Extract raw commit data from git log --numstat.
  */
-export async function extractRawCommits(
-  repoPath: string,
-  opts: GitParserOptions = {},
-): Promise<RawCommit[]> {
-  const args = [
-    'log',
-    `--format=${RECORD_SEP}${LOG_FORMAT}`,
-    '--numstat',
-  ];
+export async function extractRawCommits(repoPath: string, opts: GitParserOptions = {}): Promise<RawCommit[]> {
+  const args = ['log', `--format=${RECORD_SEP}${LOG_FORMAT}`, '--numstat'];
 
   if (opts.maxCommits && opts.maxCommits > 0) {
     args.push(`-n`, `${opts.maxCommits}`);
@@ -103,7 +93,7 @@ export async function extractRawCommits(
 }
 
 function parseLogOutput(output: string): RawCommit[] {
-  const records = output.split(RECORD_SEP).filter(r => r.trim());
+  const records = output.split(RECORD_SEP).filter((r) => r.trim());
   const commits: RawCommit[] = [];
 
   for (const record of records) {
@@ -271,10 +261,7 @@ export async function getHeadHash(repoPath: string): Promise<string> {
 /**
  * Get per-file commit counts (churn) in a single pass.
  */
-export async function getFileChurnCounts(
-  repoPath: string,
-  opts: { since?: Date } = {},
-): Promise<Map<string, number>> {
+export async function getFileChurnCounts(repoPath: string, opts: { since?: Date } = {}): Promise<Map<string, number>> {
   const args = ['log', '--name-only', '--format='];
   if (opts.since) {
     args.push(`--since=${opts.since.toISOString()}`);
@@ -309,10 +296,15 @@ export async function getFileChurnCounts(
  */
 export async function extractRepositoryMetadata(
   repoPath: string,
-  opts: { headHash?: string; fileCount?: number; commitCount?: number; contributorCount?: number; languages?: string[] } = {},
+  opts: {
+    headHash?: string;
+    fileCount?: number;
+    commitCount?: number;
+    contributorCount?: number;
+    languages?: string[];
+  } = {},
 ): Promise<RepositoryMetadata> {
-  const spawn = (args: string[]) =>
-    Bun.spawn(['git', ...args], { cwd: repoPath, stdout: 'pipe', stderr: 'pipe' });
+  const spawn = (args: string[]) => Bun.spawn(['git', ...args], { cwd: repoPath, stdout: 'pipe', stderr: 'pipe' });
 
   // Run git commands in parallel
   const [remoteProc, branchProc, branchListProc] = [
@@ -331,7 +323,10 @@ export async function extractRepositoryMetadata(
 
   const remoteUrl = remoteOut.trim() || 'unknown';
   const currentBranch = branchOut.trim() || 'unknown';
-  const branchCount = branchListOut.trim().split('\n').filter(l => l.trim()).length;
+  const branchCount = branchListOut
+    .trim()
+    .split('\n')
+    .filter((l) => l.trim()).length;
 
   return {
     name: basename(repoPath),

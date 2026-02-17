@@ -5,10 +5,10 @@
  * which runs in Node/Bun (not browser).
  */
 
-import { describe, test, expect, beforeAll, afterAll } from 'bun:test';
+import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { ManifestGenerator } from '../src/manifest/ManifestGenerator.js';
-import { mkdir, writeFile, rm } from 'fs/promises';
-import { join } from 'path';
 
 const TEST_DIR = join(import.meta.dir, '.test-generated');
 
@@ -17,31 +17,43 @@ beforeAll(async () => {
   await mkdir(join(TEST_DIR, 'shaders'), { recursive: true });
 
   // Create test assets
-  await writeFile(join(TEST_DIR, 'topology.json'), JSON.stringify({
-    version: '1.0',
-    files: [],
-    commits: [],
-    tree: { name: 'root', path: '/', type: 'directory' },
-  }));
+  await writeFile(
+    join(TEST_DIR, 'topology.json'),
+    JSON.stringify({
+      version: '1.0',
+      files: [],
+      commits: [],
+      tree: { name: 'root', path: '/', type: 'directory' },
+    }),
+  );
 
-  await writeFile(join(TEST_DIR, 'shaders', 'dendrite.glsl'), `
+  await writeFile(
+    join(TEST_DIR, 'shaders', 'dendrite.glsl'),
+    `
     uniform float time;
     void main() { gl_FragColor = vec4(1.0); }
-  `);
+  `,
+  );
 
-  await writeFile(join(TEST_DIR, 'shaders', 'bark.glsl'), `
+  await writeFile(
+    join(TEST_DIR, 'shaders', 'bark.glsl'),
+    `
     uniform vec3 color;
     float sdf(vec3 p) { return length(p) - 1.0; }
-  `);
+  `,
+  );
 
-  await writeFile(join(TEST_DIR, 'palette.json'), JSON.stringify({
-    primary: '#1a1a2e',
-    secondary: '#16213e',
-    accent: '#0f3460',
-    background: '#0a0a1a',
-    glow: '#e94560',
-    mood: 'cool',
-  }));
+  await writeFile(
+    join(TEST_DIR, 'palette.json'),
+    JSON.stringify({
+      primary: '#1a1a2e',
+      secondary: '#16213e',
+      accent: '#0f3460',
+      background: '#0a0a1a',
+      glow: '#e94560',
+      mood: 'cool',
+    }),
+  );
 });
 
 afterAll(async () => {
@@ -64,8 +76,8 @@ describe('ManifestGenerator', () => {
     const manifest = await gen.generate();
 
     expect(Object.keys(manifest.shaders).length).toBe(2);
-    expect(manifest.shaders['dendrite']).toBe('shaders/dendrite.glsl');
-    expect(manifest.shaders['bark']).toBe('shaders/bark.glsl');
+    expect(manifest.shaders.dendrite).toBe('shaders/dendrite.glsl');
+    expect(manifest.shaders.bark).toBe('shaders/bark.glsl');
   });
 
   test('detects topology', async () => {
@@ -80,7 +92,7 @@ describe('ManifestGenerator', () => {
     const manifest = await gen.generate();
 
     expect(Object.keys(manifest.palettes).length).toBe(1);
-    expect(manifest.palettes['palette']).toBe('palette.json');
+    expect(manifest.palettes.palette).toBe('palette.json');
   });
 
   test('writes manifest to disk', async () => {
@@ -100,20 +112,26 @@ describe('ManifestGenerator', () => {
     const manifest1 = await gen.generate();
 
     // Modify a shader
-    await writeFile(join(TEST_DIR, 'shaders', 'dendrite.glsl'), `
+    await writeFile(
+      join(TEST_DIR, 'shaders', 'dendrite.glsl'),
+      `
       uniform float time;
       uniform float modified;
       void main() { gl_FragColor = vec4(0.5); }
-    `);
+    `,
+    );
 
     const manifest2 = await gen.generate();
     expect(manifest2.checksum).not.toBe(manifest1.checksum);
 
     // Restore original
-    await writeFile(join(TEST_DIR, 'shaders', 'dendrite.glsl'), `
+    await writeFile(
+      join(TEST_DIR, 'shaders', 'dendrite.glsl'),
+      `
       uniform float time;
       void main() { gl_FragColor = vec4(1.0); }
-    `);
+    `,
+    );
   });
 
   test('handles empty directory', async () => {

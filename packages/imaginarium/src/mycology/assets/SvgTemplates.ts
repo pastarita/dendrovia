@@ -5,7 +5,7 @@
  * Each SVG is ~2-5KB, valid XML, and ready for inline rendering.
  */
 
-import type { MushroomMorphology, FungalGenus, CapShape, FungalSpecimen } from '../types';
+import type { CapShape, FungalSpecimen } from '../types';
 
 // ---------------------------------------------------------------------------
 // SVG generation constants
@@ -64,13 +64,7 @@ function capPath(shape: CapShape, w: number, h: number, cx: number, topY: number
 // Gills rendering
 // ---------------------------------------------------------------------------
 
-function gillsPath(
-  count: number,
-  cx: number,
-  baseY: number,
-  capW: number,
-  capH: number,
-): string {
+function gillsPath(count: number, cx: number, baseY: number, capW: number, capH: number): string {
   const lines: string[] = [];
   const halfW = capW / 2;
   const gillLength = capH * 0.4;
@@ -150,8 +144,8 @@ export function generateSvg(specimen: FungalSpecimen): string {
   const m = specimen.morphology;
 
   // Compute dimensions
-  const capW = 30 + m.capWidth * 70;   // 30-100px
-  const capH = 15 + m.capHeight * 45;  // 15-60px
+  const capW = 30 + m.capWidth * 70; // 30-100px
+  const capH = 15 + m.capHeight * 45; // 15-60px
   const stemH = 30 + m.stem.height * 80; // 30-110px
   const stemTopW = 4 + m.stem.thickness * 12;
   const stemBotW = stemTopW * (m.stem.bulbous ? 1.8 : 1.2);
@@ -165,7 +159,9 @@ export function generateSvg(specimen: FungalSpecimen): string {
   const parts: string[] = [];
 
   // SVG header
-  parts.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}" width="${VIEWBOX_SIZE}" height="${VIEWBOX_SIZE}">`);
+  parts.push(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}" width="${VIEWBOX_SIZE}" height="${VIEWBOX_SIZE}">`,
+  );
   parts.push('  <defs>');
   if (applyGlow) parts.push(`    ${GLOW_FILTER}`);
   parts.push(`    ${ORGANIC_FILTER}`);
@@ -174,7 +170,9 @@ export function generateSvg(specimen: FungalSpecimen): string {
   parts.push(`  <g${filterAttr}>`);
 
   // Stem
-  parts.push(`    <path d="${stemPath(CENTER_X, capBottomY, BASE_Y, stemTopW, stemBotW, m.stem.bulbous)}" fill="${m.gillColor}" filter="url(#organic)"/>`);
+  parts.push(
+    `    <path d="${stemPath(CENTER_X, capBottomY, BASE_Y, stemTopW, stemBotW, m.stem.bulbous)}" fill="${m.gillColor}" filter="url(#organic)"/>`,
+  );
 
   // Ring (annulus) if applicable
   if (m.stem.ringed) {
@@ -183,10 +181,14 @@ export function generateSvg(specimen: FungalSpecimen): string {
   }
 
   // Gills
-  parts.push(`    <path d="${gillsPath(m.gillCount, CENTER_X, capBottomY, capW, capH)}" stroke="${m.gillColor}" stroke-width="0.8" fill="none" opacity="0.7"/>`);
+  parts.push(
+    `    <path d="${gillsPath(m.gillCount, CENTER_X, capBottomY, capW, capH)}" stroke="${m.gillColor}" stroke-width="0.8" fill="none" opacity="0.7"/>`,
+  );
 
   // Cap
-  parts.push(`    <path d="${capPath(m.capShape, capW, capH, CENTER_X, capTopY)}" fill="${m.scaleColor}" filter="url(#organic)"/>`);
+  parts.push(
+    `    <path d="${capPath(m.capShape, capW, capH, CENTER_X, capTopY)}" fill="${m.scaleColor}" filter="url(#organic)"/>`,
+  );
 
   // Spots
   if (m.spots) {

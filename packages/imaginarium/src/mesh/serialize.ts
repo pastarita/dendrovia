@@ -15,9 +15,9 @@
  * If deserialize fails, consumers fall back to the next tier.
  */
 
-import type { HalfEdgeMesh, FlatMeshData, HEVertex } from './HalfEdgeMesh';
-import { toFlatArrays, buildFromIndexed, halfedgeFrom } from './HalfEdgeMesh';
-import type { SerializedMeshData, MeshFormat } from '@dendrovia/shared';
+import type { MeshFormat, SerializedMeshData } from '@dendrovia/shared';
+import type { FlatMeshData, HalfEdgeMesh, HEVertex } from './HalfEdgeMesh';
+import { buildFromIndexed, toFlatArrays } from './HalfEdgeMesh';
 
 // ---------------------------------------------------------------------------
 // Serialize: HalfEdgeMesh → SerializedMeshData
@@ -37,10 +37,7 @@ export interface SerializeOptions {
  * Serialize a HalfEdgeMesh to a JSON-safe SerializedMeshData.
  * The output is ready for Bun.write() / JSON.stringify() / OPERATUS cache.
  */
-export function serialize(
-  mesh: HalfEdgeMesh,
-  options: SerializeOptions = {},
-): SerializedMeshData {
+export function serialize(mesh: HalfEdgeMesh, options: SerializeOptions = {}): SerializedMeshData {
   const flat = toFlatArrays(mesh);
   const includeTopology = options.includeTopology ?? false;
   const format = options.format ?? (includeTopology ? 'halfedge' : 'indexed');
@@ -57,15 +54,15 @@ export function serialize(
 
   if (includeTopology) {
     data.topology = {
-      halfedges: mesh.halfedges.map(he => ({
+      halfedges: mesh.halfedges.map((he) => ({
         vertex: he.vertex,
         face: he.face,
         next: he.next,
         prev: he.prev,
         twin: he.twin,
       })),
-      vertexHalfedges: mesh.vertices.map(v => v.halfedge),
-      faceHalfedges: mesh.faces.map(f => f.halfedge),
+      vertexHalfedges: mesh.vertices.map((v) => v.halfedge),
+      faceHalfedges: mesh.faces.map((f) => f.halfedge),
     };
   }
 
@@ -108,17 +105,14 @@ export function deserializeToHalfEdge(data: unknown): HalfEdgeMesh | null {
         });
       }
 
-      const halfedges = d.topology.halfedges.map(he => ({ ...he }));
-      const faces = d.topology.faceHalfedges.map(he => ({ halfedge: he }));
+      const halfedges = d.topology.halfedges.map((he) => ({ ...he }));
+      const faces = d.topology.faceHalfedges.map((he) => ({ halfedge: he }));
 
       return { vertices, halfedges, faces };
     }
 
     // No topology — rebuild from indexed data (slow path)
-    return buildFromIndexed(
-      new Float32Array(d.positions),
-      new Uint32Array(d.indices),
-    );
+    return buildFromIndexed(new Float32Array(d.positions), new Uint32Array(d.indices));
   } catch {
     return null; // Malformed data → fallback
   }

@@ -22,9 +22,9 @@
  *   const manifest = await gen.generate();
  */
 
-import { createHash } from 'crypto';
-import { readdir, readFile, stat, writeFile } from 'fs/promises';
-import { join, extname, relative } from 'path';
+import { createHash } from 'node:crypto';
+import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { extname, join } from 'node:path';
 import type { AssetManifest } from '@dendrovia/shared';
 
 export interface ManifestEntry {
@@ -46,10 +46,16 @@ export interface ManifestGeneratorConfig {
 }
 
 const DEFAULT_EXTENSIONS = [
-  '.glsl', '.frag', '.vert',  // shaders
-  '.json',                     // data
-  '.webp', '.png', '.jpg',    // textures
-  '.ogg', '.mp3', '.wav',     // audio
+  '.glsl',
+  '.frag',
+  '.vert', // shaders
+  '.json', // data
+  '.webp',
+  '.png',
+  '.jpg', // textures
+  '.ogg',
+  '.mp3',
+  '.wav', // audio
 ];
 
 export class ManifestGenerator {
@@ -116,11 +122,7 @@ export class ManifestGenerator {
 
     const manifest = await this.generate();
 
-    await writeFile(
-      this.config.outputPath,
-      JSON.stringify(manifest, null, 2),
-      'utf-8',
-    );
+    await writeFile(this.config.outputPath, JSON.stringify(manifest, null, 2), 'utf-8');
 
     return { manifest, entries };
   }
@@ -237,10 +239,10 @@ export class ManifestGenerator {
 
     // We store the path as key, but we don't have per-file hashes
     // in the current AssetManifest format. Use checksum as fallback.
-    for (const [id, path] of Object.entries(manifest.shaders ?? {})) {
+    for (const [_id, path] of Object.entries(manifest.shaders ?? {})) {
       map.set(path, manifest.checksum);
     }
-    for (const [id, path] of Object.entries(manifest.palettes ?? {})) {
+    for (const [_id, path] of Object.entries(manifest.palettes ?? {})) {
       map.set(path, manifest.checksum);
     }
     if (manifest.topology) {
@@ -275,7 +277,7 @@ async function main() {
   console.log(`  Palettes: ${Object.keys(manifest.palettes).length}`);
   console.log(`  Topology: ${manifest.topology || 'none'}`);
   console.log(`  Checksum: ${manifest.checksum}`);
-  console.log(`  Written to: ${outputPath ?? inputDir + '/manifest.json'}`);
+  console.log(`  Written to: ${outputPath ?? `${inputDir}/manifest.json`}`);
 }
 
 // Run if invoked directly

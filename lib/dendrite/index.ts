@@ -4,68 +4,65 @@
  * 2D hierarchical flow visualization for the Dendrovia six-pillar pipeline.
  */
 
-// Types
-export type {
-  NodeKind,
-  NodeStatus,
-  PillarDomain,
-  SourceNode,
-  SourceEdge,
-  SourceDiagram,
-  LayoutDirection,
-  ColorMode,
-  LayoutConfig,
-  CollapseState,
-  DendriteState,
-  BoundaryType,
-  BoundaryEvent,
-  BoundaryContract,
-  RuntimeHealth,
-  RuntimeMetric,
-  NodeAction,
-  RuntimeNodeState,
-  RuntimeEvent,
-} from "./types";
-
-// Design tokens
-export { DT, PILLAR_COLORS, STATUS_COLORS, FIDELITY_COLORS, RUNTIME_HEALTH_COLORS } from "./design-tokens";
+export type { DendriteCanvasProps } from './canvas/DendriteCanvas';
+// Components
+export { DendriteCanvas } from './canvas/DendriteCanvas';
 
 // Coloring
-export { resolveNodeColor } from "./coloring";
-
-// Layout
-export { buildDendriteLayout, transformFixtureToFlow, applyDagreLayout } from "./layout/layout-engine";
-export { getHiddenNodeIds, getVisibleNodes, getCollapsibleIds, collapseAllIds } from "./layout/collapse-manager";
-
-// Store
-export { createDendriteStore } from "./store/dendrite-store";
-export { createRuntimeStore } from "./store/runtime-store";
-export type { RuntimeStoreState } from "./store/runtime-store";
-
-// Components
-export { DendriteCanvas } from "./canvas/DendriteCanvas";
-export type { DendriteCanvasProps } from "./canvas/DendriteCanvas";
-export { DendriteToolbar } from "./toolbar/DendriteToolbar";
-export type { DendriteToolbarProps } from "./toolbar/DendriteToolbar";
-
-// Panels
-export { ColorLegend, NodeDetailPanel, ContractDetailPanel, LiveMetricsSection } from "./panels";
-export type { ColorLegendProps, NodeDetailPanelProps, ContractDetailPanelProps, LiveMetricsSectionProps } from "./panels";
-
+export { resolveNodeColor } from './coloring';
 // Contracts
-export { BOUNDARY_CONTRACTS } from "./contracts";
-
-// Node & edge types (for advanced usage)
-export { dendritenodeTypes } from "./nodes";
-export { dendriteEdgeTypes } from "./edges";
-
+export { BOUNDARY_CONTRACTS } from './contracts';
+// Design tokens
+export { DT, FIDELITY_COLORS, PILLAR_COLORS, RUNTIME_HEALTH_COLORS, STATUS_COLORS } from './design-tokens';
+export { dendriteEdgeTypes } from './edges';
 // Fixtures
 export {
-  chronosFixture,
-  imaginariumFixture,
   architectusFixture,
+  chronosFixture,
+  dendroviaFixture,
+  imaginariumFixture,
   ludusFixture,
   oculusFixture,
   operatusFixture,
-  dendroviaFixture,
-} from "./fixtures";
+} from './fixtures';
+export { collapseAllIds, getCollapsibleIds, getHiddenNodeIds, getVisibleNodes } from './layout/collapse-manager';
+// Layout
+export { applyDagreLayout, buildDendriteLayout, transformFixtureToFlow } from './layout/layout-engine';
+// Node & edge types (for advanced usage)
+export { dendritenodeTypes } from './nodes';
+export type {
+  ColorLegendProps,
+  ContractDetailPanelProps,
+  LiveMetricsSectionProps,
+  NodeDetailPanelProps,
+} from './panels';
+// Panels
+export { ColorLegend, ContractDetailPanel, LiveMetricsSection, NodeDetailPanel } from './panels';
+// Store
+export { createDendriteStore } from './store/dendrite-store';
+export type { RuntimeStoreState } from './store/runtime-store';
+export { createRuntimeStore } from './store/runtime-store';
+export type { DendriteToolbarProps } from './toolbar/DendriteToolbar';
+export { DendriteToolbar } from './toolbar/DendriteToolbar';
+// Types
+export type {
+  BoundaryContract,
+  BoundaryEvent,
+  BoundaryType,
+  CollapseState,
+  ColorMode,
+  DendriteState,
+  LayoutConfig,
+  LayoutDirection,
+  NodeAction,
+  NodeKind,
+  NodeStatus,
+  PillarDomain,
+  RuntimeEvent,
+  RuntimeHealth,
+  RuntimeMetric,
+  RuntimeNodeState,
+  SourceDiagram,
+  SourceEdge,
+  SourceNode,
+} from './types';

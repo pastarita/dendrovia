@@ -1,65 +1,64 @@
-"use client";
+'use client';
 
-import type { StoreApi } from "zustand";
-import { useStore } from "zustand";
-import type { DendriteState, LayoutDirection, ColorMode } from "../types";
-import type { RuntimeStoreState } from "../store/runtime-store";
-import { DT, PILLAR_COLORS } from "../design-tokens";
-import type { PillarDomain } from "../types";
+import type { StoreApi } from 'zustand';
+import { useStore } from 'zustand';
+import { DT, PILLAR_COLORS } from '../design-tokens';
+import type { RuntimeStoreState } from '../store/runtime-store';
+import type { ColorMode, DendriteState, LayoutDirection, PillarDomain } from '../types';
 
 // ---------------------------------------------------------------------------
 // Styles
 // ---------------------------------------------------------------------------
 
 const toolbarStyle: React.CSSProperties = {
-  display: "flex",
-  flexWrap: "wrap",
-  gap: "0.5rem",
-  alignItems: "center",
-  paddingTop: "0.5rem",
-  paddingBottom: "0.5rem",
-  paddingLeft: "0.75rem",
-  paddingRight: "0.75rem",
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '0.5rem',
+  alignItems: 'center',
+  paddingTop: '0.5rem',
+  paddingBottom: '0.5rem',
+  paddingLeft: '0.75rem',
+  paddingRight: '0.75rem',
   backgroundColor: DT.panel,
-  borderWidth: "1px",
-  borderStyle: "solid",
+  borderWidth: '1px',
+  borderStyle: 'solid',
   borderColor: DT.panelBorder,
-  borderRadius: "6px",
-  fontSize: "0.75rem",
+  borderRadius: '6px',
+  fontSize: '0.75rem',
   color: DT.textMuted,
 };
 
 const btnBase: React.CSSProperties = {
-  paddingTop: "0.25rem",
-  paddingBottom: "0.25rem",
-  paddingLeft: "0.5rem",
-  paddingRight: "0.5rem",
-  borderRadius: "4px",
-  borderWidth: "1px",
-  borderStyle: "solid",
+  paddingTop: '0.25rem',
+  paddingBottom: '0.25rem',
+  paddingLeft: '0.5rem',
+  paddingRight: '0.5rem',
+  borderRadius: '4px',
+  borderWidth: '1px',
+  borderStyle: 'solid',
   borderColor: DT.border,
   backgroundColor: DT.surface,
   color: DT.text,
-  fontSize: "0.72rem",
-  cursor: "pointer",
-  transition: "background-color 0.15s",
+  fontSize: '0.72rem',
+  cursor: 'pointer',
+  transition: 'background-color 0.15s',
 };
 
 function activeBtn(active: boolean): React.CSSProperties {
   return {
     ...btnBase,
     backgroundColor: active ? DT.accent : DT.surface,
-    color: active ? "#000" : DT.text,
+    color: active ? '#000' : DT.text,
     borderColor: active ? DT.accent : DT.border,
   };
 }
 
 const sepStyle: React.CSSProperties = {
-  width: "1px",
-  height: "1.2rem",
+  width: '1px',
+  height: '1.2rem',
   backgroundColor: DT.border,
-  marginLeft: "0.25rem",
-  marginRight: "0.25rem",
+  marginLeft: '0.25rem',
+  marginRight: '0.25rem',
 };
 
 // ---------------------------------------------------------------------------
@@ -87,26 +86,18 @@ export function DendriteToolbar({ store, availableFixtures, runtimeStore }: Dend
   const collapseAll = useStore(store, (s) => s.collapseAll);
   const expandAll = useStore(store, (s) => s.expandAll);
   const setPhaseFilter = useStore(store, (s) => s.setPhaseFilter);
-  const runtimeConnected = runtimeStore
-    ? useStore(runtimeStore, (s) => s.connected)
-    : false;
+  const runtimeConnected = runtimeStore ? useStore(runtimeStore, (s) => s.connected) : false;
 
   // Get phase nodes for the active fixture
   const activeDiagram = fixtures[activeFixtureId];
-  const phases = activeDiagram
-    ? activeDiagram.nodes.filter((n) => n.kind === "phase")
-    : [];
+  const phases = activeDiagram ? activeDiagram.nodes.filter((n) => n.kind === 'phase') : [];
 
   return (
     <div style={toolbarStyle}>
       {/* Direction */}
       <span style={{ fontWeight: 600 }}>Dir:</span>
-      {(["TB", "LR"] as LayoutDirection[]).map((d) => (
-        <button
-          key={d}
-          style={activeBtn(direction === d)}
-          onClick={() => setDirection(d)}
-        >
+      {(['TB', 'LR'] as LayoutDirection[]).map((d) => (
+        <button key={d} style={activeBtn(direction === d)} onClick={() => setDirection(d)}>
           {d}
         </button>
       ))}
@@ -115,12 +106,8 @@ export function DendriteToolbar({ store, availableFixtures, runtimeStore }: Dend
 
       {/* Color mode */}
       <span style={{ fontWeight: 600 }}>Color:</span>
-      {(["status", "domain", "fidelity", "runtime"] as ColorMode[]).map((m) => (
-        <button
-          key={m}
-          style={activeBtn(colorMode === m)}
-          onClick={() => setColorMode(m)}
-        >
+      {(['status', 'domain', 'fidelity', 'runtime'] as ColorMode[]).map((m) => (
+        <button key={m} style={activeBtn(colorMode === m)} onClick={() => setColorMode(m)}>
           {m}
         </button>
       ))}
@@ -150,9 +137,7 @@ export function DendriteToolbar({ store, availableFixtures, runtimeStore }: Dend
                 key={fid}
                 style={{
                   ...activeBtn(activeFixtureId === fid),
-                  ...(color && activeFixtureId !== fid
-                    ? { borderColor: color }
-                    : {}),
+                  ...(color && activeFixtureId !== fid ? { borderColor: color } : {}),
                 }}
                 onClick={() => setFixture(fid)}
               >
@@ -168,19 +153,14 @@ export function DendriteToolbar({ store, availableFixtures, runtimeStore }: Dend
       {phases.length > 0 && (
         <>
           <span style={{ fontWeight: 600 }}>Phase:</span>
-          <button
-            style={activeBtn(phaseFilter === null)}
-            onClick={() => setPhaseFilter(null)}
-          >
+          <button style={activeBtn(phaseFilter === null)} onClick={() => setPhaseFilter(null)}>
             All
           </button>
           {phases.map((p) => (
             <button
               key={p.id}
               style={activeBtn(phaseFilter === p.id)}
-              onClick={() =>
-                setPhaseFilter(phaseFilter === p.id ? null : p.id)
-              }
+              onClick={() => setPhaseFilter(phaseFilter === p.id ? null : p.id)}
             >
               {p.label}
             </button>
@@ -193,12 +173,12 @@ export function DendriteToolbar({ store, availableFixtures, runtimeStore }: Dend
         <>
           <div style={sepStyle} />
           <span
-            title={runtimeConnected ? "Bridge connected" : "Bridge disconnected"}
+            title={runtimeConnected ? 'Bridge connected' : 'Bridge disconnected'}
             style={{
               width: 8,
               height: 8,
-              borderRadius: "50%",
-              backgroundColor: runtimeConnected ? "#22c55e" : DT.textDim,
+              borderRadius: '50%',
+              backgroundColor: runtimeConnected ? '#22c55e' : DT.textDim,
               flexShrink: 0,
             }}
           />

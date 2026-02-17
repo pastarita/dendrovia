@@ -13,11 +13,11 @@
  * Feature-detects OPFS and transparently falls back to IDB-only.
  */
 
-import { OPFSCache, isOPFSSupported } from './OPFSCache';
-import { IDBCache } from './IDBCache';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { CacheUpdatedEvent } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { IDBCache } from './IDBCache';
 import type { CacheStats } from './OPFSCache';
+import { isOPFSSupported, OPFSCache } from './OPFSCache';
 
 export type CacheTier = 'memory' | 'opfs' | 'idb' | 'network';
 
@@ -116,7 +116,7 @@ export class CacheManager {
   /**
    * Get binary data from cache.
    */
-  async getBinary(path: string): Promise<(CacheResult<ArrayBuffer>) | null> {
+  async getBinary(path: string): Promise<CacheResult<ArrayBuffer> | null> {
     await this.ensureInit();
 
     // OPFS first (binary native)
@@ -145,9 +145,7 @@ export class CacheManager {
     // Populate all tiers
     this.memory.set(path, data);
 
-    const writes: Promise<void>[] = [
-      this.idb.write(path, data, hash),
-    ];
+    const writes: Promise<void>[] = [this.idb.write(path, data, hash)];
 
     if (this.opfsAvailable && this.opfs) {
       writes.push(this.opfs.write(path, data, hash));
@@ -164,9 +162,7 @@ export class CacheManager {
   async setBinary(path: string, data: ArrayBuffer, hash?: string): Promise<void> {
     await this.ensureInit();
 
-    const writes: Promise<void>[] = [
-      this.idb.write(path, data, hash),
-    ];
+    const writes: Promise<void>[] = [this.idb.write(path, data, hash)];
 
     if (this.opfsAvailable && this.opfs) {
       writes.push(this.opfs.write(path, data, hash));
@@ -252,9 +248,7 @@ export class CacheManager {
   async stats(): Promise<{ memory: number; persistent: CacheStats; opfsAvailable: boolean }> {
     await this.ensureInit();
 
-    const persistentStats = this.opfsAvailable && this.opfs
-      ? await this.opfs.stats()
-      : await this.idb.stats();
+    const persistentStats = this.opfsAvailable && this.opfs ? await this.opfs.stats() : await this.idb.stats();
 
     return {
       memory: this.memory.size,
@@ -335,7 +329,7 @@ export class CacheManager {
 
       const tiers: CacheTier[] = [];
       if (this.memory.has(path)) tiers.push('memory');
-      if (this.opfsAvailable && this.opfs && await this.opfs.exists(path)) tiers.push('opfs');
+      if (this.opfsAvailable && this.opfs && (await this.opfs.exists(path))) tiers.push('opfs');
       tiers.push('idb'); // present by definition (listed from IDB)
 
       entries.push({
@@ -359,6 +353,8 @@ export class CacheManager {
 
   /** Fire-and-forget CACHE_UPDATED event (non-blocking). */
   private emitCacheUpdated(data: CacheUpdatedEvent): void {
-    getEventBus().emit(GameEvents.CACHE_UPDATED, data).catch(() => {});
+    getEventBus()
+      .emit(GameEvents.CACHE_UPDATED, data)
+      .catch(() => {});
   }
 }

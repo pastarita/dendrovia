@@ -9,16 +9,16 @@
  *   - contributors.json (NPC profiles)
  */
 
-import { join } from 'path';
+import { join } from 'node:path';
 import type {
   CodeTopology,
-  ParsedFile,
-  ParsedCommit,
-  Hotspot,
-  FileTreeNode,
-  RepositoryMetadata,
-  LanguageDistribution,
   ContributorSummary,
+  FileTreeNode,
+  Hotspot,
+  LanguageDistribution,
+  ParsedCommit,
+  ParsedFile,
+  RepositoryMetadata,
   TemporalCoupling,
 } from '@dendrovia/shared';
 import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer.js';
@@ -145,8 +145,8 @@ export function buildTopology(input: TopologyInput): TopologyOutput {
   const complexity = {
     version: VERSION,
     files: input.files
-      .filter(f => f.complexity > 0)
-      .map(f => ({
+      .filter((f) => f.complexity > 0)
+      .map((f) => ({
         path: f.path,
         cyclomatic: f.complexity,
         loc: f.loc,
@@ -173,10 +173,7 @@ export function buildTopology(input: TopologyInput): TopologyOutput {
 /**
  * Write all output files to the generated/ directory.
  */
-export async function writeOutputFiles(
-  output: TopologyOutput,
-  outputDir: string,
-): Promise<string[]> {
+export async function writeOutputFiles(output: TopologyOutput, outputDir: string): Promise<string[]> {
   const written: string[] = [];
 
   const files: [string, unknown][] = [

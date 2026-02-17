@@ -1,2 +1,2 @@
-export { PerfMonitor, getPerfMonitor } from './PerfMonitor';
-export type { PerfMetric, CacheMetrics, LoadingReport } from './PerfMonitor';
+export type { CacheMetrics, LoadingReport, PerfMetric } from './PerfMonitor';
+export { getPerfMonitor, PerfMonitor } from './PerfMonitor';

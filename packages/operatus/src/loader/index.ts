@@ -1,4 +1,4 @@
-export { AssetLoader, AssetPriority } from './AssetLoader';
 export type { AssetDescriptor, LoadProgress } from './AssetLoader';
-export { CDNLoader } from './CDNLoader';
+export { AssetLoader, AssetPriority } from './AssetLoader';
 export type { CDNConfig, DownloadProgress } from './CDNLoader';
+export { CDNLoader } from './CDNLoader';

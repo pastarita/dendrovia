@@ -4,7 +4,7 @@
  */
 
 import { useRef } from 'react';
-import { Mesh, Color } from 'three';
+import { Color, type Mesh } from 'three';
 
 interface TerrainProps {
   size?: number;

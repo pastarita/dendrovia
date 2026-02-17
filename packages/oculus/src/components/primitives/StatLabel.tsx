@@ -2,8 +2,6 @@
  * StatLabel — Key/value display (e.g., "Level: 5")
  */
 
-import React from 'react';
-
 export interface StatLabelProps {
   label: string;
   value: string | number;
@@ -11,12 +9,7 @@ export interface StatLabelProps {
   className?: string;
 }
 
-export function StatLabel({
-  label,
-  value,
-  color = 'var(--oculus-amber)',
-  className = '',
-}: StatLabelProps) {
+export function StatLabel({ label, value, color = 'var(--oculus-amber)', className = '' }: StatLabelProps) {
   return (
     <div
       className={`oculus-stat ${className}`}

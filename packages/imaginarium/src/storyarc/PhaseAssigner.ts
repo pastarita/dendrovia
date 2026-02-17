@@ -11,7 +11,7 @@
  * Single-segment fallback: always gets climax.
  */
 
-import type { StoryPhase, SegmentMetrics } from '@dendrovia/shared';
+import type { SegmentMetrics, StoryPhase } from '@dendrovia/shared';
 
 export interface PhaseAssignment {
   index: number;
@@ -20,25 +20,23 @@ export interface PhaseAssignment {
 }
 
 export function computeTension(metrics: SegmentMetrics): number {
-  return metrics.avgComplexity
-    * Math.max(metrics.hotspotCount, 1)
-    * Math.max(metrics.encounterDensity, 0.1);
+  return metrics.avgComplexity * Math.max(metrics.hotspotCount, 1) * Math.max(metrics.encounterDensity, 0.1);
 }
 
-export function assignPhases(
-  segmentMetrics: SegmentMetrics[],
-): PhaseAssignment[] {
+export function assignPhases(segmentMetrics: SegmentMetrics[]): PhaseAssignment[] {
   const count = segmentMetrics.length;
 
   if (count === 0) return [];
 
   // Single segment → climax
   if (count === 1) {
-    return [{
-      index: 0,
-      phase: 'climax',
-      tension: computeTension(segmentMetrics[0]),
-    }];
+    return [
+      {
+        index: 0,
+        phase: 'climax',
+        tension: computeTension(segmentMetrics[0]),
+      },
+    ];
   }
 
   // Compute tensions and sort by ascending tension

@@ -1,10 +1,5 @@
-import { describe, test, expect } from 'bun:test';
-import {
-  classifyCommit,
-  commitFlags,
-  type CommitType,
-  type ClassifiedCommit,
-} from '../src/classifier/CommitClassifier';
+import { describe, expect, test } from 'bun:test';
+import { type ClassifiedCommit, classifyCommit, commitFlags } from '../src/classifier/CommitClassifier';
 
 // ---------------------------------------------------------------------------
 // Tier 1: Conventional commit format
@@ -189,11 +184,7 @@ describe('classifyCommit — Tier 2 (keyword matching)', () => {
   });
 
   test('detects docs keywords', () => {
-    const docs = [
-      'Update documentation for API',
-      'Readme improvements',
-      'Explain the config options',
-    ];
+    const docs = ['Update documentation for API', 'Readme improvements', 'Explain the config options'];
     for (const msg of docs) {
       const result = classifyCommit(msg);
       expect(result.type).toBe('docs');
@@ -201,11 +192,7 @@ describe('classifyCommit — Tier 2 (keyword matching)', () => {
   });
 
   test('detects test keywords', () => {
-    const tests = [
-      'Improve test coverage',
-      'Spec for authentication module',
-      'Mock database service in tests',
-    ];
+    const tests = ['Improve test coverage', 'Spec for authentication module', 'Mock database service in tests'];
     for (const msg of tests) {
       const result = classifyCommit(msg);
       expect(result.type).toBe('test');
@@ -226,12 +213,7 @@ describe('classifyCommit — Tier 2 (keyword matching)', () => {
   });
 
   test('detects dependency keywords', () => {
-    const deps = [
-      'Bump lodash to 4.17.21',
-      'Upgrade typescript to 5.0',
-      'Update version for react',
-      'Update deps',
-    ];
+    const deps = ['Bump lodash to 4.17.21', 'Upgrade typescript to 5.0', 'Update version for react', 'Update deps'];
     for (const msg of deps) {
       const result = classifyCommit(msg);
       expect(result.type).toBe('dependency');
@@ -239,11 +221,7 @@ describe('classifyCommit — Tier 2 (keyword matching)', () => {
   });
 
   test('detects style keywords', () => {
-    const styles = [
-      'Format code with prettier',
-      'Linting pass on all modules',
-      'Prettier formatted everything',
-    ];
+    const styles = ['Format code with prettier', 'Linting pass on all modules', 'Prettier formatted everything'];
     for (const msg of styles) {
       const result = classifyCommit(msg);
       expect(result.type).toBe('style');

@@ -7,7 +7,7 @@
 import type { CSSProperties } from 'react';
 
 // Re-export universal factories from zoo-kit
-export { tabStyle, sectionHeaderStyle, countStyle } from '../../zoos/_zoo-kit/zoo-styles';
+export { countStyle, sectionHeaderStyle, tabStyle } from '../../zoos/_zoo-kit/zoo-styles';
 
 // ── Exhibit Row ─────────────────────────────────────────
 

@@ -64,9 +64,7 @@ console.log(`${DIM}Launching all six pillars in parallel...${RESET}\n`);
 
 // Launch each pillar
 const processes = PILLARS.map((pillar) => {
-  console.log(
-    `${pillar.color}${pillar.emoji} ${pillar.name}${RESET} ${DIM}→ ${pillar.cwd}${RESET}`
-  );
+  console.log(`${pillar.color}${pillar.emoji} ${pillar.name}${RESET} ${DIM}→ ${pillar.cwd}${RESET}`);
 
   const proc = spawn(pillar.cmd, {
     cwd: pillar.cwd,
@@ -82,9 +80,7 @@ const processes = PILLARS.map((pillar) => {
       const { done, value } = await reader.read();
       if (done) break;
       const text = decoder.decode(value);
-      process.stdout.write(
-        `${pillar.color}[${pillar.name}]${RESET} ${text}`
-      );
+      process.stdout.write(`${pillar.color}[${pillar.name}]${RESET} ${text}`);
     }
   })();
 
@@ -96,9 +92,7 @@ const processes = PILLARS.map((pillar) => {
       const { done, value } = await errorReader.read();
       if (done) break;
       const text = decoder.decode(value);
-      process.stderr.write(
-        `${pillar.color}[${pillar.name}]${RESET} ${BOLD}ERROR:${RESET} ${text}`
-      );
+      process.stderr.write(`${pillar.color}[${pillar.name}]${RESET} ${BOLD}ERROR:${RESET} ${text}`);
     }
   })();
 

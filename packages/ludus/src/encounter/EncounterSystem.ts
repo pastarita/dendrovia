@@ -10,20 +10,9 @@
  * All decisions use the seeded PRNG for deterministic replay.
  */
 
-import type {
-  Encounter,
-  Monster,
-  ParsedFile,
-  ParsedCommit,
-  Hotspot,
-  RngState,
-} from '@dendrovia/shared';
-import {
-  generateBugMonster,
-  generateBoss,
-  generateMiniboss,
-} from '../combat/MonsterFactory';
-import { rngNext, rngChance } from '../utils/SeededRandom';
+import type { Encounter, Hotspot, ParsedCommit, ParsedFile, RngState } from '@dendrovia/shared';
+import { generateBoss, generateBugMonster, generateMiniboss } from '../combat/MonsterFactory';
+import { rngChance } from '../utils/SeededRandom';
 
 // ─── Configuration ──────────────────────────────────────────
 
@@ -88,7 +77,7 @@ export function checkEncounter(
   config: EncounterConfig = DEFAULT_CONFIG,
 ): EncounterCheckResult {
   // Increment step counter
-  let state: EncounterState = {
+  const state: EncounterState = {
     ...encounterState,
     stepsSinceLastEncounter: encounterState.stepsSinceLastEncounter + 1,
   };
@@ -115,7 +104,7 @@ export function checkEncounter(
 
   // Priority 2: Miniboss encounter (hotspot)
   const hotspot = hotspots.find(
-    h => h.path === file.path && h.riskScore >= config.minibossRiskThreshold && !state.defeatedMinibosses.has(h.path),
+    (h) => h.path === file.path && h.riskScore >= config.minibossRiskThreshold && !state.defeatedMinibosses.has(h.path),
   );
   if (hotspot) {
     const [monster, rng1] = generateMiniboss(hotspot, rng);
@@ -133,7 +122,7 @@ export function checkEncounter(
 
   // Priority 3: Bug encounter (bug-fix commits touching this file)
   const bugCommit = commits.find(
-    c => c.isBugFix && c.filesChanged.includes(file.path) && !state.defeatedBugs.has(c.hash),
+    (c) => c.isBugFix && c.filesChanged.includes(file.path) && !state.defeatedBugs.has(c.hash),
   );
   if (bugCommit) {
     const [monster, rng1] = generateBugMonster(bugCommit, rng);
@@ -228,9 +217,7 @@ export function scanAllEncounters(
     }
 
     // Miniboss check
-    const hotspot = hotspots.find(
-      h => h.path === file.path && h.riskScore >= config.minibossRiskThreshold,
-    );
+    const hotspot = hotspots.find((h) => h.path === file.path && h.riskScore >= config.minibossRiskThreshold);
     if (hotspot) {
       const [monster, rng1] = generateMiniboss(hotspot, currentRng);
       currentRng = rng1;
@@ -246,9 +233,7 @@ export function scanAllEncounters(
     }
 
     // Bug check
-    const bugCommit = commits.find(
-      c => c.isBugFix && c.filesChanged.includes(file.path),
-    );
+    const bugCommit = commits.find((c) => c.isBugFix && c.filesChanged.includes(file.path));
     if (bugCommit) {
       const [monster, rng1] = generateBugMonster(bugCommit, currentRng);
       currentRng = rng1;
@@ -281,8 +266,9 @@ export function getEncounterDensity(
   let encounterCount = 0;
   for (const file of files) {
     if (file.complexity > config.bossComplexityThreshold) encounterCount++;
-    else if (hotspots.some(h => h.path === file.path && h.riskScore >= config.minibossRiskThreshold)) encounterCount++;
-    else if (commits.some(c => c.isBugFix && c.filesChanged.includes(file.path))) encounterCount++;
+    else if (hotspots.some((h) => h.path === file.path && h.riskScore >= config.minibossRiskThreshold))
+      encounterCount++;
+    else if (commits.some((c) => c.isBugFix && c.filesChanged.includes(file.path))) encounterCount++;
   }
 
   return encounterCount / files.length;

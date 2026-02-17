@@ -15,15 +15,9 @@
  *   - partialize excludes transient state and actions
  */
 
+import type { Character, CharacterStats, GameSaveState, Item, Quest } from '@dendrovia/shared';
 import { create } from 'zustand';
 import { persist, type StorageValue } from 'zustand/middleware';
-import type {
-  Character,
-  CharacterStats,
-  Quest,
-  Item,
-  GameSaveState,
-} from '@dendrovia/shared';
 import { createDendroviaStorage, SAVE_VERSION } from './StatePersistence';
 
 // ── State Shape ──────────────────────────────────────────────────
@@ -110,18 +104,14 @@ const INITIAL_STATE = {
 function serializeState(state: any): any {
   return {
     ...state,
-    visitedNodes: state.visitedNodes instanceof Set
-      ? Array.from(state.visitedNodes)
-      : state.visitedNodes,
+    visitedNodes: state.visitedNodes instanceof Set ? Array.from(state.visitedNodes) : state.visitedNodes,
   };
 }
 
 function deserializeState(raw: any): any {
   return {
     ...raw,
-    visitedNodes: Array.isArray(raw.visitedNodes)
-      ? new Set(raw.visitedNodes)
-      : new Set(),
+    visitedNodes: Array.isArray(raw.visitedNodes) ? new Set(raw.visitedNodes) : new Set(),
   };
 }
 
@@ -161,8 +151,7 @@ export const useGameStore = create<GameStoreState>()(
     (set, get) => ({
       ...INITIAL_STATE,
 
-      setCharacter: (updates) =>
-        set((s) => ({ character: { ...s.character, ...updates } })),
+      setCharacter: (updates) => set((s) => ({ character: { ...s.character, ...updates } })),
 
       updateStats: (updates) =>
         set((s) => ({
@@ -233,14 +222,11 @@ export const useGameStore = create<GameStoreState>()(
           };
         }),
 
-      addQuest: (quest) =>
-        set((s) => ({ quests: [...s.quests, quest] })),
+      addQuest: (quest) => set((s) => ({ quests: [...s.quests, quest] })),
 
       updateQuestStatus: (questId, status) =>
         set((s) => ({
-          quests: s.quests.map((q) =>
-            q.id === questId ? { ...q, status } : q,
-          ),
+          quests: s.quests.map((q) => (q.id === questId ? { ...q, status } : q)),
         })),
 
       visitNode: (nodeId) =>
@@ -252,9 +238,7 @@ export const useGameStore = create<GameStoreState>()(
 
       unlockKnowledge: (knowledgeId) =>
         set((s) =>
-          s.unlockedKnowledge.includes(knowledgeId)
-            ? s
-            : { unlockedKnowledge: [...s.unlockedKnowledge, knowledgeId] },
+          s.unlockedKnowledge.includes(knowledgeId) ? s : { unlockedKnowledge: [...s.unlockedKnowledge, knowledgeId] },
         ),
 
       setWorldPosition: (pos) => set({ worldPosition: pos }),
@@ -263,17 +247,13 @@ export const useGameStore = create<GameStoreState>()(
 
       setMenuOpen: (open) => set({ isMenuOpen: open }),
 
-      addItem: (item) =>
-        set((s) => ({ inventory: [...s.inventory, item] })),
+      addItem: (item) => set((s) => ({ inventory: [...s.inventory, item] })),
 
-      removeItem: (itemId) =>
-        set((s) => ({ inventory: s.inventory.filter((i) => i.id !== itemId) })),
+      removeItem: (itemId) => set((s) => ({ inventory: s.inventory.filter((i) => i.id !== itemId) })),
 
-      setGameFlag: (key, value) =>
-        set((s) => ({ gameFlags: { ...s.gameFlags, [key]: value } })),
+      setGameFlag: (key, value) => set((s) => ({ gameFlags: { ...s.gameFlags, [key]: value } })),
 
-      addPlaytime: (ms) =>
-        set((s) => ({ playtimeMs: s.playtimeMs + ms })),
+      addPlaytime: (ms) => set((s) => ({ playtimeMs: s.playtimeMs + ms })),
 
       reset: () => set(INITIAL_STATE),
     }),
@@ -305,17 +285,18 @@ export const useGameStore = create<GameStoreState>()(
         },
       },
 
-      partialize: (state) => ({
-        character: state.character,
-        quests: state.quests,
-        visitedNodes: state.visitedNodes,
-        unlockedKnowledge: state.unlockedKnowledge,
-        worldPosition: state.worldPosition,
-        cameraMode: state.cameraMode,
-        inventory: state.inventory,
-        gameFlags: state.gameFlags,
-        playtimeMs: state.playtimeMs,
-      }) as GameStoreState,
+      partialize: (state) =>
+        ({
+          character: state.character,
+          quests: state.quests,
+          visitedNodes: state.visitedNodes,
+          unlockedKnowledge: state.unlockedKnowledge,
+          worldPosition: state.worldPosition,
+          cameraMode: state.cameraMode,
+          inventory: state.inventory,
+          gameFlags: state.gameFlags,
+          playtimeMs: state.playtimeMs,
+        }) as GameStoreState,
 
       merge: (persisted, current) => {
         if (!persisted || typeof persisted !== 'object') return current;
@@ -354,8 +335,15 @@ export function waitForHydration(): Promise<void> {
  */
 export function getGameSaveSnapshot(): GameSaveState {
   const {
-    character, quests, visitedNodes, unlockedKnowledge,
-    inventory, gameFlags, worldPosition, cameraMode, playtimeMs,
+    character,
+    quests,
+    visitedNodes,
+    unlockedKnowledge,
+    inventory,
+    gameFlags,
+    worldPosition,
+    cameraMode,
+    playtimeMs,
   } = useGameStore.getState();
   return {
     timestamp: Date.now(),

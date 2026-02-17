@@ -6,25 +6,22 @@
  * placement in the 3D world.
  */
 
-import type { StoryArc, SegmentPlacement } from '@dendrovia/shared';
+import type { SegmentPlacement, StoryArc } from '@dendrovia/shared';
 import type { NodeMarker } from './TurtleInterpreter';
 
 /**
  * Map node markers to story arc segments, producing placement data
  * for each segment (centroid position and bounding radius).
  */
-export function mapNodesToSegments(
-  nodes: NodeMarker[],
-  storyArc: StoryArc,
-): Map<string, SegmentPlacement> {
+export function mapNodesToSegments(nodes: NodeMarker[], storyArc: StoryArc): Map<string, SegmentPlacement> {
   const placements = new Map<string, SegmentPlacement>();
 
   for (const segment of storyArc.segments) {
     const fileSet = new Set(segment.filePaths);
 
     // Find all nodes that belong to this segment
-    const matchingNodes = nodes.filter(n => fileSet.has(n.path));
-    const matchedPaths = matchingNodes.map(n => n.path);
+    const matchingNodes = nodes.filter((n) => fileSet.has(n.path));
+    const matchedPaths = matchingNodes.map((n) => n.path);
 
     if (matchingNodes.length === 0) {
       // No matching nodes — place at origin with zero radius
@@ -38,7 +35,9 @@ export function mapNodesToSegments(
     }
 
     // Compute centroid
-    let cx = 0, cy = 0, cz = 0;
+    let cx = 0,
+      cy = 0,
+      cz = 0;
     for (const node of matchingNodes) {
       cx += node.position.x;
       cy += node.position.y;

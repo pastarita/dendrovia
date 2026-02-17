@@ -12,8 +12,7 @@
  * directly into the `persist` middleware.
  */
 
-import type { GameSaveState, Character, Quest } from '@dendrovia/shared';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
 
 // ── IndexedDB Storage Backend ────────────────────────────────────
 
@@ -234,7 +233,7 @@ export interface PersistenceConfig {
  */
 export function createDendroviaStorage(config: PersistenceConfig = {}) {
   const {
-    name = 'dendrovia-save',
+    name: _name = 'dendrovia-save',
     compress: useCompression = true,
     version = SAVE_VERSION,
     emitEvents = true,

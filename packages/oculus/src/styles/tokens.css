@@ -48,8 +48,8 @@
   --oculus-panel-shadow: 0 0 20px var(--oculus-glow);
 
   /* ── Typography ─────────────────────────────────── */
-  --oculus-font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --oculus-font-code: 'Courier New', 'Menlo', monospace;
+  --oculus-font-ui: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --oculus-font-code: "Courier New", "Menlo", monospace;
   --oculus-font-xs: 11px;
   --oculus-font-sm: 12px;
   --oculus-font-base: 14px;

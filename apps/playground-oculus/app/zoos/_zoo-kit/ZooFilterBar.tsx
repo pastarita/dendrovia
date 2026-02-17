@@ -5,7 +5,7 @@
  */
 
 import type { ZooCategory, ZooSortDimension, ZooViewMode } from './types';
-import { tabStyle, countStyle } from './zoo-styles';
+import { countStyle, tabStyle } from './zoo-styles';
 
 interface ZooFilterBarProps {
   categories: ZooCategory[];
@@ -34,11 +34,7 @@ export function ZooFilterBar({
     <div style={{ marginBottom: '1.5rem' }}>
       {/* Category tabs */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.75rem' }}>
-        <button
-          type="button"
-          style={tabStyle(activeCategory === 'all')}
-          onClick={() => onCategoryChange('all')}
-        >
+        <button type="button" style={tabStyle(activeCategory === 'all')} onClick={() => onCategoryChange('all')}>
           All
         </button>
         {categories.map((cat) => (
@@ -71,7 +67,9 @@ export function ZooFilterBar({
             }}
           >
             {sortDimensions.map((sd) => (
-              <option key={sd.id} value={sd.id}>{sd.label}</option>
+              <option key={sd.id} value={sd.id}>
+                {sd.label}
+              </option>
             ))}
           </select>
         </label>

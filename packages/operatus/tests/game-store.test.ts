@@ -7,8 +7,8 @@
  */
 
 import './setup.js';
-import { describe, test, expect, beforeEach } from 'bun:test';
-import { useGameStore, getGameSaveSnapshot } from '../src/persistence/GameStore.js';
+import { beforeEach, describe, expect, test } from 'bun:test';
+import { getGameSaveSnapshot, useGameStore } from '../src/persistence/GameStore.js';
 
 // Reset store before each test to avoid cross-contamination
 beforeEach(() => {
@@ -239,7 +239,7 @@ describe('GameStore — misc actions', () => {
 
   test('setGameFlag sets boolean flags', () => {
     useGameStore.getState().setGameFlag('tutorial_complete', true);
-    expect(useGameStore.getState().gameFlags['tutorial_complete']).toBe(true);
+    expect(useGameStore.getState().gameFlags.tutorial_complete).toBe(true);
   });
 
   test('addPlaytime accumulates', () => {

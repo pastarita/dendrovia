@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'bun:test';
-import { validateManifestStructure } from '../src/manifest/ManifestHealth.js';
+import { describe, expect, it } from 'bun:test';
 import type { AssetManifest } from '@dendrovia/shared';
+import { validateManifestStructure } from '../src/manifest/ManifestHealth.js';
 
 function makeManifest(overrides: Partial<AssetManifest> = {}): AssetManifest {
   return {
@@ -43,31 +43,37 @@ describe('validateManifestStructure', () => {
   });
 
   it('should detect empty manifest', () => {
-    const report = validateManifestStructure(makeManifest({
-      shaders: {},
-      palettes: {},
-      topology: '',
-    }));
+    const report = validateManifestStructure(
+      makeManifest({
+        shaders: {},
+        palettes: {},
+        topology: '',
+      }),
+    );
     expect(report.valid).toBe(false);
     expect(report.errors).toContain('Manifest contains no asset entries');
   });
 
   it('should count mesh entries', () => {
-    const report = validateManifestStructure(makeManifest({
-      meshes: {
-        fungus: { path: 'meshes/fungus.json', hash: 'h1', size: 1024 },
-      },
-    }));
+    const report = validateManifestStructure(
+      makeManifest({
+        meshes: {
+          fungus: { path: 'meshes/fungus.json', hash: 'h1', size: 1024 },
+        },
+      }),
+    );
     expect(report.valid).toBe(true);
     expect(report.entryCount).toBe(4); // 1 shader + 1 palette + 1 topology + 1 mesh
   });
 
   it('should detect mesh entries with missing paths', () => {
-    const report = validateManifestStructure(makeManifest({
-      meshes: {
-        broken: { path: '', hash: 'h1', size: 0 },
-      },
-    }));
+    const report = validateManifestStructure(
+      makeManifest({
+        meshes: {
+          broken: { path: '', hash: 'h1', size: 0 },
+        },
+      }),
+    );
     expect(report.valid).toBe(false);
     expect(report.errors).toContain("Mesh entry 'broken' missing path");
   });

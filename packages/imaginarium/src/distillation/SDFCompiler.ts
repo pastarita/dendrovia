@@ -11,17 +11,16 @@
  *   6. Feed into ShaderAssembler with palette uniforms and lighting
  */
 
-import type { CodeTopology, ProceduralPalette, SDFShader, LSystemRule, NoiseFunction } from '@dendrovia/shared';
-import { interpret, type TurtleSegment } from './TurtleInterpreter';
-import { expandLSystem } from './LSystemCompiler';
-import { assembleShader, buildColorParameters } from '../shaders/ShaderAssembler';
+import type { CodeTopology, LSystemRule, NoiseFunction, ProceduralPalette, SDFShader } from '@dendrovia/shared';
 import { getDefaultSDF } from '../fallback/DefaultSDFs';
-import { hashString } from '../utils/hash';
+import { assembleShader, buildColorParameters } from '../shaders/ShaderAssembler';
 import { glslFloat } from '../utils/glsl';
+import { expandLSystem } from './LSystemCompiler';
+import { interpret, type TurtleSegment } from './TurtleInterpreter';
 
 const INSTRUCTION_BUDGET = 100;
 const INSTRUCTIONS_PER_SEGMENT = 5; // sdCapsule ≈ 5 instructions
-const INSTRUCTIONS_PER_BLEND = 3;   // opSmoothUnion ≈ 3
+const INSTRUCTIONS_PER_BLEND = 3; // opSmoothUnion ≈ 3
 
 export interface SDFCompileConfig {
   topology: CodeTopology;
@@ -56,7 +55,7 @@ export async function compile(config: SDFCompileConfig): Promise<SDFShader> {
 
     // 5. Build parameter map
     const parameters = buildColorParameters(palette);
-    parameters['time'] = 0;
+    parameters.time = 0;
 
     return {
       id: `sdf-${variantId}-${seed.substring(0, 8)}`,
@@ -66,9 +65,8 @@ export async function compile(config: SDFCompileConfig): Promise<SDFShader> {
     };
   } catch {
     // Fallback to default SDF
-    const avgComplexity = topology.files.length > 0
-      ? topology.files.reduce((s, f) => s + f.complexity, 0) / topology.files.length
-      : 5;
+    const avgComplexity =
+      topology.files.length > 0 ? topology.files.reduce((s, f) => s + f.complexity, 0) / topology.files.length : 5;
     const fallback = getDefaultSDF(avgComplexity);
     const assembled = await assembleShader({
       sceneSDF: fallback.glsl,
@@ -87,9 +85,7 @@ export async function compile(config: SDFCompileConfig): Promise<SDFShader> {
 }
 
 function applyBudget(segments: TurtleSegment[], budget: number): TurtleSegment[] {
-  const maxSegments = Math.floor(
-    (budget - 10) / (INSTRUCTIONS_PER_SEGMENT + INSTRUCTIONS_PER_BLEND),
-  );
+  const maxSegments = Math.floor((budget - 10) / (INSTRUCTIONS_PER_SEGMENT + INSTRUCTIONS_PER_BLEND));
 
   if (segments.length <= maxSegments) return segments;
 
@@ -132,7 +128,9 @@ float scene(vec3 p) {
     const k = glslFloat(Math.max(0.1, 0.35 - seg.depth * 0.05));
 
     if (seg.isHotspot) {
-      lines.push(`  d = opSmoothUnion(d, sdCapsule(opTwist(p, 0.3), ${pts.start}, ${pts.end}, ${glslFloat(seg.radius)}), ${k});`);
+      lines.push(
+        `  d = opSmoothUnion(d, sdCapsule(opTwist(p, 0.3), ${pts.start}, ${pts.end}, ${glslFloat(seg.radius)}), ${k});`,
+      );
     } else {
       lines.push(`  d = opSmoothUnion(d, sdCapsule(p, ${pts.start}, ${pts.end}, ${glslFloat(seg.radius)}), ${k});`);
     }

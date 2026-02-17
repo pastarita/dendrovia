@@ -12,16 +12,16 @@
  * so mesh generation never blocks the overall pipeline.
  */
 
-import { join } from 'path';
-import { mkdirSync, existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 import type { MeshManifestEntry } from '@dendrovia/shared';
-import type { FungalSpecimen } from '../mycology/types';
 import { generateMeshData } from '../mycology/assets/MeshGenerator';
-import { applyPipelineToProfile, applyPipelineToCylinder } from './adapters';
-import { serialize } from './serialize';
-import { buildFromIndexed } from './HalfEdgeMesh';
-import { genusPipeline, STEM_PIPELINE } from './genusPipelines';
+import type { FungalSpecimen } from '../mycology/types';
 import { hashString } from '../utils/hash';
+import { applyPipelineToCylinder, applyPipelineToProfile } from './adapters';
+import { genusPipeline, STEM_PIPELINE } from './genusPipelines';
+import { buildFromIndexed } from './HalfEdgeMesh';
+import { serialize } from './serialize';
 
 // ---------------------------------------------------------------------------
 // Result types

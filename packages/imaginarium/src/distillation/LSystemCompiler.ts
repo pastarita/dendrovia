@@ -19,7 +19,7 @@ export interface LSystemOverrides {
 
 export function compile(topology: CodeTopology, overrides?: LSystemOverrides): LSystemRule {
   const tree = topology.tree;
-  const hotspotPaths = new Set((topology.hotspots ?? []).map(h => h.path));
+  const hotspotPaths = new Set((topology.hotspots ?? []).map((h) => h.path));
 
   // Compute max depth
   const maxDepth = computeDepth(tree);
@@ -36,20 +36,20 @@ export function compile(topology: CodeTopology, overrides?: LSystemOverrides): L
   // H = hotspot branch (thicker, twisted)
 
   // Main rule derived from root children
-  const rootChildren = tree.children?.filter(c => c.type === 'directory') ?? [];
+  const rootChildren = tree.children?.filter((c) => c.type === 'directory') ?? [];
   const childCount = Math.max(rootChildren.length, 2);
 
-  rules['F'] = buildBranchRule(childCount, hotspotPaths, tree);
+  rules.F = buildBranchRule(childCount, hotspotPaths, tree);
 
   // Hotspot expansion: thicker, with twist
-  rules['H'] = 'FF[+&F][-^F]';
+  rules.H = 'FF[+&F][-^F]';
 
   // Angle narrows with depth — computed at interpretation time via the angle parameter
   const angleMultiplier = overrides?.angleMultiplier ?? 1;
   const angle = Math.round(BASE_ANGLE * angleMultiplier);
 
   // Seed-based determinism
-  const seed = hashString(JSON.stringify({ tree: tree.name, files: topology.files.length }));
+  const _seed = hashString(JSON.stringify({ tree: tree.name, files: topology.files.length }));
 
   return {
     axiom: 'F',
@@ -61,7 +61,7 @@ export function compile(topology: CodeTopology, overrides?: LSystemOverrides): L
 
 function buildBranchRule(childCount: number, hotspots: Set<string>, node: FileTreeNode): string {
   // Check if any direct children are hotspots
-  const hasHotspot = node.children?.some(c => hotspots.has(c.path)) ?? false;
+  const hasHotspot = node.children?.some((c) => hotspots.has(c.path)) ?? false;
 
   if (childCount <= 1) {
     return 'FF';

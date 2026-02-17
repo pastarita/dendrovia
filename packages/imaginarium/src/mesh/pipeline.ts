@@ -61,7 +61,7 @@ export function pipeAsync(...ops: (MeshOp | AsyncMeshOp)[]): AsyncMeshOp {
  *   const maybeSubdivide = when(m => m.faces.length < 100, subdivide(1));
  */
 export function when(predicate: (mesh: HalfEdgeMesh) => boolean, op: MeshOp): MeshOp {
-  return (mesh) => predicate(mesh) ? op(mesh) : mesh;
+  return (mesh) => (predicate(mesh) ? op(mesh) : mesh);
 }
 
 /**
@@ -115,6 +115,6 @@ export class MeshPipeline {
 
   /** Get step names for inspection. */
   get names(): string[] {
-    return this.steps.map(s => s.name);
+    return this.steps.map((s) => s.name);
   }
 }

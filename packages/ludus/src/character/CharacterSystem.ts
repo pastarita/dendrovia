@@ -7,12 +7,7 @@
  *   DPS        → Feature Developer (high ATK, glass cannon)
  */
 
-import type {
-  Character,
-  CharacterClass,
-  CharacterStats,
-  GrowthRates,
-} from '@dendrovia/shared';
+import type { Character, CharacterClass, CharacterStats, GrowthRates } from '@dendrovia/shared';
 
 // ─── Base Stats ──────────────────────────────────────────────
 
@@ -55,17 +50,17 @@ export const BASE_STATS: Record<CharacterClass, CharacterStats> = {
 // ─── Growth Rates (per level) ────────────────────────────────
 
 export const GROWTH_RATES: Record<CharacterClass, GrowthRates> = {
-  tank:   { hp: 8,   mana: 2, attack: 1,   defense: 2,   speed: 1   },
-  healer: { hp: 5,   mana: 5, attack: 0.5, defense: 1,   speed: 1.5 },
-  dps:    { hp: 3,   mana: 3, attack: 2,   defense: 0.5, speed: 1   },
+  tank: { hp: 8, mana: 2, attack: 1, defense: 2, speed: 1 },
+  healer: { hp: 5, mana: 5, attack: 0.5, defense: 1, speed: 1.5 },
+  dps: { hp: 3, mana: 3, attack: 2, defense: 0.5, speed: 1 },
 };
 
 // ─── Starter Spells ──────────────────────────────────────────
 
 const STARTER_SPELLS: Record<CharacterClass, string[]> = {
-  tank:   ['spell-mutex-lock', 'spell-load-balancer', 'spell-firewall', 'spell-deadlock'],
+  tank: ['spell-mutex-lock', 'spell-load-balancer', 'spell-firewall', 'spell-deadlock'],
   healer: ['spell-try-catch', 'spell-rollback', 'spell-garbage-collect', 'spell-patch'],
-  dps:    ['spell-sql-injection', 'spell-fork-bomb', 'spell-buffer-overflow', 'spell-regex-nuke'],
+  dps: ['spell-sql-injection', 'spell-fork-bomb', 'spell-buffer-overflow', 'spell-regex-nuke'],
 };
 
 // ─── XP Curve ────────────────────────────────────────────────
@@ -82,18 +77,11 @@ export function xpToNextLevel(currentLevel: number): number {
 
 // ─── Stat Calculation ────────────────────────────────────────
 
-export function statAtLevel(
-  baseStat: number,
-  growthPerLevel: number,
-  level: number,
-): number {
+export function statAtLevel(baseStat: number, growthPerLevel: number, level: number): number {
   return Math.floor(baseStat + growthPerLevel * (level - 1));
 }
 
-export function computeStatsAtLevel(
-  charClass: CharacterClass,
-  level: number,
-): CharacterStats {
+export function computeStatsAtLevel(charClass: CharacterClass, level: number): CharacterStats {
   const base = BASE_STATS[charClass];
   const growth = GROWTH_RATES[charClass];
 
@@ -115,11 +103,7 @@ export function computeStatsAtLevel(
 
 let nextId = 1;
 
-export function createCharacter(
-  charClass: CharacterClass,
-  name: string,
-  level: number = 1,
-): Character {
+export function createCharacter(charClass: CharacterClass, name: string, level: number = 1): Character {
   const stats = computeStatsAtLevel(charClass, level);
 
   return {
@@ -138,11 +122,11 @@ export function createCharacter(
 // ─── Level Up ────────────────────────────────────────────────
 
 // Spell unlock schedule: new spell at these levels
-const SPELL_UNLOCK_LEVELS = [5, 10, 15, 20, 25, 30];
+const _SPELL_UNLOCK_LEVELS = [5, 10, 15, 20, 25, 30];
 
 const UNLOCK_SPELLS: Record<CharacterClass, Record<number, string>> = {
   tank: {
-    5:  'spell-docker-compose',
+    5: 'spell-docker-compose',
     10: 'spell-kubernetes',
     15: 'spell-terraform',
     20: 'spell-circuit-breaker',
@@ -150,7 +134,7 @@ const UNLOCK_SPELLS: Record<CharacterClass, Record<number, string>> = {
     30: 'spell-immutable-infra',
   },
   healer: {
-    5:  'spell-lint-fix',
+    5: 'spell-lint-fix',
     10: 'spell-bisect',
     15: 'spell-hot-reload',
     20: 'spell-snapshot-restore',
@@ -158,7 +142,7 @@ const UNLOCK_SPELLS: Record<CharacterClass, Record<number, string>> = {
     30: 'spell-formal-verification',
   },
   dps: {
-    5:  'spell-zero-day',
+    5: 'spell-zero-day',
     10: 'spell-privilege-escalation',
     15: 'spell-ddos',
     20: 'spell-cryptominer',
@@ -174,10 +158,7 @@ export interface LevelUpResult {
   newSpells: string[];
 }
 
-export function gainExperience(
-  character: Character,
-  xp: number,
-): LevelUpResult {
+export function gainExperience(character: Character, xp: number): LevelUpResult {
   let { level, experience } = character;
   experience += xp;
 

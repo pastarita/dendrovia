@@ -8,8 +8,7 @@
  *   - Total segments are capped at MAX_SEGMENTS.
  */
 
-import type { FileTreeNode, CodeTopology, SegmentMetrics } from '@dendrovia/shared';
-import { hashString } from '../utils/hash.js';
+import type { CodeTopology, FileTreeNode, SegmentMetrics } from '@dendrovia/shared';
 
 const MIN_SEGMENT_FILES = 3;
 const MAX_SEGMENTS = 10;
@@ -26,8 +25,8 @@ export interface RawSegment {
  */
 export function sliceSegments(topology: CodeTopology): RawSegment[] {
   const tree = topology.tree;
-  const hotspotPaths = new Set((topology.hotspots ?? []).map(h => h.path));
-  const hotspotMap = new Map((topology.hotspots ?? []).map(h => [h.path, h]));
+  const _hotspotPaths = new Set((topology.hotspots ?? []).map((h) => h.path));
+  const hotspotMap = new Map((topology.hotspots ?? []).map((h) => [h.path, h]));
 
   // Collect root-level files and top-level directories
   const rootFiles: string[] = [];
@@ -60,7 +59,7 @@ export function sliceSegments(topology: CodeTopology): RawSegment[] {
 
   // Fallback: if < 3 top-level dirs, produce a single segment
   if (rawSegments.length === 0) {
-    const allFiles = topology.files.map(f => f.path);
+    const allFiles = topology.files.map((f) => f.path);
     return [buildRawSegment('all', tree.path, allFiles, topology, hotspotMap)];
   }
 
@@ -92,27 +91,27 @@ function buildRawSegment(
   hotspotMap: Map<string, { churnRate: number; complexity: number; riskScore: number }>,
 ): RawSegment {
   const fileSet = new Set(filePaths);
-  const files = topology.files.filter(f => fileSet.has(f.path));
+  const files = topology.files.filter((f) => fileSet.has(f.path));
 
   const fileCount = files.length;
   const totalLoc = files.reduce((sum, f) => sum + f.loc, 0);
   const avgComplexity = fileCount > 0 ? files.reduce((sum, f) => sum + f.complexity, 0) / fileCount : 0;
-  const maxComplexity = fileCount > 0 ? Math.max(...files.map(f => f.complexity)) : 0;
+  const maxComplexity = fileCount > 0 ? Math.max(...files.map((f) => f.complexity)) : 0;
 
-  const segmentHotspots = filePaths.filter(p => hotspotMap.has(p));
+  const segmentHotspots = filePaths.filter((p) => hotspotMap.has(p));
   const hotspotCount = segmentHotspots.length;
-  const avgChurn = hotspotCount > 0
-    ? segmentHotspots.reduce((sum, p) => sum + (hotspotMap.get(p)?.churnRate ?? 0), 0) / hotspotCount
-    : 0;
+  const avgChurn =
+    hotspotCount > 0
+      ? segmentHotspots.reduce((sum, p) => sum + (hotspotMap.get(p)?.churnRate ?? 0), 0) / hotspotCount
+      : 0;
 
   // Dominant language
   const langCounts = new Map<string, number>();
   for (const f of files) {
     langCounts.set(f.language, (langCounts.get(f.language) ?? 0) + 1);
   }
-  const dominantLanguage = langCounts.size > 0
-    ? [...langCounts.entries()].sort((a, b) => b[1] - a[1])[0][0]
-    : 'unknown';
+  const dominantLanguage =
+    langCounts.size > 0 ? [...langCounts.entries()].sort((a, b) => b[1] - a[1])[0][0] : 'unknown';
 
   // Encounter density: hotspots per file
   const encounterDensity = fileCount > 0 ? hotspotCount / fileCount : 0;
@@ -179,19 +178,20 @@ function mergeTwo(a: RawSegment, b: RawSegment): RawSegment {
   const totalLoc = a.metrics.totalLoc + b.metrics.totalLoc;
   const hotspotCount = a.metrics.hotspotCount + b.metrics.hotspotCount;
 
-  const avgComplexity = fileCount > 0
-    ? (a.metrics.avgComplexity * a.metrics.fileCount + b.metrics.avgComplexity * b.metrics.fileCount) / fileCount
-    : 0;
+  const avgComplexity =
+    fileCount > 0
+      ? (a.metrics.avgComplexity * a.metrics.fileCount + b.metrics.avgComplexity * b.metrics.fileCount) / fileCount
+      : 0;
   const maxComplexity = Math.max(a.metrics.maxComplexity, b.metrics.maxComplexity);
-  const avgChurn = hotspotCount > 0
-    ? (a.metrics.avgChurn * a.metrics.hotspotCount + b.metrics.avgChurn * b.metrics.hotspotCount) / hotspotCount
-    : 0;
+  const avgChurn =
+    hotspotCount > 0
+      ? (a.metrics.avgChurn * a.metrics.hotspotCount + b.metrics.avgChurn * b.metrics.hotspotCount) / hotspotCount
+      : 0;
   const encounterDensity = fileCount > 0 ? hotspotCount / fileCount : 0;
 
   // Dominant language: use whichever segment has more files
-  const dominantLanguage = a.metrics.fileCount >= b.metrics.fileCount
-    ? a.metrics.dominantLanguage
-    : b.metrics.dominantLanguage;
+  const dominantLanguage =
+    a.metrics.fileCount >= b.metrics.fileCount ? a.metrics.dominantLanguage : b.metrics.dominantLanguage;
 
   return {
     label: `${a.label}+${b.label}`,

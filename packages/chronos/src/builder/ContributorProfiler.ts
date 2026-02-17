@@ -4,17 +4,17 @@
  * Classifies developers into RPG archetypes based on their commit patterns.
  */
 
-import type { ParsedCommit, CommitType } from '@dendrovia/shared';
+import type { CommitType, ParsedCommit } from '@dendrovia/shared';
 import { classifyCommit } from '../classifier/CommitClassifier.js';
 
 export type Archetype =
-  | 'guardian'    // >50% chore/ci/build — the infrastructure tank
-  | 'healer'     // >50% fix commits — the bug fixer
-  | 'striker'    // >50% feat commits — the feature builder
-  | 'sage'       // >40% docs/test — the knowledge keeper
-  | 'ranger'     // high file diversity — the wide-ranging explorer
-  | 'artificer'  // >40% perf/build — the optimizer
-  | 'berserker'  // high breaking change ratio — the disruptor
+  | 'guardian' // >50% chore/ci/build — the infrastructure tank
+  | 'healer' // >50% fix commits — the bug fixer
+  | 'striker' // >50% feat commits — the feature builder
+  | 'sage' // >40% docs/test — the knowledge keeper
+  | 'ranger' // high file diversity — the wide-ranging explorer
+  | 'artificer' // >40% perf/build — the optimizer
+  | 'berserker' // high breaking change ratio — the disruptor
   | 'adventurer'; // no dominant pattern — the generalist
 
 export type TimeArchetype = 'dawn' | 'daylight' | 'twilight' | 'midnight';
@@ -42,11 +42,11 @@ export interface ContributorProfile {
 }
 
 export interface ContributorFacets {
-  energy: number;       // commit frequency
-  discipline: number;   // conventional commit adherence
-  creativity: number;   // feature ratio
+  energy: number; // commit frequency
+  discipline: number; // conventional commit adherence
+  creativity: number; // feature ratio
   protectiveness: number; // fix/test ratio
-  breadth: number;      // file diversity
+  breadth: number; // file diversity
   collaboration: number; // co-authorship / merge frequency
 }
 
@@ -74,11 +74,7 @@ export function profileContributors(commits: ParsedCommit[]): ContributorProfile
   return profiles;
 }
 
-function buildProfile(
-  name: string,
-  authorCommits: ParsedCommit[],
-  allCommits: ParsedCommit[],
-): ContributorProfile {
+function buildProfile(name: string, authorCommits: ParsedCommit[], allCommits: ParsedCommit[]): ContributorProfile {
   // Classify each commit
   const typeCounts: Partial<Record<CommitType, number>> = {};
   const hourCounts = new Array(24).fill(0);
@@ -104,8 +100,8 @@ function buildProfile(
   const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
 
   // Determine top commit type
-  const topCommitType = (Object.entries(typeCounts) as [CommitType, number][])
-    .sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'maintenance';
+  const topCommitType =
+    (Object.entries(typeCounts) as [CommitType, number][]).sort((a, b) => b[1] - a[1])[0]?.[0] ?? 'maintenance';
 
   // Determine archetype
   const archetype = determineArchetype(typeCounts, total, filesSet.size, allCommits.length);
@@ -143,7 +139,7 @@ function determineArchetype(
   types: Partial<Record<CommitType, number>>,
   total: number,
   fileCount: number,
-  totalCommitsInRepo: number,
+  _totalCommitsInRepo: number,
 ): Archetype {
   const ratio = (type: CommitType) => (types[type] || 0) / total;
   const multiRatio = (...tt: CommitType[]) => tt.reduce((s, t) => s + ratio(t), 0);
@@ -196,7 +192,7 @@ function computeFacets(
   const ratio = (type: CommitType) => (types[type] || 0) / Math.max(total, 1);
 
   // Energy: commit frequency relative to repo average
-  const avgCommitsPerAuthor = allCommits.length / new Set(allCommits.map(c => c.author)).size;
+  const avgCommitsPerAuthor = allCommits.length / new Set(allCommits.map((c) => c.author)).size;
   const energy = Math.min(100, Math.round((total / avgCommitsPerAuthor) * 50));
 
   // Discipline: conventional commit adherence
@@ -212,7 +208,7 @@ function computeFacets(
   const breadth = Math.min(100, Math.round((fileCount / Math.max(total, 1)) * 20));
 
   // Collaboration: merge ratio (proxy for teamwork)
-  const mergeCount = authorCommits.filter(c => c.isMerge).length;
+  const mergeCount = authorCommits.filter((c) => c.isMerge).length;
   const collaboration = Math.min(100, Math.round((mergeCount / Math.max(total, 1)) * 200));
 
   return { energy, discipline, creativity, protectiveness, breadth, collaboration };

@@ -13,13 +13,16 @@ import type { RngState } from '@dendrovia/shared';
 /** Advance sfc32 state by one step, return [value in [0,1), newState] */
 export function rngNext(state: RngState): [number, RngState] {
   let { a, b, c, d } = state;
-  a |= 0; b |= 0; c |= 0; d |= 0;
+  a |= 0;
+  b |= 0;
+  c |= 0;
+  d |= 0;
 
-  const t = ((a + b) | 0) + d | 0;
+  const t = (((a + b) | 0) + d) | 0;
   d = (d + 1) | 0;
   a = b ^ (b >>> 9);
   b = (c + (c << 3)) | 0;
-  c = ((c << 21) | (c >>> 11));
+  c = (c << 21) | (c >>> 11);
   c = (c + t) | 0;
 
   const value = (t >>> 0) / 4294967296;
@@ -29,11 +32,11 @@ export function rngNext(state: RngState): [number, RngState] {
 /** Create initial RNG state from a single seed number */
 export function createRngState(seed: number): RngState {
   // Hash the seed into 4 distinct values using a simple mixing function
-  let s = seed | 0;
-  const a = hashMix(s, 0x9E3779B9);
-  const b = hashMix(s, 0x85EBCA6B);
-  const c = hashMix(s, 0xC2B2AE35);
-  const d = hashMix(s, 0x27D4EB2F);
+  const s = seed | 0;
+  const a = hashMix(s, 0x9e3779b9);
+  const b = hashMix(s, 0x85ebca6b);
+  const c = hashMix(s, 0xc2b2ae35);
+  const d = hashMix(s, 0x27d4eb2f);
 
   // Warm up the generator with 12 rounds to mix state
   let state: RngState = { a, b, c, d };
@@ -45,8 +48,8 @@ export function createRngState(seed: number): RngState {
 
 function hashMix(seed: number, constant: number): number {
   let h = (seed + constant) | 0;
-  h = Math.imul(h ^ (h >>> 16), 0x45D9F3B);
-  h = Math.imul(h ^ (h >>> 13), 0x45D9F3B);
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b);
+  h = Math.imul(h ^ (h >>> 13), 0x45d9f3b);
   return (h ^ (h >>> 16)) | 0;
 }
 
@@ -106,29 +109,19 @@ export class SeededRandom {
 // --- Pure functional helpers for use inside the reducer ---
 
 /** Random integer in [min, max] with state passing */
-export function rngRange(
-  state: RngState,
-  min: number,
-  max: number
-): [number, RngState] {
+export function rngRange(state: RngState, min: number, max: number): [number, RngState] {
   const [value, newState] = rngNext(state);
   return [min + Math.floor(value * (max - min + 1)), newState];
 }
 
 /** Random boolean with given probability, with state passing */
-export function rngChance(
-  state: RngState,
-  probability: number
-): [boolean, RngState] {
+export function rngChance(state: RngState, probability: number): [boolean, RngState] {
   const [value, newState] = rngNext(state);
   return [value < probability, newState];
 }
 
 /** Pick random element from array, with state passing */
-export function rngPick<T>(
-  state: RngState,
-  array: readonly T[]
-): [T, RngState] {
+export function rngPick<T>(state: RngState, array: readonly T[]): [T, RngState] {
   const [value, newState] = rngNext(state);
   return [array[Math.floor(value * array.length)], newState];
 }

@@ -9,7 +9,11 @@
 import type { FileTreeNode, Hotspot, ProceduralPalette } from '@dendrovia/shared';
 
 // Helper to create file metadata
-function file(name: string, path: string, opts: { loc?: number; complexity?: number; language?: string } = {}): FileTreeNode {
+function file(
+  name: string,
+  path: string,
+  opts: { loc?: number; complexity?: number; language?: string } = {},
+): FileTreeNode {
   return {
     name,
     path,
@@ -206,10 +210,38 @@ export const DENDROVIA_HOTSPOTS: Hotspot[] = [
 // ---------------------------------------------------------------------------
 
 export const FIXTURE_PALETTES: Record<string, ProceduralPalette> = {
-  'small-library':  { primary: '#0a4a6e', secondary: '#1a2a4e', accent: '#00ffcc', background: '#0a0a0a', glow: '#00ffff', mood: 'cool' },
-  'medium-app':     { primary: '#6e3a0a', secondary: '#4e2a1a', accent: '#ffcc00', background: '#0a0a0a', glow: '#ff6600', mood: 'warm' },
-  'large-project':  { primary: '#3a1a6e', secondary: '#2a1a4e', accent: '#cc66ff', background: '#050505', glow: '#9933ff', mood: 'cool' },
-  'dendrovia-self':  { primary: '#0a4e2a', secondary: '#1a3e1a', accent: '#00ff66', background: '#050a05', glow: '#00ff00', mood: 'cool' },
+  'small-library': {
+    primary: '#0a4a6e',
+    secondary: '#1a2a4e',
+    accent: '#00ffcc',
+    background: '#0a0a0a',
+    glow: '#00ffff',
+    mood: 'cool',
+  },
+  'medium-app': {
+    primary: '#6e3a0a',
+    secondary: '#4e2a1a',
+    accent: '#ffcc00',
+    background: '#0a0a0a',
+    glow: '#ff6600',
+    mood: 'warm',
+  },
+  'large-project': {
+    primary: '#3a1a6e',
+    secondary: '#2a1a4e',
+    accent: '#cc66ff',
+    background: '#050505',
+    glow: '#9933ff',
+    mood: 'cool',
+  },
+  'dendrovia-self': {
+    primary: '#0a4e2a',
+    secondary: '#1a3e1a',
+    accent: '#00ff66',
+    background: '#050a05',
+    glow: '#00ff00',
+    mood: 'cool',
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -231,7 +263,14 @@ function countFiles(node: FileTreeNode): number {
   return (node.children ?? []).reduce((sum, c) => sum + countFiles(c), 0);
 }
 
-const TRON_PALETTE: ProceduralPalette = { primary: '#0a4a6e', secondary: '#1a2a4e', accent: '#00ffcc', background: '#0a0a0a', glow: '#00ffff', mood: 'cool' };
+const TRON_PALETTE: ProceduralPalette = {
+  primary: '#0a4a6e',
+  secondary: '#1a2a4e',
+  accent: '#00ffcc',
+  background: '#0a0a0a',
+  glow: '#00ffff',
+  mood: 'cool',
+};
 
 export const FIXTURES: ShowcaseFixture[] = [
   {

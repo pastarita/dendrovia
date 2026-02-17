@@ -47,7 +47,7 @@ export function useCodeLoader(options: CodeLoaderOptions = {}) {
     const controller = new AbortController();
     abortRef.current = controller;
 
-    const store = useOculusStore.getState();
+    const _store = useOculusStore.getState();
 
     async function load() {
       try {
@@ -71,8 +71,7 @@ export function useCodeLoader(options: CodeLoaderOptions = {}) {
       } catch (err: unknown) {
         if (controller.signal.aborted) return;
 
-        const message =
-          err instanceof Error ? err.message : 'Unknown error loading file';
+        const message = err instanceof Error ? err.message : 'Unknown error loading file';
         useOculusStore.getState().setCodeError(message);
         // Set fallback content so the viewer is not stuck on a spinner
         useOculusStore.getState().setCodeContent(PLACEHOLDER);

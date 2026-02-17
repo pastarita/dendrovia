@@ -70,7 +70,7 @@ const EFFECTS = [
 export default function StatusEffectReference(): React.JSX.Element {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
-      {EFFECTS.map(fx => (
+      {EFFECTS.map((fx) => (
         <div
           key={fx.type}
           style={{

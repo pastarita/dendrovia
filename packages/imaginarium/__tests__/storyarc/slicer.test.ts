@@ -1,9 +1,8 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
+import type { CodeTopology, FileTreeNode, Hotspot, ParsedFile } from '@dendrovia/shared';
 import { sliceSegments } from '../../src/storyarc/SegmentSlicer';
-import { generateMockTopology } from '../../src/pipeline/MockTopology';
-import type { CodeTopology, FileTreeNode, ParsedFile, Hotspot } from '@dendrovia/shared';
 
-function buildTopologyWithDirs(dirNames: string[], filesPerDir: number, seed = 42): CodeTopology {
+function buildTopologyWithDirs(dirNames: string[], filesPerDir: number, _seed = 42): CodeTopology {
   const files: ParsedFile[] = [];
   const hotspots: Hotspot[] = [];
   let fileIdx = 0;
@@ -29,13 +28,13 @@ function buildTopologyWithDirs(dirNames: string[], filesPerDir: number, seed = 4
   }
 
   // Build tree
-  const rootChildren: FileTreeNode[] = dirNames.map(dir => ({
+  const rootChildren: FileTreeNode[] = dirNames.map((dir) => ({
     name: dir,
     path: dir,
     type: 'directory' as const,
     children: files
-      .filter(f => f.path.startsWith(dir + '/'))
-      .map(f => ({
+      .filter((f) => f.path.startsWith(`${dir}/`))
+      .map((f) => ({
         name: f.path.split('/').pop()!,
         path: f.path,
         type: 'file' as const,
@@ -102,7 +101,7 @@ describe('SegmentSlicer', () => {
     }
 
     const segments = sliceSegments(topology);
-    const rootSegment = segments.find(s => s.filePaths.some(p => p === 'README.md'));
+    const rootSegment = segments.find((s) => s.filePaths.some((p) => p === 'README.md'));
     expect(rootSegment).toBeDefined();
   });
 
@@ -123,12 +122,14 @@ describe('SegmentSlicer', () => {
       name: 'tiny',
       path: 'tiny',
       type: 'directory',
-      children: [{
-        name: 'only.ts',
-        path: 'tiny/only.ts',
-        type: 'file',
-        metadata: tinyFile,
-      }],
+      children: [
+        {
+          name: 'only.ts',
+          path: 'tiny/only.ts',
+          type: 'file',
+          metadata: tinyFile,
+        },
+      ],
     });
 
     const segments = sliceSegments(topology);
@@ -150,7 +151,17 @@ describe('SegmentSlicer', () => {
 
   test('fallback: empty tree produces a single segment', () => {
     const topology: CodeTopology = {
-      files: [{ path: 'a.ts', hash: 'h', language: 'typescript', complexity: 5, loc: 50, lastModified: new Date(), author: 'dev' }],
+      files: [
+        {
+          path: 'a.ts',
+          hash: 'h',
+          language: 'typescript',
+          complexity: 5,
+          loc: 50,
+          lastModified: new Date(),
+          author: 'dev',
+        },
+      ],
       commits: [],
       tree: { name: 'root', path: '.', type: 'directory', children: [] },
       hotspots: [],
@@ -172,7 +183,8 @@ describe('SegmentSlicer', () => {
     };
 
     const topology: CodeTopology = {
-      files: [deepFile,
+      files: [
+        deepFile,
         ...Array.from({ length: 4 }, (_, i) => ({
           path: `src/file-${i}.ts`,
           hash: `src-${i}`,
@@ -185,31 +197,49 @@ describe('SegmentSlicer', () => {
       ],
       commits: [],
       tree: {
-        name: 'root', path: '.', type: 'directory' as const,
-        children: [{
-          name: 'src', path: 'src', type: 'directory' as const,
-          children: [
-            {
-              name: 'deep', path: 'src/deep', type: 'directory' as const,
-              children: [{
-                name: 'nested', path: 'src/deep/nested', type: 'directory' as const,
-                children: [{
-                  name: 'file.ts', path: 'src/deep/nested/file.ts', type: 'file' as const,
-                  metadata: deepFile,
-                }],
-              }],
-            },
-            ...Array.from({ length: 4 }, (_, i) => ({
-              name: `file-${i}.ts`, path: `src/file-${i}.ts`, type: 'file' as const,
-            })),
-          ],
-        }],
+        name: 'root',
+        path: '.',
+        type: 'directory' as const,
+        children: [
+          {
+            name: 'src',
+            path: 'src',
+            type: 'directory' as const,
+            children: [
+              {
+                name: 'deep',
+                path: 'src/deep',
+                type: 'directory' as const,
+                children: [
+                  {
+                    name: 'nested',
+                    path: 'src/deep/nested',
+                    type: 'directory' as const,
+                    children: [
+                      {
+                        name: 'file.ts',
+                        path: 'src/deep/nested/file.ts',
+                        type: 'file' as const,
+                        metadata: deepFile,
+                      },
+                    ],
+                  },
+                ],
+              },
+              ...Array.from({ length: 4 }, (_, i) => ({
+                name: `file-${i}.ts`,
+                path: `src/file-${i}.ts`,
+                type: 'file' as const,
+              })),
+            ],
+          },
+        ],
       },
       hotspots: [],
     };
 
     const segments = sliceSegments(topology);
-    const allPaths = segments.flatMap(s => s.filePaths);
+    const allPaths = segments.flatMap((s) => s.filePaths);
     expect(allPaths).toContain('src/deep/nested/file.ts');
   });
 

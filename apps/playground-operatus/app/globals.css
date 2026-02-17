@@ -1,13 +1,13 @@
-@import '@dendrovia/oculus/src/styles/tokens.css';
-@import '@dendrovia/oculus/src/styles/ornate-frame.css';
-@import '@dendrovia/oculus/src/styles/animations.css';
+@import "@dendrovia/oculus/src/styles/tokens.css";
+@import "@dendrovia/oculus/src/styles/ornate-frame.css";
+@import "@dendrovia/oculus/src/styles/animations.css";
 
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
-  --pillar-accent: #6B7280;
-  --pillar-accent-dim: #4B5563;
-  --pillar-accent-sable: #1F2937;
+  --pillar-accent: #6b7280;
+  --pillar-accent-dim: #4b5563;
+  --pillar-accent-sable: #1f2937;
   --sidebar-width: 260px;
 }
 

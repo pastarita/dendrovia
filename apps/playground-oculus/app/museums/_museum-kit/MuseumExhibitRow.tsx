@@ -6,8 +6,8 @@
  * Shows a color dot, name, inline badges, and optional metadata.
  */
 
+import { badgeStyle, dotStyle, exhibitRowStyle } from './museum-styles';
 import type { MuseumExhibitDescriptor } from './types';
-import { exhibitRowStyle, badgeStyle, dotStyle } from './museum-styles';
 
 interface MuseumExhibitRowProps {
   exhibit: MuseumExhibitDescriptor;
@@ -23,7 +23,9 @@ export function MuseumExhibitRow({ exhibit, selected, onClick }: MuseumExhibitRo
         {exhibit.name}
       </span>
       {exhibit.badges.map((b) => (
-        <span key={b.label} style={badgeStyle(b.color)}>{b.label}</span>
+        <span key={b.label} style={badgeStyle(b.color)}>
+          {b.label}
+        </span>
       ))}
     </button>
   );

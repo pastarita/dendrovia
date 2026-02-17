@@ -6,10 +6,10 @@
  * For the POC, we use a simple mesh approximation.
  */
 
-import React, { useRef, useState } from 'react';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
 import { useFrame } from '@react-three/fiber';
-import { Mesh, Color } from 'three';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { useRef, useState } from 'react';
+import type { Mesh } from 'three';
 
 // Load generated palette (in real version, this would be dynamic)
 const palette = {
@@ -66,30 +66,15 @@ export function DendriteBranch({ onClick }: { onClick: () => void }) {
         const z = Math.cos(angle) * 0.5;
 
         return (
-          <mesh
-            key={i}
-            position={[x, height + 1, z]}
-            rotation={[Math.PI / 4, angle, 0]}
-          >
+          <mesh key={i} position={[x, height + 1, z]} rotation={[Math.PI / 4, angle, 0]}>
             <cylinderGeometry args={[0.03, 0.05, 0.6, 8]} />
-            <meshStandardMaterial
-              color={palette.primary}
-              emissive={palette.primary}
-              emissiveIntensity={0.2}
-            />
+            <meshStandardMaterial color={palette.primary} emissive={palette.primary} emissiveIntensity={0.2} />
           </mesh>
         );
       })}
 
       {/* Glow effect when hovered */}
-      {hovered && (
-        <pointLight
-          position={[0, 1, 0]}
-          color={palette.glow}
-          intensity={2}
-          distance={3}
-        />
-      )}
+      {hovered && <pointLight position={[0, 1, 0]} color={palette.glow} intensity={2} distance={3} />}
     </group>
   );
 }

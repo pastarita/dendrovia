@@ -1,22 +1,21 @@
 'use client';
 
-import { Suspense, Component, type ReactNode } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
-import {
-  DendriteWorld,
-  Lighting,
-  PostProcessing,
-  PerformanceMonitor,
-  useRendererStore,
-} from '@dendrovia/architectus';
+import { DendriteWorld, Lighting, PerformanceMonitor, PostProcessing, useRendererStore } from '@dendrovia/architectus';
 import { OrnateFrame } from '@dendrovia/oculus';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { Component, type ReactNode, Suspense } from 'react';
 
 class R3FErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };
-  static getDerivedStateFromError(error: Error) { return { error }; }
-  render() { return this.state.error ? null : this.props.children; }
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  render() {
+    return this.state.error ? null : this.props.children;
+  }
 }
+
 import type { ShowcaseFixture } from './fixtures';
 
 interface ShowcaseViewerProps {
@@ -29,24 +28,30 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
   const selectedNodeId = useRendererStore((s) => s.selectedNodeId);
 
   return (
-    <OrnateFrame pillar="architectus" variant="modal" style={{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 100,
-      background: fixture.palette.background,
-      display: 'flex',
-      flexDirection: 'column',
-    }}>
-      {/* Header bar */}
-      <div style={{
-        padding: '0.75rem 1rem',
+    <OrnateFrame
+      pillar="architectus"
+      variant="modal"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 100,
+        background: fixture.palette.background,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        background: '#111',
-        borderBottom: '1px solid #333',
-        zIndex: 10,
-      }}>
+        flexDirection: 'column',
+      }}
+    >
+      {/* Header bar */}
+      <div
+        style={{
+          padding: '0.75rem 1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: '#111',
+          borderBottom: '1px solid #333',
+          zIndex: 10,
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button
             onClick={onClose}
@@ -63,9 +68,7 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
             &larr; Back
           </button>
           <div>
-            <span style={{ fontWeight: 700, color: 'var(--pillar-accent)' }}>
-              {fixture.name}
-            </span>
+            <span style={{ fontWeight: 700, color: 'var(--pillar-accent)' }}>{fixture.name}</span>
             <span style={{ opacity: 0.4, marginLeft: '0.75rem', fontSize: '0.8rem' }}>
               {fixture.fileCount} files
               {fixture.hotspots.length > 0 && ` | ${fixture.hotspots.length} hotspots`}
@@ -74,11 +77,13 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
         </div>
 
         {/* Performance stats */}
-        <div style={{
-          fontFamily: 'var(--font-geist-mono), monospace',
-          fontSize: '0.7rem',
-          opacity: 0.5,
-        }}>
+        <div
+          style={{
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '0.7rem',
+            opacity: 0.5,
+          }}
+        >
           {fps > 0 ? `${fps} FPS` : '...'}
         </div>
       </div>
@@ -90,27 +95,12 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
           gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }}
           style={{ background: fixture.palette.background }}
         >
-          <PerspectiveCamera
-            makeDefault
-            position={[15, 20, -20]}
-            fov={60}
-            near={0.1}
-            far={500}
-          />
-          <OrbitControls
-            enableDamping
-            dampingFactor={0.05}
-            minDistance={3}
-            maxDistance={100}
-          />
+          <PerspectiveCamera makeDefault position={[15, 20, -20]} fov={60} near={0.1} far={500} />
+          <OrbitControls enableDamping dampingFactor={0.05} minDistance={3} maxDistance={100} />
 
           <Suspense fallback={null}>
             <Lighting />
-            <DendriteWorld
-              topology={fixture.topology}
-              hotspots={fixture.hotspots}
-              palette={fixture.palette}
-            />
+            <DendriteWorld topology={fixture.topology} hotspots={fixture.hotspots} palette={fixture.palette} />
             <R3FErrorBoundary>
               <PostProcessing />
             </R3FErrorBoundary>
@@ -122,39 +112,51 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
 
         {/* Selected node info */}
         {selectedNodeId && (
-          <div style={{
-            position: 'absolute',
-            bottom: 16,
-            left: 16,
-            padding: '8px 12px',
-            background: `${fixture.palette.background}cc`,
-            borderLeft: `2px solid ${fixture.palette.accent}`,
-            color: fixture.palette.accent,
-            fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '0.8rem',
-            pointerEvents: 'none',
-            textShadow: `0 0 8px ${fixture.palette.accent}40`,
-          }}>
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 16,
+              left: 16,
+              padding: '8px 12px',
+              background: `${fixture.palette.background}cc`,
+              borderLeft: `2px solid ${fixture.palette.accent}`,
+              color: fixture.palette.accent,
+              fontFamily: 'var(--font-geist-mono), monospace',
+              fontSize: '0.8rem',
+              pointerEvents: 'none',
+              textShadow: `0 0 8px ${fixture.palette.accent}40`,
+            }}
+          >
             <div style={{ opacity: 0.5, fontSize: '0.65rem', marginBottom: 2 }}>SELECTED</div>
             <div>{selectedNodeId}</div>
           </div>
         )}
 
         {/* Metadata panel */}
-        <div style={{
-          position: 'absolute',
-          bottom: 16,
-          right: 16,
-          padding: '10px 14px',
-          background: '#0a0a0acc',
-          border: '1px solid #333',
-          borderRadius: '6px',
-          fontFamily: 'var(--font-geist-mono), monospace',
-          fontSize: '0.7rem',
-          color: '#aaa',
-          minWidth: 180,
-        }}>
-          <div style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.5, marginBottom: '0.4rem' }}>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 16,
+            right: 16,
+            padding: '10px 14px',
+            background: '#0a0a0acc',
+            border: '1px solid #333',
+            borderRadius: '6px',
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '0.7rem',
+            color: '#aaa',
+            minWidth: 180,
+          }}
+        >
+          <div
+            style={{
+              fontSize: '0.65rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              opacity: 0.5,
+              marginBottom: '0.4rem',
+            }}
+          >
             Topology
           </div>
           <div>Files: {fixture.fileCount}</div>
@@ -162,7 +164,15 @@ export function ShowcaseViewer({ fixture, onClose }: ShowcaseViewerProps) {
           <div>Palette: {fixture.palette.mood}</div>
           {fixture.hotspots.length > 0 && (
             <>
-              <div style={{ marginTop: '0.4rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.5 }}>
+              <div
+                style={{
+                  marginTop: '0.4rem',
+                  fontSize: '0.65rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  opacity: 0.5,
+                }}
+              >
                 Top Risk
               </div>
               {fixture.hotspots.slice(0, 2).map((h) => (

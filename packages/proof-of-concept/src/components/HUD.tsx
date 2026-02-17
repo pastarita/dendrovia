@@ -4,8 +4,8 @@
  * Demonstrates the "Iron Man HUD" concept - peripheral awareness without blocking the view.
  */
 
-import React, { useEffect, useState } from 'react';
-import { getEventBus, GameEvents, type NodeClickedEvent } from '@dendrovia/shared';
+import { GameEvents, getEventBus, type NodeClickedEvent } from '@dendrovia/shared';
+import { useEffect, useState } from 'react';
 
 export function HUD() {
   const [lastClicked, setLastClicked] = useState<string | null>(null);
@@ -14,13 +14,10 @@ export function HUD() {
   useEffect(() => {
     const eventBus = getEventBus();
 
-    const unsubscribe = eventBus.on<NodeClickedEvent>(
-      GameEvents.NODE_CLICKED,
-      (data) => {
-        setLastClicked(data.filePath);
-        setEventCount(c => c + 1);
-      }
-    );
+    const unsubscribe = eventBus.on<NodeClickedEvent>(GameEvents.NODE_CLICKED, (data) => {
+      setLastClicked(data.filePath);
+      setEventCount((c) => c + 1);
+    });
 
     return unsubscribe;
   }, []);
@@ -30,10 +27,16 @@ export function HUD() {
       <div className="hud-panel">
         <h4>Dendrovia POC</h4>
         <div className="hud-stats">
-          <div>Mode: <span className="highlight">Falcon</span></div>
-          <div>Events: <span className="highlight">{eventCount}</span></div>
+          <div>
+            Mode: <span className="highlight">Falcon</span>
+          </div>
+          <div>
+            Events: <span className="highlight">{eventCount}</span>
+          </div>
           {lastClicked && (
-            <div>Last Clicked: <span className="highlight">{lastClicked}</span></div>
+            <div>
+              Last Clicked: <span className="highlight">{lastClicked}</span>
+            </div>
           )}
         </div>
       </div>

@@ -7,19 +7,16 @@
  * Never throws — falls back gracefully on any error.
  */
 
-import { join } from 'path';
-import { mkdirSync, existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 import type { CodeTopology } from '@dendrovia/shared';
-import type { MycologyManifest, FungalSpecimen, MycelialNetwork, FungalGenus } from './types';
-import { catalogize } from './SpecimenCatalog';
-import { buildNetwork } from './MycelialNetwork';
-import { buildCoChurnMap, buildFileContext, classifyGenus } from './GenusMapper';
 import { generateSvg } from './assets/SvgTemplates';
+import { buildCoChurnMap, buildFileContext, classifyGenus } from './GenusMapper';
+import { buildNetwork } from './MycelialNetwork';
+import { catalogize } from './SpecimenCatalog';
+import type { FungalGenus, MycologyManifest } from './types';
 
-export async function distillMycology(
-  topology: CodeTopology,
-  outputDir: string,
-): Promise<MycologyManifest> {
+export async function distillMycology(topology: CodeTopology, outputDir: string): Promise<MycologyManifest> {
   console.log('[MYCOLOGY] Starting mycology catalogization...');
 
   // Ensure output directories

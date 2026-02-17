@@ -18,6 +18,12 @@
     "lint": {
       "outputs": []
     },
+    "//#check": {
+      "outputs": []
+    },
+    "//#lint": {
+      "outputs": []
+    },
     "clean": {
       "cache": false
     },

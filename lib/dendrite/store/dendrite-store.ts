@@ -5,22 +5,17 @@
  * collapse state, phase filtering, and ReactFlow node/edge state.
  */
 
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
-import { enableMapSet } from "immer";
-import { applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
+import { applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
+import { enableMapSet } from 'immer';
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
 
 enableMapSet();
-import type { NodeChange, EdgeChange } from "@xyflow/react";
-import type {
-  DendriteState,
-  SourceDiagram,
-  LayoutDirection,
-  ColorMode,
-  RuntimeHealth,
-} from "../types";
-import { buildDendriteLayout } from "../layout/layout-engine";
-import { collapseAllIds } from "../layout/collapse-manager";
+
+import type { EdgeChange, NodeChange } from '@xyflow/react';
+import { collapseAllIds } from '../layout/collapse-manager';
+import { buildDendriteLayout } from '../layout/layout-engine';
+import type { ColorMode, DendriteState, LayoutDirection, RuntimeHealth, SourceDiagram } from '../types';
 
 function relayoutFromState(state: DendriteState): void {
   const diagram = state.fixtures[state.activeFixtureId];
@@ -32,7 +27,7 @@ function relayoutFromState(state: DendriteState): void {
     state.direction,
     state.colorMode,
     state.phaseFilter,
-    state.runtimeHealthMap ?? undefined
+    state.runtimeHealthMap ?? undefined,
   );
 
   state.nodes = nodes;
@@ -40,23 +35,20 @@ function relayoutFromState(state: DendriteState): void {
   state.fitViewTrigger += 1;
 }
 
-export function createDendriteStore(
-  fixtures: Record<string, SourceDiagram>,
-  initialFixtureId: string
-) {
+export function createDendriteStore(fixtures: Record<string, SourceDiagram>, initialFixtureId: string) {
   return create<DendriteState>()(
     immer((set) => {
       const initial = fixtures[initialFixtureId];
       const collapsed = new Set<string>();
       const { nodes, edges } = initial
-        ? buildDendriteLayout(initial, collapsed, "TB", "status", null)
+        ? buildDendriteLayout(initial, collapsed, 'TB', 'status', null)
         : { nodes: [], edges: [] };
 
       return {
         activeFixtureId: initialFixtureId,
         fixtures,
-        direction: "TB" as LayoutDirection,
-        colorMode: "status" as ColorMode,
+        direction: 'TB' as LayoutDirection,
+        colorMode: 'status' as ColorMode,
         collapseState: { collapsed },
         nodes,
         edges,
@@ -138,7 +130,7 @@ export function createDendriteStore(
         setRuntimeHealthMap: (map: Map<string, RuntimeHealth> | null) =>
           set((state) => {
             state.runtimeHealthMap = map;
-            if (state.colorMode === "runtime") {
+            if (state.colorMode === 'runtime') {
               relayoutFromState(state);
             }
           }),
@@ -158,6 +150,6 @@ export function createDendriteStore(
             state.edges = applyEdgeChanges(changes, state.edges);
           }),
       };
-    })
+    }),
   );
 }

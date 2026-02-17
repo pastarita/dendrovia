@@ -5,38 +5,6 @@
  * First step in the Dendrovia pipeline (no upstream dependencies).
  */
 
-// Parsers
-export {
-  parseGitHistory,
-  extractRawCommits,
-  listFilesAtHead,
-  getHeadHash,
-  getFileChurnCounts,
-  extractRepositoryMetadata,
-  type GitParserOptions,
-  type RawCommit,
-} from './parser/GitParser.js';
-
-export {
-  parseFiles,
-  parseFile,
-  buildStubFile,
-  createProject,
-  detectLanguage,
-  canParse,
-  type ASTParseResult,
-} from './parser/ASTParser.js';
-
-export { parseGoFile } from './parser/GoParser.js';
-
-// Classifiers
-export {
-  classifyCommit,
-  commitFlags,
-  type CommitType,
-  type ClassifiedCommit,
-} from './classifier/CommitClassifier.js';
-
 // Analyzers
 export {
   analyzeFileComplexity,
@@ -45,59 +13,80 @@ export {
   type DifficultyTier,
   type FunctionComplexity,
 } from './analyzer/ComplexityAnalyzer.js';
-
 export {
   detectHotspots,
   type HotspotAnalysis,
   type TemporalCoupling,
 } from './analyzer/HotspotDetector.js';
-
+export {
+  type Archetype,
+  type ContributorFacets,
+  type ContributorProfile,
+  profileContributors,
+  type TimeArchetype,
+} from './builder/ContributorProfiler.js';
+export {
+  buildContributorSummary,
+  buildLanguageDistribution,
+  buildTopology,
+  type TopologyInput,
+  type TopologyOutput,
+  writeOutputFiles,
+} from './builder/TopologyBuilder.js';
 // Builders
 export {
   buildFileTree,
-  countFiles,
   countDirectories,
+  countFiles,
 } from './builder/TreeBuilder.js';
-
+// Classifiers
 export {
-  buildTopology,
-  writeOutputFiles,
-  buildLanguageDistribution,
-  buildContributorSummary,
-  type TopologyInput,
-  type TopologyOutput,
-} from './builder/TopologyBuilder.js';
-
-export {
-  profileContributors,
-  type ContributorProfile,
-  type ContributorFacets,
-  type Archetype,
-  type TimeArchetype,
-} from './builder/ContributorProfiler.js';
-
-// Pipeline (reusable entry point)
-export {
-  runPipeline,
-  type PipelineOptions,
-  type PipelineResult,
-} from './pipeline.js';
-
-// Resolver (GitHub URL → local clone)
-export {
-  resolveRepo,
-  loadRegistry,
-  saveRegistry,
-  upsertRegistryEntry,
-  getChronosHome,
-  getReposDir,
-  getGeneratedDir,
-  getOutputDirForRepo,
-  type ResolvedRepo,
-  type Registry,
-  type RegistryEntry,
-} from './resolver/index.js';
-
+  type ClassifiedCommit,
+  type CommitType,
+  classifyCommit,
+  commitFlags,
+} from './classifier/CommitClassifier.js';
 // Enrichment (optional DeepWiki layer — additive, never required)
 export { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher.js';
 export { enrichTopology } from './enrichment/TopologyEnricher.js';
+export {
+  type ASTParseResult,
+  buildStubFile,
+  canParse,
+  createProject,
+  detectLanguage,
+  parseFile,
+  parseFiles,
+} from './parser/ASTParser.js';
+// Parsers
+export {
+  extractRawCommits,
+  extractRepositoryMetadata,
+  type GitParserOptions,
+  getFileChurnCounts,
+  getHeadHash,
+  listFilesAtHead,
+  parseGitHistory,
+  type RawCommit,
+} from './parser/GitParser.js';
+export { parseGoFile } from './parser/GoParser.js';
+// Pipeline (reusable entry point)
+export {
+  type PipelineOptions,
+  type PipelineResult,
+  runPipeline,
+} from './pipeline.js';
+// Resolver (GitHub URL → local clone)
+export {
+  getChronosHome,
+  getGeneratedDir,
+  getOutputDirForRepo,
+  getReposDir,
+  loadRegistry,
+  type Registry,
+  type RegistryEntry,
+  type ResolvedRepo,
+  resolveRepo,
+  saveRegistry,
+  upsertRegistryEntry,
+} from './resolver/index.js';

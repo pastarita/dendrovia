@@ -11,19 +11,9 @@
  * Loot resolution uses the seeded PRNG for deterministic drops.
  */
 
-import type {
-  Item,
-  ItemEffect,
-  LootEntry,
-  Character,
-  RngState,
-} from '@dendrovia/shared';
+import type { Character, Item, LootEntry, RngState } from '@dendrovia/shared';
+import { applyStatusEffect, cleanse, createStatusEffect } from '../combat/StatusEffects';
 import { rngNext } from '../utils/SeededRandom';
-import {
-  applyStatusEffect,
-  createStatusEffect,
-  cleanse,
-} from '../combat/StatusEffects';
 
 // ─── Item Registry ──────────────────────────────────────────
 
@@ -148,15 +138,13 @@ export function createInventory(maxSlots: number = 20): Inventory {
 
 /** Add an item to the inventory. Stacks if already present. */
 export function addItem(inventory: Inventory, itemId: string, quantity: number = 1): Inventory {
-  const existing = inventory.items.find(slot => slot.itemId === itemId);
+  const existing = inventory.items.find((slot) => slot.itemId === itemId);
 
   if (existing) {
     return {
       ...inventory,
-      items: inventory.items.map(slot =>
-        slot.itemId === itemId
-          ? { ...slot, quantity: slot.quantity + quantity }
-          : slot
+      items: inventory.items.map((slot) =>
+        slot.itemId === itemId ? { ...slot, quantity: slot.quantity + quantity } : slot,
       ),
     };
   }
@@ -173,35 +161,33 @@ export function addItem(inventory: Inventory, itemId: string, quantity: number =
 
 /** Remove items from inventory. Removes slot if quantity reaches 0. */
 export function removeItem(inventory: Inventory, itemId: string, quantity: number = 1): Inventory {
-  const existing = inventory.items.find(slot => slot.itemId === itemId);
+  const existing = inventory.items.find((slot) => slot.itemId === itemId);
   if (!existing || existing.quantity < quantity) return inventory;
 
   if (existing.quantity <= quantity) {
     return {
       ...inventory,
-      items: inventory.items.filter(slot => slot.itemId !== itemId),
+      items: inventory.items.filter((slot) => slot.itemId !== itemId),
     };
   }
 
   return {
     ...inventory,
-    items: inventory.items.map(slot =>
-      slot.itemId === itemId
-        ? { ...slot, quantity: slot.quantity - quantity }
-        : slot
+    items: inventory.items.map((slot) =>
+      slot.itemId === itemId ? { ...slot, quantity: slot.quantity - quantity } : slot,
     ),
   };
 }
 
 /** Check if inventory contains an item */
 export function hasItem(inventory: Inventory, itemId: string, quantity: number = 1): boolean {
-  const slot = inventory.items.find(s => s.itemId === itemId);
+  const slot = inventory.items.find((s) => s.itemId === itemId);
   return slot !== undefined && slot.quantity >= quantity;
 }
 
 /** Get total count of a specific item */
 export function getItemCount(inventory: Inventory, itemId: string): number {
-  const slot = inventory.items.find(s => s.itemId === itemId);
+  const slot = inventory.items.find((s) => s.itemId === itemId);
   return slot?.quantity ?? 0;
 }
 
@@ -226,10 +212,7 @@ export function useItem(character: Character, itemId: string): UseItemResult {
 
   switch (item.effect.type) {
     case 'heal-hp': {
-      const newHealth = Math.min(
-        character.stats.maxHealth,
-        character.stats.health + item.effect.value,
-      );
+      const newHealth = Math.min(character.stats.maxHealth, character.stats.health + item.effect.value);
       const healed = newHealth - character.stats.health;
       return {
         character: {
@@ -242,10 +225,7 @@ export function useItem(character: Character, itemId: string): UseItemResult {
     }
 
     case 'heal-mana': {
-      const newMana = Math.min(
-        character.stats.maxMana,
-        character.stats.mana + item.effect.value,
-      );
+      const newMana = Math.min(character.stats.maxMana, character.stats.mana + item.effect.value);
       const restored = newMana - character.stats.mana;
       return {
         character: {
@@ -258,12 +238,7 @@ export function useItem(character: Character, itemId: string): UseItemResult {
     }
 
     case 'buff-attack': {
-      const buff = createStatusEffect(
-        'attack-up',
-        item.name,
-        item.effect.value,
-        item.effect.duration ?? 3,
-      );
+      const buff = createStatusEffect('attack-up', item.name, item.effect.value, item.effect.duration ?? 3);
       return {
         character: {
           ...character,
@@ -275,12 +250,7 @@ export function useItem(character: Character, itemId: string): UseItemResult {
     }
 
     case 'buff-defense': {
-      const buff = createStatusEffect(
-        'defense-up',
-        item.name,
-        item.effect.value,
-        item.effect.duration ?? 3,
-      );
+      const buff = createStatusEffect('defense-up', item.name, item.effect.value, item.effect.duration ?? 3);
       return {
         character: {
           ...character,
@@ -310,10 +280,7 @@ export function useItem(character: Character, itemId: string): UseItemResult {
 // ─── Loot Resolution ────────────────────────────────────────
 
 /** Roll loot from a monster's loot table */
-export function resolveLoot(
-  lootTable: LootEntry[],
-  rng: RngState,
-): { items: string[]; rng: RngState } {
+export function resolveLoot(lootTable: LootEntry[], rng: RngState): { items: string[]; rng: RngState } {
   const items: string[] = [];
   let currentRng = rng;
 

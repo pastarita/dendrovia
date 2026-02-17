@@ -6,17 +6,10 @@
  * Sits alongside Panel (doesn't replace it).
  */
 
-import React, {
-  useId,
-  useRef,
-  useState,
-  useEffect,
-  type ReactNode,
-  type CSSProperties,
-} from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { useInputCapture } from '../../hooks/useInputCapture';
+import type { FrameVariant, PillarId } from './frames';
 import { FRAME_ORNAMENTS, PILLAR_PALETTES } from './frames';
-import type { PillarId, FrameVariant } from './frames';
 
 export interface OrnateFrameProps {
   children: ReactNode;
@@ -88,13 +81,7 @@ export function OrnateFrame({
   // Sanitize useId() output for SVG ID refs (colons are invalid in url(#...))
   const id = uid.replace(/:/g, '_');
 
-  const classes = [
-    'ornate-frame',
-    `ornate-frame--${variant}`,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = ['ornate-frame', `ornate-frame--${variant}`, className].filter(Boolean).join(' ');
 
   const frameStyle: CSSProperties = {
     ...style,
@@ -122,62 +109,18 @@ export function OrnateFrame({
           <ornaments.Defs id={id} palette={palette} />
 
           {/* Corners: TL, TR, BL, BR */}
-          <ornaments.Corner
-            id={id} x={0} y={0}
-            size={cornerSize}
-            mirror={[false, false]}
-            palette={palette}
-          />
-          <ornaments.Corner
-            id={id} x={w} y={0}
-            size={cornerSize}
-            mirror={[true, false]}
-            palette={palette}
-          />
-          <ornaments.Corner
-            id={id} x={0} y={h}
-            size={cornerSize}
-            mirror={[false, true]}
-            palette={palette}
-          />
-          <ornaments.Corner
-            id={id} x={w} y={h}
-            size={cornerSize}
-            mirror={[true, true]}
-            palette={palette}
-          />
+          <ornaments.Corner id={id} x={0} y={0} size={cornerSize} mirror={[false, false]} palette={palette} />
+          <ornaments.Corner id={id} x={w} y={0} size={cornerSize} mirror={[true, false]} palette={palette} />
+          <ornaments.Corner id={id} x={0} y={h} size={cornerSize} mirror={[false, true]} palette={palette} />
+          <ornaments.Corner id={id} x={w} y={h} size={cornerSize} mirror={[true, true]} palette={palette} />
 
           {/* Edges (modal + panel only) */}
           {showEdges && (
             <>
-              <ornaments.EdgeH
-                id={id}
-                x={cornerSize}
-                y={0}
-                length={w - cornerSize * 2}
-                palette={palette}
-              />
-              <ornaments.EdgeH
-                id={id}
-                x={cornerSize}
-                y={h}
-                length={w - cornerSize * 2}
-                palette={palette}
-              />
-              <ornaments.EdgeV
-                id={id}
-                x={0}
-                y={cornerSize}
-                length={h - cornerSize * 2}
-                palette={palette}
-              />
-              <ornaments.EdgeV
-                id={id}
-                x={w}
-                y={cornerSize}
-                length={h - cornerSize * 2}
-                palette={palette}
-              />
+              <ornaments.EdgeH id={id} x={cornerSize} y={0} length={w - cornerSize * 2} palette={palette} />
+              <ornaments.EdgeH id={id} x={cornerSize} y={h} length={w - cornerSize * 2} palette={palette} />
+              <ornaments.EdgeV id={id} x={0} y={cornerSize} length={h - cornerSize * 2} palette={palette} />
+              <ornaments.EdgeV id={id} x={w} y={cornerSize} length={h - cornerSize * 2} palette={palette} />
             </>
           )}
         </svg>
@@ -186,17 +129,13 @@ export function OrnateFrame({
       {/* Header slot (modal variant only) */}
       {variant === 'modal' && header && (
         <div className="ornate-frame__header">
-          {headerIcon && (
-            <span className="ornate-frame__header-icon">{headerIcon}</span>
-          )}
+          {headerIcon && <span className="ornate-frame__header-icon">{headerIcon}</span>}
           {header}
         </div>
       )}
 
       {/* Content */}
-      <div className="ornate-frame__content">
-        {children}
-      </div>
+      <div className="ornate-frame__content">{children}</div>
     </div>
   );
 }

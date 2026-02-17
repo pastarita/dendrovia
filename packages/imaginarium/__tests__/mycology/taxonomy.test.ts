@@ -1,6 +1,6 @@
-import { describe, test, expect } from 'bun:test';
-import type { ParsedFile, CodeTopology } from '@dendrovia/shared';
-import { classifyGenus, buildTaxonomy, buildFileContext, buildCoChurnMap } from '../../src/mycology/GenusMapper';
+import { describe, expect, test } from 'bun:test';
+import type { CodeTopology, ParsedFile } from '@dendrovia/shared';
+import { buildCoChurnMap, buildFileContext, buildTaxonomy, classifyGenus } from '../../src/mycology/GenusMapper';
 import type { FungalGenus } from '../../src/mycology/types';
 import { generateMockTopology } from '../../src/pipeline/MockTopology';
 
@@ -26,7 +26,7 @@ function makeTopology(files: ParsedFile[], hotspotPaths: string[] = []): CodeTop
         message: 'init',
         author: 'dev',
         date: new Date('2025-01-01'),
-        filesChanged: files.map(f => f.path),
+        filesChanged: files.map((f) => f.path),
         insertions: 100,
         deletions: 0,
         isBugFix: false,
@@ -35,7 +35,7 @@ function makeTopology(files: ParsedFile[], hotspotPaths: string[] = []): CodeTop
       },
     ],
     tree: { name: 'root', path: '', type: 'directory', children: [] },
-    hotspots: hotspotPaths.map(p => ({ path: p, churnRate: 10, complexity: 10, riskScore: 0.5 })),
+    hotspots: hotspotPaths.map((p) => ({ path: p, churnRate: 10, complexity: 10, riskScore: 0.5 })),
   };
 }
 
@@ -182,18 +182,21 @@ describe('Full taxonomy', () => {
 
 describe('Co-churn map', () => {
   test('files changed together are connected', () => {
-    const files = [
-      makeFile({ path: 'a.ts' }),
-      makeFile({ path: 'b.ts' }),
-      makeFile({ path: 'c.ts' }),
-    ];
+    const files = [makeFile({ path: 'a.ts' }), makeFile({ path: 'b.ts' }), makeFile({ path: 'c.ts' })];
     const topology: CodeTopology = {
       files,
       commits: [
         {
-          hash: 'c1', message: 'feat', author: 'dev', date: new Date(),
-          filesChanged: ['a.ts', 'b.ts'], insertions: 10, deletions: 0,
-          isBugFix: false, isFeature: true, isMerge: false,
+          hash: 'c1',
+          message: 'feat',
+          author: 'dev',
+          date: new Date(),
+          filesChanged: ['a.ts', 'b.ts'],
+          insertions: 10,
+          deletions: 0,
+          isBugFix: false,
+          isFeature: true,
+          isMerge: false,
         },
       ],
       tree: { name: 'root', path: '', type: 'directory' },

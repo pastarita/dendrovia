@@ -8,10 +8,7 @@ import type { FileTreeNode, ParsedFile } from '@dendrovia/shared';
  * Build a FileTreeNode tree from a list of parsed files.
  * Paths are split on '/' to create the directory hierarchy.
  */
-export function buildFileTree(
-  files: ParsedFile[],
-  rootName: string = 'root',
-): FileTreeNode {
+export function buildFileTree(files: ParsedFile[], rootName: string = 'root'): FileTreeNode {
   const root: FileTreeNode = {
     name: rootName,
     path: '',
@@ -35,11 +32,7 @@ export function buildFileTree(
   return root;
 }
 
-function insertPath(
-  node: FileTreeNode,
-  segments: string[],
-  metadata: ParsedFile,
-): void {
+function insertPath(node: FileTreeNode, segments: string[], metadata: ParsedFile): void {
   if (segments.length === 0) return;
 
   if (!node.children) node.children = [];
@@ -48,7 +41,7 @@ function insertPath(
   const currentPath = node.path ? `${node.path}/${head}` : head;
 
   // Find or create child
-  let child = node.children.find(c => c.name === head);
+  let child = node.children.find((c) => c.name === head);
 
   if (!child) {
     child = {

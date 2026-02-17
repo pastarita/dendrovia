@@ -8,7 +8,7 @@
  * Low churn  + high complexity = dormant threat (sleeping dragon)
  */
 
-import type { Hotspot, ParsedFile, ParsedCommit, TemporalCoupling } from '@dendrovia/shared';
+import type { Hotspot, ParsedCommit, ParsedFile, TemporalCoupling } from '@dendrovia/shared';
 
 export type { TemporalCoupling } from '@dendrovia/shared';
 
@@ -40,7 +40,7 @@ export function detectHotspots(
   // Calculate hotspots
   const allPaths = new Set([...churnMap.keys(), ...complexityMap.keys()]);
   const maxChurn = Math.max(...churnMap.values(), 1);
-  const complexities = [...complexityMap.values()].filter(v => v > 0);
+  const complexities = [...complexityMap.values()].filter((v) => v > 0);
   const maxComplexity = Math.max(...complexities, 1);
   const minComplexity = Math.min(...complexities, 0);
 
@@ -51,15 +51,11 @@ export function detectHotspots(
     const complexity = complexityMap.get(path) || 0;
 
     // Log-normalized churn (handles power-law distribution)
-    const churnNorm = churn > 0
-      ? Math.log(churn + 1) / Math.log(maxChurn + 1)
-      : 0;
+    const churnNorm = churn > 0 ? Math.log(churn + 1) / Math.log(maxChurn + 1) : 0;
 
     // Linear-normalized complexity
     const range = maxComplexity - minComplexity;
-    const complexityNorm = range > 0
-      ? (complexity - minComplexity) / range
-      : 0;
+    const complexityNorm = range > 0 ? (complexity - minComplexity) / range : 0;
 
     const riskScore = churnNorm * complexityNorm;
 
@@ -113,9 +109,7 @@ function detectTemporalCouplings(
     for (let i = 0; i < files.length; i++) {
       for (let j = i + 1; j < files.length; j++) {
         // Canonical key (sorted)
-        const key = files[i] < files[j]
-          ? `${files[i]}\0${files[j]}`
-          : `${files[j]}\0${files[i]}`;
+        const key = files[i] < files[j] ? `${files[i]}\0${files[j]}` : `${files[j]}\0${files[i]}`;
         coOccurrences.set(key, (coOccurrences.get(key) || 0) + 1);
       }
     }

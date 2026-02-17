@@ -31,15 +31,8 @@ export interface SWController {
  * Register the OPERATUS service worker.
  * No-ops in environments where SW is unavailable (non-HTTPS, SSR).
  */
-export async function registerServiceWorker(
-  config: SWRegistrationConfig = {},
-): Promise<SWController> {
-  const {
-    swPath = '/sw.js',
-    scope = '/',
-    onUpdate,
-    onInstall,
-  } = config;
+export async function registerServiceWorker(config: SWRegistrationConfig = {}): Promise<SWController> {
+  const { swPath = '/sw.js', scope = '/', onUpdate, onInstall } = config;
 
   const controller: SWController = {
     registration: null,
@@ -90,7 +83,6 @@ export async function registerServiceWorker(
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       // Optionally reload the page to use new assets
     });
-
   } catch (err) {
     console.warn('[OPERATUS] Service worker registration failed:', err);
   }

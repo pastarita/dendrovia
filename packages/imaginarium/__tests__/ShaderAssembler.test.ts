@@ -1,6 +1,6 @@
-import { describe, test, expect } from 'bun:test';
-import { assembleShader, buildColorParameters } from '../src/shaders/ShaderAssembler';
+import { describe, expect, test } from 'bun:test';
 import type { ProceduralPalette } from '@dendrovia/shared';
+import { assembleShader, buildColorParameters } from '../src/shaders/ShaderAssembler';
 
 const testPalette: ProceduralPalette = {
   primary: '#3178c6',

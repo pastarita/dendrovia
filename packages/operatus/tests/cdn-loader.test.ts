@@ -7,7 +7,7 @@
  */
 
 import './setup.js';
-import { describe, test, expect, beforeEach } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { CDNLoader } from '../src/loader/CDNLoader.js';
 
 // Minimal CacheManager mock that tracks calls
@@ -53,13 +53,27 @@ function createMockCache() {
       hashStore.clear();
     },
     async stats() {
-      return { memory: store.size, persistent: { entryCount: 0, totalBytes: 0, oldestEntry: null }, opfsAvailable: false };
+      return {
+        memory: store.size,
+        persistent: { entryCount: 0, totalBytes: 0, oldestEntry: null },
+        opfsAvailable: false,
+      };
     },
-    async getStorageQuota() { return null; },
-    async requestPersistentStorage() { return false; },
-    async evictOlderThan() { return 0; },
-    async listEntries() { return []; },
-    get isOPFSActive() { return false; },
+    async getStorageQuota() {
+      return null;
+    },
+    async requestPersistentStorage() {
+      return false;
+    },
+    async evictOlderThan() {
+      return 0;
+    },
+    async listEntries() {
+      return [];
+    },
+    get isOPFSActive() {
+      return false;
+    },
   };
 }
 

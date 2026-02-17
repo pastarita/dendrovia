@@ -6,15 +6,20 @@
 export type SDFTier = 'simple-trunk' | 'binary-branch' | 'complex-tree' | 'dense-canopy' | 'twisted-spire';
 
 export const DEFAULT_SDFS: Map<SDFTier, string> = new Map([
-  ['simple-trunk', `
+  [
+    'simple-trunk',
+    `
 float scene(vec3 p) {
   float trunk = sdCapsule(p, vec3(0.0, 0.0, 0.0), vec3(0.0, 4.0, 0.0), 0.3);
   float crown = sdSphere(p - vec3(0.0, 4.5, 0.0), 1.2);
   return opSmoothUnion(trunk, crown, 0.5);
 }
-`],
+`,
+  ],
 
-  ['binary-branch', `
+  [
+    'binary-branch',
+    `
 float scene(vec3 p) {
   float trunk = sdCapsule(p, vec3(0.0, 0.0, 0.0), vec3(0.0, 3.0, 0.0), 0.25);
   float b1 = sdCapsule(p, vec3(0.0, 2.5, 0.0), vec3(1.5, 4.5, 0.5), 0.15);
@@ -23,9 +28,12 @@ float scene(vec3 p) {
   d = opSmoothUnion(d, b2, 0.3);
   return d;
 }
-`],
+`,
+  ],
 
-  ['complex-tree', `
+  [
+    'complex-tree',
+    `
 float scene(vec3 p) {
   float trunk = sdCapsule(p, vec3(0.0, 0.0, 0.0), vec3(0.0, 3.5, 0.0), 0.3);
   float b1 = sdCapsule(p, vec3(0.0, 2.0, 0.0), vec3(1.8, 4.0, 0.8), 0.15);
@@ -40,9 +48,12 @@ float scene(vec3 p) {
   d = opSmoothUnion(d, b5, 0.2);
   return d;
 }
-`],
+`,
+  ],
 
-  ['dense-canopy', `
+  [
+    'dense-canopy',
+    `
 float scene(vec3 p) {
   float trunk = sdCapsule(p, vec3(0.0, 0.0, 0.0), vec3(0.0, 3.0, 0.0), 0.35);
   float b1 = sdCapsule(p, vec3(0.0, 1.5, 0.0), vec3(2.0, 3.5, 1.0), 0.18);
@@ -61,9 +72,12 @@ float scene(vec3 p) {
   d = opSmoothUnion(d, b7, 0.15);
   return d;
 }
-`],
+`,
+  ],
 
-  ['twisted-spire', `
+  [
+    'twisted-spire',
+    `
 float scene(vec3 p) {
   vec3 tp = opTwist(p, 0.3);
   float trunk = sdCapsule(tp, vec3(0.0, 0.0, 0.0), vec3(0.0, 5.0, 0.0), 0.2);
@@ -77,7 +91,8 @@ float scene(vec3 p) {
   d = opSmoothUnion(d, spire, 0.15);
   return d;
 }
-`],
+`,
+  ],
 ]);
 
 export function getDefaultSDF(avgComplexity: number): { tier: SDFTier; glsl: string } {

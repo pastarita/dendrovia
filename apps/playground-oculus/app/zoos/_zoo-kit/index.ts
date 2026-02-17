@@ -7,29 +7,28 @@
  *   3. Render <ZooShell config={config} />
  */
 
-export { ZooShell } from './ZooShell';
-export { ZooFilterBar } from './ZooFilterBar';
-export { ZooExhibitCard } from './ZooExhibitCard';
-export { ZooInspector } from './ZooInspector';
 export { PropPlayground } from './PropPlayground';
-
 export type {
-  ZooViewMode,
-  ZooCategory,
-  ZooSortDimension,
-  PropControl,
   ExhibitRenderProps,
+  PropControl,
+  ZooCategory,
   ZooExhibitDescriptor,
   ZooPageConfig,
+  ZooSortDimension,
+  ZooViewMode,
 } from './types';
+export { ZooExhibitCard } from './ZooExhibitCard';
+export { ZooFilterBar } from './ZooFilterBar';
+export { ZooInspector } from './ZooInspector';
+export { ZooShell } from './ZooShell';
 
 export {
-  tabStyle,
   cardStyle,
-  listRowStyle,
-  inspectorStyle,
-  sectionHeaderStyle,
   categoryBadgeStyle,
-  emptyStateStyle,
   countStyle,
+  emptyStateStyle,
+  inspectorStyle,
+  listRowStyle,
+  sectionHeaderStyle,
+  tabStyle,
 } from './zoo-styles';

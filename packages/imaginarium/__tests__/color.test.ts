@@ -1,18 +1,24 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import {
-  rgbToOklch, oklchToRgb, oklchToHex, hexToRgb, rgbToHex, hexToOklch,
-  harmonize, colorTemperature, blendColors, hslToHex,
-  type OklchColor,
+  blendColors,
+  colorTemperature,
+  harmonize,
+  hexToOklch,
+  hexToRgb,
+  hslToHex,
+  oklchToHex,
+  oklchToRgb,
+  rgbToOklch,
 } from '../src/utils/color';
 
 describe('OKLCH round-trip', () => {
   test('RGB -> OKLCH -> RGB preserves colors', () => {
     const testColors = [
-      { r: 255, g: 0, b: 0 },    // Red
-      { r: 0, g: 255, b: 0 },    // Green
-      { r: 0, g: 0, b: 255 },    // Blue
+      { r: 255, g: 0, b: 0 }, // Red
+      { r: 0, g: 255, b: 0 }, // Green
+      { r: 0, g: 0, b: 255 }, // Blue
       { r: 128, g: 128, b: 128 }, // Gray
-      { r: 255, g: 255, b: 0 },   // Yellow
+      { r: 255, g: 255, b: 0 }, // Yellow
     ];
 
     for (const rgb of testColors) {

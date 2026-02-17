@@ -4,77 +4,69 @@
  * Covers: QuestGenerator, EncounterSystem, InventorySystem, ProgressionSystem, EventWiring
  */
 
-import { describe, it, expect, beforeEach } from 'bun:test';
-
-// Seeded RNG
-import { createRngState } from '../src/utils/SeededRandom.js';
-
-// Quest Generator
-import {
-  generateQuestGraph,
-  generateBugHuntQuests,
-  generateArchaeologyQuests,
-  generateHotspotQuests,
-  unlockAvailableQuests,
-  startQuest,
-  completeQuest,
-  getQuestsByStatus,
-  getQuestRewards,
-  resetQuestIds,
-} from '../src/quest/QuestGenerator.js';
-
+import { beforeEach, describe, expect, it } from 'bun:test';
+import type { Character, Hotspot, Monster, ParsedCommit, ParsedFile, Quest, RngState } from '@dendrovia/shared';
+import { createCharacter } from '../src/character/CharacterSystem.js';
+import { createMonster } from '../src/combat/MonsterFactory.js';
+// Combat (for building test states)
+import { executeTurn, initBattle } from '../src/combat/TurnBasedEngine.js';
 // Encounter System
 import {
   checkEncounter,
   createEncounterState,
-  markBossDefeated,
-  markMinibossDefeated,
-  markBugDefeated,
-  scanAllEncounters,
-  getEncounterDensity,
   DEFAULT_CONFIG,
+  getEncounterDensity,
+  markBossDefeated,
+  markBugDefeated,
+  markMinibossDefeated,
+  scanAllEncounters,
 } from '../src/encounter/EncounterSystem.js';
-
-// Inventory System
-import {
-  getItem,
-  getAllItems,
-  createInventory,
-  addItem,
-  removeItem,
-  hasItem,
-  getItemCount,
-  useItem,
-  resolveLoot,
-  resolveLootToInventory,
-} from '../src/inventory/InventorySystem.js';
-
-// Progression System
-import {
-  resolveBattleRewards,
-  applyBattleRewards,
-  applyQuestRewards,
-  updateBattleStatistics,
-  createBattleStatistics,
-  buildVictoryScreen,
-} from '../src/progression/ProgressionSystem.js';
-
-// Combat (for building test states)
-import { initBattle, executeTurn } from '../src/combat/TurnBasedEngine.js';
 
 // Event Wiring
 import {
   createGameSession,
-  wireGameEvents,
-  startBattle,
   dispatchCombatAction,
+  startBattle,
+  wireGameEvents,
 } from '../src/integration/EventWiring.js';
+// Inventory System
+import {
+  addItem,
+  createInventory,
+  getAllItems,
+  getItem,
+  getItemCount,
+  hasItem,
+  removeItem,
+  resolveLoot,
+  resolveLootToInventory,
+  useItem,
+} from '../src/inventory/InventorySystem.js';
+// Progression System
+import {
+  applyBattleRewards,
+  applyQuestRewards,
+  buildVictoryScreen,
+  createBattleStatistics,
+  resolveBattleRewards,
+  updateBattleStatistics,
+} from '../src/progression/ProgressionSystem.js';
+// Quest Generator
+import {
+  completeQuest,
+  generateArchaeologyQuests,
+  generateBugHuntQuests,
+  generateHotspotQuests,
+  generateQuestGraph,
+  getQuestRewards,
+  getQuestsByStatus,
+  resetQuestIds,
+  startQuest,
+  unlockAvailableQuests,
+} from '../src/quest/QuestGenerator.js';
 import { createGameStore } from '../src/state/GameStore.js';
-import { createCharacter } from '../src/character/CharacterSystem.js';
-import { createMonster } from '../src/combat/MonsterFactory.js';
-
-import type { ParsedCommit, ParsedFile, Hotspot, Character, Monster, RngState, Quest, BattleState } from '@dendrovia/shared';
-import { EventBus, getEventBus, GameEvents } from '@dendrovia/shared';
+// Seeded RNG
+import { createRngState } from '../src/utils/SeededRandom.js';
 
 // ─── Test Helpers ───────────────────────────────────────────
 
@@ -235,7 +227,7 @@ describe('QuestGenerator', () => {
     ];
     const bugQuests = generateBugHuntQuests(commits);
     expect(bugQuests).toHaveLength(2);
-    expect(bugQuests.every(q => q.type === 'bug-hunt')).toBe(true);
+    expect(bugQuests.every((q) => q.type === 'bug-hunt')).toBe(true);
   });
 
   it('should generate archaeology quests from complex files', () => {
@@ -246,7 +238,7 @@ describe('QuestGenerator', () => {
     ];
     const quests = generateArchaeologyQuests(files, 15);
     expect(quests).toHaveLength(2);
-    expect(quests.every(q => q.type === 'archaeology')).toBe(true);
+    expect(quests.every((q) => q.type === 'archaeology')).toBe(true);
   });
 
   it('should generate hotspot quests', () => {
@@ -262,9 +254,33 @@ describe('QuestGenerator', () => {
   describe('Quest State Management', () => {
     it('should unlock quests when prerequisites are met', () => {
       const quests: Quest[] = [
-        { id: 'q1', title: 'Q1', description: '', type: 'bug-hunt', status: 'completed', requirements: [], rewards: [] },
-        { id: 'q2', title: 'Q2', description: '', type: 'bug-hunt', status: 'locked', requirements: ['q1'], rewards: [] },
-        { id: 'q3', title: 'Q3', description: '', type: 'bug-hunt', status: 'locked', requirements: ['q2'], rewards: [] },
+        {
+          id: 'q1',
+          title: 'Q1',
+          description: '',
+          type: 'bug-hunt',
+          status: 'completed',
+          requirements: [],
+          rewards: [],
+        },
+        {
+          id: 'q2',
+          title: 'Q2',
+          description: '',
+          type: 'bug-hunt',
+          status: 'locked',
+          requirements: ['q1'],
+          rewards: [],
+        },
+        {
+          id: 'q3',
+          title: 'Q3',
+          description: '',
+          type: 'bug-hunt',
+          status: 'locked',
+          requirements: ['q2'],
+          rewards: [],
+        },
       ];
       const unlocked = unlockAvailableQuests(quests, new Set(['q1']));
       expect(unlocked[1].status).toBe('available');
@@ -273,7 +289,15 @@ describe('QuestGenerator', () => {
 
     it('should start an available quest', () => {
       const quests: Quest[] = [
-        { id: 'q1', title: 'Q1', description: '', type: 'bug-hunt', status: 'available', requirements: [], rewards: [] },
+        {
+          id: 'q1',
+          title: 'Q1',
+          description: '',
+          type: 'bug-hunt',
+          status: 'available',
+          requirements: [],
+          rewards: [],
+        },
       ];
       const updated = startQuest(quests, 'q1');
       expect(updated[0].status).toBe('active');
@@ -281,7 +305,15 @@ describe('QuestGenerator', () => {
 
     it('should not start a locked quest', () => {
       const quests: Quest[] = [
-        { id: 'q1', title: 'Q1', description: '', type: 'bug-hunt', status: 'locked', requirements: ['q0'], rewards: [] },
+        {
+          id: 'q1',
+          title: 'Q1',
+          description: '',
+          type: 'bug-hunt',
+          status: 'locked',
+          requirements: ['q0'],
+          rewards: [],
+        },
       ];
       const updated = startQuest(quests, 'q1');
       expect(updated[0].status).toBe('locked');
@@ -290,7 +322,15 @@ describe('QuestGenerator', () => {
     it('should complete a quest and unlock dependents', () => {
       const quests: Quest[] = [
         { id: 'q1', title: 'Q1', description: '', type: 'bug-hunt', status: 'active', requirements: [], rewards: [] },
-        { id: 'q2', title: 'Q2', description: '', type: 'feature', status: 'locked', requirements: ['q1'], rewards: [] },
+        {
+          id: 'q2',
+          title: 'Q2',
+          description: '',
+          type: 'feature',
+          status: 'locked',
+          requirements: ['q1'],
+          rewards: [],
+        },
       ];
       const updated = completeQuest(quests, 'q1');
       expect(updated[0].status).toBe('completed');
@@ -528,7 +568,7 @@ describe('InventorySystem', () => {
     it('should apply attack buff', () => {
       const result = useItem(player, 'item-root-cause');
       expect(result.consumed).toBe(true);
-      expect(result.character.statusEffects.some(e => e.type === 'attack-up')).toBe(true);
+      expect(result.character.statusEffects.some((e) => e.type === 'attack-up')).toBe(true);
     });
 
     it('should cleanse debuffs with rubber duck', () => {
@@ -563,10 +603,8 @@ describe('InventorySystem', () => {
 
     it('should resolve loot to inventory', () => {
       const rng = createRngState(42);
-      const lootTable = [
-        { itemId: 'item-debug-log', chance: 1.0 },
-      ];
-      let inv = createInventory();
+      const lootTable = [{ itemId: 'item-debug-log', chance: 1.0 }];
+      const inv = createInventory();
       const result = resolveLootToInventory(lootTable, inv, rng);
       expect(hasItem(result.inventory, 'item-debug-log')).toBe(true);
     });
@@ -636,7 +674,7 @@ describe('ProgressionSystem', () => {
     expect(result.character.level).toBe(6);
     expect(result.levelUpResult.leveledUp).toBe(true);
     expect(hasItem(result.inventory, 'item-debug-log')).toBe(true);
-    expect(result.log.some(l => l.includes('LEVEL UP'))).toBe(true);
+    expect(result.log.some((l) => l.includes('LEVEL UP'))).toBe(true);
   });
 
   it('should apply quest rewards', () => {
@@ -675,7 +713,11 @@ describe('ProgressionSystem', () => {
       state = executeTurn(state, { type: 'ATTACK', targetIndex: 0 });
 
       stats = updateBattleStatistics(stats, state, {
-        xp: 50, lootItems: [], monstersDefeated: 1, bossDefeated: false, turnsElapsed: 1,
+        xp: 50,
+        lootItems: [],
+        monstersDefeated: 1,
+        bossDefeated: false,
+        turnsElapsed: 1,
       });
 
       expect(stats.totalBattles).toBe(1);
@@ -693,7 +735,11 @@ describe('ProgressionSystem', () => {
       state = executeTurn(state, { type: 'ATTACK', targetIndex: 0 });
 
       stats = updateBattleStatistics(stats, state, {
-        xp: 25, lootItems: [], monstersDefeated: 1, bossDefeated: false, turnsElapsed: 1,
+        xp: 25,
+        lootItems: [],
+        monstersDefeated: 1,
+        bossDefeated: false,
+        turnsElapsed: 1,
       });
 
       expect(stats.fastestVictory).toBe(1);
@@ -807,7 +853,7 @@ describe('EventWiring', () => {
 
     startBattle(session, [weakMonster]);
 
-    const result = dispatchCombatAction(session, { type: 'ATTACK', targetIndex: 0 });
+    const _result = dispatchCombatAction(session, { type: 'ATTACK', targetIndex: 0 });
     // Should have ended in victory, clearing battleState
     const state = store.getState();
     expect(state.battleState).toBeNull();

@@ -2,8 +2,7 @@
  * CHRONOS ornaments — Scroll curl terminals, strata band lines
  */
 
-import React from 'react';
-import type { CornerProps, EdgeProps, DefsProps, FrameOrnamentSet } from './types';
+import type { CornerProps, DefsProps, EdgeProps, FrameOrnamentSet } from './types';
 
 function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
   const [flipX, flipY] = mirror;
@@ -21,21 +20,9 @@ function Corner({ id, x, y, size, mirror, palette }: CornerProps) {
         strokeLinecap="round"
       />
       {/* Curl spiral inward */}
-      <path
-        d={`M 4 0 Q 8 4 6 8 Q 4 12 8 10`}
-        fill="none"
-        stroke={palette.secondary}
-        strokeWidth="1"
-        opacity="0.5"
-      />
+      <path d={`M 4 0 Q 8 4 6 8 Q 4 12 8 10`} fill="none" stroke={palette.secondary} strokeWidth="1" opacity="0.5" />
       {/* Strata dot */}
-      <circle
-        cx={size * 0.3}
-        cy={size * 0.3}
-        r={2}
-        fill={palette.accent}
-        opacity="0.4"
-      />
+      <circle cx={size * 0.3} cy={size * 0.3} r={2} fill={palette.accent} opacity="0.4" />
     </g>
   );
 }
@@ -48,19 +35,15 @@ function EdgeH({ id, x, y, length, palette }: EdgeProps) {
   return (
     <g transform={`translate(${x},${y})`}>
       {/* Main line */}
-      <line
-        x1={0} y1={0}
-        x2={length} y2={0}
-        stroke={palette.primary}
-        strokeWidth="1"
-        opacity="0.2"
-      />
+      <line x1={0} y1={0} x2={length} y2={0} stroke={palette.primary} strokeWidth="1" opacity="0.2" />
       {/* Strata tick marks */}
       {Array.from({ length: bands + 1 }, (_, i) => (
         <line
           key={i}
-          x1={i * gap} y1={-3}
-          x2={i * gap} y2={3}
+          x1={i * gap}
+          y1={-3}
+          x2={i * gap}
+          y2={3}
           stroke={palette.secondary}
           strokeWidth="1"
           opacity={0.2 + 0.15 * (i % 2)}
@@ -77,18 +60,14 @@ function EdgeV({ id, x, y, length, palette }: EdgeProps) {
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <line
-        x1={0} y1={0}
-        x2={0} y2={length}
-        stroke={palette.primary}
-        strokeWidth="1"
-        opacity="0.2"
-      />
+      <line x1={0} y1={0} x2={0} y2={length} stroke={palette.primary} strokeWidth="1" opacity="0.2" />
       {Array.from({ length: bands + 1 }, (_, i) => (
         <line
           key={i}
-          x1={-3} y1={i * gap}
-          x2={3} y2={i * gap}
+          x1={-3}
+          y1={i * gap}
+          x2={3}
+          y2={i * gap}
           stroke={palette.secondary}
           strokeWidth="1"
           opacity={0.2 + 0.15 * (i % 2)}

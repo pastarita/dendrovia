@@ -1,6 +1,6 @@
 'use client';
 
-import { StatLabel, Panel } from '@dendrovia/oculus';
+import { Panel, StatLabel } from '@dendrovia/oculus';
 import type { ExhibitRenderProps } from '../../_zoo-kit/types';
 
 const COLOR_VARIATIONS = [

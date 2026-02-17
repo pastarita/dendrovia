@@ -1,5 +1,5 @@
-import { describe, test, expect } from 'bun:test';
-import type { ParsedFile, CodeTopology } from '@dendrovia/shared';
+import { describe, expect, test } from 'bun:test';
+import type { CodeTopology, ParsedFile } from '@dendrovia/shared';
 import { catalogize } from '../../src/mycology/SpecimenCatalog';
 import { generateMockTopology } from '../../src/pipeline/MockTopology';
 
@@ -41,7 +41,7 @@ describe('Specimen catalogization', () => {
 
     const specimens = catalogize(topology);
 
-    const paths = specimens.map(s => s.filePath);
+    const paths = specimens.map((s) => s.filePath);
     expect(paths).toContain('src/module.ts');
     expect(paths).not.toContain('.gitignore');
     expect(paths).not.toContain('src/tiny.ts');
@@ -91,7 +91,7 @@ describe('Specimen catalogization', () => {
   test('specimens have unique IDs', () => {
     const topology = generateMockTopology(50, ['typescript', 'javascript'], 42);
     const specimens = catalogize(topology);
-    const ids = specimens.map(s => s.id);
+    const ids = specimens.map((s) => s.id);
     const uniqueIds = new Set(ids);
     expect(uniqueIds.size).toBe(ids.length);
   });
@@ -103,8 +103,8 @@ describe('Placement hints', () => {
     const specimens = catalogize(topology);
 
     // Check that not all positions are identical
-    const positions = specimens.map(s => s.placement.position);
-    const uniqueX = new Set(positions.map(p => Math.round(p[0])));
+    const positions = specimens.map((s) => s.placement.position);
+    const uniqueX = new Set(positions.map((p) => Math.round(p[0])));
     expect(uniqueX.size).toBeGreaterThan(1);
   });
 
@@ -116,7 +116,7 @@ describe('Placement hints', () => {
         hash: `h${i}`,
         complexity: 2,
         loc: 20,
-      })
+      }),
     );
     const topology: CodeTopology = {
       files,
@@ -126,7 +126,7 @@ describe('Placement hints', () => {
     };
 
     const specimens = catalogize(topology);
-    const mycenaSpecimens = specimens.filter(s => s.taxonomy.genus === 'Mycena');
+    const mycenaSpecimens = specimens.filter((s) => s.taxonomy.genus === 'Mycena');
 
     for (const s of mycenaSpecimens) {
       expect(s.placement.clusterSize).toBeGreaterThan(1);
@@ -150,7 +150,7 @@ describe('Placement hints', () => {
     };
 
     const specimens = catalogize(topology);
-    const tuberSpecimens = specimens.filter(s => s.taxonomy.genus === 'Tuber');
+    const tuberSpecimens = specimens.filter((s) => s.taxonomy.genus === 'Tuber');
 
     for (const s of tuberSpecimens) {
       expect(s.placement.substrate).toBe('subterranean');
@@ -182,9 +182,9 @@ describe('Determinism', () => {
     const catalog2 = catalogize(topology2);
 
     // At least some specimens should differ
-    const ids1 = new Set(catalog1.map(s => s.id));
-    const ids2 = new Set(catalog2.map(s => s.id));
-    const overlap = [...ids1].filter(id => ids2.has(id));
+    const ids1 = new Set(catalog1.map((s) => s.id));
+    const ids2 = new Set(catalog2.map((s) => s.id));
+    const overlap = [...ids1].filter((id) => ids2.has(id));
     expect(overlap.length).toBeLessThan(catalog1.length);
   });
 });

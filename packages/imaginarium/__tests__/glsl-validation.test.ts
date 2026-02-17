@@ -1,7 +1,12 @@
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import {
-  validateGLSL, countInstructions,
-  glslFloat, glslVec3, glslVec3FromHex, glslUniform, glslFunction,
+  countInstructions,
+  glslFloat,
+  glslFunction,
+  glslUniform,
+  glslVec3,
+  glslVec3FromHex,
+  validateGLSL,
 } from '../src/utils/glsl';
 
 describe('glsl helpers', () => {
@@ -51,19 +56,19 @@ void main() {
   test('detects unresolved placeholders', () => {
     const result = validateGLSL('void main() { {{BODY}} }');
     expect(result.valid).toBe(false);
-    expect(result.errors.some(e => e.includes('placeholder'))).toBe(true);
+    expect(result.errors.some((e) => e.includes('placeholder'))).toBe(true);
   });
 
   test('detects unclosed braces', () => {
     const result = validateGLSL('void main() { float x = 1.0;');
     expect(result.valid).toBe(false);
-    expect(result.errors.some(e => e.includes('brace'))).toBe(true);
+    expect(result.errors.some((e) => e.includes('brace'))).toBe(true);
   });
 
   test('detects missing entry point', () => {
     const result = validateGLSL('float helper(vec3 p) { return 1.0; }');
     expect(result.valid).toBe(false);
-    expect(result.errors.some(e => e.includes('entry point') || e.includes('main'))).toBe(true);
+    expect(result.errors.some((e) => e.includes('entry point') || e.includes('main'))).toBe(true);
   });
 
   test('accepts scene() as entry point', () => {

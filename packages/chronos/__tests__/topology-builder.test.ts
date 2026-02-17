@@ -1,13 +1,9 @@
-import { describe, test, expect } from 'bun:test';
-import {
-  buildTopology,
-  type TopologyInput,
-  type TopologyOutput,
-} from '../src/builder/TopologyBuilder';
-import type { ParsedFile, ParsedCommit, FileTreeNode, Hotspot } from '@dendrovia/shared';
+import { describe, expect, test } from 'bun:test';
+import type { FileTreeNode, Hotspot, ParsedCommit, ParsedFile } from '@dendrovia/shared';
 import type { FunctionComplexity } from '../src/analyzer/ComplexityAnalyzer';
 import type { TemporalCoupling } from '../src/analyzer/HotspotDetector';
 import type { ContributorProfile } from '../src/builder/ContributorProfiler';
+import { buildTopology, type TopologyInput } from '../src/builder/TopologyBuilder';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -45,9 +41,12 @@ function makeTree(): FileTreeNode {
     path: '',
     type: 'directory',
     children: [
-      { name: 'src', path: 'src', type: 'directory', children: [
-        { name: 'index.ts', path: 'src/index.ts', type: 'file' },
-      ]},
+      {
+        name: 'src',
+        path: 'src',
+        type: 'directory',
+        children: [{ name: 'index.ts', path: 'src/index.ts', type: 'file' }],
+      },
     ],
   };
 }
@@ -177,7 +176,7 @@ describe('buildTopology — complexity output', () => {
       files: [makeFile('zero.ts', 0), makeFile('nonzero.ts', 5)],
     });
     const output = buildTopology(input);
-    const paths = output.complexity.files.map(f => f.path);
+    const paths = output.complexity.files.map((f) => f.path);
     expect(paths).not.toContain('zero.ts');
     expect(paths).toContain('nonzero.ts');
   });
@@ -185,7 +184,7 @@ describe('buildTopology — complexity output', () => {
   test('includes function breakdown per file', () => {
     const input = makeInput();
     const output = buildTopology(input);
-    const indexEntry = output.complexity.files.find(f => f.path === 'src/index.ts');
+    const indexEntry = output.complexity.files.find((f) => f.path === 'src/index.ts');
     expect(indexEntry).toBeDefined();
     expect(indexEntry!.functions.length).toBe(1);
     expect(indexEntry!.functions[0].name).toBe('main');
@@ -197,7 +196,7 @@ describe('buildTopology — complexity output', () => {
       functionsByFile: new Map(),
     });
     const output = buildTopology(input);
-    const orphan = output.complexity.files.find(f => f.path === 'orphan.ts');
+    const orphan = output.complexity.files.find((f) => f.path === 'orphan.ts');
     expect(orphan).toBeDefined();
     expect(orphan!.functions).toEqual([]);
   });

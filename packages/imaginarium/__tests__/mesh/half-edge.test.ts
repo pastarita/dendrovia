@@ -2,16 +2,16 @@
  * Tests for the HalfEdgeMesh data structure.
  */
 
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import {
+  buildFromCylinder,
   buildFromIndexed,
   buildFromProfile,
-  buildFromCylinder,
-  vertexNeighbors,
-  vertexFaces,
+  type HalfEdgeMesh,
   isBoundaryVertex,
   toFlatArrays,
-  type HalfEdgeMesh,
+  vertexFaces,
+  vertexNeighbors,
 } from '../../src/mesh/HalfEdgeMesh.js';
 
 // ---------------------------------------------------------------------------
@@ -20,20 +20,14 @@ import {
 
 /** Build a single triangle: vertices at (0,0,0), (1,0,0), (0,1,0). */
 function singleTriangle(): HalfEdgeMesh {
-  return buildFromIndexed(
-    new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0]),
-    new Uint32Array([0, 1, 2]),
-  );
+  return buildFromIndexed(new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0]), new Uint32Array([0, 1, 2]));
 }
 
 /** Build two triangles sharing an edge: a quad split diagonally. */
 function twoTriangles(): HalfEdgeMesh {
   // (0,0,0), (1,0,0), (1,1,0), (0,1,0)
   // Triangle 1: 0,1,2  Triangle 2: 0,2,3
-  return buildFromIndexed(
-    new Float32Array([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0]),
-    new Uint32Array([0, 1, 2, 0, 2, 3]),
-  );
+  return buildFromIndexed(new Float32Array([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0]), new Uint32Array([0, 1, 2, 0, 2, 3]));
 }
 
 // ---------------------------------------------------------------------------
@@ -109,7 +103,10 @@ describe('buildFromIndexed', () => {
 describe('buildFromProfile', () => {
   test('simple 2-point profile with 4 segments produces a cylinder-like mesh', () => {
     const mesh = buildFromProfile(
-      [[1, 0], [1, 1]], // vertical line at radius=1
+      [
+        [1, 0],
+        [1, 1],
+      ], // vertical line at radius=1
       4,
     );
     // 2 rows * (4+1) columns = 10 vertices (last column wraps)
@@ -120,7 +117,11 @@ describe('buildFromProfile', () => {
 
   test('3-point profile with 6 segments produces more faces', () => {
     const mesh = buildFromProfile(
-      [[0.5, 0], [1, 0.5], [0.5, 1]], // curved profile
+      [
+        [0.5, 0],
+        [1, 0.5],
+        [0.5, 1],
+      ], // curved profile
       6,
     );
     // 3 rows * 7 columns = 21 vertices
@@ -130,7 +131,13 @@ describe('buildFromProfile', () => {
   });
 
   test('revolution produces closed ring (first and last column at same angle)', () => {
-    const mesh = buildFromProfile([[1, 0], [1, 1]], 8);
+    const mesh = buildFromProfile(
+      [
+        [1, 0],
+        [1, 1],
+      ],
+      8,
+    );
     // First vertex and last-ring vertex should be at same position (within float precision)
     const first = mesh.vertices[0];
     const last = mesh.vertices[mesh.vertices.length - 2]; // second-to-last row, last ring
@@ -153,7 +160,7 @@ describe('buildFromCylinder', () => {
 
   test('height dimension is correct', () => {
     const mesh = buildFromCylinder(0.5, 1.0, 3.0, 6, 2);
-    const ys = mesh.vertices.map(v => v.y);
+    const ys = mesh.vertices.map((v) => v.y);
     expect(Math.min(...ys)).toBeCloseTo(0, 5);
     expect(Math.max(...ys)).toBeCloseTo(3.0, 5);
   });
@@ -261,7 +268,14 @@ describe('toFlatArrays', () => {
   });
 
   test('profile mesh produces valid flat arrays', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5], [0.3, 1]], 8);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+        [0.3, 1],
+      ],
+      8,
+    );
     const { positions, normals, indices } = toFlatArrays(mesh);
     expect(positions.length).toBe(mesh.vertices.length * 3);
     expect(normals.length).toBe(mesh.vertices.length * 3);

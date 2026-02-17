@@ -24,21 +24,21 @@ const CDN_CACHE = `${CACHE_PREFIX}-cdn`;
 const RUNTIME_CACHE = `${CACHE_PREFIX}-runtime`;
 
 // Assets to pre-cache during install
-const PRECACHE_URLS = [
-  '/',
-  '/generated/manifest.json',
-];
+const PRECACHE_URLS = ['/', '/generated/manifest.json'];
 
 // ── Install ──────────────────────────────────────────────────────
 
 self.addEventListener('install', (event: ExtendableEvent) => {
   event.waitUntil(
-    caches.open(GENERATED_CACHE).then((cache) => {
-      return cache.addAll(PRECACHE_URLS);
-    }).then(() => {
-      // Activate immediately (don't wait for old SW to release)
-      return self.skipWaiting();
-    }),
+    caches
+      .open(GENERATED_CACHE)
+      .then((cache) => {
+        return cache.addAll(PRECACHE_URLS);
+      })
+      .then(() => {
+        // Activate immediately (don't wait for old SW to release)
+        return self.skipWaiting();
+      }),
   );
 });
 
@@ -47,17 +47,20 @@ self.addEventListener('install', (event: ExtendableEvent) => {
 self.addEventListener('activate', (event: ExtendableEvent) => {
   event.waitUntil(
     // Clean up old caches from previous versions
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name.startsWith(CACHE_PREFIX))
-          .filter((name) => ![GENERATED_CACHE, CDN_CACHE, RUNTIME_CACHE].includes(name))
-          .map((name) => caches.delete(name)),
-      );
-    }).then(() => {
-      // Take control of all clients immediately
-      return self.clients.claim();
-    }),
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames
+            .filter((name) => name.startsWith(CACHE_PREFIX))
+            .filter((name) => ![GENERATED_CACHE, CDN_CACHE, RUNTIME_CACHE].includes(name))
+            .map((name) => caches.delete(name)),
+        );
+      })
+      .then(() => {
+        // Take control of all clients immediately
+        return self.clients.claim();
+      }),
   );
 });
 
@@ -158,8 +161,7 @@ function isGeneratedAsset(url: URL): boolean {
 }
 
 function isCDNAsset(url: URL): boolean {
-  return url.hostname.includes('cdn.dendrovia') ||
-    url.pathname.startsWith('/cdn/');
+  return url.hostname.includes('cdn.dendrovia') || url.pathname.startsWith('/cdn/');
 }
 
 function isAPICall(url: URL): boolean {

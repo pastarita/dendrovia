@@ -10,18 +10,16 @@
  * - Provider wiring (EventBus + OculusProvider + store seeding)
  */
 
-// Shell
-export { GymShell } from './GymShell';
+export { GymControlPanel } from './GymControlPanel';
 
 // Sub-components (for advanced composition)
 export { GymProvider, useGymEventBus } from './GymProvider';
-export { GymControlPanel } from './GymControlPanel';
+// Shell
+export { GymShell } from './GymShell';
+export { GymStateDash } from './GymStateDash';
 export { GymViewport } from './GymViewport';
 export { GymWiretap } from './GymWiretap';
-export { GymStateDash } from './GymStateDash';
-
-// Types
-export type { GymPageConfig, GymRenderProps, GymSlots, WiretapEntry } from './types';
-
 // Styles
 export * from './gym-styles';
+// Types
+export type { GymPageConfig, GymRenderProps, GymSlots, WiretapEntry } from './types';

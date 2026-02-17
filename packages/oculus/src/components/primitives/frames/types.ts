@@ -6,13 +6,7 @@
 
 import type { ReactNode } from 'react';
 
-export type PillarId =
-  | 'oculus'
-  | 'chronos'
-  | 'architectus'
-  | 'ludus'
-  | 'imaginarium'
-  | 'operatus';
+export type PillarId = 'oculus' | 'chronos' | 'architectus' | 'ludus' | 'imaginarium' | 'operatus';
 
 export type FrameVariant = 'modal' | 'panel' | 'compact' | 'tooltip';
 

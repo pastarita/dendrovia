@@ -12,13 +12,13 @@
  *   mysterious → cool hues, low lightness, high-octave simplex
  */
 
-import { join } from 'path';
-import { mkdirSync, existsSync } from 'fs';
-import type { CodeTopology, StoryArc, SegmentAssets, SegmentMood } from '@dendrovia/shared';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import type { CodeTopology, SegmentAssets, SegmentMood, StoryArc } from '@dendrovia/shared';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
 import { extractPalette, type PaletteOverrides } from '../distillation/ColorExtractor.js';
-import { generate as generateNoise, type NoiseOverrides } from '../distillation/NoiseGenerator.js';
 import { compile as compileLSystem, type LSystemOverrides } from '../distillation/LSystemCompiler.js';
+import { generate as generateNoise, type NoiseOverrides } from '../distillation/NoiseGenerator.js';
 import { compile as compileSDF } from '../distillation/SDFCompiler.js';
 import { hashString } from '../utils/hash.js';
 
@@ -75,8 +75,8 @@ export async function distillSegments(
 
       // Filter topology to this segment's files
       const fileSet = new Set(segment.filePaths);
-      const segFiles = topology.files.filter(f => fileSet.has(f.path));
-      const segHotspots = topology.hotspots.filter(h => fileSet.has(h.path));
+      const segFiles = topology.files.filter((f) => fileSet.has(f.path));
+      const segHotspots = topology.hotspots.filter((h) => fileSet.has(h.path));
 
       // Build a sub-topology for this segment
       const subTopology: CodeTopology = {
@@ -127,7 +127,9 @@ export async function distillSegments(
         assets,
       });
     } catch (e) {
-      console.log(`[IMAGINARIUM]   Segment ${segment.id}: skipped (${e instanceof Error ? e.message : 'unknown error'})`);
+      console.log(
+        `[IMAGINARIUM]   Segment ${segment.id}: skipped (${e instanceof Error ? e.message : 'unknown error'})`,
+      );
     }
   }
 

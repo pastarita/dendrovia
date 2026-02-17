@@ -8,44 +8,39 @@
 
 import type { CodeTopology, ParsedFile } from '@dendrovia/shared';
 import type {
+  FungalGenus,
+  HyphalCluster,
+  MycelialEdge,
   MycelialNetwork,
   MycelialNode,
-  MycelialEdge,
-  HyphalCluster,
   MycorrhizalType,
   SignalType,
-  FungalGenus,
 } from './types';
-import { hashString } from '../utils/hash';
 
 // ---------------------------------------------------------------------------
 // Connection type derivation
 // ---------------------------------------------------------------------------
 
-function deriveMycorrhizalType(
-  source: ParsedFile,
-  target: ParsedFile,
-): MycorrhizalType {
+function deriveMycorrhizalType(source: ParsedFile, target: ParsedFile): MycorrhizalType {
   // Deprecated source or target = saprotrophic
-  if (source.path.match(/deprecated|legacy|old|dead/i) ||
-      target.path.match(/deprecated|legacy|old|dead/i)) return 'saprotrophic';
+  if (source.path.match(/deprecated|legacy|old|dead/i) || target.path.match(/deprecated|legacy|old|dead/i))
+    return 'saprotrophic';
 
   // Decorators/patches = parasitic
-  if (source.path.match(/decorator|patch|plugin|hook|override/i) ||
-      target.path.match(/decorator|patch|plugin|hook|override/i)) return 'parasitic';
+  if (
+    source.path.match(/decorator|patch|plugin|hook|override/i) ||
+    target.path.match(/decorator|patch|plugin|hook|override/i)
+  )
+    return 'parasitic';
 
   // If one has much higher complexity, likely deep modification
-  if (source.complexity > target.complexity * 2 ||
-      target.complexity > source.complexity * 2) return 'endomycorrhizal';
+  if (source.complexity > target.complexity * 2 || target.complexity > source.complexity * 2) return 'endomycorrhizal';
 
   // Default: external wrapping (read-only consumer)
   return 'ectomycorrhizal';
 }
 
-function deriveSignalTypes(
-  source: ParsedFile,
-  target: ParsedFile,
-): SignalType[] {
+function deriveSignalTypes(source: ParsedFile, target: ParsedFile): SignalType[] {
   const signals: SignalType[] = ['nutrient']; // data flow is always present
 
   // Type files -> salicylic (type information flow)
@@ -54,8 +49,10 @@ function deriveSignalTypes(
   }
 
   // Error-related -> jasmonic
-  if (source.path.match(/error|exception|handler|boundary/i) ||
-      target.path.match(/error|exception|handler|boundary/i)) {
+  if (
+    source.path.match(/error|exception|handler|boundary/i) ||
+    target.path.match(/error|exception|handler|boundary/i)
+  ) {
     signals.push('jasmonic');
   }
 
@@ -71,12 +68,7 @@ function deriveSignalTypes(
 // Strength calculation
 // ---------------------------------------------------------------------------
 
-function calculateStrength(
-  coChurnCount: number,
-  maxCoChurn: number,
-  source: ParsedFile,
-  target: ParsedFile,
-): number {
+function calculateStrength(coChurnCount: number, maxCoChurn: number, source: ParsedFile, target: ParsedFile): number {
   // Normalize co-churn frequency
   const churnStrength = maxCoChurn > 0 ? coChurnCount / maxCoChurn : 0;
 
@@ -92,10 +84,7 @@ function calculateStrength(
 // Network construction
 // ---------------------------------------------------------------------------
 
-export function buildNetwork(
-  topology: CodeTopology,
-  genusMap: Map<string, FungalGenus>,
-): MycelialNetwork {
+export function buildNetwork(topology: CodeTopology, genusMap: Map<string, FungalGenus>): MycelialNetwork {
   const fileMap = new Map<string, ParsedFile>();
   for (const f of topology.files) {
     fileMap.set(f.path, f);
@@ -104,7 +93,7 @@ export function buildNetwork(
   // Build co-churn frequency map
   const coChurnFreq = new Map<string, number>();
   for (const commit of topology.commits) {
-    const changed = commit.filesChanged.filter(p => fileMap.has(p));
+    const changed = commit.filesChanged.filter((p) => fileMap.has(p));
     for (let i = 0; i < changed.length; i++) {
       for (let j = i + 1; j < changed.length; j++) {
         const key = [changed[i], changed[j]].sort().join('|');
@@ -151,19 +140,18 @@ export function buildNetwork(
 
   // Determine hub threshold (top 10% by connections)
   const connectionCounts = [...nodeConnections.values()].sort((a, b) => b - a);
-  const hubThreshold = connectionCounts.length > 0
-    ? connectionCounts[Math.floor(connectionCounts.length * 0.1)] ?? 1
-    : 1;
+  const hubThreshold =
+    connectionCounts.length > 0 ? (connectionCounts[Math.floor(connectionCounts.length * 0.1)] ?? 1) : 1;
 
   // Build nodes
-  const nodes: MycelialNode[] = topology.files.map(f => ({
+  const nodes: MycelialNode[] = topology.files.map((f) => ({
     id: f.path,
     genus: genusMap.get(f.path) ?? 'Agaricus',
     connections: nodeConnections.get(f.path) ?? 0,
     isHub: (nodeConnections.get(f.path) ?? 0) >= hubThreshold,
   }));
 
-  const hubNodes = nodes.filter(n => n.isHub).map(n => n.id);
+  const hubNodes = nodes.filter((n) => n.isHub).map((n) => n.id);
 
   // Build clusters from directory structure
   const clusters = buildClusters(topology.files, edges);
@@ -175,19 +163,14 @@ export function buildNetwork(
 // Cluster detection (directory-based)
 // ---------------------------------------------------------------------------
 
-function buildClusters(
-  files: ParsedFile[],
-  edges: MycelialEdge[],
-): HyphalCluster[] {
+function buildClusters(files: ParsedFile[], edges: MycelialEdge[]): HyphalCluster[] {
   // Group files by top-level directory
   const dirGroups = new Map<string, string[]>();
 
   for (const f of files) {
     const parts = f.path.split('/');
     // Use first 2 directory levels as cluster key
-    const clusterKey = parts.length > 2
-      ? parts.slice(0, 2).join('/')
-      : parts[0] ?? 'root';
+    const clusterKey = parts.length > 2 ? parts.slice(0, 2).join('/') : (parts[0] ?? 'root');
 
     if (!dirGroups.has(clusterKey)) {
       dirGroups.set(clusterKey, []);

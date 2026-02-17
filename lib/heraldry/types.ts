@@ -22,16 +22,16 @@ export type Domain =
   | 'infra';
 
 export const DOMAIN_FILE_PATTERNS: Record<Domain, RegExp[]> = {
-  chronos:      [/^packages\/chronos\//],
-  imaginarium:  [/^packages\/imaginarium\//],
-  architectus:  [/^packages\/architectus\//, /^packages\/dendrovia-engine\//],
-  ludus:        [/^packages\/ludus\//],
-  oculus:       [/^packages\/oculus\//, /^packages\/ui\//],
-  operatus:     [/^packages\/operatus\//, /^scripts\//],
-  shared:       [/^packages\/shared\//],
-  app:          [/^apps\//],
-  docs:         [/^docs\//],
-  infra:        [/^turbo\.json$/, /^\.github\//, /\.config\.\w+$/],
+  chronos: [/^packages\/chronos\//],
+  imaginarium: [/^packages\/imaginarium\//],
+  architectus: [/^packages\/architectus\//, /^packages\/dendrovia-engine\//],
+  ludus: [/^packages\/ludus\//],
+  oculus: [/^packages\/oculus\//, /^packages\/ui\//],
+  operatus: [/^packages\/operatus\//, /^scripts\//],
+  shared: [/^packages\/shared\//],
+  app: [/^apps\//],
+  docs: [/^docs\//],
+  infra: [/^turbo\.json$/, /^\.github\//, /\.config\.\w+$/],
 };
 
 // ============================================================
@@ -46,32 +46,23 @@ export interface HeraldryTincture {
 }
 
 export const DOMAIN_TINCTURES: Record<Domain, HeraldryTincture> = {
-  chronos:      { name: 'Amber',   hex: '#c77b3f', textColor: '#000000', type: 'color' },
-  imaginarium:  { name: 'Purpure', hex: '#A855F7', textColor: '#ffffff', type: 'color' },
-  architectus:  { name: 'Azure',   hex: '#3B82F6', textColor: '#ffffff', type: 'color' },
-  ludus:        { name: 'Gules',   hex: '#EF4444', textColor: '#ffffff', type: 'color' },
-  oculus:       { name: 'Vert',    hex: '#22C55E', textColor: '#000000', type: 'color' },
-  operatus:     { name: 'Sable',   hex: '#1F2937', textColor: '#ffffff', type: 'color' },
-  shared:       { name: 'Or',      hex: '#FFD700', textColor: '#000000', type: 'metal' },
-  app:          { name: 'Argent',  hex: '#E5E7EB', textColor: '#000000', type: 'metal' },
-  docs:         { name: 'Tenné',   hex: '#CD853F', textColor: '#000000', type: 'color' },
-  infra:        { name: 'Gules',   hex: '#EF4444', textColor: '#ffffff', type: 'color' },
+  chronos: { name: 'Amber', hex: '#c77b3f', textColor: '#000000', type: 'color' },
+  imaginarium: { name: 'Purpure', hex: '#A855F7', textColor: '#ffffff', type: 'color' },
+  architectus: { name: 'Azure', hex: '#3B82F6', textColor: '#ffffff', type: 'color' },
+  ludus: { name: 'Gules', hex: '#EF4444', textColor: '#ffffff', type: 'color' },
+  oculus: { name: 'Vert', hex: '#22C55E', textColor: '#000000', type: 'color' },
+  operatus: { name: 'Sable', hex: '#1F2937', textColor: '#ffffff', type: 'color' },
+  shared: { name: 'Or', hex: '#FFD700', textColor: '#000000', type: 'metal' },
+  app: { name: 'Argent', hex: '#E5E7EB', textColor: '#000000', type: 'metal' },
+  docs: { name: 'Tenné', hex: '#CD853F', textColor: '#000000', type: 'color' },
+  infra: { name: 'Gules', hex: '#EF4444', textColor: '#ffffff', type: 'color' },
 };
 
 // ============================================================
 // SECTION 3: Charges (Commit Type Mapping)
 // ============================================================
 
-export type ChargeType =
-  | 'mullet'
-  | 'cross'
-  | 'bend'
-  | 'eagle'
-  | 'book'
-  | 'scales'
-  | 'hammer'
-  | 'tower'
-  | 'chevron';
+export type ChargeType = 'mullet' | 'cross' | 'bend' | 'eagle' | 'book' | 'scales' | 'hammer' | 'tower' | 'chevron';
 
 export interface ChargeMapping {
   charge: ChargeType;
@@ -80,15 +71,15 @@ export interface ChargeMapping {
 }
 
 export const COMMIT_TYPE_CHARGES: Record<string, ChargeMapping> = {
-  feat:     { charge: 'mullet',  symbol: 'star',     blazon: 'a mullet' },
-  fix:      { charge: 'cross',   symbol: 'cross',    blazon: 'a cross' },
-  refactor: { charge: 'bend',    symbol: 'diagonal', blazon: 'a bend' },
-  perf:     { charge: 'eagle',   symbol: 'eagle',    blazon: 'an eagle displayed' },
-  docs:     { charge: 'book',    symbol: 'book',     blazon: 'a book open' },
-  test:     { charge: 'scales',  symbol: 'scales',   blazon: 'scales of justice' },
-  chore:    { charge: 'hammer',  symbol: 'hammer',   blazon: 'a hammer' },
-  infra:    { charge: 'tower',   symbol: 'tower',    blazon: 'a tower' },
-  style:    { charge: 'chevron', symbol: 'chevron',  blazon: 'a chevron' },
+  feat: { charge: 'mullet', symbol: 'star', blazon: 'a mullet' },
+  fix: { charge: 'cross', symbol: 'cross', blazon: 'a cross' },
+  refactor: { charge: 'bend', symbol: 'diagonal', blazon: 'a bend' },
+  perf: { charge: 'eagle', symbol: 'eagle', blazon: 'an eagle displayed' },
+  docs: { charge: 'book', symbol: 'book', blazon: 'a book open' },
+  test: { charge: 'scales', symbol: 'scales', blazon: 'scales of justice' },
+  chore: { charge: 'hammer', symbol: 'hammer', blazon: 'a hammer' },
+  infra: { charge: 'tower', symbol: 'tower', blazon: 'a tower' },
+  style: { charge: 'chevron', symbol: 'chevron', blazon: 'a chevron' },
 };
 
 // Keyword fallback for non-conventional commit messages
@@ -105,13 +96,7 @@ export const CHARGE_KEYWORDS: [RegExp, string][] = [
 // SECTION 4: Shield Divisions
 // ============================================================
 
-export type ShieldDivision =
-  | 'plain'
-  | 'per-pale'
-  | 'per-chevron'
-  | 'per-quarterly'
-  | 'party-per-cross'
-  | 'gyronny';
+export type ShieldDivision = 'plain' | 'per-pale' | 'per-chevron' | 'per-quarterly' | 'party-per-cross' | 'gyronny';
 
 export function getDivisionForDomainCount(count: number): ShieldDivision {
   if (count <= 1) return 'plain';
@@ -129,11 +114,11 @@ export function getDivisionForDomainCount(count: number): ShieldDivision {
 export type Magnitude = 'trivial' | 'minor' | 'moderate' | 'major' | 'epic';
 
 export const MAGNITUDE_SYMBOLS: Record<Magnitude, string> = {
-  trivial:  '+',
-  minor:    '*',
+  trivial: '+',
+  minor: '*',
   moderate: '**',
-  major:    '***',
-  epic:     '****',
+  major: '***',
+  epic: '****',
 };
 
 export interface MagnitudeFactors {

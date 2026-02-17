@@ -1,5 +1,5 @@
-export { OPFSCache, isOPFSSupported } from './OPFSCache';
-export type { CacheEntry, CacheStats } from './OPFSCache';
-export { IDBCache } from './IDBCache';
+export type { CacheEntryInfo, CacheResult, CacheTier, StorageQuota } from './CacheManager';
 export { CacheManager } from './CacheManager';
-export type { CacheTier, CacheResult, StorageQuota, CacheEntryInfo } from './CacheManager';
+export { IDBCache } from './IDBCache';
+export type { CacheEntry, CacheStats } from './OPFSCache';
+export { isOPFSSupported, OPFSCache } from './OPFSCache';

@@ -11,8 +11,8 @@
  * └────────────┴────────────┘
  */
 
-import type { DendroviaConfig, Pillar } from "./pillar-registry";
-import type { LaunchOptions, WindowPosition } from "./types";
+import type { DendroviaConfig } from './pillar-registry';
+import type { LaunchOptions, WindowPosition } from './types';
 
 interface LayoutConfig {
   columns: number;
@@ -27,7 +27,7 @@ function calculateGridPositions(
   count: number,
   layout: LayoutConfig,
   screenWidth: number = 1920,
-  screenHeight: number = 1080
+  screenHeight: number = 1080,
 ): WindowPosition[] {
   const { columns, rows, margin } = layout;
   const positions: WindowPosition[] = [];
@@ -55,10 +55,7 @@ function calculateGridPositions(
 /**
  * Generate AppleScript for launching Dendrovia workspace
  */
-export function generateItermAppleScript(
-  config: DendroviaConfig,
-  options: LaunchOptions = {}
-): string {
+export function generateItermAppleScript(config: DendroviaConfig, options: LaunchOptions = {}): string {
   const { pillars: pillarIds, withDevServers = false } = options;
 
   // Filter pillars if specific ones requested
@@ -80,9 +77,7 @@ export function generateItermAppleScript(
     const titleBottomRight = `echo -e '\\\\033]0;${pillar.shortCode} Shell\\\\007'`;
 
     // Dev server command (if requested)
-    const devServerCmd = withDevServers
-      ? ` && echo 'Starting dev server...' && bun run dev`
-      : "";
+    const devServerCmd = withDevServers ? ` && echo 'Starting dev server...' && bun run dev` : '';
 
     // Claude Code pane shows CLAUDE.md on launch
     const claudeSetup = ` && echo '\\n${pillar.name}\\n${pillar.description}\\n' && echo 'CLAUDE.md context loaded for this pillar\\n' && echo 'Run claude to start AI assistant\\n'`;
@@ -147,7 +142,7 @@ export function generateItermAppleScript(
 tell application "iTerm"
   activate
   delay 0.3
-${windowScripts.join("\n")}
+${windowScripts.join('\n')}
 
 end tell
 
@@ -159,10 +154,7 @@ display notification "Launched ${pillars.length} pillar workspaces" with title "
 /**
  * Generate bash-friendly launcher that invokes osascript
  */
-export function generateBashLauncher(
-  config: DendroviaConfig,
-  options: LaunchOptions = {}
-): string {
+export function generateBashLauncher(config: DendroviaConfig, options: LaunchOptions = {}): string {
   const script = generateItermAppleScript(config, options);
   // Escape for bash
   const escaped = script.replace(/'/g, "'\\''");

@@ -1,20 +1,11 @@
-import { describe, test, expect } from 'bun:test';
-import {
-  profileContributors,
-  type ContributorProfile,
-  type Archetype,
-  type TimeArchetype,
-} from '../src/builder/ContributorProfiler';
+import { describe, expect, test } from 'bun:test';
 import type { ParsedCommit } from '@dendrovia/shared';
+import { profileContributors } from '../src/builder/ContributorProfiler';
 
 // ---------------------------------------------------------------------------
 // Helper: create test commits
 // ---------------------------------------------------------------------------
-function makeCommit(
-  author: string,
-  message: string,
-  opts: Partial<ParsedCommit> = {},
-): ParsedCommit {
+function makeCommit(author: string, message: string, opts: Partial<ParsedCommit> = {}): ParsedCommit {
   return {
     hash: Math.random().toString(36).slice(2, 10),
     message,
@@ -113,9 +104,7 @@ describe('profileContributors — archetype classification', () => {
 
   test('berserker: >15% breaking change ratio', () => {
     const commits = [
-      ...Array.from({ length: 3 }, (_, i) =>
-        makeCommit('Frank', `feat!: breaking change ${i}`),
-      ),
+      ...Array.from({ length: 3 }, (_, i) => makeCommit('Frank', `feat!: breaking change ${i}`)),
       ...makeCommitsOfType('Frank', 'feat', 7),
     ];
     const profiles = profileContributors(commits);
@@ -235,10 +224,7 @@ describe('profileContributors — time archetype', () => {
 // ---------------------------------------------------------------------------
 describe('profileContributors — personality facets', () => {
   test('facets are all between 0 and 100', () => {
-    const commits = [
-      ...makeCommitsOfType('Dev', 'feat', 5),
-      ...makeCommitsOfType('Dev', 'fix', 5),
-    ];
+    const commits = [...makeCommitsOfType('Dev', 'feat', 5), ...makeCommitsOfType('Dev', 'fix', 5)];
     const profiles = profileContributors(commits);
     const f = profiles[0].facets;
 
@@ -258,13 +244,11 @@ describe('profileContributors — personality facets', () => {
 
   test('discipline reflects conventional commit adherence', () => {
     const conventional = makeCommitsOfType('Alice', 'feat', 10);
-    const nonConventional = Array.from({ length: 10 }, (_, i) =>
-      makeCommit('Bob', `did some stuff ${i}`),
-    );
+    const nonConventional = Array.from({ length: 10 }, (_, i) => makeCommit('Bob', `did some stuff ${i}`));
 
     const profiles = profileContributors([...conventional, ...nonConventional]);
-    const alice = profiles.find(p => p.name === 'Alice')!;
-    const bob = profiles.find(p => p.name === 'Bob')!;
+    const alice = profiles.find((p) => p.name === 'Alice')!;
+    const bob = profiles.find((p) => p.name === 'Bob')!;
 
     // Alice uses conventional commits (high confidence) -> high discipline
     expect(alice.facets.discipline).toBeGreaterThan(bob.facets.discipline);
@@ -275,22 +259,19 @@ describe('profileContributors — personality facets', () => {
     const fixHeavy = makeCommitsOfType('Bob', 'fix', 10);
 
     const profiles = profileContributors([...featureHeavy, ...fixHeavy]);
-    const alice = profiles.find(p => p.name === 'Alice')!;
-    const bob = profiles.find(p => p.name === 'Bob')!;
+    const alice = profiles.find((p) => p.name === 'Alice')!;
+    const bob = profiles.find((p) => p.name === 'Bob')!;
 
     expect(alice.facets.creativity).toBeGreaterThan(bob.facets.creativity);
   });
 
   test('protectiveness reflects fix+test ratio', () => {
-    const fixAndTest = [
-      ...makeCommitsOfType('Alice', 'fix', 5),
-      ...makeCommitsOfType('Alice', 'test', 5),
-    ];
+    const fixAndTest = [...makeCommitsOfType('Alice', 'fix', 5), ...makeCommitsOfType('Alice', 'test', 5)];
     const featureOnly = makeCommitsOfType('Bob', 'feat', 10);
 
     const profiles = profileContributors([...fixAndTest, ...featureOnly]);
-    const alice = profiles.find(p => p.name === 'Alice')!;
-    const bob = profiles.find(p => p.name === 'Bob')!;
+    const alice = profiles.find((p) => p.name === 'Alice')!;
+    const bob = profiles.find((p) => p.name === 'Bob')!;
 
     expect(alice.facets.protectiveness).toBeGreaterThan(bob.facets.protectiveness);
   });
@@ -304,8 +285,8 @@ describe('profileContributors — personality facets', () => {
     const soloWork = makeCommitsOfType('Bob', 'feat', 5);
 
     const profiles = profileContributors([...mergeHeavy, ...soloWork]);
-    const alice = profiles.find(p => p.name === 'Alice')!;
-    const bob = profiles.find(p => p.name === 'Bob')!;
+    const alice = profiles.find((p) => p.name === 'Alice')!;
+    const bob = profiles.find((p) => p.name === 'Bob')!;
 
     expect(alice.facets.collaboration).toBeGreaterThan(bob.facets.collaboration);
   });
@@ -384,9 +365,9 @@ describe('profileContributors — metadata', () => {
       ...makeCommitsOfType('Dev', 'chore', 1),
     ];
     const profiles = profileContributors(commits);
-    expect(profiles[0].typeDistribution['feature']).toBe(3);
+    expect(profiles[0].typeDistribution.feature).toBe(3);
     expect(profiles[0].typeDistribution['bug-fix']).toBe(2);
-    expect(profiles[0].typeDistribution['chore']).toBe(1);
+    expect(profiles[0].typeDistribution.chore).toBe(1);
   });
 
   test('email defaults to empty string', () => {
@@ -427,7 +408,7 @@ describe('profileContributors — edge cases', () => {
     ];
     const profiles = profileContributors(commits);
     expect(profiles.length).toBe(3);
-    const names = profiles.map(p => p.name);
+    const names = profiles.map((p) => p.name);
     expect(names).toContain('Alice');
     expect(names).toContain('Bob');
     expect(names).toContain('Carol');

@@ -9,7 +9,7 @@
  * The peer dependencies are marked optional in package.json.
  */
 
-import React, { createElement, type ReactNode, type CSSProperties } from 'react';
+import React, { type CSSProperties, createElement, type ReactNode } from 'react';
 
 // Dynamic import to avoid hard dependency on R3F types at build time
 let dreiHtml: React.ComponentType<any> | null = null;
@@ -75,7 +75,7 @@ export function Billboard3D({
         style: { ...defaultStyle, ...style },
         className: `oculus-billboard ${className}`,
       },
-      children
-    )
+      children,
+    ),
   );
 }

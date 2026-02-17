@@ -5,12 +5,11 @@
  * and hotspot line highlighting. Blurs background when open.
  */
 
-import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { useOculusStore } from '../store/useOculusStore';
+import { useEffect, useMemo, useState } from 'react';
 import { useCodeLoader } from '../hooks/useCodeLoader';
-import { Panel } from './primitives/Panel';
+import { useOculusStore } from '../store/useOculusStore';
 import { IconBadge } from './primitives/IconBadge';
-import { StatLabel } from './primitives/StatLabel';
+import { Panel } from './primitives/Panel';
 
 const langIcons: Record<string, string> = {
   typescript: 'TS',
@@ -61,7 +60,7 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
   // Find hotspot for this file
   const fileHotspot = useMemo(
     () => hotspots.find((h) => h.path === codeReader.filePath),
-    [hotspots, codeReader.filePath]
+    [hotspots, codeReader.filePath],
   );
 
   const lines = useMemo(() => {
@@ -81,8 +80,8 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
   }, [activePanel, closeCodeReader]);
 
   const deepwikiDoc = useMemo(
-    () => codeReader.filePath ? deepwiki?.moduleDocumentation?.[codeReader.filePath] : undefined,
-    [deepwiki, codeReader.filePath]
+    () => (codeReader.filePath ? deepwiki?.moduleDocumentation?.[codeReader.filePath] : undefined),
+    [deepwiki, codeReader.filePath],
   );
 
   if (activePanel !== 'code-reader' || !codeReader.filePath) return null;
@@ -125,23 +124,30 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
         >
           <IconBadge icon={langIcon} label={codeReader.language} size="sm" />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{
-              color: 'var(--oculus-amber)',
-              fontSize: 'var(--oculus-font-sm)',
-              fontFamily: 'var(--oculus-font-code)',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}>
+            <div
+              style={{
+                color: 'var(--oculus-amber)',
+                fontSize: 'var(--oculus-font-sm)',
+                fontFamily: 'var(--oculus-font-code)',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {codeReader.filePath}
             </div>
-            <div style={{ display: 'flex', gap: 'var(--oculus-space-md)', fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-text-muted)' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: 'var(--oculus-space-md)',
+                fontSize: 'var(--oculus-font-xs)',
+                color: 'var(--oculus-text-muted)',
+              }}
+            >
               <span>{loc} lines</span>
               <span>{codeReader.language}</span>
               {fileHotspot && (
-                <span style={{ color: 'var(--oculus-danger)' }}>
-                  Risk: {fileHotspot.riskScore.toFixed(1)}
-                </span>
+                <span style={{ color: 'var(--oculus-danger)' }}>Risk: {fileHotspot.riskScore.toFixed(1)}</span>
               )}
             </div>
           </div>
@@ -155,11 +161,7 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
               {docsExpanded ? '\u{1F4D6} Docs' : '\u{1F4D6} Docs'}
             </button>
           )}
-          <button
-            className="oculus-button"
-            onClick={closeCodeReader}
-            aria-label="Close code viewer"
-          >
+          <button className="oculus-button" onClick={closeCodeReader} aria-label="Close code viewer">
             Close
           </button>
         </div>
@@ -191,18 +193,19 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
           style={{ flex: 1, padding: 0 }}
           role="region"
           aria-label="Source code"
-          tabIndex={0}
         >
           {codeReader.loading ? (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              color: 'var(--oculus-text-muted)',
-              gap: 'var(--oculus-space-sm)',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                color: 'var(--oculus-text-muted)',
+                gap: 'var(--oculus-space-sm)',
+              }}
+            >
               <div
                 className="oculus-code-reader__spinner"
                 style={{
@@ -219,17 +222,19 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
               <span>Loading {fileName}...</span>
             </div>
           ) : codeReader.error && !codeReader.content ? (
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              color: 'var(--oculus-danger, #ff4444)',
-              gap: 'var(--oculus-space-sm)',
-              padding: 'var(--oculus-space-lg)',
-              textAlign: 'center',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                color: 'var(--oculus-danger, #ff4444)',
+                gap: 'var(--oculus-space-sm)',
+                padding: 'var(--oculus-space-lg)',
+                textAlign: 'center',
+              }}
+            >
               <span style={{ fontSize: 'var(--oculus-font-md)' }}>Failed to load file</span>
               <span style={{ fontSize: 'var(--oculus-font-xs)', color: 'var(--oculus-text-muted)' }}>
                 {codeReader.error}
@@ -250,9 +255,7 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
                   <tr
                     key={line.number}
                     style={{
-                      background: line.isHotspot
-                        ? 'rgba(255, 68, 68, 0.08)'
-                        : undefined,
+                      background: line.isHotspot ? 'rgba(255, 68, 68, 0.08)' : undefined,
                     }}
                   >
                     <td
@@ -284,13 +287,15 @@ export function CodeReader({ codeLoaderOptions }: CodeReaderProps = {}) {
               </tbody>
             </table>
           ) : (
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              color: 'var(--oculus-text-muted)',
-            }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                color: 'var(--oculus-text-muted)',
+              }}
+            >
               No content available
             </div>
           )}

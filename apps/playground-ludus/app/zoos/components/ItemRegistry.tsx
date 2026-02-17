@@ -1,14 +1,14 @@
 'use client';
 
-import { useMemo } from 'react';
 import { getAllItems } from '@dendrovia/ludus';
+import { useMemo } from 'react';
 
 const EFFECT_COLORS: Record<string, string> = {
   'heal-hp': '#EF4444',
   'heal-mana': '#3B82F6',
   'buff-attack': '#F97316',
   'buff-defense': '#6366F1',
-  'cleanse': '#22C55E',
+  cleanse: '#22C55E',
   'full-restore': '#EAB308',
 };
 
@@ -17,7 +17,7 @@ export default function ItemRegistry(): React.JSX.Element {
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.75rem' }}>
-      {items.map(item => (
+      {items.map((item) => (
         <div
           key={item.id}
           style={{
@@ -27,7 +27,9 @@ export default function ItemRegistry(): React.JSX.Element {
             background: '#111',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}
+          >
             <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>{item.name}</span>
             <span
               style={{

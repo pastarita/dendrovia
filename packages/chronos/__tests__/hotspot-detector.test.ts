@@ -1,15 +1,11 @@
-import { describe, test, expect } from 'bun:test';
-import { detectHotspots, type HotspotAnalysis } from '../src/analyzer/HotspotDetector';
-import type { ParsedFile, ParsedCommit, Hotspot } from '@dendrovia/shared';
+import { describe, expect, test } from 'bun:test';
+import type { ParsedCommit, ParsedFile } from '@dendrovia/shared';
+import { detectHotspots } from '../src/analyzer/HotspotDetector';
 
 // ---------------------------------------------------------------------------
 // Helpers: build minimal test data
 // ---------------------------------------------------------------------------
-function makeFile(
-  path: string,
-  complexity: number,
-  loc: number = 100,
-): ParsedFile {
+function makeFile(path: string, complexity: number, loc: number = 100): ParsedFile {
   return {
     path,
     hash: 'abc123',
@@ -21,11 +17,7 @@ function makeFile(
   };
 }
 
-function makeCommit(
-  hash: string,
-  filesChanged: string[],
-  opts: Partial<ParsedCommit> = {},
-): ParsedCommit {
+function makeCommit(hash: string, filesChanged: string[], opts: Partial<ParsedCommit> = {}): ParsedCommit {
   return {
     hash,
     message: 'some commit',
@@ -50,7 +42,7 @@ describe('detectHotspots — risk score calculation', () => {
     const commits: ParsedCommit[] = []; // no commits
 
     const result = detectHotspots(files, commits);
-    const hs = result.hotspots.find(h => h.path === 'src/index.ts');
+    const hs = result.hotspots.find((h) => h.path === 'src/index.ts');
     expect(hs).toBeDefined();
     expect(hs!.riskScore).toBe(0);
   });
@@ -65,27 +57,22 @@ describe('detectHotspots — risk score calculation', () => {
 
     const result = detectHotspots(files, commits);
     // complexity 0 => complexityNorm 0 => risk 0
-    const hs = result.hotspots.find(h => h.path === 'src/config.ts');
+    const hs = result.hotspots.find((h) => h.path === 'src/config.ts');
     expect(hs).toBeDefined();
     expect(hs!.riskScore).toBe(0);
   });
 
   test('high churn + high complexity = high risk score', () => {
-    const files = [
-      makeFile('src/safe.ts', 1),
-      makeFile('src/danger.ts', 50),
-    ];
+    const files = [makeFile('src/safe.ts', 1), makeFile('src/danger.ts', 50)];
     const commits = [
       // danger.ts is touched in every commit; safe.ts rarely
-      ...Array.from({ length: 20 }, (_, i) =>
-        makeCommit(`d${i}`, ['src/danger.ts']),
-      ),
+      ...Array.from({ length: 20 }, (_, i) => makeCommit(`d${i}`, ['src/danger.ts'])),
       makeCommit('s1', ['src/safe.ts']),
     ];
 
     const result = detectHotspots(files, commits);
-    const danger = result.hotspots.find(h => h.path === 'src/danger.ts')!;
-    const safe = result.hotspots.find(h => h.path === 'src/safe.ts')!;
+    const danger = result.hotspots.find((h) => h.path === 'src/danger.ts')!;
+    const safe = result.hotspots.find((h) => h.path === 'src/safe.ts')!;
 
     expect(danger.riskScore).toBeGreaterThan(safe.riskScore);
     expect(danger.churnRate).toBe(20);
@@ -93,11 +80,7 @@ describe('detectHotspots — risk score calculation', () => {
   });
 
   test('risk score is between 0 and 1', () => {
-    const files = [
-      makeFile('a.ts', 10),
-      makeFile('b.ts', 30),
-      makeFile('c.ts', 80),
-    ];
+    const files = [makeFile('a.ts', 10), makeFile('b.ts', 30), makeFile('c.ts', 80)];
     const commits = [
       makeCommit('c1', ['a.ts', 'b.ts']),
       makeCommit('c2', ['b.ts', 'c.ts']),
@@ -113,38 +96,25 @@ describe('detectHotspots — risk score calculation', () => {
   });
 
   test('hotspots are sorted by riskScore descending', () => {
-    const files = [
-      makeFile('low.ts', 5),
-      makeFile('mid.ts', 25),
-      makeFile('high.ts', 80),
-    ];
+    const files = [makeFile('low.ts', 5), makeFile('mid.ts', 25), makeFile('high.ts', 80)];
     const commits = [
-      ...Array.from({ length: 15 }, (_, i) =>
-        makeCommit(`h${i}`, ['high.ts']),
-      ),
-      ...Array.from({ length: 8 }, (_, i) =>
-        makeCommit(`m${i}`, ['mid.ts']),
-      ),
+      ...Array.from({ length: 15 }, (_, i) => makeCommit(`h${i}`, ['high.ts'])),
+      ...Array.from({ length: 8 }, (_, i) => makeCommit(`m${i}`, ['mid.ts'])),
       makeCommit('l1', ['low.ts']),
     ];
 
     const result = detectHotspots(files, commits);
     for (let i = 1; i < result.hotspots.length; i++) {
-      expect(result.hotspots[i - 1].riskScore).toBeGreaterThanOrEqual(
-        result.hotspots[i].riskScore,
-      );
+      expect(result.hotspots[i - 1].riskScore).toBeGreaterThanOrEqual(result.hotspots[i].riskScore);
     }
   });
 
   test('riskScore is rounded to 3 decimal places', () => {
     const files = [makeFile('a.ts', 10)];
-    const commits = [
-      makeCommit('c1', ['a.ts']),
-      makeCommit('c2', ['a.ts']),
-    ];
+    const commits = [makeCommit('c1', ['a.ts']), makeCommit('c2', ['a.ts'])];
 
     const result = detectHotspots(files, commits);
-    const hs = result.hotspots.find(h => h.path === 'a.ts')!;
+    const hs = result.hotspots.find((h) => h.path === 'a.ts')!;
     const decimals = hs.riskScore.toString().split('.')[1];
     expect(!decimals || decimals.length <= 3).toBe(true);
   });
@@ -155,24 +125,16 @@ describe('detectHotspots — risk score calculation', () => {
 // ---------------------------------------------------------------------------
 describe('detectHotspots — topN filtering', () => {
   test('default topN is 50', () => {
-    const files = Array.from({ length: 100 }, (_, i) =>
-      makeFile(`file${i}.ts`, i + 1),
-    );
-    const commits = files.map((f, i) =>
-      makeCommit(`c${i}`, [f.path]),
-    );
+    const files = Array.from({ length: 100 }, (_, i) => makeFile(`file${i}.ts`, i + 1));
+    const commits = files.map((f, i) => makeCommit(`c${i}`, [f.path]));
 
     const result = detectHotspots(files, commits);
     expect(result.hotspots.length).toBeLessThanOrEqual(50);
   });
 
   test('respects custom topN', () => {
-    const files = Array.from({ length: 20 }, (_, i) =>
-      makeFile(`file${i}.ts`, i + 1),
-    );
-    const commits = files.map((f, i) =>
-      makeCommit(`c${i}`, [f.path]),
-    );
+    const files = Array.from({ length: 20 }, (_, i) => makeFile(`file${i}.ts`, i + 1));
+    const commits = files.map((f, i) => makeCommit(`c${i}`, [f.path]));
 
     const result = detectHotspots(files, commits, { topN: 5 });
     expect(result.hotspots.length).toBeLessThanOrEqual(5);
@@ -184,14 +146,9 @@ describe('detectHotspots — topN filtering', () => {
 // ---------------------------------------------------------------------------
 describe('detectHotspots — temporal coupling', () => {
   test('detects files that frequently co-change', () => {
-    const files = [
-      makeFile('model.ts', 10),
-      makeFile('view.ts', 10),
-    ];
+    const files = [makeFile('model.ts', 10), makeFile('view.ts', 10)];
     // 6 commits where both files change together
-    const commits = Array.from({ length: 6 }, (_, i) =>
-      makeCommit(`c${i}`, ['model.ts', 'view.ts']),
-    );
+    const commits = Array.from({ length: 6 }, (_, i) => makeCommit(`c${i}`, ['model.ts', 'view.ts']));
 
     const result = detectHotspots(files, commits, { minCouplingCount: 5 });
     expect(result.temporalCouplings.length).toBeGreaterThanOrEqual(1);
@@ -199,37 +156,27 @@ describe('detectHotspots — temporal coupling', () => {
     const coupling = result.temporalCouplings[0];
     expect(
       (coupling.fileA === 'model.ts' && coupling.fileB === 'view.ts') ||
-      (coupling.fileA === 'view.ts' && coupling.fileB === 'model.ts'),
+        (coupling.fileA === 'view.ts' && coupling.fileB === 'model.ts'),
     ).toBe(true);
     expect(coupling.coChangeCount).toBe(6);
     expect(coupling.strength).toBeGreaterThan(0);
   });
 
   test('does not report couplings below minCouplingCount', () => {
-    const files = [
-      makeFile('a.ts', 10),
-      makeFile('b.ts', 10),
-    ];
+    const files = [makeFile('a.ts', 10), makeFile('b.ts', 10)];
     // Only 3 co-changes
-    const commits = Array.from({ length: 3 }, (_, i) =>
-      makeCommit(`c${i}`, ['a.ts', 'b.ts']),
-    );
+    const commits = Array.from({ length: 3 }, (_, i) => makeCommit(`c${i}`, ['a.ts', 'b.ts']));
 
     const result = detectHotspots(files, commits, { minCouplingCount: 5 });
     expect(result.temporalCouplings.length).toBe(0);
   });
 
   test('skips commits with >50 files (mass commits)', () => {
-    const files = [
-      makeFile('a.ts', 10),
-      makeFile('b.ts', 10),
-    ];
+    const files = [makeFile('a.ts', 10), makeFile('b.ts', 10)];
     // One commit with 51 files
     const massFiles = Array.from({ length: 51 }, (_, i) => `file${i}.ts`);
     massFiles.push('a.ts', 'b.ts');
-    const commits = Array.from({ length: 6 }, (_, i) =>
-      makeCommit(`c${i}`, massFiles),
-    );
+    const commits = Array.from({ length: 6 }, (_, i) => makeCommit(`c${i}`, massFiles));
 
     const result = detectHotspots(files, commits, { minCouplingCount: 1 });
     // All commits had >50 files, so coupling detection skips them
@@ -238,28 +185,19 @@ describe('detectHotspots — temporal coupling', () => {
 
   test('skips single-file commits for coupling', () => {
     const files = [makeFile('a.ts', 10)];
-    const commits = Array.from({ length: 10 }, (_, i) =>
-      makeCommit(`c${i}`, ['a.ts']),
-    );
+    const commits = Array.from({ length: 10 }, (_, i) => makeCommit(`c${i}`, ['a.ts']));
 
     const result = detectHotspots(files, commits, { minCouplingCount: 1 });
     expect(result.temporalCouplings.length).toBe(0);
   });
 
   test('coupling strength is normalized', () => {
-    const files = [
-      makeFile('a.ts', 10),
-      makeFile('b.ts', 10),
-    ];
+    const files = [makeFile('a.ts', 10), makeFile('b.ts', 10)];
     const commits = [
       // 5 co-changes
-      ...Array.from({ length: 5 }, (_, i) =>
-        makeCommit(`co${i}`, ['a.ts', 'b.ts']),
-      ),
+      ...Array.from({ length: 5 }, (_, i) => makeCommit(`co${i}`, ['a.ts', 'b.ts'])),
       // 5 additional solo changes to a.ts
-      ...Array.from({ length: 5 }, (_, i) =>
-        makeCommit(`solo${i}`, ['a.ts']),
-      ),
+      ...Array.from({ length: 5 }, (_, i) => makeCommit(`solo${i}`, ['a.ts'])),
     ];
 
     const result = detectHotspots(files, commits, { minCouplingCount: 5 });
@@ -294,7 +232,7 @@ describe('detectHotspots — edge cases', () => {
 
     const result = detectHotspots(files, commits);
     // unknown.ts appears in hotspots from churn map
-    const unknown = result.hotspots.find(h => h.path === 'unknown.ts');
+    const unknown = result.hotspots.find((h) => h.path === 'unknown.ts');
     expect(unknown).toBeDefined();
     expect(unknown!.complexity).toBe(0);
   });
@@ -304,7 +242,7 @@ describe('detectHotspots — edge cases', () => {
     const commits = [makeCommit('c1', ['orphan.ts'])];
 
     const result = detectHotspots(files, commits);
-    const orphan = result.hotspots.find(h => h.path === 'orphan.ts');
+    const orphan = result.hotspots.find((h) => h.path === 'orphan.ts');
     expect(orphan).toBeDefined();
     expect(orphan!.complexity).toBe(0);
     expect(orphan!.riskScore).toBe(0);

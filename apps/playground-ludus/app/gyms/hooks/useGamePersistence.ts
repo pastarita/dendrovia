@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Character } from '@dendrovia/shared';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /** Matches the SaveSlot shape from @dendrovia/operatus */
 interface SaveSlot {
@@ -76,27 +76,32 @@ export function useGamePersistence(): PersistenceState {
       });
     });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [refreshSaves, refreshCharacter]);
 
-  const saveGame = useCallback(async (player: Character) => {
-    const mod = operatusRef.current;
-    if (!mod) return;
-    mod.useGameStore.getState().setCharacter({
-      id: player.id,
-      name: player.name,
-      class: player.class,
-      level: player.level,
-      experience: player.experience,
-      stats: { ...player.stats },
-      spells: [...player.spells],
-      statusEffects: [],
-      cooldowns: {},
-    });
-    // Allow persist middleware to flush to IndexedDB
-    await new Promise<void>((r) => setTimeout(r, 250));
-    await refreshSaves();
-  }, [refreshSaves]);
+  const saveGame = useCallback(
+    async (player: Character) => {
+      const mod = operatusRef.current;
+      if (!mod) return;
+      mod.useGameStore.getState().setCharacter({
+        id: player.id,
+        name: player.name,
+        class: player.class,
+        level: player.level,
+        experience: player.experience,
+        stats: { ...player.stats },
+        spells: [...player.spells],
+        statusEffects: [],
+        cooldowns: {},
+      });
+      // Allow persist middleware to flush to IndexedDB
+      await new Promise<void>((r) => setTimeout(r, 250));
+      await refreshSaves();
+    },
+    [refreshSaves],
+  );
 
   const loadCharacter = useCallback((): Character | null => {
     const mod = operatusRef.current;

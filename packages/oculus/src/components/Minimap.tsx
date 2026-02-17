@@ -5,11 +5,11 @@
  * Yellow = current, grey = visited, white = unvisited, red glow = hotspot.
  */
 
-import React, { useMemo } from 'react';
-import { useOculusStore } from '../store/useOculusStore';
-import { useOculus } from '../OculusProvider';
-import { GameEvents } from '@dendrovia/shared';
 import type { FileTreeNode, Hotspot } from '@dendrovia/shared';
+import { GameEvents } from '@dendrovia/shared';
+import { useMemo } from 'react';
+import { useOculus } from '../OculusProvider';
+import { useOculusStore } from '../store/useOculusStore';
 import { Panel } from './primitives/Panel';
 
 interface MinimapNode {
@@ -27,7 +27,7 @@ function flattenTree(
   hotspotPaths: Set<string>,
   visited: string[],
   depth = 0,
-  index = 0
+  index = 0,
 ): MinimapNode[] {
   const nodes: MinimapNode[] = [];
   // Simple radial layout: depth → radius, index → angle
@@ -59,13 +59,10 @@ export function Minimap() {
   const topology = useOculusStore((s) => s.topology);
   const hotspots = useOculusStore((s) => s.hotspots);
   const visitedNodes = useOculusStore((s) => s.visitedNodes);
-  const playerPosition = useOculusStore((s) => s.playerPosition);
+  const _playerPosition = useOculusStore((s) => s.playerPosition);
   const { eventBus } = useOculus();
 
-  const hotspotPaths = useMemo(
-    () => new Set(hotspots.map((h: Hotspot) => h.path)),
-    [hotspots]
-  );
+  const hotspotPaths = useMemo(() => new Set(hotspots.map((h: Hotspot) => h.path)), [hotspots]);
 
   const nodes = useMemo(() => {
     if (!topology) return [];

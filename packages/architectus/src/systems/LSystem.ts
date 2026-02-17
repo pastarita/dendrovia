@@ -136,11 +136,7 @@ export class LSystem {
    * their parametric lengths/radii through expansion. Adds F (organic forward)
    * at leaf tips, which rules expand into small branching clusters.
    */
-  static fromTopology(
-    tree: FileTreeNode,
-    hotspots: Hotspot[] = [],
-    baseSeed = 42
-  ): LSystem {
+  static fromTopology(tree: FileTreeNode, hotspots: Hotspot[] = [], baseSeed = 42): LSystem {
     const seed = hashString(tree.path) + baseSeed;
     const rng = mulberry32(seed);
 
@@ -150,9 +146,9 @@ export class LSystem {
     // Only F is expanded — G passes through unchanged, preserving topology
     const rules: Record<string, string | string[]> = {
       F: [
-        'G[+G][-G]',           // Symmetric branching cluster
-        'G[+G]G[-G]',          // Alternating cluster
-        'G[^G][&G]',           // Vertical spread
+        'G[+G][-G]', // Symmetric branching cluster
+        'G[+G]G[-G]', // Alternating cluster
+        'G[^G][&G]', // Vertical spread
       ],
     };
 
@@ -167,12 +163,7 @@ export class LSystem {
    * F = organic tips at leaf nodes (expanded into small clusters)
    * Parameters on G segments preserve LOC-based lengths and radii.
    */
-  private static buildAxiom(
-    tree: FileTreeNode,
-    hotspots: Hotspot[],
-    parentRadius: number,
-    rng: () => number,
-  ): string {
+  private static buildAxiom(tree: FileTreeNode, hotspots: Hotspot[], parentRadius: number, rng: () => number): string {
     if (!tree.children || tree.children.length === 0) {
       const t = tree.type === 'directory' ? 'd' : 'f';
       return `@(${t}:${tree.path})`;
@@ -192,14 +183,10 @@ export class LSystem {
       const hotspot = hotspots.find((h) => h.path === child.path);
 
       // Radius: directories thicker, files thinner, scaled from parent
-      const radius = child.type === 'directory'
-        ? parentRadius * 0.7
-        : parentRadius * 0.4;
+      const radius = child.type === 'directory' ? parentRadius * 0.7 : parentRadius * 0.4;
 
       // Length from LOC (files) or default (directories), scaled up for visibility
-      const baseLength = child.metadata
-        ? Math.max(1.5, Math.min(6, child.metadata.loc / 40))
-        : 2.5;
+      const baseLength = child.metadata ? Math.max(1.5, Math.min(6, child.metadata.loc / 40)) : 2.5;
       // Organic perturbation: ±20%
       const length = baseLength * (0.8 + rng() * 0.4);
 

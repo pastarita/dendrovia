@@ -1,10 +1,10 @@
-import { describe, test, expect } from 'bun:test';
-import { mkdirSync, rmSync, existsSync, readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
-import { deriveStoryArc } from '../../src/storyarc/StoryArcDeriver';
-import { distillSegments } from '../../src/pipeline/SegmentPipeline';
+import { describe, expect, test } from 'bun:test';
+import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import type { CodeTopology, FileTreeNode, ParsedFile } from '@dendrovia/shared';
 import { generateMockTopology } from '../../src/pipeline/MockTopology';
-import type { CodeTopology, ParsedFile, FileTreeNode } from '@dendrovia/shared';
+import { distillSegments } from '../../src/pipeline/SegmentPipeline';
+import { deriveStoryArc } from '../../src/storyarc/StoryArcDeriver';
 
 const TEST_OUTPUT = join(import.meta.dir, '..', '..', 'generated', '__test-segments__');
 
@@ -52,8 +52,8 @@ function buildRichTopology(): CodeTopology {
     commits: [],
     tree: { name: 'root', path: '.', type: 'directory', children: rootChildren },
     hotspots: files
-      .filter(f => f.complexity > 10)
-      .map(f => ({
+      .filter((f) => f.complexity > 10)
+      .map((f) => ({
         path: f.path,
         churnRate: f.complexity * 2,
         complexity: f.complexity,
@@ -96,7 +96,7 @@ describe('Story Arc Integration', () => {
       }
 
       // 4. Verify distinct palettes (at least some segments should differ)
-      const palettes = segmentAssets.map(a => a.palette.primary);
+      const palettes = segmentAssets.map((a) => a.palette.primary);
       const uniquePalettes = new Set(palettes);
       // With different moods driving overrides, we should get variety
       if (storyArc.segments.length >= 3) {

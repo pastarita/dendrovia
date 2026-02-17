@@ -2,29 +2,25 @@
  * Tests for mesh serialization and adapter functions.
  */
 
-import { describe, test, expect } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import {
-  buildFromProfile,
-  buildFromIndexed,
-  toFlatArrays,
-} from '../../src/mesh/HalfEdgeMesh.js';
-import {
-  serialize,
-  deserializeToHalfEdge,
-  deserializeToFlat,
-  deserializeWithFallback,
-} from '../../src/mesh/serialize.js';
-import {
-  profileToHalfEdge,
-  cylinderToHalfEdge,
-  specimenToHalfEdge,
-  fallbackMeshFromProfile,
   applyPipelineToProfile,
+  cylinderToHalfEdge,
+  fallbackMeshFromProfile,
+  profileToHalfEdge,
+  specimenToHalfEdge,
 } from '../../src/mesh/adapters.js';
+import { buildFromProfile } from '../../src/mesh/HalfEdgeMesh.js';
 import { smooth } from '../../src/mesh/ops/smooth.js';
 import { subdivide } from '../../src/mesh/ops/subdivide.js';
 import { pipe } from '../../src/mesh/pipeline.js';
-import type { ProfileGeometry, CylinderGeometry, MushroomMeshData } from '../../src/mycology/assets/MeshGenerator.js';
+import {
+  deserializeToFlat,
+  deserializeToHalfEdge,
+  deserializeWithFallback,
+  serialize,
+} from '../../src/mesh/serialize.js';
+import type { CylinderGeometry, MushroomMeshData, ProfileGeometry } from '../../src/mycology/assets/MeshGenerator.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -32,7 +28,12 @@ import type { ProfileGeometry, CylinderGeometry, MushroomMeshData } from '../../
 
 function testProfile(): ProfileGeometry {
   return {
-    points: [[0, 1], [0.3, 0.8], [0.5, 0.3], [0.2, 0]],
+    points: [
+      [0, 1],
+      [0.3, 0.8],
+      [0.5, 0.3],
+      [0.2, 0],
+    ],
     segments: 8,
   };
 }
@@ -73,7 +74,13 @@ function testSpecimenMeshData(): MushroomMeshData {
 
 describe('serialize', () => {
   test('produces valid SerializedMeshData with version 1', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(mesh);
     expect(data.version).toBe(1);
     expect(data.format).toBe('indexed'); // default without topology
@@ -85,13 +92,25 @@ describe('serialize', () => {
   });
 
   test('omits topology by default', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(mesh);
     expect(data.topology).toBeUndefined();
   });
 
   test('includes topology when requested', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(mesh, { includeTopology: true });
     expect(data.topology).toBeDefined();
     expect(data.topology!.halfedges.length).toBe(mesh.halfedges.length);
@@ -101,7 +120,13 @@ describe('serialize', () => {
   });
 
   test('includes metadata when provided', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(mesh, {
       meta: {
         genus: 'Amanita',
@@ -115,7 +140,14 @@ describe('serialize', () => {
   });
 
   test('output is JSON-serializable (no typed arrays, no circular refs)', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5], [0.3, 1]], 6);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+        [0.3, 1],
+      ],
+      6,
+    );
     const data = serialize(mesh, { includeTopology: true });
     const json = JSON.stringify(data);
     const parsed = JSON.parse(json);
@@ -125,7 +157,14 @@ describe('serialize', () => {
   });
 
   test('no NaN values in positions or normals', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5], [0.3, 1]], 8);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+        [0.3, 1],
+      ],
+      8,
+    );
     const data = serialize(mesh);
     for (const v of data.positions) expect(Number.isNaN(v)).toBe(false);
     for (const v of data.normals) expect(Number.isNaN(v)).toBe(false);
@@ -138,7 +177,13 @@ describe('serialize', () => {
 
 describe('deserializeToHalfEdge', () => {
   test('round-trips without topology', () => {
-    const original = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const original = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(original);
     const restored = deserializeToHalfEdge(data);
 
@@ -148,7 +193,13 @@ describe('deserializeToHalfEdge', () => {
   });
 
   test('round-trips with topology (fast path)', () => {
-    const original = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const original = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(original, { includeTopology: true });
     const restored = deserializeToHalfEdge(data);
 
@@ -159,7 +210,13 @@ describe('deserializeToHalfEdge', () => {
   });
 
   test('preserves vertex positions through round-trip', () => {
-    const original = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const original = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(original, { includeTopology: true });
     const restored = deserializeToHalfEdge(data)!;
 
@@ -181,7 +238,13 @@ describe('deserializeToHalfEdge', () => {
 
 describe('deserializeToFlat', () => {
   test('produces typed arrays from serialized data', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(mesh);
     const flat = deserializeToFlat(data);
 
@@ -200,7 +263,13 @@ describe('deserializeToFlat', () => {
 
 describe('deserializeWithFallback', () => {
   test('returns FlatMeshData for valid input', () => {
-    const mesh = buildFromProfile([[0.5, 0], [1, 0.5]], 4);
+    const mesh = buildFromProfile(
+      [
+        [0.5, 0],
+        [1, 0.5],
+      ],
+      4,
+    );
     const data = serialize(mesh);
     const flat = deserializeWithFallback(data);
 
@@ -288,7 +357,9 @@ describe('applyPipelineToProfile', () => {
 
   test('falls back to base mesh if pipeline throws', () => {
     const profile = testProfile();
-    const brokenPipeline = () => { throw new Error('boom'); };
+    const brokenPipeline = () => {
+      throw new Error('boom');
+    };
     const flat = applyPipelineToProfile(profile, brokenPipeline as any);
     // Should still return valid mesh data (fallback)
     expect(flat.positions).toBeInstanceOf(Float32Array);
@@ -297,7 +368,9 @@ describe('applyPipelineToProfile', () => {
 
   test('fallback mesh matches direct profile conversion', () => {
     const profile = testProfile();
-    const brokenPipeline = () => { throw new Error('boom'); };
+    const brokenPipeline = () => {
+      throw new Error('boom');
+    };
     const fallback = applyPipelineToProfile(profile, brokenPipeline as any);
     const direct = fallbackMeshFromProfile(profile);
     // Should produce identical results

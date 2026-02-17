@@ -5,13 +5,8 @@
  * on high-frequency runtime updates. Uses flat replace (no Immer).
  */
 
-import { createStore } from "zustand/vanilla";
-import type {
-  RuntimeNodeState,
-  NodeAction,
-  RuntimeEvent,
-  RuntimeHealth,
-} from "../types";
+import { createStore } from 'zustand/vanilla';
+import type { NodeAction, RuntimeEvent, RuntimeHealth, RuntimeNodeState } from '../types';
 
 const MAX_EVENTS = 50;
 
@@ -21,10 +16,7 @@ export interface RuntimeStoreState {
   events: Map<string, RuntimeEvent[]>;
   connected: boolean;
 
-  updateNode: (
-    nodeId: string,
-    partial: Partial<Omit<RuntimeNodeState, "nodeId">>
-  ) => void;
+  updateNode: (nodeId: string, partial: Partial<Omit<RuntimeNodeState, 'nodeId'>>) => void;
   registerActions: (nodeId: string, actions: NodeAction[]) => void;
   pushEvent: (nodeId: string, event: RuntimeEvent) => void;
   setConnected: (connected: boolean) => void;
@@ -47,7 +39,7 @@ export function createRuntimeStore() {
         const existing = next.get(nodeId);
         next.set(nodeId, {
           nodeId,
-          health: "idle",
+          health: 'idle',
           metrics: [],
           actions: [],
           lastUpdated: Date.now(),

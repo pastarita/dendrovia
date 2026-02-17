@@ -152,42 +152,30 @@ export const useRendererStore = create<RendererState>()(
     generatedAssets: null,
 
     // Actions
-    setCameraMode: (mode) =>
-      set({ cameraMode: mode, cameraTransitioning: true }),
+    setCameraMode: (mode) => set({ cameraMode: mode, cameraTransitioning: true }),
 
-    setPlayerPosition: (pos) =>
-      set({ playerPosition: pos }),
+    setPlayerPosition: (pos) => set({ playerPosition: pos }),
 
-    setPlayerBranch: (branchId) =>
-      set({ playerBranchId: branchId }),
+    setPlayerBranch: (branchId) => set({ playerBranchId: branchId }),
 
-    setQualityTier: (tier) =>
-      set({ qualityTier: tier, quality: QUALITY_PRESETS[tier] }),
+    setQualityTier: (tier) => set({ qualityTier: tier, quality: QUALITY_PRESETS[tier] }),
 
-    setGpuBackend: (backend) =>
-      set({ gpuBackend: backend }),
+    setGpuBackend: (backend) => set({ gpuBackend: backend }),
 
-    selectNode: (nodeId) =>
-      set({ selectedNodeId: nodeId }),
+    selectNode: (nodeId) => set({ selectedNodeId: nodeId }),
 
-    hoverNode: (nodeId) =>
-      set({ hoveredNodeId: nodeId }),
+    hoverNode: (nodeId) => set({ hoveredNodeId: nodeId }),
 
-    setSceneReady: (ready) =>
-      set({ sceneReady: ready }),
+    setSceneReady: (ready) => set({ sceneReady: ready }),
 
-    setLoading: (loading, progress) =>
-      set({ loading, loadingProgress: progress ?? (loading ? 0 : 100) }),
+    setLoading: (loading, progress) => set({ loading, loadingProgress: progress ?? (loading ? 0 : 100) }),
 
-    updatePerformance: (fps, drawCalls, triangles) =>
-      set({ fps, drawCalls, triangles }),
+    updatePerformance: (fps, drawCalls, triangles) => set({ fps, drawCalls, triangles }),
 
-    setGeneratedAssets: (assets) =>
-      set({ generatedAssets: assets }),
+    setGeneratedAssets: (assets) => set({ generatedAssets: assets }),
 
-    setUiHovered: (hovered) =>
-      set({ isUiHovered: hovered }),
-  }))
+    setUiHovered: (hovered) => set({ isUiHovered: hovered }),
+  })),
 );
 
 /** Get quality settings without subscribing (for useFrame loops) */

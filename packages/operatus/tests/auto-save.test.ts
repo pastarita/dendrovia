@@ -10,7 +10,7 @@
  */
 
 import './setup.js';
-import { describe, test, expect, beforeEach, afterEach, mock, spyOn } from 'bun:test';
+import { describe, expect, test } from 'bun:test';
 import { AutoSave } from '../src/persistence/AutoSave.js';
 
 describe('AutoSave — construction', () => {

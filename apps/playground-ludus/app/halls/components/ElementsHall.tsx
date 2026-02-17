@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
 import { ELEMENT_TABLE, getAllSpells } from '@dendrovia/ludus';
 import type { Element } from '@dendrovia/shared';
+import { useMemo } from 'react';
 
 const ELEMENTS: Element[] = ['fire', 'water', 'earth', 'air', 'none'];
 
@@ -26,7 +26,8 @@ const ELEMENT_DESCRIPTIONS: Record<string, { theme: string; strengths: string; w
     weakness: 'Resisted by Water and Air',
   },
   earth: {
-    theme: 'Defensive, shielding, persistent. Associated with Tank spells like Mutex Lock, Docker Compose, and Terraform.',
+    theme:
+      'Defensive, shielding, persistent. Associated with Tank spells like Mutex Lock, Docker Compose, and Terraform.',
     strengths: 'Super effective against Water and Air',
     weakness: 'Resisted by Earth and vulnerable to Fire',
   },
@@ -74,17 +75,47 @@ export default function ElementsHall(): React.JSX.Element {
           <table style={{ borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                <th style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid #333', fontSize: '0.7rem', opacity: 0.5 }}>ATK \ DEF</th>
-                {ELEMENTS.map(el => (
-                  <th key={el} style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid #333', fontSize: '0.8rem', color: ELEMENT_COLORS[el], fontWeight: 700 }}>{el}</th>
+                <th
+                  style={{
+                    padding: '0.5rem 0.75rem',
+                    borderBottom: '1px solid #333',
+                    fontSize: '0.7rem',
+                    opacity: 0.5,
+                  }}
+                >
+                  ATK \ DEF
+                </th>
+                {ELEMENTS.map((el) => (
+                  <th
+                    key={el}
+                    style={{
+                      padding: '0.5rem 0.75rem',
+                      borderBottom: '1px solid #333',
+                      fontSize: '0.8rem',
+                      color: ELEMENT_COLORS[el],
+                      fontWeight: 700,
+                    }}
+                  >
+                    {el}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {ELEMENTS.map(atkEl => (
+              {ELEMENTS.map((atkEl) => (
                 <tr key={atkEl}>
-                  <td style={{ padding: '0.5rem 0.75rem', fontWeight: 700, fontSize: '0.8rem', color: ELEMENT_COLORS[atkEl], borderBottom: '1px solid #1a1a1a' }}>{atkEl}</td>
-                  {ELEMENTS.map(defEl => {
+                  <td
+                    style={{
+                      padding: '0.5rem 0.75rem',
+                      fontWeight: 700,
+                      fontSize: '0.8rem',
+                      color: ELEMENT_COLORS[atkEl],
+                      borderBottom: '1px solid #1a1a1a',
+                    }}
+                  >
+                    {atkEl}
+                  </td>
+                  {ELEMENTS.map((defEl) => {
                     const mult = ELEMENT_TABLE[atkEl][defEl];
                     return (
                       <td
@@ -110,15 +141,21 @@ export default function ElementsHall(): React.JSX.Element {
           </table>
         </div>
         <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', marginTop: '0.5rem', opacity: 0.6 }}>
-          <span><span style={{ color: '#22C55E' }}>Green</span> = super effective (1.5x)</span>
-          <span><span style={{ color: '#EF4444' }}>Red</span> = resisted (0.5x)</span>
-          <span><span style={{ color: '#6B7280' }}>Gray</span> = neutral (1.0x)</span>
+          <span>
+            <span style={{ color: '#22C55E' }}>Green</span> = super effective (1.5x)
+          </span>
+          <span>
+            <span style={{ color: '#EF4444' }}>Red</span> = resisted (0.5x)
+          </span>
+          <span>
+            <span style={{ color: '#6B7280' }}>Gray</span> = neutral (1.0x)
+          </span>
         </div>
       </div>
 
       {/* Element Cards */}
       <div style={{ display: 'grid', gap: '0.75rem' }}>
-        {ELEMENTS.map(el => {
+        {ELEMENTS.map((el) => {
           const desc = ELEMENT_DESCRIPTIONS[el];
           return (
             <div
@@ -131,16 +168,41 @@ export default function ElementsHall(): React.JSX.Element {
                 borderLeft: `3px solid ${ELEMENT_COLORS[el]}`,
               }}
             >
-              <div style={{ fontWeight: 700, fontSize: '1rem', color: ELEMENT_COLORS[el], marginBottom: '0.35rem', textTransform: 'capitalize' }}>{el}</div>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  color: ELEMENT_COLORS[el],
+                  marginBottom: '0.35rem',
+                  textTransform: 'capitalize',
+                }}
+              >
+                {el}
+              </div>
               <div style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '0.5rem' }}>{desc.theme}</div>
               <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
-                <div><span style={{ color: '#22C55E' }}>Strengths:</span> {desc.strengths}</div>
-                <div><span style={{ color: '#EF4444' }}>Weakness:</span> {desc.weakness}</div>
+                <div>
+                  <span style={{ color: '#22C55E' }}>Strengths:</span> {desc.strengths}
+                </div>
+                <div>
+                  <span style={{ color: '#EF4444' }}>Weakness:</span> {desc.weakness}
+                </div>
               </div>
               <div style={{ fontSize: '0.7rem', opacity: 0.4, marginBottom: '0.15rem' }}>Spells with this element:</div>
               <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
-                {spellsByElement[el].slice(0, 8).map(name => (
-                  <span key={name} style={{ fontSize: '0.7rem', padding: '0.1rem 0.35rem', borderRadius: '3px', background: '#1a1a1a', border: '1px solid #333' }}>{name}</span>
+                {spellsByElement[el].slice(0, 8).map((name) => (
+                  <span
+                    key={name}
+                    style={{
+                      fontSize: '0.7rem',
+                      padding: '0.1rem 0.35rem',
+                      borderRadius: '3px',
+                      background: '#1a1a1a',
+                      border: '1px solid #333',
+                    }}
+                  >
+                    {name}
+                  </span>
                 ))}
                 {spellsByElement[el].length > 8 && (
                   <span style={{ fontSize: '0.7rem', opacity: 0.4 }}>+{spellsByElement[el].length - 8} more</span>

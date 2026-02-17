@@ -9,25 +9,20 @@
 // Source Fixture Types (authored by each pillar)
 // ---------------------------------------------------------------------------
 
-export type NodeKind = "root" | "phase" | "section";
+export type NodeKind = 'root' | 'phase' | 'section';
 
-export type NodeStatus =
-  | "implemented"
-  | "partial"
-  | "scaffold"
-  | "planned"
-  | "deprecated";
+export type NodeStatus = 'implemented' | 'partial' | 'scaffold' | 'planned' | 'deprecated';
 
 export type PillarDomain =
-  | "chronos"
-  | "imaginarium"
-  | "architectus"
-  | "ludus"
-  | "oculus"
-  | "operatus"
-  | "shared"
-  | "app"
-  | "infra";
+  | 'chronos'
+  | 'imaginarium'
+  | 'architectus'
+  | 'ludus'
+  | 'oculus'
+  | 'operatus'
+  | 'shared'
+  | 'app'
+  | 'infra';
 
 export interface SourceNode {
   id: string;
@@ -45,7 +40,7 @@ export interface SourceEdge {
   source: string;
   target: string;
   /** "pipeline-flow" = data flows between phases; "containment" = parent-child */
-  relation: "pipeline-flow" | "containment";
+  relation: 'pipeline-flow' | 'containment';
   /** Data type label displayed on pipeline-flow edges */
   label?: string;
   /** Boundary contract for pillar-to-pillar edges (L1) */
@@ -69,7 +64,7 @@ export interface BoundaryEvent {
   name: string;
   /** Event key, e.g. "player:moved" */
   key: string;
-  direction: "emit" | "consume";
+  direction: 'emit' | 'consume';
   payloadType?: string;
 }
 
@@ -90,7 +85,7 @@ export interface SourceDiagram {
 // Runtime State Types (for live subsystem observation)
 // ---------------------------------------------------------------------------
 
-export type RuntimeHealth = "healthy" | "degraded" | "error" | "idle";
+export type RuntimeHealth = 'healthy' | 'degraded' | 'error' | 'idle';
 
 export interface RuntimeMetric {
   key: string;
@@ -103,7 +98,7 @@ export interface NodeAction {
   label: string;
   handler: () => void | Promise<void>;
   confirm?: string;
-  category?: "default" | "danger" | "info";
+  category?: 'default' | 'danger' | 'info';
 }
 
 export interface RuntimeNodeState {
@@ -125,9 +120,9 @@ export interface RuntimeEvent {
 // Layout & Rendering Types
 // ---------------------------------------------------------------------------
 
-export type LayoutDirection = "TB" | "LR";
+export type LayoutDirection = 'TB' | 'LR';
 
-export type ColorMode = "status" | "domain" | "fidelity" | "runtime";
+export type ColorMode = 'status' | 'domain' | 'fidelity' | 'runtime';
 
 export interface LayoutConfig {
   direction: LayoutDirection;
@@ -157,8 +152,8 @@ export interface DendriteState {
   collapseState: CollapseState;
 
   // ReactFlow-managed
-  nodes: import("@xyflow/react").Node[];
-  edges: import("@xyflow/react").Edge[];
+  nodes: import('@xyflow/react').Node[];
+  edges: import('@xyflow/react').Edge[];
 
   // FitView trigger counter
   fitViewTrigger: number;
@@ -188,6 +183,6 @@ export interface DendriteState {
   relayout: () => void;
 
   // ReactFlow callbacks
-  onNodesChange: (changes: import("@xyflow/react").NodeChange[]) => void;
-  onEdgesChange: (changes: import("@xyflow/react").EdgeChange[]) => void;
+  onNodesChange: (changes: import('@xyflow/react').NodeChange[]) => void;
+  onEdgesChange: (changes: import('@xyflow/react').EdgeChange[]) => void;
 }

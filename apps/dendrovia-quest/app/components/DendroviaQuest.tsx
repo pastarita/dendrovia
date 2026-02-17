@@ -17,32 +17,34 @@
  * renders.
  */
 
-import { useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
-
-// ── Shared ────────────────────────────────────────────────────
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { EventBus, TopologyGeneratedEvent } from '@dendrovia/shared';
-import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit } from '@dendrovia/shared';
-
 // ── ARCHITECTUS (3D renderer) ─────────────────────────────────
 import { App as ArchitectusApp, useRendererStore } from '@dendrovia/architectus';
-
-// ── OCULUS (UI layer) ─────────────────────────────────────────
-import { OculusProvider, HUD, useOculusStore } from '@dendrovia/oculus';
-
 // ── LUDUS (game logic) ────────────────────────────────────────
 import {
-  createGameStore,
   bridgeStoreToEventBus,
-  createGameSession,
-  wireGameEvents,
   createCharacter,
+  createGameSession,
+  createGameStore,
   type GameSession,
   type GameStore,
+  wireGameEvents,
 } from '@dendrovia/ludus';
-
+// ── OCULUS (UI layer) ─────────────────────────────────────────
+import { HUD, OculusProvider, useOculusStore } from '@dendrovia/oculus';
 // ── OPERATUS (infrastructure) ─────────────────────────────────
-import { initializeOperatus, StateAdapter, type OperatusContext } from '@dendrovia/operatus';
+import { initializeOperatus, type OperatusContext, StateAdapter } from '@dendrovia/operatus';
+import type {
+  CharacterClass,
+  EventBus,
+  FileTreeNode,
+  Hotspot,
+  ParsedCommit,
+  ParsedFile,
+  TopologyGeneratedEvent,
+} from '@dendrovia/shared';
+// ── Shared ────────────────────────────────────────────────────
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 // ─── Configuration ────────────────────────────────────────────
 
@@ -57,6 +59,10 @@ export interface DendroviaQuestProps {
   enableLudus?: boolean;
   /** Enable OCULUS HUD overlay (default: true) */
   enableOculus?: boolean;
+  /** Character class for LUDUS (default: 'dps') */
+  characterClass?: CharacterClass;
+  /** Character name (default: 'Explorer') */
+  characterName?: string;
   /** Children rendered inside the OCULUS provider, after HUD */
   children?: ReactNode;
 }
@@ -103,6 +109,8 @@ export function DendroviaQuest({
   enableOperatus = true,
   enableLudus = true,
   enableOculus = true,
+  characterClass = 'dps',
+  characterName = 'Explorer',
   children,
 }: DendroviaQuestProps) {
   // ── Refs (persist across renders, no re-render on mutation) ──
@@ -178,7 +186,7 @@ export function DendroviaQuest({
         try {
           setInitMessage('Wiring game session...');
 
-          const character = createCharacter('dps', 'Explorer', 1);
+          const character = createCharacter(characterClass, characterName, 1);
           const store: GameStore = createGameStore({
             character,
             inventory: [],
@@ -227,7 +235,11 @@ export function DendroviaQuest({
     return () => {
       cancelled = true;
       for (const fn of cleanupRef.current) {
-        try { fn(); } catch { /* swallow cleanup errors */ }
+        try {
+          fn();
+        } catch {
+          /* swallow cleanup errors */
+        }
       }
       cleanupRef.current = [];
 
@@ -237,13 +249,7 @@ export function DendroviaQuest({
       operatusRef.current = null;
       gameSessionRef.current = null;
     };
-  }, [
-    enableOperatus,
-    enableLudus,
-    topologyPath,
-    manifestPath,
-    getOrCreateEventBus,
-  ]);
+  }, [enableOperatus, enableLudus, topologyPath, manifestPath, getOrCreateEventBus]);
 
   // ── Loading state ──
   if (!ready) {
@@ -275,11 +281,7 @@ export function DendroviaQuest({
 
   // Wrap in OculusProvider if OCULUS is enabled (provides EventBus context)
   if (enableOculus) {
-    return (
-      <OculusProvider eventBus={bus}>
-        {scene}
-      </OculusProvider>
-    );
+    return <OculusProvider eventBus={bus}>{scene}</OculusProvider>;
   }
 
   return scene;

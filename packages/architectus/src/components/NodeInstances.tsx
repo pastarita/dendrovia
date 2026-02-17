@@ -1,9 +1,9 @@
-import { useRef, useMemo, useEffect, useCallback } from 'react';
-import { useFrame, ThreeEvent } from '@react-three/fiber';
+import { GameEvents, getEventBus } from '@dendrovia/shared';
+import { type ThreeEvent, useFrame } from '@react-three/fiber';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { NodeMarker } from '../systems/TurtleInterpreter';
 import { useRendererStore } from '../store/useRendererStore';
+import type { NodeMarker } from '../systems/TurtleInterpreter';
 
 /**
  * NODE INSTANCES
@@ -37,8 +37,8 @@ const _color = new THREE.Color();
 
 export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const selectedNodeId = useRendererStore((s) => s.selectedNodeId);
-  const hoveredNodeId = useRendererStore((s) => s.hoveredNodeId);
+  const _selectedNodeId = useRendererStore((s) => s.selectedNodeId);
+  const _hoveredNodeId = useRendererStore((s) => s.hoveredNodeId);
 
   const material = useMemo(() => {
     return new THREE.MeshStandardMaterial({
@@ -128,7 +128,7 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
         position: node.position.toArray() as [number, number, number],
       });
     },
-    [nodes, pathToIndex]
+    [nodes, pathToIndex],
   );
 
   // Hover handler
@@ -144,7 +144,7 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
         document.body.style.cursor = 'pointer';
       }
     },
-    [pathToIndex]
+    [pathToIndex],
   );
 
   const handlePointerOut = useCallback(() => {

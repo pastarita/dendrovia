@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
 import { createMonster, createRngState } from '@dendrovia/ludus';
-import type { BugType } from '@dendrovia/shared';
 import { OrnateFrame } from '@dendrovia/oculus';
+import type { BugType } from '@dendrovia/shared';
+import { useMemo } from 'react';
 
 const BUG_TYPES: BugType[] = ['null-pointer', 'memory-leak', 'race-condition', 'off-by-one'];
 const SEVERITIES: (1 | 2 | 3 | 4 | 5)[] = [1, 2, 3, 4, 5];
@@ -32,17 +32,29 @@ export default function MonsterBestiary(): React.JSX.Element {
   return (
     <div>
       {/* Header row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '120px repeat(5, 1fr)', gap: '0.5rem', marginBottom: '0.5rem' }}>
+      <div
+        style={{ display: 'grid', gridTemplateColumns: '120px repeat(5, 1fr)', gap: '0.5rem', marginBottom: '0.5rem' }}
+      >
         <div />
-        {SEVERITIES.map(s => (
-          <div key={s} style={{ textAlign: 'center', fontSize: '0.75rem', opacity: 0.5 }}>Severity {s}</div>
+        {SEVERITIES.map((s) => (
+          <div key={s} style={{ textAlign: 'center', fontSize: '0.75rem', opacity: 0.5 }}>
+            Severity {s}
+          </div>
         ))}
       </div>
 
-      {BUG_TYPES.map(type => (
-        <div key={type} style={{ display: 'grid', gridTemplateColumns: '120px repeat(5, 1fr)', gap: '0.5rem', marginBottom: '0.5rem' }}>
+      {BUG_TYPES.map((type) => (
+        <div
+          key={type}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '120px repeat(5, 1fr)',
+            gap: '0.5rem',
+            marginBottom: '0.5rem',
+          }}
+        >
           <div style={{ fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center' }}>{type}</div>
-          {SEVERITIES.map(sev => {
+          {SEVERITIES.map((sev) => {
             const monster = monsters[`${type}-${sev}`];
             if (!monster) return <div key={sev} />;
             return (
@@ -61,7 +73,9 @@ export default function MonsterBestiary(): React.JSX.Element {
                 </div>
                 <div style={{ fontFamily: 'var(--font-geist-mono)', opacity: 0.7, lineHeight: 1.6 }}>
                   <div>HP {monster.stats.maxHealth}</div>
-                  <div>ATK {monster.stats.attack} DEF {monster.stats.defense}</div>
+                  <div>
+                    ATK {monster.stats.attack} DEF {monster.stats.defense}
+                  </div>
                   <div>SPD {monster.stats.speed}</div>
                   <div style={{ color: '#22C55E' }}>XP {monster.xpReward}</div>
                 </div>

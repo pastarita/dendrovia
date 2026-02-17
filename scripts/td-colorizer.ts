@@ -9,7 +9,7 @@
  * Usage: bun run scripts/td-colorizer.ts [turbo dev args...]
  */
 
-import { spawn } from 'child_process';
+import { spawn } from 'node:child_process';
 import { launchBrave } from './workspace-launcher/brave-launcher';
 
 // ── Pillar Color Registry ────────────────────────────────────────
@@ -34,21 +34,21 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
 }
 
 const PILLAR_COLORS: Record<string, PillarColor> = {
-  'architectus': { hex: '#3B82F6', ...hexToRgb('#3B82F6'), emoji: '🏛️', tincture: 'Azure' },
-  'chronos':     { hex: '#c77b3f', ...hexToRgb('#c77b3f'), emoji: '📜', tincture: 'Amber' },
-  'imaginarium': { hex: '#A855F7', ...hexToRgb('#A855F7'), emoji: '🎨', tincture: 'Purpure' },
-  'ludus':       { hex: '#EF4444', ...hexToRgb('#EF4444'), emoji: '🎮', tincture: 'Gules' },
-  'oculus':      { hex: '#22C55E', ...hexToRgb('#22C55E'), emoji: '👁️', tincture: 'Vert' },
-  'operatus':    { hex: '#6B7280', ...hexToRgb('#6B7280'), emoji: '💾', tincture: 'Sable' },
+  architectus: { hex: '#3B82F6', ...hexToRgb('#3B82F6'), emoji: '🏛️', tincture: 'Azure' },
+  chronos: { hex: '#c77b3f', ...hexToRgb('#c77b3f'), emoji: '📜', tincture: 'Amber' },
+  imaginarium: { hex: '#A855F7', ...hexToRgb('#A855F7'), emoji: '🎨', tincture: 'Purpure' },
+  ludus: { hex: '#EF4444', ...hexToRgb('#EF4444'), emoji: '🎮', tincture: 'Gules' },
+  oculus: { hex: '#22C55E', ...hexToRgb('#22C55E'), emoji: '👁️', tincture: 'Vert' },
+  operatus: { hex: '#6B7280', ...hexToRgb('#6B7280'), emoji: '💾', tincture: 'Sable' },
 };
 
 // Supporting packages get dimmer/neutral colors
 const SUPPORT_COLORS: Record<string, PillarColor> = {
-  'shared':            { hex: '#FFD700', ...hexToRgb('#FFD700'), emoji: '🔗', tincture: 'Or' },
-  'engine':            { hex: '#3B82F6', ...hexToRgb('#3B82F6'), emoji: '⚙️', tincture: 'Azure' },
-  'proof-of-concept':  { hex: '#CD853F', ...hexToRgb('#CD853F'), emoji: '🧪', tincture: 'Tenné' },
-  'ui':                { hex: '#E5E7EB', ...hexToRgb('#E5E7EB'), emoji: '🎨', tincture: 'Argent' },
-  'quest':             { hex: '#E5E7EB', ...hexToRgb('#E5E7EB'), emoji: '🌳', tincture: 'Argent' },
+  shared: { hex: '#FFD700', ...hexToRgb('#FFD700'), emoji: '🔗', tincture: 'Or' },
+  engine: { hex: '#3B82F6', ...hexToRgb('#3B82F6'), emoji: '⚙️', tincture: 'Azure' },
+  'proof-of-concept': { hex: '#CD853F', ...hexToRgb('#CD853F'), emoji: '🧪', tincture: 'Tenné' },
+  ui: { hex: '#E5E7EB', ...hexToRgb('#E5E7EB'), emoji: '🎨', tincture: 'Argent' },
+  quest: { hex: '#E5E7EB', ...hexToRgb('#E5E7EB'), emoji: '🌳', tincture: 'Argent' },
 };
 
 // ── ANSI Helpers ─────────────────────────────────────────────────
@@ -98,13 +98,13 @@ const args = process.argv.slice(2);
 const skipBrowser = args.includes(NO_BROWSER_FLAG);
 
 // Remove our custom flag before passing to turbo
-const turboArgs = ['dev', ...args.filter(a => a !== NO_BROWSER_FLAG)];
+const turboArgs = ['dev', ...args.filter((a) => a !== NO_BROWSER_FLAG)];
 
 const child = spawn('turbo', turboArgs, {
   stdio: ['inherit', 'pipe', 'pipe'],
   env: {
     ...process.env,
-    FORCE_COLOR: '1',  // Ensure turbo outputs color (we'll re-color)
+    FORCE_COLOR: '1', // Ensure turbo outputs color (we'll re-color)
   },
 });
 
@@ -118,13 +118,13 @@ function processStream(stream: NodeJS.ReadableStream, output: NodeJS.WritableStr
     buffer = lines.pop() ?? '';
 
     for (const line of lines) {
-      output.write(colorizeLine(line) + '\n');
+      output.write(`${colorizeLine(line)}\n`);
     }
   });
 
   stream.on('end', () => {
     if (buffer) {
-      output.write(colorizeLine(buffer) + '\n');
+      output.write(`${colorizeLine(buffer)}\n`);
     }
   });
 }

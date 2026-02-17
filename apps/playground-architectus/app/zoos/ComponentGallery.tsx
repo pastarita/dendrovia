@@ -1,21 +1,20 @@
 'use client';
 
-import { useState, useMemo, Suspense, Component, type ReactNode } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 import {
-  LSystem,
-  TurtleInterpreter,
   BranchInstances,
-  NodeInstances,
-  CameraRig,
   Lighting,
-  PostProcessing,
+  LSystem,
+  NodeInstances,
   PerformanceMonitor,
+  PostProcessing,
+  TurtleInterpreter,
   useRendererStore,
 } from '@dendrovia/architectus';
 import type { ProceduralPalette } from '@dendrovia/shared';
-import { ComponentCard, ComponentInfo, type ComponentEntry } from './ComponentCard';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { Component, type ReactNode, Suspense, useMemo, useState } from 'react';
+import { ComponentCard, type ComponentEntry, ComponentInfo } from './ComponentCard';
 
 // ---------------------------------------------------------------------------
 // Component registry — every exported ARCHITECTUS component
@@ -96,7 +95,8 @@ useRendererStore.getState()
     id: 'lighting',
     name: 'Lighting',
     category: 'effects',
-    description: 'Tron-aesthetic lighting: low ambient, sharp directional key, cyan fill from below, hemisphere gradient.',
+    description:
+      'Tron-aesthetic lighting: low ambient, sharp directional key, cyan fill from below, hemisphere gradient.',
     propsSignature: `(no props — reads shadows from store)
 
 Lights:
@@ -126,7 +126,8 @@ useRendererStore.getState()
     id: 'performance-monitor',
     name: 'PerformanceMonitor',
     category: 'systems',
-    description: 'Samples FPS and renderer stats every 30 frames. Updates store via getState() to avoid re-render churn.',
+    description:
+      'Samples FPS and renderer stats every 30 frames. Updates store via getState() to avoid re-render churn.',
     propsSignature: `(no props — writes to store)
 
 Updates:
@@ -181,7 +182,9 @@ function useSampleGeometry() {
 
 class R3FErrorBoundary extends Component<{ fallback?: ReactNode; children: ReactNode }, { error: Error | null }> {
   state = { error: null as Error | null };
-  static getDerivedStateFromError(error: Error) { return { error }; }
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
   render() {
     if (this.state.error) return this.props.fallback ?? null;
     return this.props.children;
@@ -196,8 +199,12 @@ function PreviewScene({ selectedId }: { selectedId: string }) {
   const geom = useSampleGeometry();
 
   // Show different combinations based on selected component
-  const showBranches = ['branch-instances', 'dendrite-world', 'lighting', 'camera-rig', 'performance-monitor'].includes(selectedId);
-  const showNodes = ['node-instances', 'dendrite-world', 'lighting', 'camera-rig', 'performance-monitor'].includes(selectedId);
+  const showBranches = ['branch-instances', 'dendrite-world', 'lighting', 'camera-rig', 'performance-monitor'].includes(
+    selectedId,
+  );
+  const showNodes = ['node-instances', 'dendrite-world', 'lighting', 'camera-rig', 'performance-monitor'].includes(
+    selectedId,
+  );
   const showPostFx = selectedId === 'post-processing';
 
   return (
@@ -209,22 +216,14 @@ function PreviewScene({ selectedId }: { selectedId: string }) {
           palette={{ primary: PALETTE.primary, secondary: PALETTE.secondary, glow: PALETTE.glow }}
         />
       )}
-      {showNodes && (
-        <NodeInstances
-          nodes={geom.nodes}
-          palette={{ accent: PALETTE.accent, glow: PALETTE.glow }}
-        />
-      )}
+      {showNodes && <NodeInstances nodes={geom.nodes} palette={{ accent: PALETTE.accent, glow: PALETTE.glow }} />}
       {showPostFx && (
         <>
           <BranchInstances
             branches={geom.branches}
             palette={{ primary: PALETTE.primary, secondary: PALETTE.secondary, glow: PALETTE.glow }}
           />
-          <NodeInstances
-            nodes={geom.nodes}
-            palette={{ accent: PALETTE.accent, glow: PALETTE.glow }}
-          />
+          <NodeInstances nodes={geom.nodes} palette={{ accent: PALETTE.accent, glow: PALETTE.glow }} />
           <R3FErrorBoundary>
             <PostProcessing />
           </R3FErrorBoundary>
@@ -249,27 +248,31 @@ export function ComponentGallery() {
   return (
     <div style={{ display: 'flex', height: 'calc(100vh - 10rem)' }}>
       {/* Sidebar — component list */}
-      <div style={{
-        width: 260,
-        padding: '1rem',
-        borderRight: '1px solid #333',
-        overflowY: 'auto',
-        flexShrink: 0,
-        background: '#111',
-      }}>
+      <div
+        style={{
+          width: 260,
+          padding: '1rem',
+          borderRight: '1px solid #333',
+          overflowY: 'auto',
+          flexShrink: 0,
+          background: '#111',
+        }}
+      >
         <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--pillar-accent)' }}>
           Components
         </div>
 
         {CATEGORIES.map((cat) => (
           <div key={cat} style={{ marginBottom: '1rem' }}>
-            <div style={{
-              fontSize: '0.65rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              opacity: 0.4,
-              marginBottom: '0.4rem',
-            }}>
+            <div
+              style={{
+                fontSize: '0.65rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                opacity: 0.4,
+                marginBottom: '0.4rem',
+              }}
+            >
               {CATEGORY_LABELS[cat]}
             </div>
             {COMPONENTS.filter((c) => c.category === cat).map((entry) => (
@@ -284,22 +287,30 @@ export function ComponentGallery() {
         ))}
 
         {/* Stats */}
-        <div style={{
-          padding: '0.5rem',
-          background: '#0a0a1e',
-          border: '1px solid #1a1a3e',
-          borderRadius: '4px',
-          fontFamily: 'var(--font-geist-mono), monospace',
-          fontSize: '0.7rem',
-          marginTop: '1rem',
-        }}>
-          <div style={{ opacity: 0.5, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.25rem' }}>
+        <div
+          style={{
+            padding: '0.5rem',
+            background: '#0a0a1e',
+            border: '1px solid #1a1a3e',
+            borderRadius: '4px',
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '0.7rem',
+            marginTop: '1rem',
+          }}
+        >
+          <div
+            style={{
+              opacity: 0.5,
+              fontSize: '0.65rem',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              marginBottom: '0.25rem',
+            }}
+          >
             Performance
           </div>
           <div>FPS: {fps || '...'}</div>
-          <div style={{ opacity: 0.4 }}>
-            {COMPONENTS.length} components registered
-          </div>
+          <div style={{ opacity: 0.4 }}>{COMPONENTS.length} components registered</div>
         </div>
       </div>
 
@@ -312,19 +323,8 @@ export function ComponentGallery() {
             gl={{ antialias: true, powerPreference: 'high-performance', alpha: false }}
             style={{ background: PALETTE.background }}
           >
-            <PerspectiveCamera
-              makeDefault
-              position={[10, 14, -16]}
-              fov={60}
-              near={0.1}
-              far={500}
-            />
-            <OrbitControls
-              enableDamping
-              dampingFactor={0.05}
-              minDistance={2}
-              maxDistance={100}
-            />
+            <PerspectiveCamera makeDefault position={[10, 14, -16]} fov={60} near={0.1} far={500} />
+            <OrbitControls enableDamping dampingFactor={0.05} minDistance={2} maxDistance={100} />
 
             <Suspense fallback={null}>
               <PreviewScene selectedId={selectedId} />
@@ -334,20 +334,22 @@ export function ComponentGallery() {
           </Canvas>
 
           {/* Component label overlay */}
-          <div style={{
-            position: 'absolute',
-            top: 12,
-            left: 12,
-            padding: '6px 10px',
-            background: '#0a0a0acc',
-            border: '1px solid var(--pillar-accent)',
-            borderRadius: '4px',
-            color: 'var(--pillar-accent)',
-            fontFamily: 'var(--font-geist-mono), monospace',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            pointerEvents: 'none',
-          }}>
+          <div
+            style={{
+              position: 'absolute',
+              top: 12,
+              left: 12,
+              padding: '6px 10px',
+              background: '#0a0a0acc',
+              border: '1px solid var(--pillar-accent)',
+              borderRadius: '4px',
+              color: 'var(--pillar-accent)',
+              fontFamily: 'var(--font-geist-mono), monospace',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              pointerEvents: 'none',
+            }}
+          >
             &lt;{selectedEntry.name} /&gt;
           </div>
         </div>

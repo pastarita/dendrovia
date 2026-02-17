@@ -1,6 +1,6 @@
-import { describe, test, expect } from 'bun:test';
-import { assignPhases, computeTension } from '../../src/storyarc/PhaseAssigner';
+import { describe, expect, test } from 'bun:test';
 import type { SegmentMetrics } from '@dendrovia/shared';
+import { assignPhases, computeTension } from '../../src/storyarc/PhaseAssigner';
 
 function makeMetrics(overrides: Partial<SegmentMetrics> = {}): SegmentMetrics {
   return {
@@ -49,7 +49,7 @@ describe('assignPhases', () => {
     ]);
     expect(assignments.length).toBe(2);
 
-    const phases = assignments.map(a => a.phase);
+    const phases = assignments.map((a) => a.phase);
     expect(phases).toContain('prologue');
     expect(phases).toContain('climax');
   });
@@ -64,7 +64,7 @@ describe('assignPhases', () => {
     ]);
 
     expect(assignments.length).toBe(5);
-    const phases = new Set(assignments.map(a => a.phase));
+    const phases = new Set(assignments.map((a) => a.phase));
     expect(phases.has('prologue')).toBe(true);
     expect(phases.has('climax')).toBe(true);
     // Should have at least 3 distinct phases with 5 segments

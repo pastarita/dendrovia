@@ -5,16 +5,13 @@
  * All functions are pure — they return new state, never mutate.
  */
 
-import type { StatusEffect, CharacterStats } from '@dendrovia/shared';
+import type { CharacterStats, StatusEffect } from '@dendrovia/shared';
 
 // ─── Apply a new status effect ───────────────────────────────
 
-export function applyStatusEffect(
-  existing: StatusEffect[],
-  effect: StatusEffect,
-): StatusEffect[] {
+export function applyStatusEffect(existing: StatusEffect[], effect: StatusEffect): StatusEffect[] {
   // Check for existing effect of same type
-  const idx = existing.findIndex(e => e.type === effect.type);
+  const idx = existing.findIndex((e) => e.type === effect.type);
 
   if (idx >= 0) {
     if (effect.stackable) {
@@ -39,27 +36,22 @@ export function applyStatusEffect(
 
 // ─── Remove a status effect by ID ────────────────────────────
 
-export function removeStatusEffect(
-  effects: StatusEffect[],
-  effectId: string,
-): StatusEffect[] {
-  return effects.filter(e => e.id !== effectId);
+export function removeStatusEffect(effects: StatusEffect[], effectId: string): StatusEffect[] {
+  return effects.filter((e) => e.id !== effectId);
 }
 
 // ─── Remove all negative status effects (cleanse) ────────────
 
-const NEGATIVE_TYPES: Set<StatusEffect['type']> = new Set([
-  'poison', 'stun', 'attack-down', 'defense-down',
-]);
+const NEGATIVE_TYPES: Set<StatusEffect['type']> = new Set(['poison', 'stun', 'attack-down', 'defense-down']);
 
 export function cleanse(effects: StatusEffect[]): StatusEffect[] {
-  return effects.filter(e => !NEGATIVE_TYPES.has(e.type));
+  return effects.filter((e) => !NEGATIVE_TYPES.has(e.type));
 }
 
 // ─── Check if entity is stunned ──────────────────────────────
 
 export function isStunned(effects: StatusEffect[]): boolean {
-  return effects.some(e => e.type === 'stun' && e.remainingTurns > 0);
+  return effects.some((e) => e.type === 'stun' && e.remainingTurns > 0);
 }
 
 // ─── Tick all effects at start of turn ──────────────────────
@@ -71,10 +63,7 @@ export interface TickResult {
   log: string[];
 }
 
-export function tickStatusEffects(
-  effects: StatusEffect[],
-  entityName: string,
-): TickResult {
+export function tickStatusEffects(effects: StatusEffect[], entityName: string): TickResult {
   let hpDelta = 0;
   const log: string[] = [];
   const statMods: Partial<CharacterStats> = {};
@@ -127,9 +116,7 @@ export function tickStatusEffects(
 // ─── Get total shield HP from all shield effects ─────────────
 
 export function getShieldHP(effects: StatusEffect[]): number {
-  return effects
-    .filter(e => e.type === 'shield')
-    .reduce((sum, e) => sum + e.value, 0);
+  return effects.filter((e) => e.type === 'shield').reduce((sum, e) => sum + e.value, 0);
 }
 
 // ─── Absorb damage through shields, return remaining damage ──

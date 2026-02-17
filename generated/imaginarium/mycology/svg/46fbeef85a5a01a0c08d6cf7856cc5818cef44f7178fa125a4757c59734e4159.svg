@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <filter id="organic" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="1" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  </defs>
+  <g>
+    <path d="M 97.4,114.84049731900147 Q 96.4,142.42024865950074 96.88,170 L 103.12,170 Q 103.6,142.42024865950074 102.6,114.84049731900147 Z" fill="#979bc4" filter="url(#organic)"/>
+    <path d="M 77.64,114.84049731900147 L 76.119,124.98049731900147 M 86.584,114.84049731900147 L 85.6714,124.98049731900147 M 95.528,114.84049731900147 L 95.22380000000001,124.98049731900147 M 104.47200000000001,114.84049731900147 L 104.7762,124.98049731900147 M 113.416,114.84049731900147 L 114.3286,124.98049731900147 M 122.36,114.84049731900147 L 123.881,124.98049731900147" stroke="#979bc4" stroke-width="0.8" fill="none" opacity="0.7"/>
+    <path d="M 72.05,114.84049731900146 Q 77.64,97.09549731900147 100,89.49049731900146 Q 122.36,97.09549731900147 127.95,114.84049731900146" fill="#3275b4" filter="url(#organic)"/>
+  </g>
+</svg>

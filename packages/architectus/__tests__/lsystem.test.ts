@@ -1,6 +1,6 @@
-import { describe, test, expect } from 'bun:test';
-import { LSystem } from '../src/systems/LSystem';
+import { describe, expect, test } from 'bun:test';
 import type { FileTreeNode, Hotspot } from '@dendrovia/shared';
+import { LSystem } from '../src/systems/LSystem';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -25,11 +25,7 @@ function fileNode(name: string, loc = 100): FileTreeNode {
 }
 
 /** Directory node with children. */
-function dirNode(
-  name: string,
-  children: FileTreeNode[],
-  path?: string,
-): FileTreeNode {
+function dirNode(name: string, children: FileTreeNode[], path?: string): FileTreeNode {
   return {
     name,
     path: path ?? name,
@@ -171,10 +167,7 @@ describe('LSystem.fromTopology()', () => {
   });
 
   test('directory with children produces G segments and branches', () => {
-    const tree = dirNode('src', [
-      fileNode('a.ts', 50),
-      fileNode('b.ts', 200),
-    ]);
+    const tree = dirNode('src', [fileNode('a.ts', 50), fileNode('b.ts', 200)]);
     const ls = LSystem.fromTopology(tree);
     const result = ls.expand();
 
@@ -189,13 +182,7 @@ describe('LSystem.fromTopology()', () => {
   });
 
   test('nested directories produce recursive structure', () => {
-    const tree = dirNode('root', [
-      dirNode(
-        'sub',
-        [fileNode('deep.ts', 30)],
-        'root/sub',
-      ),
-    ]);
+    const tree = dirNode('root', [dirNode('sub', [fileNode('deep.ts', 30)], 'root/sub')]);
     const ls = LSystem.fromTopology(tree);
     const result = ls.expand();
 
@@ -205,11 +192,7 @@ describe('LSystem.fromTopology()', () => {
   });
 
   test('determinism: same topology + same seed = identical output', () => {
-    const tree = dirNode('src', [
-      fileNode('x.ts', 100),
-      fileNode('y.ts', 200),
-      fileNode('z.ts', 50),
-    ]);
+    const tree = dirNode('src', [fileNode('x.ts', 100), fileNode('y.ts', 200), fileNode('z.ts', 50)]);
 
     const a = LSystem.fromTopology(tree, [], 42).expand();
     const b = LSystem.fromTopology(tree, [], 42).expand();
@@ -217,10 +200,7 @@ describe('LSystem.fromTopology()', () => {
   });
 
   test('different baseSeed produces different output', () => {
-    const tree = dirNode('src', [
-      fileNode('x.ts', 100),
-      fileNode('y.ts', 200),
-    ]);
+    const tree = dirNode('src', [fileNode('x.ts', 100), fileNode('y.ts', 200)]);
 
     const a = LSystem.fromTopology(tree, [], 1).expand();
     const b = LSystem.fromTopology(tree, [], 99999).expand();
@@ -229,9 +209,7 @@ describe('LSystem.fromTopology()', () => {
 
   test('hotspots influence branch angles', () => {
     const tree = dirNode('src', [fileNode('hot.ts', 100)]);
-    const hotspots: Hotspot[] = [
-      { path: 'src/hot.ts', churnRate: 50, complexity: 20, riskScore: 10 },
-    ];
+    const hotspots: Hotspot[] = [{ path: 'src/hot.ts', churnRate: 50, complexity: 20, riskScore: 10 }];
 
     const withHotspot = LSystem.fromTopology(tree, hotspots, 42).expand();
     const withoutHotspot = LSystem.fromTopology(tree, [], 42).expand();
@@ -241,17 +219,12 @@ describe('LSystem.fromTopology()', () => {
   });
 
   test('radius encoding: directory children are thicker than file children', () => {
-    const tree = dirNode('src', [
-      dirNode('sub', [fileNode('inner.ts')], 'src/sub'),
-      fileNode('leaf.ts'),
-    ]);
+    const tree = dirNode('src', [dirNode('sub', [fileNode('inner.ts')], 'src/sub'), fileNode('leaf.ts')]);
     const ls = LSystem.fromTopology(tree, [], 42);
     const result = ls.expand();
 
     // Extract all !(radius) values
-    const radii = [...result.matchAll(/!\(([0-9.]+)\)/g)].map((m) =>
-      parseFloat(m[1]),
-    );
+    const radii = [...result.matchAll(/!\(([0-9.]+)\)/g)].map((m) => parseFloat(m[1]));
     // There should be multiple radii and they should vary
     expect(radii.length).toBeGreaterThanOrEqual(2);
   });
@@ -271,17 +244,12 @@ describe('LSystem.fromTopology()', () => {
   });
 
   test('LOC influences segment length', () => {
-    const tree = dirNode('src', [
-      fileNode('small.ts', 10),
-      fileNode('large.ts', 500),
-    ]);
+    const tree = dirNode('src', [fileNode('small.ts', 10), fileNode('large.ts', 500)]);
     const ls = LSystem.fromTopology(tree, [], 42);
     const result = ls.expand();
 
     // Extract all G(length) values — they should differ between small and large
-    const lengths = [...result.matchAll(/G\(([0-9.]+)\)/g)].map((m) =>
-      parseFloat(m[1]),
-    );
+    const lengths = [...result.matchAll(/G\(([0-9.]+)\)/g)].map((m) => parseFloat(m[1]));
     // At minimum we should have the trunk + 2 branch segments
     expect(lengths.length).toBeGreaterThanOrEqual(3);
   });

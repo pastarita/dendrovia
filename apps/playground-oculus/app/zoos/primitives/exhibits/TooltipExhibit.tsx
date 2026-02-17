@@ -17,7 +17,7 @@ const btnStyle: React.CSSProperties = {
 
 export function TooltipExhibit({ controlValues, isInspecting }: ExhibitRenderProps) {
   const content = controlValues.content as string;
-  const position = controlValues.position as typeof POSITIONS[number];
+  const position = controlValues.position as (typeof POSITIONS)[number];
 
   if (isInspecting) {
     return (
@@ -35,16 +35,20 @@ export function TooltipExhibit({ controlValues, isInspecting }: ExhibitRenderPro
         <div style={{ fontSize: '0.7rem', opacity: 0.4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           All Positions
         </div>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '1.5rem',
-          padding: '1.5rem 0',
-          justifyItems: 'center',
-        }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '1.5rem',
+            padding: '1.5rem 0',
+            justifyItems: 'center',
+          }}
+        >
           {POSITIONS.map((pos) => (
             <Tooltip key={pos} content={`Appears ${pos}`} position={pos}>
-              <button type="button" style={btnStyle}>{pos}</button>
+              <button type="button" style={btnStyle}>
+                {pos}
+              </button>
             </Tooltip>
           ))}
         </div>
@@ -56,7 +60,9 @@ export function TooltipExhibit({ controlValues, isInspecting }: ExhibitRenderPro
   return (
     <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', padding: '0.5rem 0' }}>
       <Tooltip content="Tooltip!" position="top">
-        <button type="button" style={btnStyle}>Hover</button>
+        <button type="button" style={btnStyle}>
+          Hover
+        </button>
       </Tooltip>
     </div>
   );

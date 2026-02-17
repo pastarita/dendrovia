@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import PaletteExhibit from './components/PaletteExhibit';
-import ShaderExhibit from './components/ShaderExhibit';
-import PipelineExhibit from './components/PipelineExhibit';
 import MycologyExhibit, { type SpecimenData } from './components/MycologyExhibit';
+import PaletteExhibit from './components/PaletteExhibit';
+import PipelineExhibit from './components/PipelineExhibit';
+import ShaderExhibit from './components/ShaderExhibit';
 
 const TABS = [
   { id: 'palettes', label: 'Palettes' },

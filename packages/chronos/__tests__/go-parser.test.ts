@@ -1,12 +1,12 @@
-import { describe, test, expect, beforeAll, afterAll } from 'bun:test';
-import { writeFileSync, mkdirSync, rmSync } from 'fs';
-import { join } from 'path';
+import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
+  countCognitive,
+  countCyclomatic,
+  findFunctions,
   parseGoFile,
   stripGoCommentsAndStrings,
-  findFunctions,
-  countCyclomatic,
-  countCognitive,
 } from '../src/parser/GoParser';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -143,7 +143,7 @@ func baz() string {
       const cleaned = stripGoCommentsAndStrings(source);
       const fns = findFunctions(source, cleaned);
       expect(fns).toHaveLength(3);
-      expect(fns.map(f => f.name)).toEqual(['foo', 'bar', 'baz']);
+      expect(fns.map((f) => f.name)).toEqual(['foo', 'bar', 'baz']);
     });
 
     test('handles value receiver', () => {
@@ -233,8 +233,8 @@ case <-done:
 
     test('nested if adds 1 + depth', () => {
       const lines = [
-        '\tif x > 0 {',       // depth 0 → +1
-        '\t\tif y > 0 {',     // depth 1 → +2
+        '\tif x > 0 {', // depth 0 → +1
+        '\t\tif y > 0 {', // depth 1 → +2
         '\t\t\treturn x + y',
         '\t\t}',
         '\t}',
@@ -244,8 +244,8 @@ case <-done:
 
     test('for loop contributes to cognitive', () => {
       const lines = [
-        '\tfor i := 0; i < n; i++ {',  // depth 0 → +1
-        '\t\tif items[i] > 0 {',        // depth 1 → +2
+        '\tfor i := 0; i < n; i++ {', // depth 0 → +1
+        '\t\tif items[i] > 0 {', // depth 1 → +2
         '\t\t\tcount++',
         '\t\t}',
         '\t}',
@@ -255,10 +255,10 @@ case <-done:
 
     test('deeply nested adds significant cognitive load', () => {
       const lines = [
-        '\tif a {',             // depth 0 → +1
-        '\t\tfor b {',          // depth 1 → +2
-        '\t\t\tif c {',         // depth 2 → +3
-        '\t\t\t\tswitch d {',   // depth 3 → +4
+        '\tif a {', // depth 0 → +1
+        '\t\tfor b {', // depth 1 → +2
+        '\t\t\tif c {', // depth 2 → +3
+        '\t\t\t\tswitch d {', // depth 3 → +4
         '\t\t\t\t}',
         '\t\t\t}',
         '\t\t}',
@@ -337,9 +337,9 @@ func (s *Server) Stop() {
 
       expect(result).not.toBeNull();
       expect(result!.functions).toHaveLength(3);
-      expect(result!.functions.map(f => f.name)).toEqual(['New', 'Start', 'Stop']);
+      expect(result!.functions.map((f) => f.name)).toEqual(['New', 'Start', 'Stop']);
       // Start has an if, so cyclomatic = 2
-      const startFn = result!.functions.find(f => f.name === 'Start')!;
+      const startFn = result!.functions.find((f) => f.name === 'Start')!;
       expect(startFn.complexity.cyclomatic).toBe(2);
     });
 
@@ -367,9 +367,7 @@ var DefaultConfig = Config{
 
     test('assigns correct difficulty tiers', () => {
       // Build a function with many decision points
-      const cases = Array.from({ length: 25 }, (_, i) =>
-        `\tcase ${i}:\n\t\treturn ${i}`,
-      ).join('\n');
+      const cases = Array.from({ length: 25 }, (_, i) => `\tcase ${i}:\n\t\treturn ${i}`).join('\n');
       const source = `package main
 
 func complex(x int) int {
@@ -406,8 +404,7 @@ ${cases}
   // ── Real-world smoke test ──────────────────────────────────────────────
 
   describe('smoke test (opentelemetry-collector)', () => {
-    const serviceGoPath =
-      `${process.env.HOME}/.chronos/repos/open-telemetry/opentelemetry-collector/service/service.go`;
+    const serviceGoPath = `${process.env.HOME}/.chronos/repos/open-telemetry/opentelemetry-collector/service/service.go`;
 
     test('parses service.go with non-zero complexity', () => {
       let result: ReturnType<typeof parseGoFile>;
@@ -429,7 +426,7 @@ ${cases}
       expect(result.file.loc).toBeGreaterThan(10);
 
       // At least one function should have non-trivial complexity
-      const maxCyc = Math.max(...result.functions.map(f => f.complexity.cyclomatic));
+      const maxCyc = Math.max(...result.functions.map((f) => f.complexity.cyclomatic));
       expect(maxCyc).toBeGreaterThan(1);
     });
   });

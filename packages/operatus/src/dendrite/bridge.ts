@@ -18,24 +18,19 @@ import type { AssetLoader } from '../loader/AssetLoader.js';
 import type { CDNLoader } from '../loader/CDNLoader.js';
 import type { AutoSave } from '../persistence/AutoSave.js';
 import type { CrossTabSync } from '../sync/CrossTabSync.js';
+import { autoSaveActions, cacheManagerActions, gameStoreActions, perfMonitorActions } from './actions.js';
 import {
-  collectCacheManager,
-  collectOPFS,
-  collectIDB,
-  collectAssetLoader,
-  collectCDNLoader,
-  collectAutoSave,
-  collectGameStore,
-  collectCrossTabSync,
-  collectPerfMonitor,
   aggregatePhaseHealth,
+  collectAssetLoader,
+  collectAutoSave,
+  collectCacheManager,
+  collectCDNLoader,
+  collectCrossTabSync,
+  collectGameStore,
+  collectIDB,
+  collectOPFS,
+  collectPerfMonitor,
 } from './collectors.js';
-import {
-  cacheManagerActions,
-  autoSaveActions,
-  gameStoreActions,
-  perfMonitorActions,
-} from './actions.js';
 
 export interface BridgeConfig {
   pollIntervalMs?: number;
@@ -49,7 +44,11 @@ export interface BridgeContext {
   crossTabSync: CrossTabSync;
   perfMonitor: { getCacheMetrics: () => { hits: number; misses: number; hitRate: number }; reset: () => void };
   gameStore: {
-    getState: () => { character: { stats: { health: number }; level: number }; visitedNodes: Set<string>; playtimeMs: number };
+    getState: () => {
+      character: { stats: { health: number }; level: number };
+      visitedNodes: Set<string>;
+      playtimeMs: number;
+    };
     reset: () => void;
   };
   eventBus?: {
@@ -144,7 +143,17 @@ export class OperatusRuntimeBridge {
     const perfState = collectPerfMonitor(ctx.perfMonitor);
 
     // Batch update section nodes
-    const sections = [cacheState, opfsState, idbState, loaderState, cdnState, autoSaveState, gameState, syncState, perfState];
+    const sections = [
+      cacheState,
+      opfsState,
+      idbState,
+      loaderState,
+      cdnState,
+      autoSaveState,
+      gameState,
+      syncState,
+      perfState,
+    ];
     for (const s of sections) {
       updateNode(s.nodeId, s);
     }
@@ -161,23 +170,19 @@ export class OperatusRuntimeBridge {
 
     for (const [phaseId, childIds] of Object.entries(phaseMap)) {
       const childStates = childIds
-        .map(id => sections.find(s => s.nodeId === id))
+        .map((id) => sections.find((s) => s.nodeId === id))
         .filter((s): s is NonNullable<typeof s> => s !== undefined);
 
-      const health = childStates.length > 0
-        ? aggregatePhaseHealth(childStates)
-        : 'idle';
+      const health = childStates.length > 0 ? aggregatePhaseHealth(childStates) : 'idle';
 
       updateNode(phaseId, { health, metrics: [], actions: [], lastUpdated: Date.now() });
     }
 
     // Root node
-    const allPhaseHealths = Object.keys(phaseMap).map(id =>
-      this.store!.getState().nodes.get(id)
-    ).filter((s): s is NonNullable<typeof s> => s !== undefined);
-    const rootHealth = allPhaseHealths.length > 0
-      ? aggregatePhaseHealth(allPhaseHealths)
-      : 'idle';
+    const allPhaseHealths = Object.keys(phaseMap)
+      .map((id) => this.store!.getState().nodes.get(id))
+      .filter((s): s is NonNullable<typeof s> => s !== undefined);
+    const rootHealth = allPhaseHealths.length > 0 ? aggregatePhaseHealth(allPhaseHealths) : 'idle';
     updateNode('op-root', { health: rootHealth, metrics: [], actions: [], lastUpdated: Date.now() });
   }
 

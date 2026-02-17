@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import ClassGuideHall from './components/ClassGuideHall';
 import CombatRulesHall from './components/CombatRulesHall';
 import ElementsHall from './components/ElementsHall';
-import ClassGuideHall from './components/ClassGuideHall';
 import MonsterGuideHall from './components/MonsterGuideHall';
 
 const TABS = [
@@ -13,7 +13,7 @@ const TABS = [
   { id: 'monsters', label: 'Monster Guide' },
 ] as const;
 
-type TabId = typeof TABS[number]['id'];
+type TabId = (typeof TABS)[number]['id'];
 
 export default function HallsClient(): React.JSX.Element {
   const [tab, setTab] = useState<TabId>('combat');
@@ -21,8 +21,16 @@ export default function HallsClient(): React.JSX.Element {
   return (
     <div>
       {/* Tab Nav */}
-      <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1.5rem', borderBottom: '1px solid #222', paddingBottom: '0.5rem' }}>
-        {TABS.map(t => (
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.25rem',
+          marginBottom: '1.5rem',
+          borderBottom: '1px solid #222',
+          paddingBottom: '0.5rem',
+        }}
+      >
+        {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}

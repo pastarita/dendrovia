@@ -7,9 +7,9 @@
  * Results are cached to ~/.chronos/deepwiki/{owner}/{repo}.json
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
-import { homedir } from 'os';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import type { DeepWikiEnrichment } from '@dendrovia/shared';
 
 // Re-export so consumers can import from here or from shared
@@ -59,7 +59,7 @@ async function mcpCall(method: string, params: Record<string, unknown>): Promise
       throw new Error(`DeepWiki HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const json = await response.json() as {
+    const json = (await response.json()) as {
       result?: { content?: Array<{ text?: string }> };
       error?: { message: string };
     };
@@ -127,10 +127,7 @@ function flattenTopics(topics: WikiTopic[], maxDepth = 2, depth = 0): WikiTopic[
 
 // ── Main fetch function ──────────────────────────────────────────────────────
 
-export async function fetchDeepWikiEnrichment(
-  owner: string,
-  repo: string,
-): Promise<DeepWikiEnrichment | null> {
+export async function fetchDeepWikiEnrichment(owner: string, repo: string): Promise<DeepWikiEnrichment | null> {
   // Check cache first
   const cached = readCache(owner, repo);
   if (cached) {
@@ -142,7 +139,7 @@ export async function fetchDeepWikiEnrichment(
 
   try {
     // Step 1: Get wiki structure
-    const structure = await mcpCall('read_wiki_structure', { repoName }) as {
+    const structure = (await mcpCall('read_wiki_structure', { repoName })) as {
       pages?: Array<{ title: string; id: string; children?: Array<{ title: string; id: string }> }>;
     } | null;
 
@@ -150,10 +147,10 @@ export async function fetchDeepWikiEnrichment(
       return null; // Repo not indexed by DeepWiki
     }
 
-    const topics: WikiTopic[] = structure.pages.map(p => ({
+    const topics: WikiTopic[] = structure.pages.map((p) => ({
       title: p.title,
       id: p.id,
-      children: p.children?.map(c => ({ title: c.title, id: c.id })),
+      children: p.children?.map((c) => ({ title: c.title, id: c.id })),
     }));
 
     // Step 2: Fetch content for top-level overview topics (max 5)
@@ -163,14 +160,12 @@ export async function fetchDeepWikiEnrichment(
 
     for (const topic of topTopics) {
       try {
-        const content = await mcpCall('read_wiki_contents', {
+        const content = (await mcpCall('read_wiki_contents', {
           repoName,
           pagePath: topic.id,
-        }) as { content?: string } | string | null;
+        })) as { content?: string } | string | null;
 
-        const text = typeof content === 'string'
-          ? content
-          : (content as { content?: string })?.content;
+        const text = typeof content === 'string' ? content : (content as { content?: string })?.content;
 
         if (!text) continue;
 
@@ -180,19 +175,14 @@ export async function fetchDeepWikiEnrichment(
         } else {
           moduleDocumentation[topic.id] = text.slice(0, 1000);
         }
-      } catch {
-        // Non-fatal: skip individual topic fetch failures
-        continue;
-      }
+      } catch {}
     }
 
     const enrichment: DeepWikiEnrichment = {
       wikiUrl,
       overview,
       topics,
-      moduleDocumentation: Object.keys(moduleDocumentation).length > 0
-        ? moduleDocumentation
-        : undefined,
+      moduleDocumentation: Object.keys(moduleDocumentation).length > 0 ? moduleDocumentation : undefined,
       fetchedAt: new Date().toISOString(),
     };
 

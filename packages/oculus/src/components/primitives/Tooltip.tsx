@@ -2,7 +2,7 @@
  * Tooltip — Floating info popup anchored to an element
  */
 
-import React, { useState, useRef, type ReactNode, type CSSProperties } from 'react';
+import { type CSSProperties, type ReactNode, useRef, useState } from 'react';
 
 export interface TooltipProps {
   content: ReactNode;
@@ -12,18 +12,13 @@ export interface TooltipProps {
 }
 
 const offsets: Record<string, CSSProperties> = {
-  top:    { bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: 6 },
+  top: { bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: 6 },
   bottom: { top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: 6 },
-  left:   { right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: 6 },
-  right:  { left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 6 },
+  left: { right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: 6 },
+  right: { left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 6 },
 };
 
-export function Tooltip({
-  content,
-  children,
-  position = 'top',
-  className = '',
-}: TooltipProps) {
+export function Tooltip({ content, children, position = 'top', className = '' }: TooltipProps) {
   const [visible, setVisible] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 

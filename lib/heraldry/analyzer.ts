@@ -5,23 +5,22 @@
  * for Coat of Arms generation.
  */
 
+import { selectMotto } from './emoji.js';
 import {
-  type Domain,
+  CHARGE_KEYWORDS,
   type ChargeType,
-  type Magnitude,
-  type MagnitudeFactors,
-  type Supporter,
-  type SupporterStatus,
-  type PRCoatOfArms,
+  COMMIT_TYPE_CHARGES,
+  computeMagnitude,
   DOMAIN_FILE_PATTERNS,
   DOMAIN_TINCTURES,
-  COMMIT_TYPE_CHARGES,
-  CHARGE_KEYWORDS,
-  MAGNITUDE_SYMBOLS,
+  type Domain,
   getDivisionForDomainCount,
-  computeMagnitude,
+  MAGNITUDE_SYMBOLS,
+  type MagnitudeFactors,
+  type PRCoatOfArms,
+  type Supporter,
+  type SupporterStatus,
 } from './types.js';
-import { selectMotto } from './emoji.js';
 
 // Conventional commit regex
 const CONVENTIONAL_RE = /^(\w+)(?:\([^)]+\))?!?:\s*/;
@@ -39,17 +38,17 @@ export interface BranchAnalysis {
  */
 export function analyzeForHeraldry(analysis: BranchAnalysis): PRCoatOfArms {
   const domains = detectDomains(analysis.filesChanged);
-  const chargeCounts = countCharges(analysis.commits.map(c => c.message));
+  const chargeCounts = countCharges(analysis.commits.map((c) => c.message));
   const primaryCharge = chargeCounts[0];
 
   const factors: MagnitudeFactors = {
     fileCount: analysis.filesChanged.length,
     lineCount: analysis.linesAdded + analysis.linesRemoved,
     domainCount: domains.length,
-    hasBreakingChanges: analysis.commits.some(c => /BREAKING|breaking/i.test(c.message)),
-    hasNewDependencies: analysis.commits.some(c => /deps?|dependenc|upgrade|bump/i.test(c.message)),
-    hasMigrations: analysis.commits.some(c => /migrat/i.test(c.message)),
-    hasSchemaChanges: analysis.commits.some(c => /schema/i.test(c.message)),
+    hasBreakingChanges: analysis.commits.some((c) => /BREAKING|breaking/i.test(c.message)),
+    hasNewDependencies: analysis.commits.some((c) => /deps?|dependenc|upgrade|bump/i.test(c.message)),
+    hasMigrations: analysis.commits.some((c) => /migrat/i.test(c.message)),
+    hasSchemaChanges: analysis.commits.some((c) => /schema/i.test(c.message)),
   };
 
   const { magnitude, score } = computeMagnitude(factors);
@@ -97,7 +96,7 @@ export function detectDomains(files: string[]): Domain[] {
 
   for (const file of files) {
     for (const [domain, patterns] of Object.entries(DOMAIN_FILE_PATTERNS)) {
-      if (patterns.some(p => p.test(file))) {
+      if (patterns.some((p) => p.test(file))) {
         domainSet.add(domain as Domain);
         break; // First match wins per file
       }
@@ -160,11 +159,7 @@ function detectCommitType(message: string): string {
 /**
  * Run a validation check and return a Supporter result.
  */
-export async function runSupporter(
-  type: Supporter['type'],
-  command: string,
-  cwd: string,
-): Promise<Supporter> {
+export async function runSupporter(type: Supporter['type'], command: string, cwd: string): Promise<Supporter> {
   try {
     const proc = Bun.spawn(['sh', '-c', command], {
       cwd,

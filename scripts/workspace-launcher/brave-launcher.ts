@@ -25,17 +25,17 @@ interface PlaygroundEntry {
 }
 
 const PLAYGROUNDS: PlaygroundEntry[] = [
-  { pillar: 'QUEST',       emoji: '🌳', port: 3010, label: 'The Hub' },
+  { pillar: 'QUEST', emoji: '🌳', port: 3010, label: 'The Hub' },
   { pillar: 'ARCHITECTUS', emoji: '🏛️', port: 3011, label: 'The Renderer' },
-  { pillar: 'CHRONOS',     emoji: '📜', port: 3012, label: 'The Archaeologist' },
+  { pillar: 'CHRONOS', emoji: '📜', port: 3012, label: 'The Archaeologist' },
   { pillar: 'IMAGINARIUM', emoji: '🎨', port: 3013, label: 'The Compiler' },
-  { pillar: 'LUDUS',       emoji: '🎮', port: 3014, label: 'The Mechanics' },
-  { pillar: 'OCULUS',      emoji: '👁️', port: 3015, label: 'The Interface' },
-  { pillar: 'OPERATUS',    emoji: '💾', port: 3016, label: 'The Infrastructure' },
+  { pillar: 'LUDUS', emoji: '🎮', port: 3014, label: 'The Mechanics' },
+  { pillar: 'OCULUS', emoji: '👁️', port: 3015, label: 'The Interface' },
+  { pillar: 'OPERATUS', emoji: '💾', port: 3016, label: 'The Infrastructure' },
 ];
 
 const BRAVE_APP = '/Applications/Brave Browser.app';
-const BRAVE_BIN = `${BRAVE_APP}/Contents/MacOS/Brave Browser`;
+const _BRAVE_BIN = `${BRAVE_APP}/Contents/MacOS/Brave Browser`;
 
 // ── Helpers ─────────────────────────────────────────────────────
 
@@ -93,7 +93,7 @@ async function waitForPort(port: number, timeoutMs: number): Promise<boolean> {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     try {
-      const response = await fetch(`http://localhost:${port}`, {
+      const _response = await fetch(`http://localhost:${port}`, {
         signal: AbortSignal.timeout(500),
       });
       // Any response means the server is up (even 500s from SSR errors)
@@ -115,9 +115,7 @@ export async function launchBrave(options: BraveLaunchOptions = {}): Promise<voi
   } = options;
 
   // Filter and order playgrounds: home pillar first, then the rest
-  let entries = filterPillars
-    ? PLAYGROUNDS.filter((p) => filterPillars.includes(p.pillar))
-    : [...PLAYGROUNDS];
+  let entries = filterPillars ? PLAYGROUNDS.filter((p) => filterPillars.includes(p.pillar)) : [...PLAYGROUNDS];
 
   // Move home pillar to front
   const homeIndex = entries.findIndex((p) => p.pillar === homePillar.toUpperCase());
@@ -135,7 +133,7 @@ export async function launchBrave(options: BraveLaunchOptions = {}): Promise<voi
         const status = ready ? '✓' : '✗';
         console.log(`    ${status} ${entry.emoji} ${entry.pillar} :${entry.port}`);
         return { ...entry, ready };
-      })
+      }),
     );
     // Only open tabs for servers that responded
     entries = results.filter((r) => r.ready);

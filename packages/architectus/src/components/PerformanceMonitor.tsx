@@ -1,5 +1,5 @@
-import { useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { useRef } from 'react';
 import { useRendererStore } from '../store/useRendererStore';
 
 /**
@@ -25,11 +25,7 @@ export function PerformanceMonitor() {
     const fps = Math.round((frameCount.current / elapsed) * 1000);
 
     const info = gl.info;
-    useRendererStore.getState().updatePerformance(
-      fps,
-      info.render.calls,
-      info.render.triangles,
-    );
+    useRendererStore.getState().updatePerformance(fps, info.render.calls, info.render.triangles);
 
     frameCount.current = 0;
     lastTime.current = now;

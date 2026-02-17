@@ -1,6 +1,6 @@
 'use client';
 
-import { OrnateFrame, ProgressBar, StatLabel, IconBadge } from '@dendrovia/oculus';
+import { IconBadge, OrnateFrame, ProgressBar, StatLabel } from '@dendrovia/oculus';
 import type { Specimen } from './mock-upstream';
 import { PILLAR_EMOJIS } from './mock-upstream';
 
@@ -24,12 +24,21 @@ function HotspotContent({ data }: { data: Specimen & { kind: 'hotspot' } }) {
   const { riskScore, churnRate, complexity } = data.data;
   return (
     <>
-      <ProgressBar value={riskScore * 100} max={100} variant="health" showLabel label={`Risk ${(riskScore * 100).toFixed(0)}%`} height={10} />
+      <ProgressBar
+        value={riskScore * 100}
+        max={100}
+        variant="health"
+        showLabel
+        label={`Risk ${(riskScore * 100).toFixed(0)}%`}
+        height={10}
+      />
       <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
         <StatLabel label="Churn" value={churnRate} />
         <StatLabel label="Complexity" value={complexity} />
       </div>
-      <div style={{ fontSize: '0.7rem', opacity: 0.5, marginTop: '0.4rem', fontFamily: 'monospace' }}>{data.data.path}</div>
+      <div style={{ fontSize: '0.7rem', opacity: 0.5, marginTop: '0.4rem', fontFamily: 'monospace' }}>
+        {data.data.path}
+      </div>
     </>
   );
 }
@@ -140,7 +149,9 @@ function FungalContent({ data }: { data: Specimen & { kind: 'fungal' } }) {
         <StatLabel label="Stem" value={`${f.morphology.stem.height}cm`} />
         <StatLabel label="Gills" value={f.morphology.gillCount} />
       </div>
-      <div style={{ fontSize: '0.75rem', fontStyle: 'italic', opacity: 0.6, marginTop: '0.3rem' }}>{f.lore.flavorText}</div>
+      <div style={{ fontSize: '0.75rem', fontStyle: 'italic', opacity: 0.6, marginTop: '0.3rem' }}>
+        {f.lore.flavorText}
+      </div>
     </>
   );
 }
@@ -158,7 +169,9 @@ function PaletteContent({ data }: { data: Specimen & { kind: 'palette' } }) {
       <div style={{ display: 'flex', gap: '4px', marginBottom: '0.4rem' }}>
         {swatches.map((s) => (
           <div key={s.label} style={{ flex: 1, textAlign: 'center' }}>
-            <div style={{ height: 24, borderRadius: 4, background: s.color, border: '1px solid rgba(255,255,255,0.1)' }} />
+            <div
+              style={{ height: 24, borderRadius: 4, background: s.color, border: '1px solid rgba(255,255,255,0.1)' }}
+            />
             <div style={{ fontSize: '0.6rem', opacity: 0.5, marginTop: 2 }}>{s.color}</div>
           </div>
         ))}
@@ -260,22 +273,38 @@ function AssetManifestContent({ data }: { data: Specimen & { kind: 'asset-manife
 
 function SpecimenBody({ specimen }: { specimen: Specimen }) {
   switch (specimen.kind) {
-    case 'hotspot': return <HotspotContent data={specimen} />;
-    case 'commit': return <CommitContent data={specimen} />;
-    case 'parsed-file': return <ParsedFileContent data={specimen} />;
-    case 'monster': return <MonsterContent data={specimen} />;
-    case 'spell': return <SpellContent data={specimen} />;
-    case 'quest': return <QuestContent data={specimen} />;
-    case 'item': return <ItemContent data={specimen} />;
-    case 'fungal': return <FungalContent data={specimen} />;
-    case 'palette': return <PaletteContent data={specimen} />;
-    case 'sdf-shader': return <SDFShaderContent data={specimen} />;
-    case 'dendrite-config': return <DendriteConfigContent data={specimen} />;
-    case 'world-state': return <WorldStateContent data={specimen} />;
-    case 'oculus-inventory': return <OculusInventoryContent data={specimen} />;
-    case 'oculus-tokens': return <OculusTokensContent data={specimen} />;
-    case 'mesh-entry': return <MeshEntryContent data={specimen} />;
-    case 'asset-manifest': return <AssetManifestContent data={specimen} />;
+    case 'hotspot':
+      return <HotspotContent data={specimen} />;
+    case 'commit':
+      return <CommitContent data={specimen} />;
+    case 'parsed-file':
+      return <ParsedFileContent data={specimen} />;
+    case 'monster':
+      return <MonsterContent data={specimen} />;
+    case 'spell':
+      return <SpellContent data={specimen} />;
+    case 'quest':
+      return <QuestContent data={specimen} />;
+    case 'item':
+      return <ItemContent data={specimen} />;
+    case 'fungal':
+      return <FungalContent data={specimen} />;
+    case 'palette':
+      return <PaletteContent data={specimen} />;
+    case 'sdf-shader':
+      return <SDFShaderContent data={specimen} />;
+    case 'dendrite-config':
+      return <DendriteConfigContent data={specimen} />;
+    case 'world-state':
+      return <WorldStateContent data={specimen} />;
+    case 'oculus-inventory':
+      return <OculusInventoryContent data={specimen} />;
+    case 'oculus-tokens':
+      return <OculusTokensContent data={specimen} />;
+    case 'mesh-entry':
+      return <MeshEntryContent data={specimen} />;
+    case 'asset-manifest':
+      return <AssetManifestContent data={specimen} />;
   }
 }
 
@@ -288,7 +317,15 @@ export function FrameSpecimen({ specimen }: { specimen: Specimen }) {
       header={specimen.variant === 'modal' ? specimen.title : undefined}
       headerIcon={specimen.variant === 'modal' ? specimen.icon : undefined}
     >
-      <div style={{ fontSize: '0.7rem', opacity: 0.5, marginBottom: '0.4rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+      <div
+        style={{
+          fontSize: '0.7rem',
+          opacity: 0.5,
+          marginBottom: '0.4rem',
+          letterSpacing: '0.05em',
+          textTransform: 'uppercase',
+        }}
+      >
         {emoji} {specimen.kind.replace(/-/g, ' ')}
       </div>
       {specimen.variant !== 'modal' && (

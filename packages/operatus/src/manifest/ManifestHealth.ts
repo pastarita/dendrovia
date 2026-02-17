@@ -88,10 +88,7 @@ export function validateManifestStructure(manifest: AssetManifest): ManifestHeal
 /**
  * Verify disk state matches manifest (build-time only, requires Node APIs).
  */
-export async function validateManifestOnDisk(
-  manifestPath: string,
-  inputDir: string,
-): Promise<ManifestHealthReport> {
+export async function validateManifestOnDisk(manifestPath: string, inputDir: string): Promise<ManifestHealthReport> {
   const { readFile, stat } = await import('node:fs/promises');
   const { join } = await import('node:path');
 

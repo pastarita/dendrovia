@@ -9,21 +9,21 @@
  * Uses GymShell for layout, wiretap, and state dashboard.
  */
 
-import { useState, useCallback } from 'react';
-import { GameEvents } from '@dendrovia/shared';
-import type {
-  CombatStartedEvent,
-  CombatEndedEvent,
-  DamageDealtEvent,
-  HealthChangedEvent,
-  CombatTurnEvent,
-  SpellResolvedEvent,
-  EventBus,
-} from '@dendrovia/shared';
 import { HUD, useOculusStore } from '@dendrovia/oculus';
-import { GymShell, GymControlPanel } from '../_gym-kit';
+import type {
+  CombatEndedEvent,
+  CombatStartedEvent,
+  CombatTurnEvent,
+  DamageDealtEvent,
+  EventBus,
+  HealthChangedEvent,
+  SpellResolvedEvent,
+} from '@dendrovia/shared';
+import { GameEvents } from '@dendrovia/shared';
+import { useCallback, useState } from 'react';
+import { MOCK_HOTSPOTS, MOCK_QUESTS, MOCK_TOPOLOGY } from '../../components/mock-data';
 import type { GymPageConfig } from '../_gym-kit';
-import { MOCK_QUESTS, MOCK_TOPOLOGY, MOCK_HOTSPOTS } from '../../components/mock-data';
+import { GymControlPanel, GymShell } from '../_gym-kit';
 
 const CONFIG: GymPageConfig = {
   title: 'Battle Arena',
@@ -63,10 +63,16 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     setPlayerHp(100);
     const name = ENEMY_NAMES[Math.floor(Math.random() * ENEMY_NAMES.length)] ?? 'NullPointerBug';
     eventBus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
-      monsterId: 'arena-enemy', monsterName: name, monsterType: 'null-pointer', severity: 3,
+      monsterId: 'arena-enemy',
+      monsterName: name,
+      monsterType: 'null-pointer',
+      severity: 3,
     });
     eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
-      entityId: 'player', current: 100, max: 100, delta: 0,
+      entityId: 'player',
+      current: 100,
+      max: 100,
+      delta: 0,
     });
   }, [eventBus]);
 
@@ -79,7 +85,11 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     const crit = Math.random() < 0.2;
     const el = ELEMENTS[Math.floor(Math.random() * ELEMENTS.length)] ?? 'none';
     eventBus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
-      attackerId: 'player', targetId: 'arena-enemy', damage: crit ? dmg * 2 : dmg, isCritical: crit, element: el,
+      attackerId: 'player',
+      targetId: 'arena-enemy',
+      damage: crit ? dmg * 2 : dmg,
+      isCritical: crit,
+      element: el,
     });
     const newEnemyHp = Math.max(0, enemyHp - (crit ? dmg * 2 : dmg));
     setEnemyHp(newEnemyHp);
@@ -93,12 +103,19 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'enemy' });
     const eDmg = 5 + Math.floor(Math.random() * 10);
     eventBus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
-      attackerId: 'arena-enemy', targetId: 'player', damage: eDmg, isCritical: false, element: 'none',
+      attackerId: 'arena-enemy',
+      targetId: 'player',
+      damage: eDmg,
+      isCritical: false,
+      element: 'none',
     });
     const newPlayerHp = Math.max(0, playerHp - eDmg);
     setPlayerHp(newPlayerHp);
     eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
-      entityId: 'player', current: newPlayerHp, max: 100, delta: -eDmg,
+      entityId: 'player',
+      current: newPlayerHp,
+      max: 100,
+      delta: -eDmg,
     });
 
     if (newPlayerHp <= 0) {
@@ -115,7 +132,11 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
 
     eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'player' });
     eventBus.emit<SpellResolvedEvent>(GameEvents.SPELL_RESOLVED, {
-      spellId: 'git-bisect', casterId: 'player', targetId: 'arena-enemy', effectType: 'damage', value: 30,
+      spellId: 'git-bisect',
+      casterId: 'player',
+      targetId: 'arena-enemy',
+      effectType: 'damage',
+      value: 30,
     });
 
     const newEnemyHp = Math.max(0, enemyHp - 30);
@@ -130,12 +151,19 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'enemy' });
     const eDmg = 8 + Math.floor(Math.random() * 8);
     eventBus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
-      attackerId: 'arena-enemy', targetId: 'player', damage: eDmg, isCritical: false, element: 'none',
+      attackerId: 'arena-enemy',
+      targetId: 'player',
+      damage: eDmg,
+      isCritical: false,
+      element: 'none',
     });
     const newPlayerHp = Math.max(0, playerHp - eDmg);
     setPlayerHp(newPlayerHp);
     eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
-      entityId: 'player', current: newPlayerHp, max: 100, delta: -eDmg,
+      entityId: 'player',
+      current: newPlayerHp,
+      max: 100,
+      delta: -eDmg,
     });
 
     if (newPlayerHp <= 0) {
@@ -146,7 +174,15 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_END, { turn: newTurn, phase: 'enemy' });
   }, [eventBus, turn, enemyHp, playerHp]);
 
-  const btnStyle = { padding: '0.5rem 1rem', border: '1px solid #444', borderRadius: 4, background: 'transparent', color: 'inherit', cursor: 'pointer', fontSize: '0.85rem' } as const;
+  const btnStyle = {
+    padding: '0.5rem 1rem',
+    border: '1px solid #444',
+    borderRadius: 4,
+    background: 'transparent',
+    color: 'inherit',
+    cursor: 'pointer',
+    fontSize: '0.85rem',
+  } as const;
   const btnDisabled = { ...btnStyle, opacity: 0.3, cursor: 'not-allowed' } as const;
 
   return (

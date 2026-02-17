@@ -4,67 +4,48 @@
  * Covers: SpellFactory, CombatMath, StatusEffects, MonsterFactory, EnemyAI, TurnBasedEngine
  */
 
-import { describe, it, expect, beforeEach } from 'bun:test';
-
-// Seeded RNG
-import { createRngState, rngNext, rngChance, rngPick, SeededRandom } from '../src/utils/SeededRandom.js';
-
-// Spells
-import { getSpell, getSpellOrThrow, getAllSpells, generateSpell } from '../src/spell/SpellFactory.js';
-
+import { beforeEach, describe, expect, it } from 'bun:test';
+import type { BattleState, Character, Hotspot, Monster, ParsedCommit, ParsedFile, RngState } from '@dendrovia/shared';
 // Combat Math
 import {
-  calculateDamage,
   calculateBasicAttack,
+  calculateDamage,
   calculateHealing,
   calculateShield,
-  rollCritical,
+  DEFENSE_CONSTANT,
   getElementMultiplier,
+  rollCritical,
   scaleMonsterStat,
   xpRewardForMonster,
-  DEFENSE_CONSTANT,
-  ELEMENT_TABLE,
 } from '../src/combat/CombatMath.js';
-
-// Status Effects
-import {
-  applyStatusEffect,
-  removeStatusEffect,
-  cleanse,
-  isStunned,
-  tickStatusEffects,
-  absorbDamage,
-  getShieldHP,
-  getStatModifiers,
-  createStatusEffect,
-} from '../src/combat/StatusEffects.js';
-
-// Monster Factory
-import {
-  createMonster,
-  generateBugMonster,
-  generateBoss,
-  generateMiniboss,
-} from '../src/combat/MonsterFactory.js';
-
 // Enemy AI
 import {
   chooseEnemyAction,
-  resolveEnemySpell,
-  isSkippedTurn,
   isOffByOneHeal,
   isOffByOneSelfHit,
+  isSkippedTurn,
+  resolveEnemySpell,
 } from '../src/combat/EnemyAI.js';
-
-// Turn-Based Engine
+// Monster Factory
+import { createMonster, generateBoss, generateBugMonster, generateMiniboss } from '../src/combat/MonsterFactory.js';
+// Status Effects
 import {
-  initBattle,
-  executeTurn,
-  getAvailableActions,
-  replayBattle,
-} from '../src/combat/TurnBasedEngine.js';
-
-import type { Character, Monster, BattleState, RngState, StatusEffect, ParsedCommit, ParsedFile, Hotspot } from '@dendrovia/shared';
+  absorbDamage,
+  applyStatusEffect,
+  cleanse,
+  createStatusEffect,
+  getShieldHP,
+  getStatModifiers,
+  isStunned,
+  removeStatusEffect,
+  tickStatusEffects,
+} from '../src/combat/StatusEffects.js';
+// Turn-Based Engine
+import { executeTurn, getAvailableActions, initBattle, replayBattle } from '../src/combat/TurnBasedEngine.js';
+// Spells
+import { generateSpell, getAllSpells, getSpell, getSpellOrThrow } from '../src/spell/SpellFactory.js';
+// Seeded RNG
+import { createRngState } from '../src/utils/SeededRandom.js';
 
 // ─── Test Helpers ───────────────────────────────────────────
 
@@ -136,9 +117,18 @@ function makeTestCommit(overrides: Partial<ParsedCommit> = {}): ParsedCommit {
 describe('SpellFactory', () => {
   it('should have all starter spells registered', () => {
     const starterIds = [
-      'spell-mutex-lock', 'spell-load-balancer', 'spell-firewall', 'spell-deadlock',
-      'spell-try-catch', 'spell-rollback', 'spell-garbage-collect', 'spell-patch',
-      'spell-sql-injection', 'spell-fork-bomb', 'spell-buffer-overflow', 'spell-regex-nuke',
+      'spell-mutex-lock',
+      'spell-load-balancer',
+      'spell-firewall',
+      'spell-deadlock',
+      'spell-try-catch',
+      'spell-rollback',
+      'spell-garbage-collect',
+      'spell-patch',
+      'spell-sql-injection',
+      'spell-fork-bomb',
+      'spell-buffer-overflow',
+      'spell-regex-nuke',
     ];
     for (const id of starterIds) {
       expect(getSpell(id)).toBeDefined();
@@ -147,8 +137,14 @@ describe('SpellFactory', () => {
 
   it('should have monster spells registered', () => {
     const monsterSpellIds = [
-      'spell-null-deref', 'spell-heap-grow', 'spell-thread-swap', 'spell-fence-post',
-      'spell-segfault', 'spell-oom-kill', 'spell-deadlock-boss', 'spell-stack-smash',
+      'spell-null-deref',
+      'spell-heap-grow',
+      'spell-thread-swap',
+      'spell-fence-post',
+      'spell-segfault',
+      'spell-oom-kill',
+      'spell-deadlock-boss',
+      'spell-stack-smash',
     ];
     for (const id of monsterSpellIds) {
       expect(getSpell(id)).toBeDefined();
@@ -157,9 +153,15 @@ describe('SpellFactory', () => {
 
   it('should have unlock spells registered', () => {
     const unlockIds = [
-      'spell-docker-compose', 'spell-kubernetes', 'spell-terraform',
-      'spell-zero-day', 'spell-rootkit', 'spell-quantum-crack',
-      'spell-lint-fix', 'spell-hot-reload', 'spell-formal-verification',
+      'spell-docker-compose',
+      'spell-kubernetes',
+      'spell-terraform',
+      'spell-zero-day',
+      'spell-rootkit',
+      'spell-quantum-crack',
+      'spell-lint-fix',
+      'spell-hot-reload',
+      'spell-formal-verification',
     ];
     for (const id of unlockIds) {
       expect(getSpell(id)).toBeDefined();
@@ -254,8 +256,8 @@ describe('CombatMath', () => {
   it('should apply element multipliers correctly', () => {
     expect(getElementMultiplier('fire', 'earth')).toBe(1.5); // super effective
     expect(getElementMultiplier('fire', 'water')).toBe(0.5); // not effective
-    expect(getElementMultiplier('fire', 'fire')).toBe(0.5);  // same element
-    expect(getElementMultiplier('none', 'fire')).toBe(1.0);  // neutral
+    expect(getElementMultiplier('fire', 'fire')).toBe(0.5); // same element
+    expect(getElementMultiplier('none', 'fire')).toBe(1.0); // neutral
   });
 
   it('should calculate healing without defense reduction', () => {
@@ -273,9 +275,9 @@ describe('CombatMath', () => {
     const s1 = scaleMonsterStat(base, 1, 0);
     const s3 = scaleMonsterStat(base, 3, 0);
     const s5 = scaleMonsterStat(base, 5, 0);
-    expect(s1).toBe(40);  // 40 * 1.0 * 1.0
-    expect(s3).toBe(68);  // 40 * 1.7 * 1.0
-    expect(s5).toBe(96);  // 40 * 2.4 * 1.0
+    expect(s1).toBe(40); // 40 * 1.0 * 1.0
+    expect(s3).toBe(68); // 40 * 1.7 * 1.0
+    expect(s5).toBe(96); // 40 * 2.4 * 1.0
     expect(s1).toBeLessThan(s3);
     expect(s3).toBeLessThan(s5);
   });
@@ -291,7 +293,7 @@ describe('CombatMath', () => {
     const xp1 = xpRewardForMonster(1, 0);
     const xp3 = xpRewardForMonster(3, 0);
     const xp5 = xpRewardForMonster(5, 0);
-    expect(xp1).toBe(25);  // 25 * 1 * 1
+    expect(xp1).toBe(25); // 25 * 1 * 1
     expect(xp3).toBe(225); // 25 * 9
     expect(xp5).toBe(625); // 25 * 25
   });
@@ -316,23 +318,29 @@ describe('CombatMath', () => {
   });
 
   it('should calculate spell damage with element multiplier', () => {
-    const [result] = calculateDamage({
-      attackerAttack: 15,
-      attackerSpeed: 8,
-      spellPower: 40,
-      defenderDefense: 5,
-      attackElement: 'fire',
-      defenderElement: 'earth',
-    }, rng);
+    const [result] = calculateDamage(
+      {
+        attackerAttack: 15,
+        attackerSpeed: 8,
+        spellPower: 40,
+        defenderDefense: 5,
+        attackElement: 'fire',
+        defenderElement: 'earth',
+      },
+      rng,
+    );
     // Element multiplier 1.5 should boost damage
-    const [neutralResult] = calculateDamage({
-      attackerAttack: 15,
-      attackerSpeed: 8,
-      spellPower: 40,
-      defenderDefense: 5,
-      attackElement: 'fire',
-      defenderElement: 'none',
-    }, rng);
+    const [neutralResult] = calculateDamage(
+      {
+        attackerAttack: 15,
+        attackerSpeed: 8,
+        spellPower: 40,
+        defenderDefense: 5,
+        attackElement: 'fire',
+        defenderElement: 'none',
+      },
+      rng,
+    );
     // Super effective should generally be higher (variance could occasionally make them equal)
     expect(result.elementMultiplier).toBe(1.5);
     expect(neutralResult.elementMultiplier).toBe(1.0);
@@ -394,7 +402,7 @@ describe('StatusEffects', () => {
     effects = applyStatusEffect(effects, shield);
     const cleansed = cleanse(effects);
     expect(cleansed).toHaveLength(2); // buff + shield remain
-    expect(cleansed.find(e => e.type === 'poison')).toBeUndefined();
+    expect(cleansed.find((e) => e.type === 'poison')).toBeUndefined();
   });
 
   it('should detect stunned state', () => {
@@ -422,7 +430,7 @@ describe('StatusEffects', () => {
     const poison = createStatusEffect('poison', 'Venom', 5, 1);
     const result = tickStatusEffects([poison], 'TestEntity');
     expect(result.effects).toHaveLength(0); // expired
-    expect(result.log.some(l => l.includes('expired'))).toBe(true);
+    expect(result.log.some((l) => l.includes('expired'))).toBe(true);
   });
 
   it('should absorb damage through shields', () => {
@@ -470,7 +478,7 @@ describe('MonsterFactory', () => {
   });
 
   it('should create monsters by type and severity', () => {
-    const [monster, newRng] = createMonster('null-pointer', 1, 0, rng);
+    const [monster, _newRng] = createMonster('null-pointer', 1, 0, rng);
     expect(monster.type).toBe('null-pointer');
     expect(monster.element).toBe('none');
     expect(monster.severity).toBe(1);
@@ -938,7 +946,7 @@ describe('TurnBasedEngine', () => {
         targetIndex: 0,
       });
       // Should have a shield effect (may be consumed by enemy attack though)
-      expect(next.log.some(l => l.result.includes('shield'))).toBe(true);
+      expect(next.log.some((l) => l.result.includes('shield'))).toBe(true);
     });
 
     it('should apply heal spell', () => {
@@ -954,7 +962,7 @@ describe('TurnBasedEngine', () => {
         targetIndex: 0,
       });
       // Player should have more HP (heal) but also less (enemy attack)
-      expect(next.log.some(l => l.result.includes('healing'))).toBe(true);
+      expect(next.log.some((l) => l.result.includes('healing'))).toBe(true);
     });
 
     it('should apply DoT spell', () => {
@@ -964,7 +972,7 @@ describe('TurnBasedEngine', () => {
         spellId: 'spell-buffer-overflow',
         targetIndex: 0,
       });
-      expect(next.log.some(l => l.result.includes('poisoning'))).toBe(true);
+      expect(next.log.some((l) => l.result.includes('poisoning'))).toBe(true);
     });
 
     it('should apply AoE damage to all enemies', () => {
@@ -978,8 +986,7 @@ describe('TurnBasedEngine', () => {
       });
       // Both enemies should take damage
       const totalDmg =
-        (m1.stats.health - next.enemies[0].stats.health) +
-        (m2.stats.health - next.enemies[1].stats.health);
+        m1.stats.health - next.enemies[0].stats.health + (m2.stats.health - next.enemies[1].stats.health);
       expect(totalDmg).toBeGreaterThan(0);
     });
   });
@@ -988,7 +995,7 @@ describe('TurnBasedEngine', () => {
     it('should grant defense buff', () => {
       const state = initBattle(player, [monster], 42);
       const next = executeTurn(state, { type: 'DEFEND' });
-      expect(next.log.some(l => l.result.includes('defensive stance'))).toBe(true);
+      expect(next.log.some((l) => l.result.includes('defensive stance'))).toBe(true);
     });
   });
 
@@ -1043,7 +1050,7 @@ describe('TurnBasedEngine', () => {
       const state = initBattle(player, [m1, m2], 42);
       const next = executeTurn(state, { type: 'ATTACK', targetIndex: 0 });
       // Both enemies should have acted (visible in log)
-      const enemyLogs = next.log.filter(l => l.actor.startsWith('enemy:'));
+      const enemyLogs = next.log.filter((l) => l.actor.startsWith('enemy:'));
       expect(enemyLogs.length).toBeGreaterThanOrEqual(1);
     });
   });
@@ -1076,7 +1083,7 @@ describe('TurnBasedEngine', () => {
       const result2 = replayBattle(player, [monster], 999, actions);
 
       // Very likely different due to variance + crits
-      const sameHP =
+      const _sameHP =
         result1.player.stats.health === result2.player.stats.health &&
         result1.enemies[0].stats.health === result2.enemies[0].stats.health;
       // Could theoretically be same, but highly unlikely
@@ -1139,20 +1146,28 @@ describe('TurnBasedEngine', () => {
     });
 
     it('should handle multi-enemy battle', () => {
-      const m1 = makeTestMonster({ id: 'ma', name: 'Bug A', stats: { ...makeTestMonster().stats, health: 15, maxHealth: 15, attack: 2 } });
-      const m2 = makeTestMonster({ id: 'mb', name: 'Bug B', stats: { ...makeTestMonster().stats, health: 15, maxHealth: 15, attack: 2 } });
+      const m1 = makeTestMonster({
+        id: 'ma',
+        name: 'Bug A',
+        stats: { ...makeTestMonster().stats, health: 15, maxHealth: 15, attack: 2 },
+      });
+      const m2 = makeTestMonster({
+        id: 'mb',
+        name: 'Bug B',
+        stats: { ...makeTestMonster().stats, health: 15, maxHealth: 15, attack: 2 },
+      });
 
       let state = initBattle(player, [m1, m2], 42);
       let maxTurns = 100;
 
       while (state.phase.type !== 'VICTORY' && state.phase.type !== 'DEFEAT' && maxTurns-- > 0) {
         // Target first alive enemy
-        const targetIdx = state.enemies.findIndex(e => e.stats.health > 0);
+        const targetIdx = state.enemies.findIndex((e) => e.stats.health > 0);
         state = executeTurn(state, { type: 'ATTACK', targetIndex: targetIdx });
       }
 
       expect(state.phase.type).toBe('VICTORY');
-      expect(state.enemies.every(e => e.stats.health <= 0)).toBe(true);
+      expect(state.enemies.every((e) => e.stats.health <= 0)).toBe(true);
     });
 
     it('should grant XP on victory', () => {

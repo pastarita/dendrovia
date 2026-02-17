@@ -5,13 +5,13 @@
  * controls, and metadata for ZooShell consumption.
  */
 
-import type { ZooExhibitDescriptor, ZooCategory, ZooSortDimension } from '../../_zoo-kit/types';
+import type { ZooCategory, ZooExhibitDescriptor, ZooSortDimension } from '../../_zoo-kit/types';
+import { IconBadgeExhibit } from './IconBadgeExhibit';
+import { OrnateFrameExhibit } from './OrnateFrameExhibit';
 import { PanelExhibit } from './PanelExhibit';
 import { ProgressBarExhibit } from './ProgressBarExhibit';
-import { IconBadgeExhibit } from './IconBadgeExhibit';
 import { StatLabelExhibit } from './StatLabelExhibit';
 import { TooltipExhibit } from './TooltipExhibit';
-import { OrnateFrameExhibit } from './OrnateFrameExhibit';
 
 // ── Categories ───────────────────────────────────────
 
@@ -62,7 +62,13 @@ export const EXHIBIT_REGISTRY: ZooExhibitDescriptor[] = [
     controls: [
       { type: 'range', key: 'value', label: 'Value', min: 0, max: 100, defaultValue: 75 },
       { type: 'range', key: 'max', label: 'Max', min: 1, max: 200, defaultValue: 100 },
-      { type: 'select', key: 'variant', label: 'Variant', options: ['health', 'mana', 'xp', 'quest', 'custom'] as const, defaultValue: 'health' },
+      {
+        type: 'select',
+        key: 'variant',
+        label: 'Variant',
+        options: ['health', 'mana', 'xp', 'quest', 'custom'] as const,
+        defaultValue: 'health',
+      },
       { type: 'range', key: 'height', label: 'Height', min: 4, max: 24, defaultValue: 8 },
       { type: 'boolean', key: 'flash', label: 'flash', defaultValue: false },
     ],
@@ -111,7 +117,13 @@ export const EXHIBIT_REGISTRY: ZooExhibitDescriptor[] = [
     component: TooltipExhibit,
     controls: [
       { type: 'text', key: 'content', label: 'Content', defaultValue: 'Tooltip content' },
-      { type: 'select', key: 'position', label: 'Position', options: ['top', 'bottom', 'left', 'right'] as const, defaultValue: 'top' },
+      {
+        type: 'select',
+        key: 'position',
+        label: 'Position',
+        options: ['top', 'bottom', 'left', 'right'] as const,
+        defaultValue: 'top',
+      },
     ],
   },
   {
@@ -125,8 +137,20 @@ export const EXHIBIT_REGISTRY: ZooExhibitDescriptor[] = [
     tags: ['frame', 'ornate', 'pillar', 'svg', 'decorative'],
     component: OrnateFrameExhibit,
     controls: [
-      { type: 'select', key: 'pillar', label: 'Pillar', options: ['oculus', 'chronos', 'architectus', 'ludus', 'imaginarium', 'operatus'] as const, defaultValue: 'oculus' },
-      { type: 'select', key: 'variant', label: 'Variant', options: ['modal', 'panel', 'compact', 'tooltip'] as const, defaultValue: 'panel' },
+      {
+        type: 'select',
+        key: 'pillar',
+        label: 'Pillar',
+        options: ['oculus', 'chronos', 'architectus', 'ludus', 'imaginarium', 'operatus'] as const,
+        defaultValue: 'oculus',
+      },
+      {
+        type: 'select',
+        key: 'variant',
+        label: 'Variant',
+        options: ['modal', 'panel', 'compact', 'tooltip'] as const,
+        defaultValue: 'panel',
+      },
       { type: 'text', key: 'header', label: 'Header', defaultValue: 'Frame Title' },
     ],
   },

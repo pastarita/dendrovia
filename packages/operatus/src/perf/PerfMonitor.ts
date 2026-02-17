@@ -196,7 +196,9 @@ export class PerfMonitor {
 
     console.group('[OPERATUS] Performance Report');
     console.log(`Total load time: ${report.totalLoadTime.toFixed(1)}ms`);
-    console.log(`Cache: ${report.cache.hits} hits / ${report.cache.misses} misses (${(report.cache.hitRate * 100).toFixed(1)}% hit rate)`);
+    console.log(
+      `Cache: ${report.cache.hits} hits / ${report.cache.misses} misses (${(report.cache.hitRate * 100).toFixed(1)}% hit rate)`,
+    );
     console.log(`OPFS: ${report.opfsAvailable ? 'active' : 'fallback to IDB'}`);
 
     if (report.storageUsage !== null) {

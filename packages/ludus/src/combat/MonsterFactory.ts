@@ -18,6 +18,7 @@ import type {
 } from '@dendrovia/shared';
 import { scaleMonsterStat, xpRewardForMonster } from './CombatMath';
 import { rngNext, rngPick } from '../utils/SeededRandom';
+import { DEFAULT_BALANCE_CONFIG } from '../config/BalanceConfig';
 
 // ─── Base Monster Templates ─────────────────────────────────
 
@@ -209,7 +210,7 @@ export function generateBoss(
     stats: scaleStats(template, severity, complexity),
     spells: [...template.bossSpells],
     statusEffects: [],
-    xpReward: xpRewardForMonster(severity, complexity) * 3,
+    xpReward: xpRewardForMonster(severity, complexity) * DEFAULT_BALANCE_CONFIG.monsters.bossXPMultiplier,
     lootTable: generateLootTable(severity),
   };
 
@@ -237,7 +238,7 @@ export function generateMiniboss(
     stats: scaleStats(template, severity, complexity),
     spells: [...template.bossSpells],
     statusEffects: [],
-    xpReward: xpRewardForMonster(severity, complexity) * 2,
+    xpReward: xpRewardForMonster(severity, complexity) * DEFAULT_BALANCE_CONFIG.monsters.minibossXPMultiplier,
     lootTable: generateLootTable(severity),
   };
 

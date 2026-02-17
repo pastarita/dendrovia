@@ -66,7 +66,7 @@ Map changed files to domains using file path patterns:
 |---------|--------|
 | `packages/chronos/` | chronos |
 | `packages/imaginarium/` | imaginarium |
-| `packages/architectus/`, `packages/dendrovia-engine/` | architectus |
+| `packages/architectus/` | architectus |
 | `packages/ludus/` | ludus |
 | `packages/oculus/`, `packages/ui/` | oculus |
 | `packages/operatus/`, `scripts/` | operatus |

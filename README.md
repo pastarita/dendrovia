@@ -156,8 +156,7 @@ dendrovia/
 │   ├── architectus/            # R3F + WebGPU engine
 │   ├── ludus/                  # Game mechanics
 │   ├── oculus/                 # UI components
-│   ├── operatus/               # Infrastructure + persistence
-│   └── dendrovia-engine/       # 3D engine core
+│   └── operatus/               # Infrastructure + persistence
 ├── assets/                     # SVG icons, design assets
 ├── lib/                        # Heraldry, shared utilities
 ├── turbo.json                  # TurboRepo pipeline

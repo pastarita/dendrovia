@@ -43,7 +43,7 @@ OCULUS is the most comprehensive listener in the system:
 
 | Event | Direction | Status |
 |-------|-----------|--------|
-| NODE_CLICKED | Listens | Working (proof-of-concept HUD) |
+| NODE_CLICKED | Listens | Working |
 | HEALTH_CHANGED | Listens | Working |
 | MANA_CHANGED | Listens | Working |
 | QUEST_UPDATED | Listens | Working |

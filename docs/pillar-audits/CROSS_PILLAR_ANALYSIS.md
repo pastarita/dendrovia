@@ -66,7 +66,7 @@
 | Defined but completely unused | SEGMENT_ENTERED | Low |
 | Under-subscribed | ARCHITECTUS handles 2/21 events OCULUS subscribes to | High |
 
-**Critical insight:** The build-time pipeline (CHRONOS → IMAGINARIUM → ARCHITECTUS) emits 7 events but no runtime listener exists for any of them. The proof-of-concept thin-slice.ts bridges this procedurally but production pillars have no wiring.
+**Critical insight:** The build-time pipeline (CHRONOS → IMAGINARIUM → ARCHITECTUS) emits 7 events but no runtime listener exists for any of them. Production pillars have no wiring for these build-time events.
 
 ---
 
@@ -116,7 +116,7 @@ Layer 2 (leaf nodes — consumed only by apps):
 | 7/8 IMAGINARIUM subpath exports orphaned | imaginarium package.json | Only `./mesh-runtime` consumed; rest unused |
 | 3 shared subpath exports orphaned | shared package.json | `./contracts`, `./logger-types`, `./magnitude` never imported via subpath |
 | CHRONOS re-exports shared types | chronos/src/index.ts | Creates facade where consumers could import shared types from chronos (benign since chronos has zero consumers) |
-| No app-layer integration package | monorepo-wide | Leaf pillars wired together only in proof-of-concept thin-slice, not a dedicated integration layer |
+| No app-layer integration package | monorepo-wide | Leaf pillars lack a dedicated integration layer |
 
 ---
 
@@ -152,7 +152,7 @@ Layer 2 (leaf nodes — consumed only by apps):
 |--------|------------------------|-------------|
 | `build` | shared, imaginarium, architectus | chronos, ludus, operatus |
 | `lint` | _(none)_ | **All 7 pillar packages** |
-| `test` | All 7 | dendrovia-engine, ui, proof-of-concept |
+| `test` | All 7 | ui |
 | `check-types` | _(none)_ | **All 7 pillar packages** |
 | `clean` | imaginarium only | All others |
 
@@ -160,16 +160,16 @@ Layer 2 (leaf nodes — consumed only by apps):
 
 ### TypeScript Project References
 
-Only `proof-of-concept` has project `references`. All other packages resolve workspace deps purely through Bun's workspace resolution. `tsc --build` mode cannot work across the monorepo.
+No packages use project `references`. All packages resolve workspace deps purely through Bun's workspace resolution. `tsc --build` mode cannot work across the monorepo.
 
 ### Scope Inconsistency
 
 | Scope | Packages |
 |-------|----------|
 | `@dendrovia/*` | All 7 pillars, shared, dendrite |
-| `@repo/*` | ui, eslint-config, typescript-config, dendrovia-engine |
+| `@repo/*` | ui, eslint-config, typescript-config |
 
-Two naming scopes coexist. This blocks `dendrovia-engine` from declaring `@dendrovia/shared` as a dependency.
+Two naming scopes coexist.
 
 ### Duplicate Patterns
 
@@ -179,13 +179,13 @@ Two naming scopes coexist. This blocks `dendrovia-engine` from declaring `@dendr
 | Bridge pattern | architectus/dendrite/bridge.ts, operatus/dendrite/bridge.ts | Duplicated dendrite bridge abstraction |
 | Math utils (clamp/lerp/smoothstep) | architectus (3 files), imaginarium, operatus | Extract to shared/src/math.ts |
 | Logger creation | shared/logger.ts pre-builds only 3 pillar loggers (chronos, imaginarium, operatus) | Missing: architectus, ludus, oculus |
-| Post-processing | architectus/PostProcessing.tsx, dendrovia-engine/Effects.tsx | Nearly identical bloom config |
+| Post-processing | architectus/PostProcessing.tsx | Bloom config |
 
 ### Version Skew
 
 | Dependency | Versions Used |
 |------------|--------------|
-| zustand | `^5.0.0` (operatus), `^5.0.2` (ludus, oculus), `^5.0.3` (architectus, dendrovia-engine) |
+| zustand | `^5.0.0` (operatus), `^5.0.2` (ludus, oculus), `^5.0.3` (architectus) |
 
 ### Dead Dependencies
 

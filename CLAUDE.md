@@ -41,7 +41,7 @@ cd packages/chronos && bun run parse    # Run CHRONOS parser
 |--------|------|---------|--------|
 | CHRONOS | Git History + AST Parsing | `packages/chronos` | Implemented |
 | IMAGINARIUM | Procedural Art Generation | `packages/imaginarium` | Scaffold |
-| ARCHITECTUS | 3D Rendering Engine | `packages/architectus`, `packages/dendrovia-engine` | Scaffold |
+| ARCHITECTUS | 3D Rendering Engine | `packages/architectus` | Scaffold |
 | LUDUS | Game Mechanics + Rules | `packages/ludus` | Scaffold |
 | OCULUS | UI + Navigation | `packages/oculus`, `packages/ui` | Scaffold |
 | OPERATUS | Infrastructure + Persistence | `packages/operatus` | Scaffold |

@@ -45,7 +45,7 @@ Map each changed file to a domain:
 |-------------|--------|----------|
 | `packages/chronos/` | chronos | Amber `#c77b3f` |
 | `packages/imaginarium/` | imaginarium | Purpure `#A855F7` |
-| `packages/architectus/`, `packages/dendrovia-engine/` | architectus | Azure `#3B82F6` |
+| `packages/architectus/` | architectus | Azure `#3B82F6` |
 | `packages/ludus/` | ludus | Gules `#EF4444` |
 | `packages/oculus/`, `packages/ui/` | oculus | Vert `#22C55E` |
 | `packages/operatus/`, `scripts/` | operatus | Sable `#1F2937` |

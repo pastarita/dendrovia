@@ -2,62 +2,35 @@
 
 ## What Was Just Implemented
 
-We've successfully implemented the **architectural foundation** for Dendrovia - the six-pillar cognitive architecture with a working proof-of-concept.
+We've successfully implemented the **architectural foundation** for Dendrovia - the six-pillar cognitive architecture with a working end-to-end pipeline.
 
 ### ✅ What's Working Now
 
 1. **Complete Monorepo Structure** - Six pillars with proper boundaries
 2. **Shared Type System** - TypeScript contracts between pillars
 3. **Event-Driven Architecture** - EventBus for pillar communication
-4. **Thin Vertical Slice** - End-to-end proof of the pipeline
-5. **Procedural Generation** - Deterministic color palette + SDF shader generation
+4. **Procedural Generation** - Deterministic color palette + SDF shader generation
 
 ---
 
-## Quick Start: Test the Proof of Concept
-
-### 1. Generate Artifacts
+## Quick Start: Analyze a Repository
 
 From the monorepo root:
 
 ```bash
-cd /Users/Patmac/denroot/ARCHITECTUS/dendrovia
-bun run slice
+cd /Users/Patmac/denroot/OPERATUS/dendrovia
+bun run refresh:worlds
 ```
 
-This will:
-- 📜 Parse `package.json` (CHRONOS)
-- 🎨 Generate a color palette (IMAGINARIUM)
-- ⚙️ Compile an SDF shader (IMAGINARIUM)
-- 💾 Write artifacts to `packages/proof-of-concept/generated/`
+This runs the CHRONOS parser with `--install`, generating world data under `worlds/`.
 
-### 2. View the Generated Artifacts
+### Launch the App
 
 ```bash
-# Color palette (JSON)
-cat packages/proof-of-concept/generated/palette.json
-
-# SDF shader (GLSL)
-cat packages/proof-of-concept/generated/dendrite.glsl
-
-# Topology (parsed file metadata)
-cat packages/proof-of-concept/generated/topology.json
-```
-
-### 3. Launch the 3D Viewer (Future)
-
-```bash
-cd packages/proof-of-concept
-bun install  # If not already installed
 bun run dev
 ```
 
-This will launch a Vite dev server with:
-- 🏛️ Three.js scene rendering the procedural branch
-- 🎯 Click-to-read interaction
-- 👁️ HUD overlay
-
-**Note:** The 3D viewer requires finishing the R3F integration (see Implementation Status).
+Navigate to `http://localhost:3000` to see the portal with available worlds.
 
 ---
 
@@ -89,10 +62,8 @@ This will launch a Vite dev server with:
 │       │   ├── architectus/     # R3F rendering engine
 │       │   ├── ludus/           # Game mechanics
 │       │   ├── oculus/          # UI components
-│       │   ├── operatus/        # Infrastructure
-│       │   └── proof-of-concept/ # Thin vertical slice
+│       │   └── operatus/        # Infrastructure
 │       └── scripts/
-│           └── pipeline-factory.ts  # Launch all 6 terminals
 │
 ├── LUDUS/                       # 🎮 Game mechanics R&D
 │   └── README.md
@@ -123,18 +94,6 @@ This will launch a Vite dev server with:
 | `src/types/index.ts` | TypeScript interfaces for all pillars |
 | `src/events/EventBus.ts` | Event-driven communication system |
 | `src/contracts/index.ts` | JSON schemas for generated files |
-
-### Proof of Concept (packages/proof-of-concept/)
-
-| File | Purpose |
-|------|---------|
-| `src/thin-slice.ts` | Complete pipeline demonstration |
-| `src/index.tsx` | React Three Fiber 3D viewer |
-| `src/components/DendriteBranch.tsx` | Procedural branch rendering |
-| `src/components/CodeOverlay.tsx` | 2D file viewer modal |
-| `src/components/HUD.tsx` | Heads-up display |
-| `generated/palette.json` | Generated color scheme |
-| `generated/dendrite.glsl` | Generated SDF shader |
 
 ---
 
@@ -313,20 +272,12 @@ rm -rf node_modules bun.lock
 bun install
 ```
 
-### "slice" command not found
+### Generated world data is missing
 
-Make sure you're in the monorepo root:
+Re-run the CHRONOS parser:
 ```bash
-cd /Users/Patmac/denroot/ARCHITECTUS/dendrovia
-bun run slice
-```
-
-### Generated files are empty
-
-The script writes files asynchronously. If they're missing, check:
-```bash
-ls packages/proof-of-concept/generated/
-# Should see: .gitkeep, palette.json, dendrite.glsl, topology.json
+bun run refresh:worlds
+ls worlds/
 ```
 
 ---

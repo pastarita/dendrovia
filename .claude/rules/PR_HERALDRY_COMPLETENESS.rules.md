@@ -26,7 +26,7 @@ Domains map to the six-pillar architecture plus cross-cutting concerns:
 |--------|--------|----------|-----|------|---------------|
 | chronos | CHRONOS | Amber | `#c77b3f` | color | `packages/chronos/` |
 | imaginarium | IMAGINARIUM | Purpure | `#A855F7` | color | `packages/imaginarium/` |
-| architectus | ARCHITECTUS | Azure | `#3B82F6` | color | `packages/architectus/`, `packages/dendrovia-engine/` |
+| architectus | ARCHITECTUS | Azure | `#3B82F6` | color | `packages/architectus/` |
 | ludus | LUDUS | Gules | `#EF4444` | color | `packages/ludus/` |
 | oculus | OCULUS | Vert | `#22C55E` | color | `packages/oculus/`, `packages/ui/` |
 | operatus | OPERATUS | Sable | `#1F2937` | color | `packages/operatus/`, `scripts/` |

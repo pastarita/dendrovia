@@ -278,14 +278,11 @@ No special commands:
 
 ### Vercel Setup
 
-Deploy the proof-of-concept:
+Deploy the application:
 
 ```bash
-cd /Users/Patmac/denroot/ARCHITECTUS/dendrovia
+cd /Users/Patmac/denroot/OPERATUS/dendrovia
 vercel init
-
-# Deploy packages/proof-of-concept
-cd packages/proof-of-concept
 vercel deploy
 ```
 

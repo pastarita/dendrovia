@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { PlayerMovedEvent } from '@dendrovia/shared';
 import { useRendererStore } from '../store/useRendererStore';
+import { deriveDimensions } from '../systems/PlatformConfig';
+import type { PlatformConfig, PlatformDimensions } from '../systems/PlatformConfig';
 
 /**
  * CAMERA RIG (D4)
@@ -13,50 +15,40 @@ import { useRendererStore } from '../store/useRendererStore';
  *
  * Falcon Mode (Overview):
  *   - Orbital controls, free-floating
- *   - For pattern recognition, hotspot detection
- *   - MinDistance: 5, MaxDistance: 100
+ *   - Position/target/distance derived from topology extent
  *
  * Player Mode (Exploration) — "Ant on a Manifold":
  *   - Surface-locked to nearest branch cylinder
- *   - Gravity vector = toward branch axis (not world-down)
- *   - Movement tangent to cylinder surface
- *   - Keyboard WASD: forward/back along branch, strafe around cylinder
- *   - Space: jump with parabolic return to surface
- *   - At branch junctions: smooth transition between segments
+ *   - Character scale proportional to trunk radius
+ *   - Platform detection: flat-ground physics when on platform
  *
- * Transition: Smooth cubic ease camera position + target over 1.5s.
+ * All positioning and physics values are topology-derived via PlatformConfig.
  */
 
-const FALCON_DEFAULTS = {
+/** Fallback defaults when no topology has been loaded yet */
+const FALLBACK_FALCON = {
   position: new THREE.Vector3(10, 14, -16),
-  target: new THREE.Vector3(0, 3, 0), // Center on root zone / platform
+  target: new THREE.Vector3(0, 3, 0),
   minDistance: 5,
   maxDistance: 100,
-  dampingFactor: 0.05,
+};
+
+/** Fallback physics when no config is available */
+const FALLBACK_PHYSICS = {
+  playerHeight: 1.5,
+  moveSpeed: 4.0,
+  strafeSpeed: 2.0,
+  jumpStrength: 5.0,
+  gravityStrength: 12.0,
+  lookAheadDistance: 3.0,
+  surfaceDamping: 0.15,
+  platformRadiusSq: 9,
+  platformYThreshold: 1.5,
 };
 
 const TRANSITION_DURATION = 1.5; // seconds
-
-/** Minimum distance (in world units) the camera must move before emitting PLAYER_MOVED */
 const MOVE_EMIT_THRESHOLD = 0.5;
-
-/** D4: Surface camera constants */
-const SURFACE_CONFIG = {
-  /** Distance from branch axis to camera (cylinder radius + offset) */
-  playerHeight: 1.5,
-  /** Movement speed along branch axis (units/sec) */
-  moveSpeed: 4.0,
-  /** Movement speed around branch circumference (rad/sec) */
-  strafeSpeed: 2.0,
-  /** Jump impulse strength */
-  jumpStrength: 5.0,
-  /** Gravity strength toward surface (units/sec^2) */
-  gravityStrength: 12.0,
-  /** Damping for smooth surface snap */
-  surfaceDamping: 0.15,
-  /** Camera look-ahead distance along branch */
-  lookAheadDistance: 3.0,
-} as const;
+const DAMPING_FACTOR = 0.05;
 
 // Reusable vectors to avoid per-frame allocation
 const _axisDir = new THREE.Vector3();
@@ -67,37 +59,34 @@ const _surfacePos = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
 const _movement = new THREE.Vector3();
 
+/** Read dimensions from store config, with fallback */
+function getDimensions(): PlatformDimensions | null {
+  const config = useRendererStore.getState().platformConfig;
+  if (!config) return null;
+  return deriveDimensions(config);
+}
+
 /**
  * SURFACE CAMERA (D4)
  *
- * Renders nothing — just manipulates camera position each frame
- * based on surface-lock physics relative to the nearest branch segment.
+ * Renders nothing — manipulates camera position each frame.
+ * Physics values scale with topology via PlatformDimensions.
  */
 function SurfaceCamera() {
   const { camera } = useThree();
 
-  // Input state tracked via keyboard events
   const keys = useRef({ w: false, s: false, a: false, d: false, space: false });
 
-  // Surface physics state
   const physicsRef = useRef({
-    /** Current parametric position along segment (0-1) */
     t: 0.5,
-    /** Current angle around branch cylinder */
     theta: 0,
-    /** Vertical velocity for jump arc */
     jumpVelocity: 0,
-    /** Height offset from surface (non-zero during jump) */
     heightOffset: 0,
-    /** Whether player is on surface (not jumping) */
     grounded: true,
-    /** Smoothed position for damping */
     smoothPosition: new THREE.Vector3(),
-    /** Index of current segment in spatial index */
     currentSegmentIndex: -1,
   });
 
-  // Register keyboard listeners
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
@@ -125,36 +114,40 @@ function SurfaceCamera() {
     };
   }, []);
 
-  // Initialize smooth position
   useEffect(() => {
     physicsRef.current.smoothPosition.copy(camera.position);
   }, [camera]);
 
   useFrame((_, delta) => {
-    const dt = Math.min(delta, 0.1); // Clamp for tab-switch
+    const dt = Math.min(delta, 0.1);
     const spatialIndex = useRendererStore.getState().spatialIndex;
     const physics = physicsRef.current;
     const k = keys.current;
 
+    // Read topology-derived physics values
+    const dim = getDimensions();
+    const ph = dim ?? FALLBACK_PHYSICS;
+    const config = useRendererStore.getState().platformConfig;
+    const oy = config?.origin[1] ?? 0;
+
     // --- Platform detection ---
-    // When within platform radius at ground level, use flat-ground physics
     const pos = camera.position;
-    const onPlatform = pos.x * pos.x + pos.z * pos.z < 9 && pos.y < 1.5;
+    const dxSq = (pos.x - (config?.origin[0] ?? 0)) ** 2;
+    const dzSq = (pos.z - (config?.origin[2] ?? 0)) ** 2;
+    const onPlatform = dxSq + dzSq < ph.platformRadiusSq && pos.y < ph.platformYThreshold;
     const wasOnPlatform = useRendererStore.getState().isOnPlatform;
     if (onPlatform !== wasOnPlatform) {
       useRendererStore.getState().setOnPlatform(onPlatform);
     }
 
     if (onPlatform) {
-      // Flat-ground movement: world-down gravity, free XZ movement
       let moveX = 0;
       let moveZ = 0;
-      if (k.w) moveZ -= SURFACE_CONFIG.moveSpeed * dt;
-      if (k.s) moveZ += SURFACE_CONFIG.moveSpeed * dt;
-      if (k.a) moveX -= SURFACE_CONFIG.moveSpeed * dt;
-      if (k.d) moveX += SURFACE_CONFIG.moveSpeed * dt;
+      if (k.w) moveZ -= ph.moveSpeed * dt;
+      if (k.s) moveZ += ph.moveSpeed * dt;
+      if (k.a) moveX -= ph.moveSpeed * dt;
+      if (k.d) moveX += ph.moveSpeed * dt;
 
-      // Apply movement relative to camera facing direction (XZ plane)
       const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
       forward.y = 0;
       forward.normalize();
@@ -168,16 +161,15 @@ function SurfaceCamera() {
 
       const targetPos = _surfacePos.copy(pos).add(_movement);
 
-      // Jump on platform
       if (k.space && physics.grounded) {
-        physics.jumpVelocity = SURFACE_CONFIG.jumpStrength;
+        physics.jumpVelocity = ph.jumpStrength;
         physics.grounded = false;
         keys.current.space = false;
       }
 
       if (!physics.grounded) {
         physics.heightOffset += physics.jumpVelocity * dt;
-        physics.jumpVelocity -= SURFACE_CONFIG.gravityStrength * dt;
+        physics.jumpVelocity -= ph.gravityStrength * dt;
         if (physics.heightOffset <= 0) {
           physics.heightOffset = 0;
           physics.jumpVelocity = 0;
@@ -185,31 +177,28 @@ function SurfaceCamera() {
         }
       }
 
-      targetPos.y = SURFACE_CONFIG.playerHeight + physics.heightOffset;
+      targetPos.y = oy + ph.playerHeight + physics.heightOffset;
 
-      // Smooth movement
-      physics.smoothPosition.lerp(targetPos, 1 - Math.pow(SURFACE_CONFIG.surfaceDamping, dt));
+      physics.smoothPosition.lerp(targetPos, 1 - Math.pow(ph.surfaceDamping, dt));
       camera.position.copy(physics.smoothPosition);
 
-      // Look toward trunk center
-      _lookTarget.set(0, 2, 0);
+      // Look toward trunk center at trunk midpoint height
+      const lookY = oy + (config?.trunkLength ?? 3) * 0.5;
+      _lookTarget.set(config?.origin[0] ?? 0, lookY, config?.origin[2] ?? 0);
       camera.lookAt(_lookTarget);
       return;
     }
 
-    // --- Branch surface-lock physics (original) ---
+    // --- Branch surface-lock physics ---
     if (!spatialIndex || spatialIndex.nodeCount === 0) return;
 
-    // Query nearest branch segment to current camera position
     const nearest = spatialIndex.nearestSegment(camera.position);
     if (!nearest) return;
 
     const { segment, t: nearestT } = nearest;
 
-    // Segment axis direction (start → end)
     _axisDir.copy(segment.end).sub(segment.start).normalize();
 
-    // Current point on segment axis at parametric t
     const currentT = physics.currentSegmentIndex === nearest.index
       ? physics.t
       : nearestT;
@@ -218,9 +207,7 @@ function SurfaceCamera() {
       .copy(segment.start)
       .lerp(segment.end, currentT);
 
-    // Vector from axis to camera = radial direction (surface normal)
     _toCamera.copy(camera.position).sub(axisPoint);
-    // Project out the axis component to get pure radial
     const axisComponent = _toCamera.dot(_axisDir);
     _toCamera.addScaledVector(_axisDir, -axisComponent);
 
@@ -228,7 +215,6 @@ function SurfaceCamera() {
     if (radialDist > 0.001) {
       _normal.copy(_toCamera).normalize();
     } else {
-      // Camera is on axis — pick an arbitrary perpendicular
       _normal.set(0, 1, 0);
       if (Math.abs(_axisDir.dot(_normal)) > 0.9) {
         _normal.set(1, 0, 0);
@@ -236,60 +222,49 @@ function SurfaceCamera() {
       _normal.crossVectors(_axisDir, _normal).normalize();
     }
 
-    // Tangent = cross(axis, normal) — movement direction around cylinder
     _tangent.crossVectors(_axisDir, _normal).normalize();
 
-    // --- Process input ---
-
-    // Forward/back: move along branch axis (change t)
     let tDelta = 0;
-    if (k.w) tDelta += SURFACE_CONFIG.moveSpeed * dt;
-    if (k.s) tDelta -= SURFACE_CONFIG.moveSpeed * dt;
+    if (k.w) tDelta += ph.moveSpeed * dt;
+    if (k.s) tDelta -= ph.moveSpeed * dt;
 
-    // Convert world-space speed to parametric delta
     const segmentLength = segment.start.distanceTo(segment.end);
     if (segmentLength > 0.01) {
       physics.t += tDelta / segmentLength;
     }
 
-    // Strafe: rotate around cylinder (change theta)
-    if (k.a) physics.theta -= SURFACE_CONFIG.strafeSpeed * dt;
-    if (k.d) physics.theta += SURFACE_CONFIG.strafeSpeed * dt;
+    if (k.a) physics.theta -= ph.strafeSpeed * dt;
+    if (k.d) physics.theta += ph.strafeSpeed * dt;
 
-    // Junction detection: if t exceeds [0, 1], find connecting segment
     if (physics.t > 1.0) {
-      // Walked past segment end — snap to nearest segment from end point
       const nextNearest = spatialIndex.nearestSegment(segment.end);
       if (nextNearest && nextNearest.index !== nearest.index) {
         physics.currentSegmentIndex = nextNearest.index;
         physics.t = nextNearest.t;
       } else {
-        physics.t = 1.0; // Clamp at end
+        physics.t = 1.0;
       }
     } else if (physics.t < 0.0) {
-      // Walked past segment start
       const prevNearest = spatialIndex.nearestSegment(segment.start);
       if (prevNearest && prevNearest.index !== nearest.index) {
         physics.currentSegmentIndex = prevNearest.index;
         physics.t = prevNearest.t;
       } else {
-        physics.t = 0.0; // Clamp at start
+        physics.t = 0.0;
       }
     } else {
       physics.currentSegmentIndex = nearest.index;
     }
 
-    // Jump
     if (k.space && physics.grounded) {
-      physics.jumpVelocity = SURFACE_CONFIG.jumpStrength;
+      physics.jumpVelocity = ph.jumpStrength;
       physics.grounded = false;
-      keys.current.space = false; // Consume jump input
+      keys.current.space = false;
     }
 
-    // Update jump physics
     if (!physics.grounded) {
       physics.heightOffset += physics.jumpVelocity * dt;
-      physics.jumpVelocity -= SURFACE_CONFIG.gravityStrength * dt;
+      physics.jumpVelocity -= ph.gravityStrength * dt;
 
       if (physics.heightOffset <= 0) {
         physics.heightOffset = 0;
@@ -298,35 +273,26 @@ function SurfaceCamera() {
       }
     }
 
-    // --- Compute target position on cylinder surface ---
-
-    // Point on axis at current t
     const clampedT = Math.max(0, Math.min(1, physics.t));
     axisPoint.copy(segment.start).lerp(segment.end, clampedT);
 
-    // Compute radial direction at current theta
-    // Rotate the initial normal around the axis by theta
     const sinT = Math.sin(physics.theta);
     const cosT = Math.cos(physics.theta);
     _movement
       .copy(_normal).multiplyScalar(cosT)
       .addScaledVector(_tangent, sinT);
 
-    // Surface position = axis point + radius * radial + height offset * normal
-    const totalHeight = SURFACE_CONFIG.playerHeight + physics.heightOffset;
+    const totalHeight = ph.playerHeight + physics.heightOffset;
     const targetPos = _surfacePos
       .copy(axisPoint)
       .addScaledVector(_movement, totalHeight);
 
-    // Smooth camera movement (damped lerp)
-    physics.smoothPosition.lerp(targetPos, 1 - Math.pow(SURFACE_CONFIG.surfaceDamping, dt));
+    physics.smoothPosition.lerp(targetPos, 1 - Math.pow(ph.surfaceDamping, dt));
     camera.position.copy(physics.smoothPosition);
 
-    // Look-at target: point ahead on the branch
-    const lookT = Math.min(1, clampedT + SURFACE_CONFIG.lookAheadDistance / Math.max(segmentLength, 0.01));
+    const lookT = Math.min(1, clampedT + ph.lookAheadDistance / Math.max(segmentLength, 0.01));
     _lookTarget.copy(segment.start).lerp(segment.end, lookT);
-    // Offset look target slightly toward the axis (look "into" the branch)
-    _lookTarget.addScaledVector(_movement, SURFACE_CONFIG.playerHeight * 0.3);
+    _lookTarget.addScaledVector(_movement, ph.playerHeight * 0.3);
     camera.lookAt(_lookTarget);
   });
 
@@ -340,12 +306,11 @@ export function CameraRig() {
   const transitioning = useRendererStore((s) => s.cameraTransitioning);
   const playerPosition = useRendererStore((s) => s.playerPosition);
   const isUiHovered = useRendererStore((s) => s.isUiHovered);
+  const platformConfig = useRendererStore((s) => s.platformConfig);
   const { camera } = useThree();
 
-  // Track last emitted position for PLAYER_MOVED debouncing
   const lastEmittedPos = useRef(new THREE.Vector3(Infinity, Infinity, Infinity));
 
-  // Transition state
   const transitionRef = useRef({
     active: false,
     elapsed: 0,
@@ -354,6 +319,19 @@ export function CameraRig() {
     endPosition: new THREE.Vector3(),
     endTarget: new THREE.Vector3(),
   });
+
+  // Derive falcon camera values from topology config
+  const falcon = platformConfig
+    ? (() => {
+        const dim = deriveDimensions(platformConfig);
+        return {
+          position: new THREE.Vector3(...dim.falconPosition),
+          target: new THREE.Vector3(...dim.falconTarget),
+          minDistance: dim.falconMinDistance,
+          maxDistance: dim.falconMaxDistance,
+        };
+      })()
+    : FALLBACK_FALCON;
 
   // Start transition when camera mode changes
   useEffect(() => {
@@ -369,15 +347,20 @@ export function CameraRig() {
     }
 
     if (cameraMode === 'falcon') {
-      t.endPosition.copy(FALCON_DEFAULTS.position);
-      t.endTarget.copy(FALCON_DEFAULTS.target);
+      t.endPosition.copy(falcon.position);
+      t.endTarget.copy(falcon.target);
     } else {
-      // Player mode: spawn on root platform if available
-      const spawnPoint = useRendererStore.getState().rootSpawnPoint;
-      if (spawnPoint) {
-        const [sx, sy, sz] = spawnPoint;
-        t.endPosition.set(sx, sy + 1.5, sz);
-        t.endTarget.set(0, 1, 0); // Look toward trunk base
+      // Player mode: spawn on root platform
+      const dim = getDimensions();
+      if (dim) {
+        const [sx, sy, sz] = dim.spawnPoint;
+        t.endPosition.set(sx, sy, sz);
+        const config = useRendererStore.getState().platformConfig!;
+        t.endTarget.set(
+          config.origin[0],
+          config.origin[1] + config.trunkLength * 0.3,
+          config.origin[2],
+        );
       } else {
         const [px, py, pz] = playerPosition;
         t.endPosition.set(px, py + 3, pz - 5);
@@ -385,7 +368,7 @@ export function CameraRig() {
       }
       useRendererStore.getState().setOnPlatform(true);
     }
-  }, [cameraMode, transitioning, camera, playerPosition]);
+  }, [cameraMode, transitioning, camera, playerPosition, falcon]);
 
   // Animate transition
   useFrame((_, delta) => {
@@ -395,7 +378,6 @@ export function CameraRig() {
     t.elapsed += delta;
     const progress = Math.min(t.elapsed / TRANSITION_DURATION, 1);
 
-    // Smooth ease-in-out
     const ease = progress < 0.5
       ? 4 * progress * progress * progress
       : 1 - Math.pow(-2 * progress + 2, 3) / 2;
@@ -416,7 +398,7 @@ export function CameraRig() {
     }
   });
 
-  // Emit PLAYER_MOVED when camera moves more than MOVE_EMIT_THRESHOLD units
+  // Emit PLAYER_MOVED when camera moves more than threshold
   useFrame(() => {
     const dist = camera.position.distanceTo(lastEmittedPos.current);
     if (dist >= MOVE_EMIT_THRESHOLD) {
@@ -432,16 +414,16 @@ export function CameraRig() {
     }
   });
 
-  // Falcon mode: orbital controls
+  // Falcon mode: orbital controls with topology-derived distances
   if (cameraMode === 'falcon') {
     return (
       <OrbitControls
         ref={controlsRef}
         enabled={!isUiHovered}
         enableDamping
-        dampingFactor={FALCON_DEFAULTS.dampingFactor}
-        minDistance={FALCON_DEFAULTS.minDistance}
-        maxDistance={FALCON_DEFAULTS.maxDistance}
+        dampingFactor={DAMPING_FACTOR}
+        minDistance={falcon.minDistance}
+        maxDistance={falcon.maxDistance}
         maxPolarAngle={Math.PI * 0.85}
         makeDefault
       />

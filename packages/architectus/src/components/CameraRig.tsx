@@ -29,7 +29,7 @@ import { useRendererStore } from '../store/useRendererStore';
 
 const FALCON_DEFAULTS = {
   position: new THREE.Vector3(10, 14, -16),
-  target: new THREE.Vector3(-2, 5, 3),
+  target: new THREE.Vector3(0, 3, 0), // Center on root zone / platform
   minDistance: 5,
   maxDistance: 100,
   dampingFactor: 0.05,
@@ -133,10 +133,72 @@ function SurfaceCamera() {
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.1); // Clamp for tab-switch
     const spatialIndex = useRendererStore.getState().spatialIndex;
-    if (!spatialIndex || spatialIndex.nodeCount === 0) return;
-
     const physics = physicsRef.current;
     const k = keys.current;
+
+    // --- Platform detection ---
+    // When within platform radius at ground level, use flat-ground physics
+    const pos = camera.position;
+    const onPlatform = pos.x * pos.x + pos.z * pos.z < 9 && pos.y < 1.5;
+    const wasOnPlatform = useRendererStore.getState().isOnPlatform;
+    if (onPlatform !== wasOnPlatform) {
+      useRendererStore.getState().setOnPlatform(onPlatform);
+    }
+
+    if (onPlatform) {
+      // Flat-ground movement: world-down gravity, free XZ movement
+      let moveX = 0;
+      let moveZ = 0;
+      if (k.w) moveZ -= SURFACE_CONFIG.moveSpeed * dt;
+      if (k.s) moveZ += SURFACE_CONFIG.moveSpeed * dt;
+      if (k.a) moveX -= SURFACE_CONFIG.moveSpeed * dt;
+      if (k.d) moveX += SURFACE_CONFIG.moveSpeed * dt;
+
+      // Apply movement relative to camera facing direction (XZ plane)
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      forward.y = 0;
+      forward.normalize();
+      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+      right.y = 0;
+      right.normalize();
+
+      _movement.set(0, 0, 0);
+      _movement.addScaledVector(forward, -moveZ);
+      _movement.addScaledVector(right, moveX);
+
+      const targetPos = _surfacePos.copy(pos).add(_movement);
+
+      // Jump on platform
+      if (k.space && physics.grounded) {
+        physics.jumpVelocity = SURFACE_CONFIG.jumpStrength;
+        physics.grounded = false;
+        keys.current.space = false;
+      }
+
+      if (!physics.grounded) {
+        physics.heightOffset += physics.jumpVelocity * dt;
+        physics.jumpVelocity -= SURFACE_CONFIG.gravityStrength * dt;
+        if (physics.heightOffset <= 0) {
+          physics.heightOffset = 0;
+          physics.jumpVelocity = 0;
+          physics.grounded = true;
+        }
+      }
+
+      targetPos.y = SURFACE_CONFIG.playerHeight + physics.heightOffset;
+
+      // Smooth movement
+      physics.smoothPosition.lerp(targetPos, 1 - Math.pow(SURFACE_CONFIG.surfaceDamping, dt));
+      camera.position.copy(physics.smoothPosition);
+
+      // Look toward trunk center
+      _lookTarget.set(0, 2, 0);
+      camera.lookAt(_lookTarget);
+      return;
+    }
+
+    // --- Branch surface-lock physics (original) ---
+    if (!spatialIndex || spatialIndex.nodeCount === 0) return;
 
     // Query nearest branch segment to current camera position
     const nearest = spatialIndex.nearestSegment(camera.position);
@@ -310,10 +372,18 @@ export function CameraRig() {
       t.endPosition.copy(FALCON_DEFAULTS.position);
       t.endTarget.copy(FALCON_DEFAULTS.target);
     } else {
-      // Player mode: position behind and above the player
-      const [px, py, pz] = playerPosition;
-      t.endPosition.set(px, py + 3, pz - 5);
-      t.endTarget.set(px, py, pz);
+      // Player mode: spawn on root platform if available
+      const spawnPoint = useRendererStore.getState().rootSpawnPoint;
+      if (spawnPoint) {
+        const [sx, sy, sz] = spawnPoint;
+        t.endPosition.set(sx, sy + 1.5, sz);
+        t.endTarget.set(0, 1, 0); // Look toward trunk base
+      } else {
+        const [px, py, pz] = playerPosition;
+        t.endPosition.set(px, py + 3, pz - 5);
+        t.endTarget.set(px, py, pz);
+      }
+      useRendererStore.getState().setOnPlatform(true);
     }
   }, [cameraMode, transitioning, camera, playerPosition]);
 

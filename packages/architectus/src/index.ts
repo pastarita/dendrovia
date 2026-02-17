@@ -23,6 +23,7 @@ export { NodeInstances } from './components/NodeInstances';
 export { MushroomInstances } from './components/MushroomInstances';
 export { CameraRig } from './components/CameraRig';
 export { PostProcessing } from './components/PostProcessing';
+export { PostProcessingTSL } from './components/PostProcessingTSL';
 export { Lighting } from './components/Lighting';
 export { PerformanceMonitor } from './components/PerformanceMonitor';
 export { ParticleInstances } from './components/ParticleInstances';

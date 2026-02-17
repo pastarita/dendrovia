@@ -68,13 +68,8 @@ export {
   type TopologyOutput,
 } from './builder/TopologyBuilder.js';
 
-export {
-  profileContributors,
-  type ContributorProfile,
-  type ContributorFacets,
-  type Archetype,
-  type TimeArchetype,
-} from './builder/ContributorProfiler.js';
+export { profileContributors } from './builder/ContributorProfiler.js';
+export type { ContributorProfile, ContributorFacets, Archetype, TimeArchetype } from '@dendrovia/shared';
 
 // Pipeline (reusable entry point)
 export {

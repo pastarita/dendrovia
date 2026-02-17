@@ -4,51 +4,10 @@
  * Classifies developers into RPG archetypes based on their commit patterns.
  */
 
-import type { ParsedCommit, CommitType } from '@dendrovia/shared';
+import type { ParsedCommit, CommitType, Archetype, TimeArchetype, ContributorProfile, ContributorFacets } from '@dendrovia/shared';
 import { classifyCommit } from '../classifier/CommitClassifier.js';
 
-export type Archetype =
-  | 'guardian'    // >50% chore/ci/build — the infrastructure tank
-  | 'healer'     // >50% fix commits — the bug fixer
-  | 'striker'    // >50% feat commits — the feature builder
-  | 'sage'       // >40% docs/test — the knowledge keeper
-  | 'ranger'     // high file diversity — the wide-ranging explorer
-  | 'artificer'  // >40% perf/build — the optimizer
-  | 'berserker'  // high breaking change ratio — the disruptor
-  | 'adventurer'; // no dominant pattern — the generalist
-
-export type TimeArchetype = 'dawn' | 'daylight' | 'twilight' | 'midnight';
-
-export interface ContributorProfile {
-  name: string;
-  email: string;
-  archetype: Archetype;
-  timeArchetype: TimeArchetype;
-  /** Character class for the shared Character interface */
-  characterClass: 'tank' | 'healer' | 'dps';
-  commitCount: number;
-  firstCommit: Date;
-  lastCommit: Date;
-  /** Total unique files touched across all commits */
-  uniqueFilesTouched: number;
-  /** Hour of day with most commits (0-23) */
-  peakHour: number;
-  /** Most frequent commit type for this contributor */
-  topCommitType: CommitType;
-  /** Commit type distribution */
-  typeDistribution: Partial<Record<CommitType, number>>;
-  /** Personality facets (0-100) */
-  facets: ContributorFacets;
-}
-
-export interface ContributorFacets {
-  energy: number;       // commit frequency
-  discipline: number;   // conventional commit adherence
-  creativity: number;   // feature ratio
-  protectiveness: number; // fix/test ratio
-  breadth: number;      // file diversity
-  collaboration: number; // co-authorship / merge frequency
-}
+export type { Archetype, TimeArchetype, ContributorProfile, ContributorFacets } from '@dendrovia/shared';
 
 /**
  * Build contributor profiles from commit history.

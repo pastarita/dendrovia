@@ -23,7 +23,7 @@ import type {
   TemporalCoupling,
 } from '@dendrovia/shared';
 import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer.js';
-import type { ContributorProfile } from './ContributorProfiler.js';
+import type { ContributorProfile } from '@dendrovia/shared';
 
 export interface TopologyInput {
   files: ParsedFile[];

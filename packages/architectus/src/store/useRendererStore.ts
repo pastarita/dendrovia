@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { GeneratedAssets } from '../loader/AssetBridge';
 import type { SpatialIndex } from '../systems/SpatialIndex';
+import type { PlatformConfig } from '../systems/PlatformConfig';
 
 /**
  * Quality tiers from T5 research: 5-tier adaptive quality system.
@@ -153,8 +154,8 @@ interface RendererState {
   // Root platform state
   /** Whether the player is currently on the root platform (flat-ground physics) */
   isOnPlatform: boolean;
-  /** Root spawn point (set when tree geometry is computed) */
-  rootSpawnPoint: [number, number, number] | null;
+  /** Topology-derived platform configuration (null until tree geometry computed) */
+  platformConfig: PlatformConfig | null;
 
   // Actions
   setCameraMode: (mode: CameraMode) => void;
@@ -178,8 +179,8 @@ interface RendererState {
   setDamagePosition: (pos: [number, number, number] | null) => void;
   /** Set whether player is on root platform */
   setOnPlatform: (on: boolean) => void;
-  /** Set root spawn point */
-  setRootSpawnPoint: (pos: [number, number, number] | null) => void;
+  /** Set topology-derived platform config */
+  setPlatformConfig: (config: PlatformConfig | null) => void;
   /** D3: Evaluate FPS history and shift tier if thresholds met */
   autoTuneQuality: () => void;
   /** Lock quality tier (disable auto-tuning) */
@@ -236,7 +237,7 @@ export const useRendererStore = create<RendererState>()(
 
     // Root platform state
     isOnPlatform: true,
-    rootSpawnPoint: null,
+    platformConfig: null,
 
     // Actions
     setCameraMode: (mode) =>
@@ -301,8 +302,8 @@ export const useRendererStore = create<RendererState>()(
     setOnPlatform: (on) =>
       set({ isOnPlatform: on }),
 
-    setRootSpawnPoint: (pos) =>
-      set({ rootSpawnPoint: pos }),
+    setPlatformConfig: (config) =>
+      set({ platformConfig: config }),
 
     autoTuneQuality: () => {
       const state = get();

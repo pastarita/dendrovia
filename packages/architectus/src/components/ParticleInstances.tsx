@@ -40,6 +40,8 @@ export function ParticleInstances({ bounds, color, systemRef }: ParticleInstance
   // Dummy matrix for instanced mesh (positions set via instance attributes)
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const particleColor = useMemo(() => new THREE.Color(color ?? '#00ffcc'), [color]);
+  // Reusable color to avoid per-particle per-frame allocation
+  const tmpColor = useMemo(() => new THREE.Color(), []);
 
   useFrame((_, delta) => {
     // Clamp delta to avoid huge jumps on tab-switch
@@ -73,12 +75,13 @@ export function ParticleInstances({ bounds, color, systemRef }: ParticleInstance
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
 
-      // Set per-instance color
-      mesh.setColorAt(i, new THREE.Color(
+      // Set per-instance color (reuse tmpColor to avoid allocation)
+      tmpColor.setRGB(
         system.colors[i3]!,
         system.colors[i3 + 1]!,
         system.colors[i3 + 2]!,
-      ));
+      );
+      mesh.setColorAt(i, tmpColor);
     }
 
     // Hide unused instances

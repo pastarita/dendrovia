@@ -1,11 +1,12 @@
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
+import * as THREE from 'three';
 import { PerspectiveCamera, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import type { FileTreeNode, ProceduralPalette, Hotspot, LSystemRule } from '@dendrovia/shared';
 import { useRendererStore } from './store/useRendererStore';
 import { useSegmentStore } from './store/useSegmentStore';
 import { loadGeneratedAssets, loadWorldIndex, type CacheableAssetLoader } from './loader/AssetBridge';
-import { detectGPU } from './renderer/detectGPU';
+import { detectGPU, type GPUCapabilities } from './renderer/detectGPU';
 import { DendriteWorld } from './components/DendriteWorld';
 import { SegmentedWorld } from './components/SegmentedWorld';
 import { CameraRig } from './components/CameraRig';
@@ -100,6 +101,9 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
   const worldReady = useSegmentStore((s) => s.worldReady);
 
   const [gpuReady, setGpuReady] = useState(false);
+  const [gpuCaps, setGpuCaps] = useState<GPUCapabilities | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const webgpuRendererClass = useRef<any>(null);
 
   const activeTopology = topology ?? DEMO_TOPOLOGY;
 
@@ -109,17 +113,33 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
   // L-system rules from IMAGINARIUM (if available)
   const activeLSystem: LSystemRule | undefined = generatedAssets?.lsystem ?? undefined;
 
-  // Phase 1: GPU detection on mount
+  // Phase 1: GPU detection + WebGPU module preload on mount
   useEffect(() => {
     let cancelled = false;
 
-    detectGPU().then((caps) => {
+    (async () => {
+      const caps = await detectGPU();
       if (cancelled) return;
+
+      // Pre-load WebGPU renderer class so the gl callback can use it synchronously
+      if (caps.backend === 'webgpu') {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const mod = await import('three/webgpu' as any);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          webgpuRendererClass.current = (mod as any).WebGPURenderer;
+        } catch (err) {
+          console.warn('[ARCHITECTUS] WebGPU module unavailable, falling back to WebGL2:', err);
+          caps.backend = 'webgl2';
+        }
+      }
+
+      setGpuCaps(caps);
       setQualityTier(caps.tier);
       setGpuBackend(caps.backend);
       setGpuReady(true);
       setLoading(false);
-    });
+    })();
 
     return () => { cancelled = true; };
   }, [setQualityTier, setGpuBackend, setLoading]);
@@ -202,10 +222,23 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
       <ErrorBoundary background={activePalette.background} accent={activePalette.glow}>
         <Canvas
           dpr={quality.dpr}
-          gl={{
-            antialias: true,
-            powerPreference: 'high-performance',
-            alpha: false,
+          gl={({ canvas }) => {
+            // D2: Use WebGPU renderer when available, WebGL2 fallback otherwise
+            if (gpuCaps?.backend === 'webgpu' && webgpuRendererClass.current) {
+              const WebGPURenderer = webgpuRendererClass.current;
+              return new WebGPURenderer({
+                canvas,
+                antialias: true,
+                powerPreference: 'high-performance',
+                alpha: false,
+              });
+            }
+            return new THREE.WebGLRenderer({
+              canvas,
+              antialias: true,
+              powerPreference: 'high-performance',
+              alpha: false,
+            });
           }}
           style={{ background: activePalette.background }}
         >

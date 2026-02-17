@@ -164,6 +164,24 @@ export default function Home() {
         )}
       </section>
 
+      {/* Browse World Library link */}
+      {worlds.length > 0 && (
+        <a
+          href="/worlds"
+          className="browse-worlds-link"
+          style={{
+            marginTop: '1.5rem',
+            fontSize: '0.8rem',
+            fontFamily: 'var(--font-geist-mono), monospace',
+            color: 'var(--oculus-amber, #c77b3f)',
+            opacity: 0.6,
+            transition: 'opacity 150ms',
+          }}
+        >
+          Browse World Library &rarr;
+        </a>
+      )}
+
       {/* Footer */}
       <footer
         style={{

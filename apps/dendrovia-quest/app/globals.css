@@ -86,3 +86,21 @@ a {
   mix-blend-mode: overlay;
   pointer-events: none;
 }
+
+/* ── Enter Button Animations ─────────────────────────────── */
+
+@keyframes enter-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(138, 180, 248, 0.15), 0 0 40px rgba(74, 56, 34, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(138, 180, 248, 0.3), 0 0 60px rgba(74, 56, 34, 0.2); }
+}
+
+@keyframes enter-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.enter-button-active {
+  animation: enter-glow-pulse 2s ease-in-out infinite, enter-gradient-shift 4s ease-in-out infinite;
+  background-size: 200% 200% !important;
+}

@@ -25,6 +25,11 @@ blocked:
     reason: "No rebasing during deployment verification"
     source: "deployment-mode"
 
+  # Stash creation blocked — use branches instead
+  - pattern: "git stash$|git stash (push|save|create|--)"
+    reason: "Stashes are invisible context lost between sessions — commit to a branch instead"
+    source: "CASTLE_WALLS.rules.md:Stash Anti-Pattern"
+
   # Dependency changes blocked
   - pattern: "bun (add|remove|install)"
     reason: "No dependency changes during deployment verification"

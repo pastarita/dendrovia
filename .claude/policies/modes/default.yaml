@@ -39,6 +39,11 @@ blocked:
     reason: "Clean -f permanently deletes untracked files"
     source: "CLAUDE.md:Safety Protocol"
 
+  # Stash creation blocked — use branches instead
+  - pattern: "git stash$|git stash (push|save|create|--)"
+    reason: "Stashes are invisible context lost between sessions — commit to a branch instead"
+    source: "CASTLE_WALLS.rules.md:Stash Anti-Pattern"
+
   # Dangerous package operations
   - pattern: "bun remove (typescript|@types/bun)"
     reason: "Core type dependencies must not be removed"

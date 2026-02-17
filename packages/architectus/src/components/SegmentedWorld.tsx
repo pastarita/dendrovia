@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import type { ProceduralPalette } from '@dendrovia/shared';
 import { useSegmentStore } from '../store/useSegmentStore';
@@ -8,6 +8,7 @@ import { RootPlatform } from './RootPlatform';
 import { SegmentRenderer } from './SegmentRenderer';
 import { SegmentDistanceUpdater } from './SegmentDistanceUpdater';
 import { WorldFog } from './WorldFog';
+import { configFromWorldIndex } from '../systems/PlatformConfig';
 
 /**
  * SEGMENTED WORLD
@@ -44,6 +45,20 @@ export function SegmentedWorld({ palette }: SegmentedWorldProps) {
     return entries.length > 0 ? entries[0] : null;
   }, [generatedAssets?.shaders]);
 
+  // Compute platform config from world index extent
+  const platformConfig = useMemo(() => {
+    if (!worldIndex) return null;
+    return configFromWorldIndex(worldIndex);
+  }, [worldIndex]);
+
+  // Publish platform config to store for CameraRig
+  useEffect(() => {
+    if (platformConfig) {
+      useRendererStore.getState().setPlatformConfig(platformConfig);
+    }
+    return () => useRendererStore.getState().setPlatformConfig(null);
+  }, [platformConfig]);
+
   // Derive route directions from world index placements
   const routes = useMemo(() => {
     if (!worldIndex?.placements) return [];
@@ -61,8 +76,10 @@ export function SegmentedWorld({ palette }: SegmentedWorldProps) {
 
   return (
     <group name="segmented-world">
-      {/* Root platform — persistent spawn base at origin (outside segment map) */}
-      <RootPlatform palette={palette} routes={routes} rootName="world" />
+      {/* Root platform — persistent spawn base, scaled to world extent */}
+      {platformConfig && (
+        <RootPlatform palette={palette} routes={routes} config={platformConfig} />
+      )}
 
       {/* Distance tracking + load triggering */}
       <SegmentDistanceUpdater />

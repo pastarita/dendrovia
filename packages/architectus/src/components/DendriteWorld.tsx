@@ -17,6 +17,7 @@ import { SDFBackdrop } from './SDFBackdrop';
 import { RootPlatform } from './RootPlatform';
 import { useRendererStore } from '../store/useRendererStore';
 import { ParticleSystem, BURST_CONFIG } from '../systems/ParticleSystem';
+import { configFromTreeGeometry } from '../systems/PlatformConfig';
 
 /**
  * DENDRITE WORLD
@@ -128,6 +129,12 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     return () => useRendererStore.getState().setSpatialIndex(null);
   }, [spatialIndex]);
 
+  // Compute platform config from topology-derived tree geometry
+  const platformConfig = useMemo(
+    () => configFromTreeGeometry(treeGeometry),
+    [treeGeometry],
+  );
+
   // Compute route indicators from depth-0 branches that have the root trunk as parent
   const routes = useMemo(() => {
     return treeGeometry.branches
@@ -138,11 +145,11 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
       }));
   }, [treeGeometry.branches]);
 
-  // Publish root spawn point to store
+  // Publish platform config to store for CameraRig to read
   useEffect(() => {
-    useRendererStore.getState().setRootSpawnPoint([0, 0.8, -2.5]);
-    return () => useRendererStore.getState().setRootSpawnPoint(null);
-  }, [treeGeometry]);
+    useRendererStore.getState().setPlatformConfig(platformConfig);
+    return () => useRendererStore.getState().setPlatformConfig(null);
+  }, [platformConfig]);
 
   // Resolve mushroom rendering data from generated assets.
   // Both specimens and meshes must be present to render mushroom instances.
@@ -221,8 +228,8 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
 
   return (
     <group name="dendrite-world">
-      {/* Root platform — persistent spawn base at origin */}
-      <RootPlatform palette={palette} routes={routes} rootName={topology.name} />
+      {/* Root platform — persistent spawn base, scaled to topology */}
+      <RootPlatform palette={palette} routes={routes} config={platformConfig} />
 
       {/* SDF backdrop — fullscreen raymarching shader behind the scene */}
       {sdfBackdrop && firstShaderSource && (

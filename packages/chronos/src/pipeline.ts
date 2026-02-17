@@ -7,7 +7,7 @@
 
 import { join, basename } from 'path';
 import { mkdirSync, existsSync } from 'fs';
-import { parseGitHistory, listFilesAtHead, getHeadHash, extractRepositoryMetadata } from './parser/GitParser.js';
+import { parseGitHistory, listFilesAtHead, getHeadHash, getFileAuthors, extractRepositoryMetadata } from './parser/GitParser.js';
 import { parseFiles, buildStubFile, canParse } from './parser/ASTParser.js';
 import { detectHotspots } from './analyzer/HotspotDetector.js';
 import { profileContributors } from './builder/ContributorProfiler.js';
@@ -151,6 +151,18 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
   }
 
   log.info({ astParsed: astResults.length, functions: totalFunctions }, 'AST parsing done');
+
+  // ── Step 3.5: Enrich file authors ──────────────────────────────────────
+  const fileAuthors = await getFileAuthors(repoPath);
+  let authorHits = 0;
+  for (const pf of allParsedFiles) {
+    const author = fileAuthors.get(pf.path);
+    if (author) {
+      pf.author = author;
+      authorHits++;
+    }
+  }
+  log.info({ enriched: authorHits, total: allParsedFiles.length }, 'File authors enriched');
 
   const elapsed3 = ((performance.now() - t3) / 1000).toFixed(2);
   log.info({ step: '3/6', elapsed: elapsed3 }, 'AST parsing complete');

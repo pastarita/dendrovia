@@ -12,6 +12,7 @@ export {
   listFilesAtHead,
   getHeadHash,
   getFileChurnCounts,
+  getFileAuthors,
   extractRepositoryMetadata,
   type GitParserOptions,
   type RawCommit,

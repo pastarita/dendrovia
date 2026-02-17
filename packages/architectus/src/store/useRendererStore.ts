@@ -150,6 +150,12 @@ interface RendererState {
   // D4: Spatial index ref for surface camera queries
   spatialIndex: SpatialIndex | null;
 
+  // Root platform state
+  /** Whether the player is currently on the root platform (flat-ground physics) */
+  isOnPlatform: boolean;
+  /** Root spawn point (set when tree geometry is computed) */
+  rootSpawnPoint: [number, number, number] | null;
+
   // Actions
   setCameraMode: (mode: CameraMode) => void;
   setPlayerPosition: (pos: [number, number, number]) => void;
@@ -170,6 +176,10 @@ interface RendererState {
   setEncounterNode: (nodeId: string | null) => void;
   /** D8: Set damage position for particle burst */
   setDamagePosition: (pos: [number, number, number] | null) => void;
+  /** Set whether player is on root platform */
+  setOnPlatform: (on: boolean) => void;
+  /** Set root spawn point */
+  setRootSpawnPoint: (pos: [number, number, number] | null) => void;
   /** D3: Evaluate FPS history and shift tier if thresholds met */
   autoTuneQuality: () => void;
   /** Lock quality tier (disable auto-tuning) */
@@ -223,6 +233,10 @@ export const useRendererStore = create<RendererState>()(
 
     // D4: Spatial index
     spatialIndex: null,
+
+    // Root platform state
+    isOnPlatform: true,
+    rootSpawnPoint: null,
 
     // Actions
     setCameraMode: (mode) =>
@@ -283,6 +297,12 @@ export const useRendererStore = create<RendererState>()(
 
     setDamagePosition: (pos) =>
       set({ damagePosition: pos }),
+
+    setOnPlatform: (on) =>
+      set({ isOnPlatform: on }),
+
+    setRootSpawnPoint: (pos) =>
+      set({ rootSpawnPoint: pos }),
 
     autoTuneQuality: () => {
       const state = get();

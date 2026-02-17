@@ -31,6 +31,12 @@ a {
   text-decoration: none;
 }
 
+/* ── Homepage Links ───────────────────────────────────────── */
+
+.browse-worlds-link:hover {
+  opacity: 1 !important;
+}
+
 /* ── Shader Background ─────────────────────────────────────── */
 
 @keyframes shader-drift {

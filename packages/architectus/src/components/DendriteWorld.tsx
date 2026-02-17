@@ -1,9 +1,9 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useEffect, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { FileTreeNode, Hotspot, ProceduralPalette, LSystemRule, StoryArc } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { BranchEnteredEvent } from '@dendrovia/shared';
+import type { BranchEnteredEvent, EncounterTriggeredEvent, DamageDealtEvent } from '@dendrovia/shared';
 import { LSystem } from '../systems/LSystem';
 import { TurtleInterpreter } from '../systems/TurtleInterpreter';
 import { SpatialIndex } from '../systems/SpatialIndex';
@@ -15,6 +15,7 @@ import { ParticleInstances } from './ParticleInstances';
 import { SegmentOverlay } from './SegmentOverlay';
 import { SDFBackdrop } from './SDFBackdrop';
 import { useRendererStore } from '../store/useRendererStore';
+import { ParticleSystem, BURST_CONFIG } from '../systems/ParticleSystem';
 
 /**
  * DENDRITE WORLD
@@ -97,6 +98,12 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
   const generatedAssets = useRendererStore((s) => s.generatedAssets);
   const sdfBackdrop = useRendererStore((s) => s.sdfBackdrop);
 
+  // D8: Particle system ref for burst calls from event handlers
+  const particleSystemRef = useRef<ParticleSystem | null>(null);
+  const onParticleSystemReady = useCallback((system: ParticleSystem) => {
+    particleSystemRef.current = system;
+  }, []);
+
   // Generate tree geometry from topology (memoized — expensive computation)
   // When IMAGINARIUM provides L-system rules, use its angle for the interpreter.
   const treeGeometry = useMemo(() => {
@@ -113,6 +120,12 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     index.rebuild(treeGeometry.nodes, treeGeometry.branches, treeGeometry.boundingBox);
     return index;
   }, [treeGeometry]);
+
+  // D4: Publish spatial index to store so CameraRig can access it
+  useEffect(() => {
+    useRendererStore.getState().setSpatialIndex(spatialIndex);
+    return () => useRendererStore.getState().setSpatialIndex(null);
+  }, [spatialIndex]);
 
   // Resolve mushroom rendering data from generated assets.
   // Both specimens and meshes must be present to render mushroom instances.
@@ -136,6 +149,58 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
   const sceneBounds = useMemo(() => {
     return treeGeometry.boundingBox.clone().expandByScalar(2);
   }, [treeGeometry.boundingBox]);
+
+  // D8: Listen to LUDUS events for visual feedback
+  useEffect(() => {
+    const bus = getEventBus();
+    const store = useRendererStore.getState;
+
+    // ENCOUNTER_TRIGGERED → emissive pulse on target node
+    const unsubEncounter = bus.on<EncounterTriggeredEvent>(
+      GameEvents.ENCOUNTER_TRIGGERED,
+      (event) => {
+        // Use the nearest node to the encounter position as the target
+        const nearest = spatialIndex.nearestNode(
+          new THREE.Vector3(...event.position),
+        );
+        if (nearest) {
+          store().setEncounterNode(nearest.path);
+          // Clear encounter after 2 seconds
+          setTimeout(() => store().setEncounterNode(null), 2000);
+        }
+      },
+    );
+
+    // DAMAGE_DEALT → particle burst at impact position
+    const unsubDamage = bus.on<DamageDealtEvent>(
+      GameEvents.DAMAGE_DEALT,
+      (event) => {
+        // DamageDealtEvent has no position — use encounter node position or camera
+        const encounterNodeId = store().encounterNodeId;
+        let burstPos: THREE.Vector3 | null = null;
+
+        if (encounterNodeId) {
+          const node = treeGeometry.nodes.find((n) => n.path === encounterNodeId);
+          if (node) burstPos = node.position.clone();
+        }
+
+        if (!burstPos) return;
+
+        const ps = particleSystemRef.current;
+        if (ps) {
+          const burstColor = event.isCritical
+            ? new THREE.Color('#ffaa00')
+            : new THREE.Color('#ff4444');
+          ps.burst(burstPos, { ...BURST_CONFIG, color: burstColor });
+        }
+      },
+    );
+
+    return () => {
+      unsubEncounter();
+      unsubDamage();
+    };
+  }, [spatialIndex, treeGeometry.nodes]);
 
   return (
     <group name="dendrite-world">
@@ -178,8 +243,8 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
         />
       )}
 
-      {/* D6: Ambient firefly particles within scene bounds */}
-      <ParticleInstances bounds={sceneBounds} color={palette.glow} />
+      {/* D6: Ambient firefly particles + D8: burst VFX via systemRef */}
+      <ParticleInstances bounds={sceneBounds} color={palette.glow} systemRef={onParticleSystemReady} />
 
       {/* D7: Story arc segment glow regions */}
       {segmentPlacements.size > 0 && (

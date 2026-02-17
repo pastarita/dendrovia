@@ -39,6 +39,7 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const selectedNodeId = useRendererStore((s) => s.selectedNodeId);
   const hoveredNodeId = useRendererStore((s) => s.hoveredNodeId);
+  const encounterNodeId = useRendererStore((s) => s.encounterNodeId);
 
   const material = useMemo(() => {
     return new THREE.MeshStandardMaterial({
@@ -100,11 +101,19 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
     mesh.computeBoundingSphere();
   }, [nodes, palette.accent, palette.glow]);
 
-  // Pulsing glow on all nodes
+  // Pulsing glow on all nodes + D8 encounter emissive pulse
   useFrame((state) => {
-    if (material) {
+    if (!material) return;
+
+    // D8: When encounter active, intensify pulse
+    if (encounterNodeId) {
+      const encounterPulse = Math.sin(state.clock.elapsedTime * 6) * 0.8 + 2.5;
+      material.emissiveIntensity = encounterPulse;
+      material.emissive.set('#ff4444');
+    } else {
       const pulse = Math.sin(state.clock.elapsedTime * 1.5) * 0.2 + 1.2;
       material.emissiveIntensity = pulse;
+      material.emissive.set(palette.glow);
     }
   });
 

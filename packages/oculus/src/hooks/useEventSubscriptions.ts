@@ -89,7 +89,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
             id: data.monsterId,
             type: (data.monsterType as BugType) || 'null-pointer',
             severity: (Math.min(5, Math.max(1, data.severity)) as 1 | 2 | 3 | 4 | 5),
-            health: 100, // Initial health — HEALTH_CHANGED events update this
+            health: data.monsterHealth ?? 100,
             position: [0, 0, 0],
             sourceCommit: '',
           };

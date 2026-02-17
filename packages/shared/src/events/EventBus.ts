@@ -259,6 +259,8 @@ export interface CombatStartedEvent {
   monsterName: string;
   monsterType: string;
   severity: number;
+  monsterHealth: number;
+  monsterMaxHealth: number;
 }
 
 export interface CombatEndedEvent {

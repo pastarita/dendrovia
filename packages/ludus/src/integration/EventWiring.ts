@@ -24,6 +24,7 @@ import type {
   Quest,
   Action,
   RngState,
+  InternalCombatEvent,
 } from '@dendrovia/shared';
 import {
   EventBus,
@@ -40,6 +41,10 @@ import {
   type ExperienceGainedEvent,
   type LevelUpEvent,
   type ItemUsedEvent,
+  type CombatTurnEvent,
+  type DamageDealtEvent,
+  type SpellResolvedEvent,
+  type StatusEffectEvent,
 } from '@dendrovia/shared';
 import { type GameStore, type GameState } from '../state/GameStore';
 import { initBattle, executeTurn } from '../combat/TurnBasedEngine';
@@ -193,6 +198,8 @@ function handleNodeClicked(
       monsterName: result.encounter.monster.name,
       monsterType: result.encounter.monster.type,
       severity: result.encounter.monster.severity,
+      monsterHealth: result.encounter.monster.stats.health,
+      monsterMaxHealth: result.encounter.monster.stats.maxHealth,
     });
   }
 }
@@ -226,6 +233,9 @@ function handleSpellCast(
   const newBattle = executeTurn(state.battleState, action);
   session.store.setState({ battleState: newBattle });
 
+  // Emit granular combat events
+  emitCombatEvents(newBattle, bus);
+
   // Check for battle end
   checkBattleEnd(session, newBattle, bus);
 }
@@ -241,6 +251,61 @@ function handleItemUsed(
   const result = useItemFromInventory(state.character, event.itemId);
   if (result.consumed) {
     session.store.setState({ character: result.character });
+  }
+}
+
+// ─── Emit Granular Combat Events ────────────────────────────
+
+function emitCombatEvents(battleState: BattleState, bus: EventBus): void {
+  for (const event of battleState.combatEvents) {
+    switch (event.type) {
+      case 'TURN_START':
+        bus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, {
+          turn: event.turn,
+          phase: event.phase,
+        });
+        break;
+      case 'TURN_END':
+        bus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_END, {
+          turn: event.turn,
+          phase: event.phase,
+        });
+        break;
+      case 'DAMAGE':
+        bus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
+          attackerId: event.attackerId,
+          targetId: event.targetId,
+          damage: event.damage,
+          isCritical: event.isCritical,
+          element: event.element,
+        });
+        break;
+      case 'SPELL':
+        bus.emit<SpellResolvedEvent>(GameEvents.SPELL_RESOLVED, {
+          spellId: event.spellId,
+          casterId: event.casterId,
+          targetId: event.targetId,
+          effectType: event.effectType,
+          value: event.value,
+        });
+        break;
+      case 'STATUS_APPLIED':
+        bus.emit<StatusEffectEvent>(GameEvents.STATUS_EFFECT_APPLIED, {
+          targetId: event.targetId,
+          effectId: event.effectId,
+          effectType: event.effectType,
+          remainingTurns: event.remainingTurns,
+        });
+        break;
+      case 'STATUS_EXPIRED':
+        bus.emit<StatusEffectEvent>(GameEvents.STATUS_EFFECT_EXPIRED, {
+          targetId: event.targetId,
+          effectId: event.effectId,
+          effectType: event.effectType,
+          remainingTurns: event.remainingTurns,
+        });
+        break;
+    }
   }
 }
 
@@ -349,6 +414,7 @@ export function dispatchCombatAction(
   session.store.setState({ battleState: newBattle });
 
   const bus = getEventBus();
+  emitCombatEvents(newBattle, bus);
   checkBattleEnd(session, newBattle, bus);
 
   return newBattle;
@@ -371,6 +437,8 @@ export function startBattle(
     monsterName: enemies[0].name,
     monsterType: enemies[0].type,
     severity: enemies[0].severity,
+    monsterHealth: enemies[0].stats.health,
+    monsterMaxHealth: enemies[0].stats.maxHealth,
   });
 
   return battleState;

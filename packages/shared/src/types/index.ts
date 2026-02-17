@@ -347,6 +347,7 @@ export interface BattleState {
   enemies: Monster[];
   log: ActionLogEntry[];
   rng: RngState;
+  combatEvents: InternalCombatEvent[];
 }
 
 export interface BattleReplay {
@@ -364,6 +365,20 @@ export interface DamageResult {
   elementMultiplier: number;
   log: string;
 }
+
+/**
+ * LUDUS INTERNAL COMBAT EVENTS
+ * Structured events pushed by the engine alongside log entries.
+ * EventWiring reads these and maps them to GameEvents after each executeTurn call.
+ */
+
+export type InternalCombatEvent =
+  | { type: 'TURN_START'; turn: number; phase: 'player' | 'enemy' }
+  | { type: 'TURN_END'; turn: number; phase: 'player' | 'enemy' }
+  | { type: 'DAMAGE'; attackerId: string; targetId: string; damage: number; isCritical: boolean; element: string }
+  | { type: 'SPELL'; spellId: string; casterId: string; targetId: string; effectType: string; value: number }
+  | { type: 'STATUS_APPLIED'; targetId: string; effectId: string; effectType: string; remainingTurns: number }
+  | { type: 'STATUS_EXPIRED'; targetId: string; effectId: string; effectType: string; remainingTurns: number };
 
 /**
  * LUDUS ITEM TYPES

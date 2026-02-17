@@ -274,8 +274,7 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
           {/* Performance tracking (no visual output) */}
           <PerformanceMonitor />
 
-          {/* Debug grid (dev mode only) */}
-          <gridHelper args={[40, 40, '#1a1a2e', '#0a0a1e']} />
+          {/* Debug grid removed — RootPlatform provides ground reference */}
         </Canvas>
       </ErrorBoundary>
     </div>

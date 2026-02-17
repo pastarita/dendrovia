@@ -28,6 +28,7 @@ export { Lighting } from './components/Lighting';
 export { PerformanceMonitor } from './components/PerformanceMonitor';
 export { ParticleInstances } from './components/ParticleInstances';
 export { SegmentOverlay } from './components/SegmentOverlay';
+export { RootPlatform } from './components/RootPlatform';
 export { ErrorBoundary } from './components/ErrorBoundary';
 
 // Systems

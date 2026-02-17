@@ -1,6 +1,9 @@
 import type { TreeGeometry } from './TurtleInterpreter';
 import type { WorldIndex } from '@dendrovia/shared';
 
+// Re-export NestConfig types for convenience
+export type { NestConfig, NestBranchAnchor } from './NestConfig';
+
 /**
  * PLATFORM CONFIG
  *
@@ -243,6 +246,18 @@ export function configFromWorldIndex(worldIndex: WorldIndex): PlatformConfig {
     treeHeight: Math.max(maxY, 10),
     treeSpan: Math.max(maxDist * 2, 10),
   };
+}
+
+/**
+ * Convenience: compute NestConfig from TreeGeometry + PlatformConfig.
+ */
+export function nestFromTreeGeometry(
+  geo: TreeGeometry,
+  platformConfig: PlatformConfig,
+): import('./NestConfig').NestConfig | null {
+  // Lazy import to avoid circular dependency
+  const { computeRootNest } = require('./NestConfig') as typeof import('./NestConfig');
+  return computeRootNest(geo.branches, platformConfig);
 }
 
 /** Hardcoded fallback for when no topology is available (demo mode) */

@@ -9,6 +9,9 @@ import type { QualityTier, CameraMode } from '../store/useRendererStore.js';
 
 const ALL_TIERS: QualityTier[] = ['ultra', 'high', 'medium', 'low', 'potato'];
 
+/** Cycle order for camera modes: falcon → player-1p → player-3p → falcon */
+const CAMERA_CYCLE: CameraMode[] = ['falcon', 'player-1p', 'player-3p'];
+
 export function qualityActions(
   setQualityTier: (tier: QualityTier) => void,
   currentTier: QualityTier,
@@ -28,13 +31,35 @@ export function cameraActions(
   setCameraMode: (mode: CameraMode) => void,
   currentMode: CameraMode,
 ): NodeAction[] {
-  const target: CameraMode = currentMode === 'falcon' ? 'player' : 'falcon';
+  const currentIdx = CAMERA_CYCLE.indexOf(currentMode);
+  const nextIdx = (currentIdx + 1) % CAMERA_CYCLE.length;
+  const target = CAMERA_CYCLE[nextIdx]!;
+
+  const labels: Record<CameraMode, string> = {
+    'falcon': 'Falcon (auto-orbit)',
+    'player-1p': 'First-person',
+    'player-3p': 'Third-person',
+  };
+
   return [
     {
       id: `camera-${target}`,
-      label: `Switch to ${target} mode`,
+      label: `Switch to ${labels[target]}`,
       category: 'default',
       handler: () => { setCameraMode(target); },
+    },
+  ];
+}
+
+export function nestActions(
+  toggleViewFrame: () => void,
+): NodeAction[] {
+  return [
+    {
+      id: 'toggle-view-frame',
+      label: 'Toggle view frame',
+      category: 'default',
+      handler: () => { toggleViewFrame(); },
     },
   ];
 }

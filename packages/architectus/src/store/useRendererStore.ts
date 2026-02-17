@@ -3,6 +3,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import type { GeneratedAssets } from '../loader/AssetBridge';
 import type { SpatialIndex } from '../systems/SpatialIndex';
 import type { PlatformConfig } from '../systems/PlatformConfig';
+import type { NestConfig } from '../systems/NestConfig';
 
 /**
  * Quality tiers from T5 research: 5-tier adaptive quality system.
@@ -78,7 +79,17 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
 /** Ordered tiers for adaptive stepping */
 const TIER_ORDER: QualityTier[] = ['potato', 'low', 'medium', 'high', 'ultra'];
 
-export type CameraMode = 'falcon' | 'player';
+export type CameraMode = 'falcon' | 'player-1p' | 'player-3p' | 'spectator';
+
+/** Check if a camera mode is any player variant */
+export function isPlayerMode(mode: CameraMode): boolean {
+  return mode.startsWith('player');
+}
+
+/** Check if a camera mode is spectator (free orbit) */
+export function isSpectatorMode(mode: CameraMode): boolean {
+  return mode === 'spectator';
+}
 
 /**
  * Adaptive quality tuning config (D3).
@@ -157,6 +168,20 @@ interface RendererState {
   /** Topology-derived platform configuration (null until tree geometry computed) */
   platformConfig: PlatformConfig | null;
 
+  // Nest system
+  /** Active nest configuration (null until tree geometry computed) */
+  activeNest: NestConfig | null;
+  /** Whether the diagnostic view frame is visible */
+  viewFrameVisible: boolean;
+
+  // Dev / inspection
+  /** Developer mode — shows debug visualizations (orbit path, labels) */
+  devMode: boolean;
+  /** Inspection panel — shows measured distances, positions, radii */
+  inspectionMode: boolean;
+  /** Current falcon flight phase */
+  falconPhase: 'orbit' | 'approach' | 'arrived' | 'idle';
+
   // Actions
   setCameraMode: (mode: CameraMode) => void;
   setPlayerPosition: (pos: [number, number, number]) => void;
@@ -181,6 +206,16 @@ interface RendererState {
   setOnPlatform: (on: boolean) => void;
   /** Set topology-derived platform config */
   setPlatformConfig: (config: PlatformConfig | null) => void;
+  /** Set active nest config */
+  setActiveNest: (nest: NestConfig | null) => void;
+  /** Toggle view frame visibility */
+  toggleViewFrame: () => void;
+  /** Toggle developer mode (orbit path, debug labels) */
+  toggleDevMode: () => void;
+  /** Toggle inspection panel (distances, positions) */
+  toggleInspectionMode: () => void;
+  /** Set falcon flight phase */
+  setFalconPhase: (phase: 'orbit' | 'approach' | 'arrived' | 'idle') => void;
   /** D3: Evaluate FPS history and shift tier if thresholds met */
   autoTuneQuality: () => void;
   /** Lock quality tier (disable auto-tuning) */
@@ -239,9 +274,22 @@ export const useRendererStore = create<RendererState>()(
     isOnPlatform: true,
     platformConfig: null,
 
+    // Nest system
+    activeNest: null,
+    viewFrameVisible: false,
+
+    // Dev / inspection
+    devMode: false,
+    inspectionMode: false,
+    falconPhase: 'idle',
+
     // Actions
-    setCameraMode: (mode) =>
-      set({ cameraMode: mode, cameraTransitioning: true }),
+    setCameraMode: (mode) => {
+      // Spectator enters/exits instantly (no transition animation)
+      const prev = get().cameraMode;
+      const skipTransition = mode === 'spectator' || prev === 'spectator';
+      set({ cameraMode: mode, cameraTransitioning: !skipTransition });
+    },
 
     setPlayerPosition: (pos) =>
       set({ playerPosition: pos }),
@@ -304,6 +352,21 @@ export const useRendererStore = create<RendererState>()(
 
     setPlatformConfig: (config) =>
       set({ platformConfig: config }),
+
+    setActiveNest: (nest) =>
+      set({ activeNest: nest }),
+
+    toggleViewFrame: () =>
+      set((state) => ({ viewFrameVisible: !state.viewFrameVisible })),
+
+    toggleDevMode: () =>
+      set((state) => ({ devMode: !state.devMode })),
+
+    toggleInspectionMode: () =>
+      set((state) => ({ inspectionMode: !state.inspectionMode })),
+
+    setFalconPhase: (phase) =>
+      set({ falconPhase: phase }),
 
     autoTuneQuality: () => {
       const state = get();

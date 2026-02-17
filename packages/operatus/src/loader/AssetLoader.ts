@@ -270,7 +270,7 @@ export class AssetLoader {
   ): Promise<void> {
     let groupLoaded = 0;
 
-    await Promise.all(
+    const results = await Promise.allSettled(
       assets.map(async (asset) => {
         await this.loadAsset(asset);
         groupLoaded++;
@@ -286,6 +286,14 @@ export class AssetLoader {
         }
       }),
     );
+
+    // Log failures but don't throw — let the tier complete with partial results
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i]!;
+      if (r.status === 'rejected') {
+        console.error(`[OPERATUS] Failed to load ${phase} asset: ${assets[i]!.path}`, r.reason);
+      }
+    }
   }
 
   /**
@@ -323,8 +331,11 @@ export class AssetLoader {
             phase: 'background',
           });
         }
-
-        // Schedule next load during idle
+      }).catch(() => {
+        // Log but don't halt the chain — background assets are non-critical
+        console.warn(`[OPERATUS] Background asset failed: ${asset.path}`);
+      }).finally(() => {
+        // Schedule next load during idle regardless of success/failure
         if (typeof requestIdleCallback !== 'undefined') {
           requestIdleCallback(() => loadNext());
         } else {

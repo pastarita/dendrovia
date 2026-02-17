@@ -182,6 +182,7 @@ export function DendroviaQuest({
   const [initMessage, setInitMessage] = useState('Initializing...');
   const [topology, setTopology] = useState<FileTreeNode | undefined>(undefined);
   const [hotspots, setHotspots] = useState<Hotspot[] | undefined>(undefined);
+  const [topologyError, setTopologyError] = useState<string | null>(null);
 
   // Lazily create EventBus singleton
   const getOrCreateEventBus = useCallback((): EventBus => {
@@ -240,24 +241,37 @@ export function DendroviaQuest({
           if (topoRes.ok && !cancelled) {
             const data = await topoRes.json();
             const tree = data.tree ?? data;
-            const spots: Hotspot[] = data.hotspots ?? [];
-            chronosFiles = data.files ?? [];
-            chronosCommits = data.commits ?? [];
-            chronosHotspots = spots;
-            setTopology(tree);
-            setHotspots(spots);
-            // T09: Emit topology to OCULUS via EventBus
-            bus.emit<TopologyGeneratedEvent>(GameEvents.TOPOLOGY_GENERATED, {
-              tree,
-              hotspots: spots,
-            });
+            if (!tree || (typeof tree === 'object' && !tree.name && !tree.path)) {
+              const msg = 'Topology JSON loaded but missing tree structure (no .tree, .name, or .path)';
+              console.error('[DENDROVIA]', msg, { keys: Object.keys(data) });
+              setTopologyError(msg);
+            } else {
+              const spots: Hotspot[] = data.hotspots ?? [];
+              chronosFiles = data.files ?? [];
+              chronosCommits = data.commits ?? [];
+              chronosHotspots = spots;
+              setTopology(tree);
+              setHotspots(spots);
+              // T09: Emit topology to OCULUS via EventBus
+              bus.emit<TopologyGeneratedEvent>(GameEvents.TOPOLOGY_GENERATED, {
+                tree,
+                hotspots: spots,
+              });
+            }
+          } else if (!topoRes.ok) {
+            const detail = await topoRes.text().catch(() => '');
+            const msg = `Topology fetch failed: ${topoRes.status} ${topoRes.statusText}`;
+            console.error('[DENDROVIA]', msg, topologyPath, detail);
+            setTopologyError(msg);
           }
 
           if (contribRes?.ok && !cancelled) {
             chronosContributors = await contribRes.json();
           }
         } catch (err) {
-          console.warn('[DENDROVIA] Failed to load topology from', topologyPath, err);
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error('[DENDROVIA] Failed to load topology from', topologyPath, msg);
+          setTopologyError(`Topology load error: ${msg}`);
         }
       } else if (worldReady) {
         setInitMessage('World index loaded, topology on demand...');
@@ -365,6 +379,31 @@ export function DendroviaQuest({
         hotspots={hotspots}
         manifestPath={manifestPath}
       />
+      {topologyError && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '14px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 200,
+            padding: '8px 16px',
+            borderRadius: '8px',
+            border: '1px solid rgba(239, 68, 68, 0.4)',
+            background: 'rgba(20, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)',
+            color: '#f87171',
+            fontFamily: 'var(--font-geist-mono), monospace',
+            fontSize: '0.75rem',
+            maxWidth: '500px',
+            textAlign: 'center',
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: '2px' }}>Topology failed to load</div>
+          <div style={{ opacity: 0.7 }}>{topologyError}</div>
+          <div style={{ opacity: 0.5, marginTop: '4px' }}>Showing demo data as fallback</div>
+        </div>
+      )}
       {enableOculus && <HUD />}
       {enableOculus && <UiHoverBridge />}
       {enableOculus && <PerformanceBridge />}

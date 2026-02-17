@@ -40,7 +40,12 @@ export async function GET(
     return new NextResponse(content, {
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch {
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`[WORLDS API] Failed to serve ${relativePath}: ${message}`);
+    return NextResponse.json(
+      { error: 'Not found', detail: message },
+      { status: 404 },
+    );
   }
 }

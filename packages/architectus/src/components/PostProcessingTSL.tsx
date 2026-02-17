@@ -29,20 +29,17 @@ export function PostProcessingTSL() {
 
     (async () => {
       try {
-        // Dynamic imports — these only exist in three/examples/jsm/tsl/
-        const [{ bloom }, { rgbShift }, tsl, passModule] = await Promise.all([
+        // Dynamic imports — bloom/rgbShift from examples/jsm, pass+TSL utils from three/tsl
+        const [{ bloom }, { rgbShift }, tsl] = await Promise.all([
           import('three/examples/jsm/tsl/display/BloomNode.js'),
           import('three/examples/jsm/tsl/display/RGBShiftNode.js'),
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           import('three/tsl' as any),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          import('three/nodes' as any),
         ]);
 
         if (cancelled) return;
 
-        const { pass } = passModule;
-        const { Fn, uv, distance, vec2, smoothstep } = tsl;
+        const { pass, Fn, uv, distance, vec2, smoothstep } = tsl;
 
         // 1. Scene pass captures the rendered scene
         const scenePass = pass(scene, camera);

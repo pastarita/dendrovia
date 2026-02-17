@@ -37,6 +37,8 @@ export { TurtleInterpreter } from './systems/TurtleInterpreter';
 export { SpatialIndex } from './systems/SpatialIndex';
 export { ParticleSystem, FIREFLY_CONFIG, BURST_CONFIG } from './systems/ParticleSystem';
 export { mapNodesToSegments } from './systems/SegmentMapper';
+export { configFromTreeGeometry, configFromWorldIndex, deriveDimensions } from './systems/PlatformConfig';
+export type { PlatformConfig, PlatformDimensions } from './systems/PlatformConfig';
 export type { BranchSegment, NodeMarker, TreeGeometry, TurtleState } from './systems/TurtleInterpreter';
 export type { NearestSegmentResult } from './systems/SpatialIndex';
 export type { Particle, EmitterConfig } from './systems/ParticleSystem';

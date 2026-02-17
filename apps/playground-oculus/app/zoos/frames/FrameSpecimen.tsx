@@ -39,7 +39,7 @@ function CommitContent({ data }: { data: Specimen & { kind: 'commit' } }) {
   return (
     <>
       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-        <IconBadge icon={c.isFeature ? '\u{2B50}' : '\u{1F527}'} label={c.type ?? 'unknown'} size="sm" />
+        <IconBadge icon={c.type === 'feature' ? '\u{2B50}' : '\u{1F527}'} label={c.type ?? 'unknown'} size="sm" />
         <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', opacity: 0.6 }}>{c.hash}</span>
       </div>
       <div style={{ fontSize: '0.8rem', marginTop: '0.4rem', lineHeight: 1.3 }}>{c.message}</div>

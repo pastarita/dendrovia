@@ -86,9 +86,8 @@ export function generateMockTopology(
       filesChanged: changedFiles,
       insertions: Math.floor(rng() * 100),
       deletions: Math.floor(rng() * 50),
-      isBugFix: rng() < 0.3,
-      isFeature: rng() < 0.4,
       isMerge: rng() < 0.1,
+      type: rng() < 0.3 ? 'bug-fix' : rng() < 0.6 ? 'feature' : 'maintenance',
     });
   }
 

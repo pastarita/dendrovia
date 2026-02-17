@@ -6,7 +6,7 @@
  */
 
 import type { ParsedCommit, RepositoryMetadata } from '@dendrovia/shared';
-import { classifyCommit, commitFlags } from '../classifier/CommitClassifier.js';
+import { classifyCommit } from '../classifier/CommitClassifier.js';
 import { basename } from 'path';
 
 // Sentinel separating fields within a single commit record
@@ -171,7 +171,6 @@ function parseRecord(record: string): RawCommit | null {
 function toCommit(raw: RawCommit): ParsedCommit {
   const fullMessage = raw.body ? `${raw.subject}\n\n${raw.body}` : raw.subject;
   const classified = classifyCommit(fullMessage);
-  const flags = commitFlags(classified);
 
   return {
     hash: raw.hash,
@@ -181,9 +180,7 @@ function toCommit(raw: RawCommit): ParsedCommit {
     filesChanged: raw.filesChanged,
     insertions: raw.insertions,
     deletions: raw.deletions,
-    isBugFix: flags.isBugFix,
-    isFeature: flags.isFeature,
-    isMerge: raw.parentHashes.length > 1 || flags.isMerge,
+    isMerge: raw.parentHashes.length > 1 || classified.type === 'merge',
     type: classified.type,
     scope: classified.scope,
     isBreaking: classified.isBreaking,

@@ -111,14 +111,3 @@ function matchKeywords(text: string): ClassifiedCommit | null {
   return null;
 }
 
-/**
- * Derive boolean flags from a ClassifiedCommit for the ParsedCommit interface.
- */
-export function commitFlags(c: ClassifiedCommit) {
-  return {
-    isBugFix: c.type === 'bug-fix',
-    isFeature: c.type === 'feature',
-    isMerge: c.type === 'merge',
-    isBreaking: c.isBreaking,
-  };
-}

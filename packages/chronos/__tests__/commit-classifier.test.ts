@@ -1,7 +1,6 @@
 import { describe, test, expect } from 'bun:test';
 import {
   classifyCommit,
-  commitFlags,
   type CommitType,
   type ClassifiedCommit,
 } from '../src/classifier/CommitClassifier';
@@ -316,60 +315,3 @@ describe('classifyCommit — edge cases', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// commitFlags
-// ---------------------------------------------------------------------------
-describe('commitFlags', () => {
-  test('sets isBugFix correctly', () => {
-    const classified: ClassifiedCommit = {
-      type: 'bug-fix',
-      isBreaking: false,
-      confidence: 'high',
-    };
-    const flags = commitFlags(classified);
-    expect(flags.isBugFix).toBe(true);
-    expect(flags.isFeature).toBe(false);
-    expect(flags.isMerge).toBe(false);
-    expect(flags.isBreaking).toBe(false);
-  });
-
-  test('sets isFeature correctly', () => {
-    const flags = commitFlags({
-      type: 'feature',
-      isBreaking: false,
-      confidence: 'high',
-    });
-    expect(flags.isFeature).toBe(true);
-    expect(flags.isBugFix).toBe(false);
-  });
-
-  test('sets isMerge correctly', () => {
-    const flags = commitFlags({
-      type: 'merge',
-      isBreaking: false,
-      confidence: 'medium',
-    });
-    expect(flags.isMerge).toBe(true);
-  });
-
-  test('sets isBreaking from classified commit', () => {
-    const flags = commitFlags({
-      type: 'breaking-change',
-      isBreaking: true,
-      confidence: 'high',
-    });
-    expect(flags.isBreaking).toBe(true);
-  });
-
-  test('all flags false for chore commit', () => {
-    const flags = commitFlags({
-      type: 'chore',
-      isBreaking: false,
-      confidence: 'high',
-    });
-    expect(flags.isBugFix).toBe(false);
-    expect(flags.isFeature).toBe(false);
-    expect(flags.isMerge).toBe(false);
-    expect(flags.isBreaking).toBe(false);
-  });
-});

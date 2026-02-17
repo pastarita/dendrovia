@@ -33,9 +33,8 @@ function makeCommit(hash: string, filesChanged: string[]): ParsedCommit {
     filesChanged,
     insertions: 10,
     deletions: 5,
-    isBugFix: false,
-    isFeature: true,
     isMerge: false,
+    type: 'feature',
   };
 }
 

@@ -169,8 +169,6 @@ const chronosCommit: CommitSpecimen = {
     filesChanged: ['src/engine/renderer.ts', 'src/engine/culling.ts', 'src/types.ts'],
     insertions: 142,
     deletions: 38,
-    isBugFix: false,
-    isFeature: true,
     isMerge: false,
     type: 'feature',
     scope: 'engine',

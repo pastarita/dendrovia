@@ -63,9 +63,8 @@ function makeCommit(overrides: Partial<ParsedCommit> = {}): ParsedCommit {
     filesChanged: ['src/parser.ts'],
     insertions: 30,
     deletions: 10,
-    isBugFix: true,
-    isFeature: false,
     isMerge: false,
+    type: 'bug-fix',
     ...overrides,
   };
 }
@@ -356,9 +355,9 @@ describe('Full Lifecycle E2E', () => {
 
     // 2. Generate quests from commits
     const commits = [
-      makeCommit({ hash: 'aaa', message: 'fix: null pointer crash', isBugFix: true, insertions: 30, deletions: 10 }),
-      makeCommit({ hash: 'bbb', message: 'feat: add auth system', isBugFix: false, isFeature: true, insertions: 100, deletions: 20 }),
-      makeCommit({ hash: 'ccc', message: 'fix: memory leak in cache', isBugFix: true, insertions: 50, deletions: 30 }),
+      makeCommit({ hash: 'aaa', message: 'fix: null pointer crash', type: 'bug-fix', insertions: 30, deletions: 10 }),
+      makeCommit({ hash: 'bbb', message: 'feat: add auth system', type: 'feature', insertions: 100, deletions: 20 }),
+      makeCommit({ hash: 'ccc', message: 'fix: memory leak in cache', type: 'bug-fix', insertions: 50, deletions: 30 }),
     ];
     const quests = generateQuestGraph(commits);
     expect(quests).toHaveLength(3);
@@ -511,8 +510,7 @@ describe('Full Lifecycle E2E', () => {
       commits.push(makeCommit({
         hash: `hash-${i.toString().padStart(3, '0')}`,
         message: i % 3 === 0 ? `fix: bug ${i}` : `feat: feature ${i}`,
-        isBugFix: i % 3 === 0,
-        isFeature: i % 3 !== 0,
+        type: i % 3 === 0 ? 'bug-fix' : 'feature',
         insertions: 10 + i * 2,
         deletions: 5 + i,
       }));
@@ -567,7 +565,7 @@ describe('Full Lifecycle E2E', () => {
       makeFile({ path: 'src/util.ts', complexity: 3 }),
     ];
     const commits = [
-      makeCommit({ hash: 'fix1', filesChanged: ['src/parser.ts'], isBugFix: true }),
+      makeCommit({ hash: 'fix1', filesChanged: ['src/parser.ts'], type: 'bug-fix' }),
     ];
     const hotspots: Hotspot[] = [];
 

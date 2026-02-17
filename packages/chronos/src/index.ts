@@ -33,7 +33,6 @@ export { parseGoFile } from './parser/GoParser.js';
 // Classifiers
 export {
   classifyCommit,
-  commitFlags,
   type CommitType,
   type ClassifiedCommit,
 } from './classifier/CommitClassifier.js';

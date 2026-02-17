@@ -46,8 +46,6 @@ export const TopologySchema = {
           filesChanged: { type: "array", items: { type: "string" } },
           insertions: { type: "number" },
           deletions: { type: "number" },
-          isBugFix: { type: "boolean" },
-          isFeature: { type: "boolean" },
           isMerge: { type: "boolean" },
           type: { type: "string" },
           scope: { type: "string" },

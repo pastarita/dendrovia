@@ -43,11 +43,9 @@ export interface ParsedCommit {
   filesChanged: string[];
   insertions: number;
   deletions: number;
-  isBugFix: boolean;
-  isFeature: boolean;
   isMerge: boolean;
   /** Full 13-value classification */
-  type?: CommitType;
+  type: CommitType;
   /** Scope from conventional commits */
   scope?: string;
   /** Breaking change flag */

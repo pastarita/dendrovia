@@ -60,8 +60,8 @@ function itemRewardForCommit(commit: ParsedCommit): QuestReward | null {
 // ─── Quest Type Inference ───────────────────────────────────
 
 function inferQuestType(commit: ParsedCommit): Quest['type'] {
-  if (commit.isBugFix) return 'bug-hunt';
-  if (commit.isFeature) return 'feature';
+  if (commit.type === 'bug-fix') return 'bug-hunt';
+  if (commit.type === 'feature') return 'feature';
   // Large changes without a clear category = refactor
   if (commit.insertions + commit.deletions > 80) return 'refactor';
   return 'feature';
@@ -179,7 +179,7 @@ export function generateBugHuntQuests(
   commits: ParsedCommit[],
   maxQuests: number = MAX_QUESTS_DEFAULT,
 ): Quest[] {
-  const bugCommits = commits.filter(c => c.isBugFix);
+  const bugCommits = commits.filter(c => c.type === 'bug-fix');
   return generateQuestGraph(bugCommits, maxQuests);
 }
 

@@ -133,7 +133,7 @@ export function checkEncounter(
 
   // Priority 3: Bug encounter (bug-fix commits touching this file)
   const bugCommit = commits.find(
-    c => c.isBugFix && c.filesChanged.includes(file.path) && !state.defeatedBugs.has(c.hash),
+    c => c.type === 'bug-fix' && c.filesChanged.includes(file.path) && !state.defeatedBugs.has(c.hash),
   );
   if (bugCommit) {
     const [monster, rng1] = generateBugMonster(bugCommit, rng);
@@ -247,7 +247,7 @@ export function scanAllEncounters(
 
     // Bug check
     const bugCommit = commits.find(
-      c => c.isBugFix && c.filesChanged.includes(file.path),
+      c => c.type === 'bug-fix' && c.filesChanged.includes(file.path),
     );
     if (bugCommit) {
       const [monster, rng1] = generateBugMonster(bugCommit, currentRng);
@@ -282,7 +282,7 @@ export function getEncounterDensity(
   for (const file of files) {
     if (file.complexity > config.bossComplexityThreshold) encounterCount++;
     else if (hotspots.some(h => h.path === file.path && h.riskScore >= config.minibossRiskThreshold)) encounterCount++;
-    else if (commits.some(c => c.isBugFix && c.filesChanged.includes(file.path))) encounterCount++;
+    else if (commits.some(c => c.type === 'bug-fix' && c.filesChanged.includes(file.path))) encounterCount++;
   }
 
   return encounterCount / files.length;

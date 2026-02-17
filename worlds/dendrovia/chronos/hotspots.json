@@ -2,305 +2,906 @@
   "version": "1.0.0",
   "hotspots": [
     {
-      "path": "docs/pr-descriptions/PR_DESCRIPTION_CHRONOS_ENRICHMENT_ZOO.md",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/commits/commit-list.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/commits/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/complexity/complexity-drilldown.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/complexity/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/contract/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/contributors/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/couplings/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/files/files-table.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/files/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/hotspots/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/overview/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/zoos/page.tsx",
+      "path": "packages/oculus/src/components/WelcomeScreen.tsx",
       "churnRate": 2,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "apps/playground-chronos/lib/load-data.ts",
+      "path": "packages/architectus/src/components/PostProcessingTSL.tsx",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "docs/pr-descriptions/PR_DESCRIPTION_ARCHITECTUS_D4_D5_D8_D9.md",
       "churnRate": 1,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "packages/chronos/src/analyzer/HotspotDetector.ts",
-      "churnRate": 2,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/chronos/src/builder/ContributorProfiler.ts",
-      "churnRate": 2,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/chronos/src/builder/TopologyBuilder.ts",
-      "churnRate": 2,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/chronos/src/index.ts",
-      "churnRate": 3,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/chronos/src/parse.ts",
-      "churnRate": 3,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/chronos/src/parser/GitParser.ts",
-      "churnRate": 2,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/shared/src/contracts/index.ts",
-      "churnRate": 2,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/shared/src/types/index.ts",
+      "path": "packages/architectus/src/components/CameraRig.tsx",
       "churnRate": 4,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "docs/pr-descriptions/PR_DESCRIPTION_PLAYGROUND_APPS_TURBODEV.md",
-      "churnRate": 1,
+      "path": "packages/architectus/src/components/PostProcessing.tsx",
+      "churnRate": 3,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "docs/TURBOREPO_COLOR_PR_STRATEGY.md",
-      "churnRate": 1,
+      "path": "packages/architectus/src/index.ts",
+      "churnRate": 8,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "docs/TURBO_DEV_ORCHESTRATION.md",
-      "churnRate": 1,
+      "path": "packages/architectus/src/components/DendriteWorld.tsx",
+      "churnRate": 8,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/NodeInstances.tsx",
+      "churnRate": 3,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/SDFBackdrop.tsx",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/App.tsx",
+      "churnRate": 8,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/ParticleInstances.tsx",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/store/useRendererStore.ts",
+      "churnRate": 6,
       "complexity": 0,
       "riskScore": 0
     },
     {
       "path": "scripts/td-colorizer.ts",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/architectus/vite.config.ts",
-      "churnRate": 2,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "packages/imaginarium/package.json",
       "churnRate": 3,
       "complexity": 0,
       "riskScore": 0
     },
     {
+      "path": "docs/pr-descriptions/PR_DESCRIPTION_L3_RUNTIME_MESH_GENERATION.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/tests/mesh-factory.test.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "bun.lock",
+      "churnRate": 21,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
       "path": "packages/operatus/package.json",
+      "churnRate": 7,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/src/index.ts",
+      "churnRate": 6,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/src/init.ts",
+      "churnRate": 7,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/src/loader/AssetLoader.ts",
+      "churnRate": 6,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/src/mesh/MeshFactory.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/src/mesh/index.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/operatus/src/mesh/serialization.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/package.json",
+      "churnRate": 7,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/src/mesh-runtime/index.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "docs/pr-descriptions/PR_DESCRIPTION_WORLD_SEGMENTATION.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/SegmentDistanceUpdater.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/SegmentHull.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/SegmentRenderer.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/SegmentedWorld.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/components/WorldFog.tsx",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/loader/SegmentLoadManager.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "apps/dendrovia-quest/app/components/DendroviaQuest.tsx",
+      "churnRate": 12,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/loader/AssetBridge.ts",
+      "churnRate": 6,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/loader/index.ts",
+      "churnRate": 2,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/architectus/src/store/useSegmentStore.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/src/mycology/MycologyPipeline.ts",
+      "churnRate": 6,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/src/pipeline/DistillationPipeline.ts",
+      "churnRate": 11,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/src/pipeline/ManifestGenerator.ts",
+      "churnRate": 7,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/src/pipeline/SegmentPlacementPrecomputer.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/imaginarium/src/pipeline/TopologyChunker.ts",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/shared/src/types/index.ts",
+      "churnRate": 14,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "docs/pr-descriptions/PR_DESCRIPTION_LUDUS_BALANCE_CONFIG_ITEMS.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "docs/pr-descriptions/PR_DESCRIPTION_CONTRACT_FIDELITY_PHASE2.md",
+      "churnRate": 1,
+      "complexity": 0,
+      "riskScore": 0
+    },
+    {
+      "path": "packages/ludus/src/combat/TurnBasedEngine.ts",
       "churnRate": 4,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "packages/operatus/tsconfig.json",
-      "churnRate": 1,
+      "path": "packages/ludus/src/integration/EventWiring.ts",
+      "churnRate": 6,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "packages/proof-of-concept/package.json",
+      "path": "packages/ludus/src/character/CharacterSystem.ts",
       "churnRate": 2,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "packages/proof-of-concept/vite.config.ts",
-      "churnRate": 2,
+      "path": "packages/ludus/src/combat/CombatMath.ts",
+      "churnRate": 3,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "apps/playground-architectus/.gitignore",
-      "churnRate": 1,
+      "path": "packages/ludus/src/combat/MonsterFactory.ts",
+      "churnRate": 3,
       "complexity": 0,
       "riskScore": 0
     },
     {
-      "path": "apps/playground-architectus/app/fonts/GeistMonoVF.woff",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/fonts/GeistVF.woff",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/generators/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/globals.css",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/gyms/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/halls/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/layout.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/museums/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/spatial-docs/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/app/zoos/page.tsx",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/eslint.config.js",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/next.config.js",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/package.json",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-architectus/tsconfig.json",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/.gitignore",
-      "churnRate": 1,
-      "complexity": 0,
-      "riskScore": 0
-    },
-    {
-      "path": "apps/playground-chronos/app/fonts/GeistMonoVF.woff",
-      "churnRate": 1,
+      "path": "packages/ludus/src/encounter/EncounterSystem.ts",
+      "churnRate": 4,
       "complexity": 0,
       "riskScore": 0
     }
   ],
-  "temporalCouplings": []
+  "temporalCouplings": [
+    {
+      "fileA": "apps/playground-ludus/app/generators/components/EncounterScanner.tsx",
+      "fileB": "apps/playground-ludus/app/generators/components/QuestGenerator.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/chronos/__tests__/commit-classifier.test.ts",
+      "fileB": "packages/chronos/__tests__/hotspot-detector.test.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/chronos/__tests__/contributor-profiler.test.ts",
+      "fileB": "packages/chronos/__tests__/topology-builder.test.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/__tests__/mycology/lore.test.ts",
+      "fileB": "packages/imaginarium/__tests__/mycology/network.test.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/__tests__/mycology/lore.test.ts",
+      "fileB": "packages/imaginarium/__tests__/mycology/taxonomy.test.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/__tests__/mycology/network.test.ts",
+      "fileB": "packages/imaginarium/__tests__/mycology/taxonomy.test.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": ".claude/policies/modes/default.yaml",
+      "fileB": ".claude/policies/modes/deployment.yaml",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": ".claude/policies/modes/default.yaml",
+      "fileB": ".claude/policies/modes/rendover.yaml",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": ".claude/policies/modes/default.yaml",
+      "fileB": ".claude/policies/modes/testing.yaml",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": ".claude/policies/modes/deployment.yaml",
+      "fileB": ".claude/policies/modes/rendover.yaml",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": ".claude/policies/modes/deployment.yaml",
+      "fileB": ".claude/policies/modes/testing.yaml",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": ".claude/policies/modes/rendover.yaml",
+      "fileB": ".claude/policies/modes/testing.yaml",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/oculus/src/styles/animations.css",
+      "fileB": "packages/oculus/src/styles/base.css",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/storyarc/PhaseAssigner.ts",
+      "fileB": "packages/imaginarium/src/storyarc/SegmentSlicer.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/cache/DeterministicCache.ts",
+      "fileB": "packages/imaginarium/src/fallback/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/distillation/ColorExtractor.ts",
+      "fileB": "packages/imaginarium/src/distillation/LSystemCompiler.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/distillation/ColorExtractor.ts",
+      "fileB": "packages/imaginarium/src/distillation/NoiseGenerator.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/distillation/ColorExtractor.ts",
+      "fileB": "packages/imaginarium/src/distillation/index.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/distillation/LSystemCompiler.ts",
+      "fileB": "packages/imaginarium/src/distillation/NoiseGenerator.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/distillation/LSystemCompiler.ts",
+      "fileB": "packages/imaginarium/src/distillation/index.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/distillation/NoiseGenerator.ts",
+      "fileB": "packages/imaginarium/src/distillation/index.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/generation/ArtGen.ts",
+      "fileB": "packages/imaginarium/src/generation/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/generation/ArtGen.ts",
+      "fileB": "packages/imaginarium/src/pipeline/VariantGenerator.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/generation/index.ts",
+      "fileB": "packages/imaginarium/src/pipeline/VariantGenerator.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/HalfEdgeMesh.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/displace.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/HalfEdgeMesh.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/HalfEdgeMesh.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/smooth.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/HalfEdgeMesh.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/subdivide.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/adapters.ts",
+      "fileB": "packages/imaginarium/src/mesh/serialize.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/generateMeshAssets.ts",
+      "fileB": "packages/imaginarium/src/mesh/genusPipelines.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/ops/displace.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/ops/displace.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/smooth.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/ops/displace.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/subdivide.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/ops/index.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/smooth.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/ops/index.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/subdivide.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mesh/ops/smooth.ts",
+      "fileB": "packages/imaginarium/src/mesh/ops/subdivide.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mycology/LoreGenerator.ts",
+      "fileB": "packages/imaginarium/src/mycology/MorphologyGenerator.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mycology/assets/MeshGenerator.ts",
+      "fileB": "packages/imaginarium/src/mycology/assets/MushroomSprite.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mycology/assets/MeshGenerator.ts",
+      "fileB": "packages/imaginarium/src/mycology/assets/SvgTemplates.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/imaginarium/src/mycology/assets/MushroomSprite.tsx",
+      "fileB": "packages/imaginarium/src/mycology/assets/SvgTemplates.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/operatus/src/loader/CDNLoader.ts",
+      "fileB": "packages/operatus/src/loader/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/operatus/src/multiplayer/index.ts",
+      "fileB": "packages/operatus/src/perf/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/operatus/src/multiplayer/index.ts",
+      "fileB": "packages/operatus/src/sw/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/operatus/src/perf/index.ts",
+      "fileB": "packages/operatus/src/sw/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/ludus/src/inventory/InventorySystem.ts",
+      "fileB": "packages/ludus/src/progression/ProgressionSystem.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/ludus/src/save/SaveSystem.ts",
+      "fileB": "packages/ludus/src/simulation/SimulationHarness.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/chronos/src/analyze.ts",
+      "fileB": "packages/chronos/src/resolver/RepoResolver.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "packages/operatus/src/dendrite/collectors.ts",
+      "fileB": "packages/operatus/src/dendrite/index.ts",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-architectus/app/gyms/ParameterPanel.tsx",
+      "fileB": "apps/playground-architectus/app/zoos/ComponentCard.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-chronos/app/zoos/commits/commit-list.tsx",
+      "fileB": "apps/playground-chronos/app/zoos/hotspots/page.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-chronos/app/zoos/commits/commit-list.tsx",
+      "fileB": "apps/playground-chronos/app/zoos/overview/page.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-chronos/app/zoos/hotspots/page.tsx",
+      "fileB": "apps/playground-chronos/app/zoos/overview/page.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-imaginarium/app/museums/components/MycologyExhibit.tsx",
+      "fileB": "apps/playground-imaginarium/app/museums/components/PaletteExhibit.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-imaginarium/app/museums/components/MycologyExhibit.tsx",
+      "fileB": "apps/playground-imaginarium/app/museums/components/ShaderExhibit.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-imaginarium/app/museums/components/PaletteExhibit.tsx",
+      "fileB": "apps/playground-imaginarium/app/museums/components/ShaderExhibit.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/ActionPanel.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/BattleLog.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/ActionPanel.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/EnemyCard.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/ActionPanel.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/PlayerCard.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/ActionPanel.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/StatBar.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/BattleLog.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/EnemyCard.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/BattleLog.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/PlayerCard.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/BattleLog.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/StatBar.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/EnemyCard.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/PlayerCard.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/EnemyCard.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/StatBar.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/components/PlayerCard.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/components/StatBar.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/zoos/components/MonsterBestiary.tsx",
+      "fileB": "apps/playground-ludus/app/zoos/components/SpellCatalog.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-operatus/app/gyms/cache-inspector/CacheInspectorClient.tsx",
+      "fileB": "apps/playground-operatus/app/gyms/cache-inspector/components/StorageQuotaBar.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-operatus/app/gyms/event-stream/components/EventLog.tsx",
+      "fileB": "apps/playground-operatus/app/gyms/event-stream/components/EventPayloadModal.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-oculus/app/gyms/battle-arena/page.tsx",
+      "fileB": "apps/playground-oculus/app/gyms/hud-sandbox/page.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "lib/dendrite/panels/ColorLegend.tsx",
+      "fileB": "lib/dendrite/panels/NodeDetailPanel.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "lib/dendrite/panels/ColorLegend.tsx",
+      "fileB": "lib/dendrite/panels/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "lib/dendrite/panels/NodeDetailPanel.tsx",
+      "fileB": "lib/dendrite/panels/index.ts",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/generators/components/MonsterGenerator.tsx",
+      "fileB": "apps/playground-ludus/app/generators/components/SpellGenerator.tsx",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/balance/BalanceSimClient.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/balance/components/ConfigSliders.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/balance/BalanceSimClient.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/balance/components/HeatmapCell.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/balance/BalanceSimClient.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/balance/page.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/balance/components/ConfigSliders.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/balance/components/HeatmapCell.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/balance/components/ConfigSliders.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/balance/page.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/gyms/balance/components/HeatmapCell.tsx",
+      "fileB": "apps/playground-ludus/app/gyms/balance/page.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/halls/HallsClient.tsx",
+      "fileB": "apps/playground-ludus/app/halls/components/CombatRulesHall.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/halls/HallsClient.tsx",
+      "fileB": "apps/playground-ludus/app/halls/components/ElementsHall.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/halls/HallsClient.tsx",
+      "fileB": "apps/playground-ludus/app/halls/components/MonsterGuideHall.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/halls/components/CombatRulesHall.tsx",
+      "fileB": "apps/playground-ludus/app/halls/components/ElementsHall.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/halls/components/CombatRulesHall.tsx",
+      "fileB": "apps/playground-ludus/app/halls/components/MonsterGuideHall.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/halls/components/ElementsHall.tsx",
+      "fileB": "apps/playground-ludus/app/halls/components/MonsterGuideHall.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/museums/MuseumsClient.tsx",
+      "fileB": "apps/playground-ludus/app/museums/components/DamageFormulaExhibit.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/museums/MuseumsClient.tsx",
+      "fileB": "apps/playground-ludus/app/museums/components/ProgressionExhibit.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/museums/components/DamageFormulaExhibit.tsx",
+      "fileB": "apps/playground-ludus/app/museums/components/ProgressionExhibit.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/zoos/ZooClient.tsx",
+      "fileB": "apps/playground-ludus/app/zoos/components/ClassComparison.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/zoos/ZooClient.tsx",
+      "fileB": "apps/playground-ludus/app/zoos/components/ItemRegistry.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/zoos/ZooClient.tsx",
+      "fileB": "apps/playground-ludus/app/zoos/components/StatusEffectReference.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/zoos/components/ClassComparison.tsx",
+      "fileB": "apps/playground-ludus/app/zoos/components/ItemRegistry.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/zoos/components/ClassComparison.tsx",
+      "fileB": "apps/playground-ludus/app/zoos/components/StatusEffectReference.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "apps/playground-ludus/app/zoos/components/ItemRegistry.tsx",
+      "fileB": "apps/playground-ludus/app/zoos/components/StatusEffectReference.tsx",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "scripts/workspace-launcher/GHOSTTY_SETUP.md",
+      "fileB": "scripts/workspace-launcher/ghostty-config-snippet.txt",
+      "coChangeCount": 3,
+      "strength": 1
+    },
+    {
+      "fileA": "assets/icons/detailed/architectus.svg",
+      "fileB": "assets/icons/detailed/chronos.svg",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "assets/icons/detailed/architectus.svg",
+      "fileB": "assets/icons/detailed/imaginarium.svg",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "assets/icons/detailed/architectus.svg",
+      "fileB": "assets/icons/detailed/ludus.svg",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "assets/icons/detailed/architectus.svg",
+      "fileB": "assets/icons/detailed/oculus.svg",
+      "coChangeCount": 2,
+      "strength": 1
+    },
+    {
+      "fileA": "assets/icons/detailed/architectus.svg",
+      "fileB": "assets/icons/detailed/operatus.svg",
+      "coChangeCount": 2,
+      "strength": 1
+    }
+  ]
 }

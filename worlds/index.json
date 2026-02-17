@@ -146,34 +146,34 @@
       "repo": "dendrovia",
       "description": "Autogamification of codebase archaeologization",
       "status": "playable",
-      "analyzedAt": "2026-02-15T01:25:34.772Z",
-      "headHash": "c32e65b5c5a6c63aeb7012286cc087e5e3f40431",
+      "analyzedAt": "2026-02-17T04:21:40.978Z",
+      "headHash": "a497afeaec5678d4a32efc3064391e4a092a6d78",
       "stats": {
-        "fileCount": 19,
-        "commitCount": 123,
+        "fileCount": 27,
+        "commitCount": 468,
         "hotspotCount": 50,
         "languageCount": 3,
         "contributorCount": 1,
         "languages": [
           {
             "language": "Typescript",
-            "fileCount": 16,
-            "percentage": 84.2
+            "fileCount": 24,
+            "percentage": 88.9
           },
           {
             "language": "Json",
             "fileCount": 2,
-            "percentage": 10.5
+            "percentage": 7.4
           },
           {
             "language": "Markdown",
             "fileCount": 1,
-            "percentage": 5.3
+            "percentage": 3.7
           }
         ]
       },
       "magnitude": {
-        "score": 10,
+        "score": 12,
         "tier": "town",
         "symbol": "**"
       },

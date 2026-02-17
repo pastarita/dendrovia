@@ -37,8 +37,15 @@ export async function GET(
     }
 
     const content = readFileSync(filePath, 'utf-8');
+
+    // Determine Content-Type from file extension
+    const ext = filePath.split('.').pop()?.toLowerCase();
+    let contentType = 'application/octet-stream';
+    if (ext === 'json') contentType = 'application/json';
+    else if (ext === 'glsl') contentType = 'text/plain';
+
     return new NextResponse(content, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': contentType },
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

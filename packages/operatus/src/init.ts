@@ -138,9 +138,10 @@ export async function initializeOperatus(
     if (!manifestHealthReport.valid) {
       log.warn({ errors: manifestHealthReport.errors }, 'Manifest validation errors');
     }
-  } catch {
+  } catch (err) {
     // Manifest not available (e.g., first run, dev mode)
     // Continue without manifest — individual assets can still be loaded
+    log.warn({ error: err instanceof Error ? err.message : String(err) }, 'Manifest unavailable — continuing without it');
   }
 
   // ── Step 4: Hydrate game state ─────────────────────────────────
@@ -205,9 +206,10 @@ export async function initializeOperatus(
 
   try {
     await assetLoader.loadAll();
-  } catch {
+  } catch (err) {
     // Asset loading partially failed — game can still start
     // with whatever loaded successfully
+    log.warn({ error: err instanceof Error ? err.message : String(err) }, 'Asset loading partially failed — continuing with available assets');
     await eventBus.emit(GameEvents.ASSETS_LOADED, {
       assetCount: 0,
       manifest: null,

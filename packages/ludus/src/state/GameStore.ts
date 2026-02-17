@@ -87,27 +87,6 @@ export function bridgeStoreToEventBus(store: GameStore): () => void {
       });
     }
 
-    // Combat started
-    if (state.battleState && !prev.battleState) {
-      const enemy = state.battleState.enemies[0];
-      bus.emit(GameEvents.COMBAT_STARTED, {
-        monsterId: enemy.id,
-        monsterName: enemy.name,
-        monsterType: enemy.type,
-        severity: enemy.severity,
-      });
-    }
-
-    // Combat ended
-    if (!state.battleState && prev.battleState) {
-      const lastPhase = prev.battleState.phase;
-      bus.emit(GameEvents.COMBAT_ENDED, {
-        outcome: lastPhase.type === 'VICTORY' ? 'victory' : 'defeat',
-        turns: prev.battleState.turn,
-        xpGained: lastPhase.type === 'VICTORY' ? lastPhase.xpGained : undefined,
-      });
-    }
-
     // Quest updates
     if (state.activeQuests !== prev.activeQuests) {
       const newQuests = state.activeQuests.filter(
@@ -123,20 +102,6 @@ export function bridgeStoreToEventBus(store: GameStore): () => void {
       }
     }
 
-    // Level up
-    if (state.character.level > prev.character.level) {
-      bus.emit(GameEvents.LEVEL_UP, {
-        characterId: state.character.id,
-        newLevel: state.character.level,
-        statChanges: {
-          health: state.character.stats.maxHealth - prev.character.stats.maxHealth,
-          mana: state.character.stats.maxMana - prev.character.stats.maxMana,
-          attack: state.character.stats.attack - prev.character.stats.attack,
-          defense: state.character.stats.defense - prev.character.stats.defense,
-          speed: state.character.stats.speed - prev.character.stats.speed,
-        },
-      });
-    }
   });
 
   return unsub;

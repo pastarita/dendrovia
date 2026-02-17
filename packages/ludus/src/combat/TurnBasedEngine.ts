@@ -19,6 +19,8 @@ import type {
   CombatPhase,
   DamageResult,
   Item,
+  InternalCombatEvent,
+  StatusEffect,
 } from '@dendrovia/shared';
 import { createRngState } from '../utils/SeededRandom';
 import {
@@ -62,6 +64,7 @@ export function initBattle(
     enemies: enemies.map(e => ({ ...e, statusEffects: [] })),
     log: [],
     rng: createRngState(seed),
+    combatEvents: [],
   };
 }
 
@@ -102,6 +105,25 @@ export function getAvailableActions(state: BattleState): AvailableActions {
   };
 }
 
+// ─── Combat Event Helpers ────────────────────────────────────
+
+function detectExpiredEffects(
+  before: StatusEffect[],
+  after: StatusEffect[],
+  targetId: string,
+): InternalCombatEvent[] {
+  const afterIds = new Set(after.map(e => e.id));
+  return before
+    .filter(e => !afterIds.has(e.id))
+    .map(e => ({
+      type: 'STATUS_EXPIRED' as const,
+      targetId,
+      effectId: e.id,
+      effectType: e.type,
+      remainingTurns: 0,
+    }));
+}
+
 // ─── Execute a Turn ──────────────────────────────────────────
 // This is the REDUCER. Pure function.
 
@@ -111,17 +133,20 @@ export function executeTurn(state: BattleState, action: Action): BattleState {
     return state;
   }
 
+  // Clear combatEvents at entry — each executeTurn produces fresh events
+  const cleanState = { ...state, combatEvents: [] as InternalCombatEvent[] };
+
   switch (action.type) {
     case 'ATTACK':
-      return executePlayerAttack(state, action.targetIndex);
+      return executePlayerAttack(cleanState, action.targetIndex);
     case 'CAST_SPELL':
-      return executePlayerSpell(state, action.spellId, action.targetIndex);
+      return executePlayerSpell(cleanState, action.spellId, action.targetIndex);
     case 'DEFEND':
-      return executePlayerDefend(state);
+      return executePlayerDefend(cleanState);
     case 'USE_ITEM':
-      return executeUseItem(state, action.itemId);
+      return executeUseItem(cleanState, action.itemId);
     case 'ENEMY_ACT':
-      return executeEnemyTurn(state);
+      return executeEnemyTurn(cleanState);
     default:
       return state;
   }
@@ -131,22 +156,30 @@ export function executeTurn(state: BattleState, action: Action): BattleState {
 
 function executePlayerAttack(state: BattleState, targetIndex: number): BattleState {
   let { player, enemies, rng, log, turn } = state;
+  let events: InternalCombatEvent[] = [...state.combatEvents];
+
+  // TURN_START for player
+  events.push({ type: 'TURN_START', turn, phase: 'player' });
 
   // Tick player status effects at start of turn
+  const beforeEffects = player.statusEffects;
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
   log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', state.log.length, l))];
 
+  // Detect expired effects from tick
+  events.push(...detectExpiredEffects(beforeEffects, playerTick.effects, player.id));
+
   // Check if player died from DoT
   if (player.stats.health <= 0) {
-    return { ...state, player, log, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
+    return { ...state, player, log, combatEvents: events, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
   }
 
   // Check stun
   if (isStunned(player.statusEffects)) {
     log = [...log, makeLog(turn, 'player', log.length, `${player.name} is stunned and cannot act!`)];
-    return proceedToEnemyPhase({ ...state, player, log, rng });
+    return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
   }
 
   // Decrement cooldowns
@@ -161,8 +194,8 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
   if (!enemy || enemy.stats.health <= 0) {
     // Target already dead, pick first alive
     const aliveIdx = enemies.findIndex(e => e.stats.health > 0);
-    if (aliveIdx < 0) return { ...state, player, log, phase: victoryPhase(enemies) };
-    return executePlayerAttack({ ...state, player, log }, aliveIdx);
+    if (aliveIdx < 0) return { ...state, player, log, combatEvents: events, phase: victoryPhase(enemies) };
+    return executePlayerAttack({ ...state, player, log, combatEvents: events }, aliveIdx);
   }
 
   const enemyMods = getStatModifiers(enemy.statusEffects);
@@ -182,36 +215,53 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
 
   enemies = enemies.map((e, i) => i === targetIndex ? updatedEnemy : e);
 
+  // DAMAGE event
+  events.push({
+    type: 'DAMAGE',
+    attackerId: player.id,
+    targetId: enemy.id,
+    damage: remainingDamage,
+    isCritical: result.isCritical,
+    element: 'none',
+  });
+
   let logMsg = `${player.name} attacks ${enemy.name} for ${result.log}`;
   if (absorbed > 0) logMsg += ` (${absorbed} absorbed by shield)`;
   log = [...log, makeLog(turn, 'player', log.length, logMsg)];
 
   // Check victory
   if (enemies.every(e => e.stats.health <= 0)) {
-    return { ...state, turn, player, enemies, log, rng, phase: victoryPhase(enemies) };
+    return { ...state, turn, player, enemies, log, rng, combatEvents: events, phase: victoryPhase(enemies) };
   }
 
-  return proceedToEnemyPhase({ ...state, turn, player, enemies, log, rng });
+  return proceedToEnemyPhase({ ...state, turn, player, enemies, log, rng, combatEvents: events });
 }
 
 // ─── Player Spell Cast ──────────────────────────────────────
 
 function executePlayerSpell(state: BattleState, spellId: string, targetIndex: number): BattleState {
   let { player, enemies, rng, log, turn } = state;
+  let events: InternalCombatEvent[] = [...state.combatEvents];
+
+  // TURN_START for player
+  events.push({ type: 'TURN_START', turn, phase: 'player' });
 
   // Tick status effects
+  const beforeEffects = player.statusEffects;
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
   log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l))];
 
+  events.push(...detectExpiredEffects(beforeEffects, playerTick.effects, player.id));
+
   if (player.stats.health <= 0) {
-    return { ...state, player, log, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
+    return { ...state, player, log, combatEvents: events, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
   }
 
   if (isStunned(player.statusEffects)) {
     log = [...log, makeLog(turn, 'player', log.length, `${player.name} is stunned!`)];
-    return proceedToEnemyPhase({ ...state, player, log, rng });
+    return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
   }
 
   player = tickCooldowns(player);
@@ -219,19 +269,19 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
   const spell = getSpell(spellId);
   if (!spell) {
     log = [...log, makeLog(turn, 'player', log.length, `Unknown spell: ${spellId}`)];
-    return proceedToEnemyPhase({ ...state, player, log, rng });
+    return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
   }
 
   // Check mana
   if (spell.manaCost > player.stats.mana) {
     log = [...log, makeLog(turn, 'player', log.length, `Not enough mana for ${spell.name}!`)];
-    return { ...state, player, log, rng }; // Stay in PLAYER_TURN
+    return { ...state, player, log, rng, combatEvents: events }; // Stay in PLAYER_TURN
   }
 
   // Check cooldown
   if ((player.cooldowns[spellId] ?? 0) > 0) {
     log = [...log, makeLog(turn, 'player', log.length, `${spell.name} is on cooldown!`)];
-    return { ...state, player, log, rng };
+    return { ...state, player, log, rng, combatEvents: events };
   }
 
   // Spend mana and set cooldown
@@ -268,6 +318,24 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
         statusEffects: eFx,
         stats: { ...e.stats, health: Math.max(0, e.stats.health - remainingDamage) },
       } : e);
+
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: enemy.id,
+        effectType: 'damage',
+        value: remainingDamage,
+      });
+      events.push({
+        type: 'DAMAGE',
+        attackerId: player.id,
+        targetId: enemy.id,
+        damage: remainingDamage,
+        isCritical: result.isCritical,
+        element: spell.element,
+      });
+
       let msg = `${player.name} casts ${spell.name} on ${enemy.name} for ${result.log}`;
       if (absorbed > 0) msg += ` (${absorbed} absorbed)`;
       log = [...log, makeLog(turn, 'player', log.length, msg)];
@@ -296,6 +364,24 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
           statusEffects: eFx,
           stats: { ...e.stats, health: Math.max(0, e.stats.health - remainingDamage) },
         } : e);
+
+        events.push({
+          type: 'SPELL',
+          spellId,
+          casterId: player.id,
+          targetId: enemies[i].id,
+          effectType: 'aoe-damage',
+          value: remainingDamage,
+        });
+        events.push({
+          type: 'DAMAGE',
+          attackerId: player.id,
+          targetId: enemies[i].id,
+          damage: remainingDamage,
+          isCritical: result.isCritical,
+          element: spell.element,
+        });
+
         log = [...log, makeLog(turn, 'player', log.length, `${spell.name} hits ${enemies[i].name} for ${result.log}`)];
       }
       break;
@@ -306,10 +392,26 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       player = applyHpDelta(player, healing);
       log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, healing for ${healing} HP`)];
 
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: player.id,
+        effectType: 'heal',
+        value: healing,
+      });
+
       // If heal-over-time (has duration), also apply a regen effect
       if (spell.effect.duration && spell.effect.duration > 1) {
         const hotEffect = createStatusEffect('regen', `${spell.name} HoT`, Math.floor(spell.effect.value / 2), spell.effect.duration, false);
         player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, hotEffect) };
+        events.push({
+          type: 'STATUS_APPLIED',
+          targetId: player.id,
+          effectId: hotEffect.id,
+          effectType: hotEffect.type,
+          remainingTurns: hotEffect.remainingTurns,
+        });
       }
       break;
     }
@@ -319,6 +421,22 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       const shieldEffect = createStatusEffect('shield', spell.name, shieldHP, 3, false);
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, shieldEffect) };
       log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, gaining ${shieldHP} shield`)];
+
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: player.id,
+        effectType: 'shield',
+        value: shieldHP,
+      });
+      events.push({
+        type: 'STATUS_APPLIED',
+        targetId: player.id,
+        effectId: shieldEffect.id,
+        effectType: shieldEffect.type,
+        remainingTurns: shieldEffect.remainingTurns,
+      });
       break;
     }
 
@@ -326,6 +444,22 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       const buffEffect = createStatusEffect('attack-up', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, buffEffect) };
       log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, ATK +${spell.effect.value}`)];
+
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: player.id,
+        effectType: 'buff',
+        value: spell.effect.value,
+      });
+      events.push({
+        type: 'STATUS_APPLIED',
+        targetId: player.id,
+        effectId: buffEffect.id,
+        effectType: buffEffect.type,
+        remainingTurns: buffEffect.remainingTurns,
+      });
       break;
     }
 
@@ -338,10 +472,42 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
         const stunEffect = createStatusEffect('stun', spell.name, 0, spell.effect.duration ?? 1, false);
         enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, stunEffect) } : e);
         log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, stunning ${enemy.name}!`)];
+
+        events.push({
+          type: 'SPELL',
+          spellId,
+          casterId: player.id,
+          targetId: enemy.id,
+          effectType: 'debuff',
+          value: 0,
+        });
+        events.push({
+          type: 'STATUS_APPLIED',
+          targetId: enemy.id,
+          effectId: stunEffect.id,
+          effectType: stunEffect.type,
+          remainingTurns: stunEffect.remainingTurns,
+        });
       } else {
         const defDown = createStatusEffect('defense-down', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
         enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, defDown) } : e);
         log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, DEF -${spell.effect.value} on ${enemy.name}`)];
+
+        events.push({
+          type: 'SPELL',
+          spellId,
+          casterId: player.id,
+          targetId: enemy.id,
+          effectType: 'debuff',
+          value: spell.effect.value,
+        });
+        events.push({
+          type: 'STATUS_APPLIED',
+          targetId: enemy.id,
+          effectId: defDown.id,
+          effectType: defDown.type,
+          remainingTurns: defDown.remainingTurns,
+        });
       }
       break;
     }
@@ -353,12 +519,40 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       const poisonEffect = createStatusEffect('poison', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
       enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, poisonEffect) } : e);
       log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, poisoning ${enemy.name} for ${spell.effect.value}/turn`)];
+
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: enemy.id,
+        effectType: 'dot',
+        value: spell.effect.value,
+      });
+      events.push({
+        type: 'STATUS_APPLIED',
+        targetId: enemy.id,
+        effectId: poisonEffect.id,
+        effectType: poisonEffect.type,
+        remainingTurns: poisonEffect.remainingTurns,
+      });
       break;
     }
 
     case 'cleanse': {
+      const beforeCleanse = player.statusEffects;
       player = { ...player, statusEffects: cleanse(player.statusEffects) };
       log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, removing all debuffs!`)];
+
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: player.id,
+        effectType: 'cleanse',
+        value: 0,
+      });
+      // Each removed debuff produces STATUS_EXPIRED
+      events.push(...detectExpiredEffects(beforeCleanse, player.statusEffects, player.id));
       break;
     }
 
@@ -366,37 +560,62 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       const reviveHP = spell.effect.value;
       player = applyHpDelta(player, reviveHP);
       log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, restoring ${reviveHP} HP!`)];
+
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: player.id,
+        effectType: 'revive',
+        value: reviveHP,
+      });
       break;
     }
 
     case 'taunt': {
       // Taunt doesn't do anything mechanically in 1v1; matters for multi-enemy
       log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, drawing enemy attention!`)];
+
+      events.push({
+        type: 'SPELL',
+        spellId,
+        casterId: player.id,
+        targetId: player.id,
+        effectType: 'taunt',
+        value: 0,
+      });
       break;
     }
   }
 
   // Check victory
   if (enemies.every(e => e.stats.health <= 0)) {
-    return { ...state, turn, player, enemies, log, rng, phase: victoryPhase(enemies) };
+    return { ...state, turn, player, enemies, log, rng, combatEvents: events, phase: victoryPhase(enemies) };
   }
 
-  return proceedToEnemyPhase({ ...state, turn, player, enemies, log, rng });
+  return proceedToEnemyPhase({ ...state, turn, player, enemies, log, rng, combatEvents: events });
 }
 
 // ─── Player Defend ──────────────────────────────────────────
 
 function executePlayerDefend(state: BattleState): BattleState {
   let { player, log, turn, rng } = state;
+  let events: InternalCombatEvent[] = [...state.combatEvents];
+
+  // TURN_START for player
+  events.push({ type: 'TURN_START', turn, phase: 'player' });
 
   // Tick status effects
+  const beforeEffects = player.statusEffects;
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
   log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l))];
 
+  events.push(...detectExpiredEffects(beforeEffects, playerTick.effects, player.id));
+
   if (player.stats.health <= 0) {
-    return { ...state, player, log, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
+    return { ...state, player, log, combatEvents: events, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
   }
 
   player = tickCooldowns(player);
@@ -406,21 +625,36 @@ function executePlayerDefend(state: BattleState): BattleState {
   player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, defBuff) };
   log = [...log, makeLog(turn, 'player', log.length, `${player.name} takes a defensive stance! DEF +5 this turn`)];
 
-  return proceedToEnemyPhase({ ...state, player, log, rng });
+  events.push({
+    type: 'STATUS_APPLIED',
+    targetId: player.id,
+    effectId: defBuff.id,
+    effectType: defBuff.type,
+    remainingTurns: defBuff.remainingTurns,
+  });
+
+  return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
 }
 
 // ─── Use Item ───────────────────────────────────────────────
 
 function executeUseItem(state: BattleState, itemId: string): BattleState {
   let { player, log, turn, rng } = state;
+  let events: InternalCombatEvent[] = [...state.combatEvents];
+
+  // TURN_START for player
+  events.push({ type: 'TURN_START', turn, phase: 'player' });
 
   // Tick status effects
+  const beforeEffects = player.statusEffects;
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
 
+  events.push(...detectExpiredEffects(beforeEffects, playerTick.effects, player.id));
+
   if (player.stats.health <= 0) {
-    return { ...state, player, log, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
+    return { ...state, player, log, combatEvents: events, phase: { type: 'DEFEAT', cause: 'Killed by status effect' } };
   }
 
   player = tickCooldowns(player);
@@ -429,19 +663,24 @@ function executeUseItem(state: BattleState, itemId: string): BattleState {
   // For now, just log and proceed
   log = [...log, makeLog(turn, 'player', log.length, `${player.name} uses item ${itemId}`)];
 
-  return proceedToEnemyPhase({ ...state, player, log, rng });
+  return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
 }
 
 // ─── Enemy Turn ──────────────────────────────────────────────
 
 function executeEnemyTurn(state: BattleState): BattleState {
   let { player, enemies, rng, log, turn } = state;
+  let events: InternalCombatEvent[] = [...state.combatEvents];
 
   for (let i = 0; i < enemies.length; i++) {
     const enemy = enemies[i];
     if (enemy.stats.health <= 0) continue;
 
+    // TURN_START for this enemy
+    events.push({ type: 'TURN_START', turn, phase: 'enemy' });
+
     // Tick enemy status effects
+    const beforeEnemyEffects = enemy.statusEffects;
     const enemyTick = tickStatusEffects(enemy.statusEffects, enemy.name);
     let updatedEnemy: Monster = {
       ...enemy,
@@ -453,10 +692,13 @@ function executeEnemyTurn(state: BattleState): BattleState {
     };
     log = [...log, ...enemyTick.log.map(l => makeLog(turn, `enemy:${i}`, log.length, l))];
 
+    events.push(...detectExpiredEffects(beforeEnemyEffects, enemyTick.effects, enemy.id));
+
     // Check if enemy died from DoT
     if (updatedEnemy.stats.health <= 0) {
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
       log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} was defeated by status effects!`)];
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -464,6 +706,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
     if (isStunned(updatedEnemy.statusEffects)) {
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
       log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} is stunned and cannot act!`)];
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -475,6 +718,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
     // Handle special off-by-one behaviors
     if (isSkippedTurn(decision)) {
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -482,6 +726,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
       // Heals player instead of dealing damage
       player = applyHpDelta(player, 5);
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -492,6 +737,15 @@ function executeEnemyTurn(state: BattleState): BattleState {
         stats: { ...updatedEnemy.stats, health: Math.max(0, updatedEnemy.stats.health - 5) },
       };
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      events.push({
+        type: 'DAMAGE',
+        attackerId: enemy.id,
+        targetId: enemy.id,
+        damage: 5,
+        isCritical: false,
+        element: enemy.element,
+      });
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -504,6 +758,15 @@ function executeEnemyTurn(state: BattleState): BattleState {
       const buff = createStatusEffect('attack-up', spell.name, spell.effect.value, spell.effect.duration ?? 99, true);
       updatedEnemy = { ...updatedEnemy, statusEffects: applyStatusEffect(updatedEnemy.statusEffects, buff) };
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+
+      events.push({
+        type: 'STATUS_APPLIED',
+        targetId: enemy.id,
+        effectId: buff.id,
+        effectType: buff.type,
+        remainingTurns: buff.remainingTurns,
+      });
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -512,8 +775,17 @@ function executeEnemyTurn(state: BattleState): BattleState {
       if (spell.effect.value === 0) {
         const stun = createStatusEffect('stun', spell.name, 0, spell.effect.duration ?? 1, false);
         player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, stun) };
+
+        events.push({
+          type: 'STATUS_APPLIED',
+          targetId: player.id,
+          effectId: stun.id,
+          effectType: stun.type,
+          remainingTurns: stun.remainingTurns,
+        });
       }
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -521,6 +793,15 @@ function executeEnemyTurn(state: BattleState): BattleState {
       const poison = createStatusEffect('poison', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, poison) };
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
+
+      events.push({
+        type: 'STATUS_APPLIED',
+        targetId: player.id,
+        effectId: poison.id,
+        effectType: poison.type,
+        remainingTurns: poison.remainingTurns,
+      });
+      events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
 
@@ -551,21 +832,32 @@ function executeEnemyTurn(state: BattleState): BattleState {
       stats: { ...player.stats, health: Math.max(0, player.stats.health - remainingDamage) },
     };
 
+    events.push({
+      type: 'DAMAGE',
+      attackerId: enemy.id,
+      targetId: player.id,
+      damage: remainingDamage,
+      isCritical: dmgResult.isCritical,
+      element: spell ? spell.element : updatedEnemy.element,
+    });
+
     let dmgLog = `${updatedEnemy.name} deals ${dmgResult.log} to ${player.name}`;
     if (absorbed > 0) dmgLog += ` (${absorbed} absorbed by shield)`;
     log = [...log, makeLog(turn, `enemy:${i}`, log.length, dmgLog)];
 
     enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
 
+    events.push({ type: 'TURN_END', turn, phase: 'enemy' });
+
     // Check defeat
     if (player.stats.health <= 0) {
-      return { ...state, turn, player, enemies, log, rng, phase: { type: 'DEFEAT', cause: `Killed by ${updatedEnemy.name}` } };
+      return { ...state, turn, player, enemies, log, rng, combatEvents: events, phase: { type: 'DEFEAT', cause: `Killed by ${updatedEnemy.name}` } };
     }
   }
 
   // Check victory (enemies may have died from DoTs during their own turn)
   if (enemies.every(e => e.stats.health <= 0)) {
-    return { ...state, turn, player, enemies, log, rng, phase: victoryPhase(enemies) };
+    return { ...state, turn, player, enemies, log, rng, combatEvents: events, phase: victoryPhase(enemies) };
   }
 
   // Next turn
@@ -577,6 +869,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
     enemies,
     log,
     rng,
+    combatEvents: events,
   };
 }
 

@@ -598,6 +598,7 @@ describe('EnemyAI', () => {
       enemies: [monster],
       log: [],
       rng,
+      combatEvents: [],
     };
     const decision = chooseEnemyAction(0, state);
     expect(decision.action.type).toBe('ENEMY_ACT');
@@ -617,6 +618,7 @@ describe('EnemyAI', () => {
         enemies: [monster],
         log: [],
         rng: createRngState(seed),
+        combatEvents: [],
       };
       const decision = chooseEnemyAction(0, state);
       if (isSkippedTurn(decision)) {
@@ -639,6 +641,7 @@ describe('EnemyAI', () => {
       enemies: [monster],
       log: [],
       rng,
+      combatEvents: [],
     };
     const decision = chooseEnemyAction(0, state);
     expect(decision.log).toContain("TestBug's memory consumption grows... (ATK up!)");
@@ -656,6 +659,7 @@ describe('EnemyAI', () => {
       enemies: [monster],
       log: [],
       rng,
+      combatEvents: [],
     };
     const decision = chooseEnemyAction(0, state);
     expect(decision.log).toContain('TestBug context-switches at the worst time! Double attack!');
@@ -672,6 +676,7 @@ describe('EnemyAI', () => {
         enemies: [monster],
         log: [],
         rng: createRngState(seed),
+        combatEvents: [],
       };
       const decision = chooseEnemyAction(0, state);
       if (isOffByOneHeal(decision)) {
@@ -693,6 +698,7 @@ describe('EnemyAI', () => {
         enemies: [monster],
         log: [],
         rng: createRngState(seed),
+        combatEvents: [],
       };
       const decision = chooseEnemyAction(0, state);
       if (isOffByOneSelfHit(decision)) {
@@ -716,6 +722,7 @@ describe('EnemyAI', () => {
       enemies: [boss],
       log: [],
       rng,
+      combatEvents: [],
     };
     const decision = chooseEnemyAction(0, state);
     expect(decision.log.length).toBeGreaterThan(0);
@@ -734,6 +741,7 @@ describe('EnemyAI', () => {
       enemies: [boss],
       log: [],
       rng,
+      combatEvents: [],
     };
     const decision = chooseEnemyAction(0, state);
     expect(decision.log).toContain('TestBoss [BOSS] enters CRITICAL PHASE! Unleashes ultimate ability!');
@@ -1167,6 +1175,135 @@ describe('TurnBasedEngine', () => {
       if (state.phase.type === 'VICTORY') {
         expect(state.phase.xpGained).toBe(100);
       }
+    });
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // COMBAT EVENTS — Granular structured events on BattleState
+  // ════════════════════════════════════════════════════════════
+
+  describe('combatEvents', () => {
+    it('should include TURN_START in combatEvents after executeTurn', () => {
+      const state = initBattle(player, [monster], 42);
+      const next = executeTurn(state, { type: 'ATTACK', targetIndex: 0 });
+      const turnStarts = next.combatEvents.filter(e => e.type === 'TURN_START');
+      // At least player TURN_START + enemy TURN_START
+      expect(turnStarts.length).toBeGreaterThanOrEqual(2);
+      expect(turnStarts[0]).toMatchObject({ type: 'TURN_START', turn: 1, phase: 'player' });
+      expect(turnStarts.some(e => e.phase === 'enemy')).toBe(true);
+    });
+
+    it('should include TURN_END for enemy phase', () => {
+      const state = initBattle(player, [monster], 42);
+      const next = executeTurn(state, { type: 'ATTACK', targetIndex: 0 });
+      const turnEnds = next.combatEvents.filter(e => e.type === 'TURN_END');
+      expect(turnEnds.length).toBeGreaterThanOrEqual(1);
+      expect(turnEnds[0]).toMatchObject({ type: 'TURN_END', phase: 'enemy' });
+    });
+
+    it('should include DAMAGE event with correct fields on player attack', () => {
+      const state = initBattle(player, [monster], 42);
+      const next = executeTurn(state, { type: 'ATTACK', targetIndex: 0 });
+      const damages = next.combatEvents.filter(e => e.type === 'DAMAGE');
+      // At least player damage + enemy damage
+      expect(damages.length).toBeGreaterThanOrEqual(2);
+
+      const playerDmg = damages.find(e => e.type === 'DAMAGE' && e.attackerId === player.id);
+      expect(playerDmg).toBeDefined();
+      if (playerDmg && playerDmg.type === 'DAMAGE') {
+        expect(playerDmg.targetId).toBe(monster.id);
+        expect(playerDmg.damage).toBeGreaterThan(0);
+        expect(typeof playerDmg.isCritical).toBe('boolean');
+        expect(typeof playerDmg.element).toBe('string');
+      }
+    });
+
+    it('should include SPELL event when casting a spell', () => {
+      const state = initBattle(player, [monster], 42);
+      const next = executeTurn(state, {
+        type: 'CAST_SPELL',
+        spellId: 'spell-sql-injection',
+        targetIndex: 0,
+      });
+      const spells = next.combatEvents.filter(e => e.type === 'SPELL');
+      expect(spells.length).toBeGreaterThanOrEqual(1);
+      const spell = spells[0];
+      if (spell.type === 'SPELL') {
+        expect(spell.spellId).toBe('spell-sql-injection');
+        expect(spell.casterId).toBe(player.id);
+        expect(spell.targetId).toBe(monster.id);
+        expect(spell.effectType).toBe('damage');
+        expect(spell.value).toBeGreaterThan(0);
+      }
+    });
+
+    it('should include STATUS_APPLIED when casting a buff/shield/dot', () => {
+      const state = initBattle(player, [monster], 42);
+      const next = executeTurn(state, {
+        type: 'CAST_SPELL',
+        spellId: 'spell-buffer-overflow', // DoT spell
+        targetIndex: 0,
+      });
+      const applied = next.combatEvents.filter(e => e.type === 'STATUS_APPLIED');
+      expect(applied.length).toBeGreaterThanOrEqual(1);
+      const dot = applied.find(e => e.type === 'STATUS_APPLIED' && e.effectType === 'poison');
+      expect(dot).toBeDefined();
+      if (dot && dot.type === 'STATUS_APPLIED') {
+        expect(dot.targetId).toBe(monster.id);
+        expect(dot.remainingTurns).toBeGreaterThan(0);
+      }
+    });
+
+    it('should include STATUS_APPLIED on defend action', () => {
+      const state = initBattle(player, [monster], 42);
+      const next = executeTurn(state, { type: 'DEFEND' });
+      const applied = next.combatEvents.filter(e => e.type === 'STATUS_APPLIED');
+      const defUp = applied.find(e => e.type === 'STATUS_APPLIED' && e.effectType === 'defense-up');
+      expect(defUp).toBeDefined();
+      if (defUp && defUp.type === 'STATUS_APPLIED') {
+        expect(defUp.targetId).toBe(player.id);
+      }
+    });
+
+    it('should include STATUS_EXPIRED when effect reaches 0 turns', () => {
+      // Give player a 1-turn effect, then take an action to tick it off
+      const playerWithEffect = makeTestPlayer({
+        statusEffects: [createStatusEffect('attack-up', 'Short Buff', 3, 1, false)],
+      });
+      const state = initBattle(playerWithEffect, [monster], 42);
+      // initBattle clears effects, so manually re-add
+      const stateWithEffect: BattleState = {
+        ...state,
+        player: {
+          ...state.player,
+          statusEffects: [createStatusEffect('attack-up', 'Short Buff', 3, 1, false)],
+        },
+      };
+      const next = executeTurn(stateWithEffect, { type: 'ATTACK', targetIndex: 0 });
+      const expired = next.combatEvents.filter(e => e.type === 'STATUS_EXPIRED');
+      expect(expired.length).toBeGreaterThanOrEqual(1);
+      const buff = expired.find(e => e.type === 'STATUS_EXPIRED' && e.effectType === 'attack-up');
+      expect(buff).toBeDefined();
+    });
+
+    it('should clear combatEvents between successive executeTurn calls', () => {
+      const state = initBattle(player, [monster], 42);
+      const first = executeTurn(state, { type: 'ATTACK', targetIndex: 0 });
+      expect(first.combatEvents.length).toBeGreaterThan(0);
+
+      if (first.phase.type === 'PLAYER_TURN') {
+        const second = executeTurn(first, { type: 'ATTACK', targetIndex: 0 });
+        // second.combatEvents should NOT contain events from first turn
+        const firstTurnStarts = first.combatEvents.filter(e => e.type === 'TURN_START' && e.turn === 1);
+        const secondTurnStarts = second.combatEvents.filter(e => e.type === 'TURN_START' && e.turn === 1);
+        // Events from turn 1 should not appear in turn 2's events
+        expect(secondTurnStarts.length).toBe(0);
+      }
+    });
+
+    it('initBattle should have empty combatEvents', () => {
+      const state = initBattle(player, [monster], 42);
+      expect(state.combatEvents).toEqual([]);
     });
   });
 });

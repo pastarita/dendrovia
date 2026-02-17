@@ -6,7 +6,7 @@
  */
 
 import { join, basename } from 'path';
-import { mkdirSync, existsSync } from 'fs';
+import { mkdirSync, existsSync, readFileSync } from 'fs';
 import { parseGitHistory, listFilesAtHead, getHeadHash, getFileAuthors, extractRepositoryMetadata } from './parser/GitParser.js';
 import { parseFiles, buildStubFile, canParse } from './parser/ASTParser.js';
 import { detectHotspots } from './analyzer/HotspotDetector.js';
@@ -17,7 +17,7 @@ import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { createLogger } from '@dendrovia/shared/logger';
 import type { ParsedFile } from '@dendrovia/shared';
 import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer.js';
-import type { TopologyOutput } from './builder/TopologyBuilder.js';
+import type { TopologyOutput, WriteOptions } from './builder/TopologyBuilder.js';
 
 // ── Default ignore patterns ─────────────────────────────────────────────────
 
@@ -40,6 +40,44 @@ const DEFAULT_IGNORE_PATTERNS = [
   /pnpm-lock\.yaml$/,
 ];
 
+// ── Manifest types ──────────────────────────────────────────────────────────
+
+const PIPELINE_VERSION = '1.0.0';
+const MANIFEST_FILENAME = '.chronos-manifest.json';
+
+interface ManifestStats {
+  files: number;
+  commits: number;
+  hotspots: number;
+  contributors: number;
+  languages: number;
+}
+
+interface ManifestDelta {
+  newCommits: number;
+  filesAdded: string[];
+  filesRemoved: string[];
+  statsChange: Record<string, string>;
+}
+
+interface ManifestChecksums {
+  topology: string;
+  commits: string;
+  complexity: string;
+  hotspots: string;
+  contributors: string;
+}
+
+export interface ChronosManifest {
+  head: string;
+  previousHead: string;
+  timestamp: string;
+  pipelineVersion: string;
+  stats: ManifestStats;
+  delta: ManifestDelta;
+  checksums: ManifestChecksums;
+}
+
 // ── Public types ─────────────────────────────────────────────────────────────
 
 export interface PipelineOptions {
@@ -49,6 +87,8 @@ export interface PipelineOptions {
   emitEvents?: boolean;
   /** If true, suppress console output */
   silent?: boolean;
+  /** Force pretty-printed JSON regardless of file size */
+  pretty?: boolean;
 }
 
 export interface PipelineResult {
@@ -67,6 +107,86 @@ export interface PipelineResult {
 
 const log = createLogger('CHRONOS', 'pipeline');
 
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+async function computeFileChecksum(path: string): Promise<string> {
+  if (!existsSync(path)) return '';
+  const content = await Bun.file(path).arrayBuffer();
+  const hasher = new Bun.CryptoHasher('sha256');
+  hasher.update(new Uint8Array(content));
+  return `sha256:${hasher.digest('hex').slice(0, 16)}`;
+}
+
+function loadPreviousManifest(outputDir: string): ChronosManifest | null {
+  const manifestPath = join(outputDir, MANIFEST_FILENAME);
+  if (!existsSync(manifestPath)) {
+    // Also check legacy .chronos-state
+    const legacyPath = join(outputDir, '.chronos-state');
+    if (existsSync(legacyPath)) {
+      try {
+        const legacy = JSON.parse(readFileSync(legacyPath, 'utf-8'));
+        return {
+          head: legacy.head ?? '',
+          previousHead: '',
+          timestamp: legacy.timestamp ?? '',
+          pipelineVersion: '0.0.0',
+          stats: {
+            files: legacy.files ?? 0,
+            commits: legacy.commits ?? 0,
+            hotspots: 0,
+            contributors: 0,
+            languages: 0,
+          },
+          delta: { newCommits: 0, filesAdded: [], filesRemoved: [], statsChange: {} },
+          checksums: { topology: '', commits: '', complexity: '', hotspots: '', contributors: '' },
+        };
+      } catch { return null; }
+    }
+    return null;
+  }
+  try {
+    return JSON.parse(readFileSync(manifestPath, 'utf-8'));
+  } catch { return null; }
+}
+
+function computeDelta(
+  prev: ChronosManifest | null,
+  currentStats: ManifestStats,
+  prevFiles: string[],
+  currentFiles: string[],
+): ManifestDelta {
+  if (!prev) {
+    return {
+      newCommits: currentStats.commits,
+      filesAdded: currentFiles,
+      filesRemoved: [],
+      statsChange: {
+        files: `+${currentStats.files}`,
+        commits: `+${currentStats.commits}`,
+      },
+    };
+  }
+
+  const prevFileSet = new Set(prevFiles);
+  const currentFileSet = new Set(currentFiles);
+
+  const filesAdded = currentFiles.filter(f => !prevFileSet.has(f));
+  const filesRemoved = prevFiles.filter(f => !currentFileSet.has(f));
+
+  const fileDiff = currentStats.files - prev.stats.files;
+  const commitDiff = currentStats.commits - prev.stats.commits;
+
+  return {
+    newCommits: Math.max(0, commitDiff),
+    filesAdded,
+    filesRemoved,
+    statsChange: {
+      files: fileDiff >= 0 ? `+${fileDiff}` : `${fileDiff}`,
+      commits: commitDiff >= 0 ? `+${commitDiff}` : `${commitDiff}`,
+    },
+  };
+}
+
 // ── Pipeline ─────────────────────────────────────────────────────────────────
 
 export async function runPipeline(options: PipelineOptions): Promise<PipelineResult> {
@@ -76,6 +196,7 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     ignorePatterns = DEFAULT_IGNORE_PATTERNS,
     emitEvents = false,
     silent = false,
+    pretty = false,
   } = options;
 
   const savedLevel = log.level;
@@ -91,6 +212,9 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
   if (!existsSync(outputDir)) {
     mkdirSync(outputDir, { recursive: true });
   }
+
+  // Load previous manifest for delta computation
+  const previousManifest = loadPreviousManifest(outputDir);
 
   // ── Step 1: Git metadata ────────────────────────────────────────────────
   const t1 = performance.now();
@@ -229,7 +353,8 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     headHash,
   });
 
-  const writtenFiles = await writeOutputFiles(output, outputDir);
+  const writeOptions: WriteOptions = { pretty };
+  const writtenFiles = await writeOutputFiles(output, outputDir, writeOptions);
 
   for (const f of writtenFiles) {
     const size = (Bun.file(f).size / 1024).toFixed(1);
@@ -247,16 +372,63 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
     });
   }
 
-  // Write state file for cache invalidation
+  // ── Write .chronos-manifest.json with delta tracking ────────────────────
+
+  const currentStats: ManifestStats = {
+    files: allParsedFiles.length,
+    commits: commits.length,
+    hotspots: hotspots.length,
+    contributors: contributors.length,
+    languages: uniqueLanguages.length,
+  };
+
+  // Gather file paths for delta computation
+  const previousFilePaths = previousManifest
+    ? (previousManifest as any)._filePaths ?? []
+    : [];
+  const currentFilePaths = allParsedFiles.map(f => f.path);
+
+  const delta = computeDelta(previousManifest, currentStats, previousFilePaths, currentFilePaths);
+
+  // Compute checksums of output files
+  const checksums: ManifestChecksums = {
+    topology: await computeFileChecksum(join(outputDir, 'topology.json')),
+    commits: await computeFileChecksum(join(outputDir, 'commits.json')),
+    complexity: await computeFileChecksum(join(outputDir, 'complexity.json')),
+    hotspots: await computeFileChecksum(join(outputDir, 'hotspots.json')),
+    contributors: await computeFileChecksum(join(outputDir, 'contributors.json')),
+  };
+
+  const manifest: ChronosManifest & { _filePaths: string[] } = {
+    head: headHash,
+    previousHead: previousManifest?.head ?? '',
+    timestamp: new Date().toISOString(),
+    pipelineVersion: PIPELINE_VERSION,
+    stats: currentStats,
+    delta,
+    checksums,
+    // Stored for next run's delta computation (not part of public interface)
+    _filePaths: currentFilePaths,
+  };
+
   await Bun.write(
-    join(outputDir, '.chronos-state'),
-    JSON.stringify({
-      head: headHash,
-      timestamp: new Date().toISOString(),
-      files: allParsedFiles.length,
-      commits: commits.length,
-    }),
+    join(outputDir, MANIFEST_FILENAME),
+    JSON.stringify(manifest, null, 2),
   );
+
+  // Log delta summary
+  log.info({
+    head: headHash.slice(0, 8),
+    previousHead: (previousManifest?.head ?? '').slice(0, 8) || '(none)',
+    files: currentStats.files,
+    commits: currentStats.commits,
+    hotspots: currentStats.hotspots,
+    newCommits: delta.newCommits,
+    filesAdded: delta.filesAdded.length,
+    filesRemoved: delta.filesRemoved.length,
+    filesChange: delta.statsChange.files,
+    commitsChange: delta.statsChange.commits,
+  }, 'Delta summary');
 
   const duration = (performance.now() - t0) / 1000;
 

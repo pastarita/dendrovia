@@ -14,7 +14,8 @@
     "./manifest": "./src/manifest/index.ts",
     "./sw": "./src/sw/index.ts",
     "./multiplayer": "./src/multiplayer/index.ts",
-    "./dendrite": "./src/dendrite/index.ts"
+    "./dendrite": "./src/dendrite/index.ts",
+    "./mesh": "./src/mesh/index.ts"
   },
   "scripts": {
     "dev": "tsc --watch --noEmit",
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "@dendrovia/shared": "workspace:*",
+    "@dendrovia/imaginarium": "workspace:*",
     "zustand": "^5.0.0"
   },
   "optionalDependencies": {

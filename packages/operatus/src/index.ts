@@ -39,6 +39,10 @@ export type {
   DownloadProgress,
 } from './loader/index';
 
+// ── Runtime mesh generation ────────────────────────────────────
+export type { BatchOpts, MeshFactoryStats, MeshResult } from './mesh/index';
+export { MeshFactory, MESH_PIPELINE_VERSION } from './mesh/index';
+
 // ── State persistence ────────────────────────────────────────────
 export {
   createDendroviaStorage,

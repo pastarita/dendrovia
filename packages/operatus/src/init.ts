@@ -34,10 +34,11 @@ const log = createLogger('OPERATUS', 'init');
 import { AssetLoader } from './loader/AssetLoader';
 import { CDNLoader, type CDNConfig } from './loader/CDNLoader';
 import { useGameStore, waitForHydration } from './persistence/GameStore';
+import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth';
+import { MeshFactory } from './mesh/MeshFactory';
 import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave';
 import { CrossTabSync, type CrossTabConfig, type TabRole } from './sync/CrossTabSync';
 import type { LoadProgress } from './loader/AssetLoader';
-import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth';
 
 export interface OperatusConfig {
   /** Base path for generated assets (default: '/generated') */
@@ -58,6 +59,8 @@ export interface OperatusConfig {
   skipSync?: boolean;
   /** Skip auto-save (default: false) */
   skipAutoSave?: boolean;
+  /** Skip mesh factory initialization (default: false) */
+  skipMeshFactory?: boolean;
 }
 
 export interface OperatusContext {
@@ -73,6 +76,8 @@ export interface OperatusContext {
   crossTabSync: CrossTabSync;
   /** This tab's role */
   tabRole: TabRole;
+  /** Runtime mesh generator with cache integration (null if skipped) */
+  meshFactory: MeshFactory | null;
   /** Tear down all infrastructure */
   destroy: () => void;
 }
@@ -96,6 +101,7 @@ export async function initializeOperatus(
     onRoleChange,
     skipSync = false,
     skipAutoSave = false,
+    skipMeshFactory = false,
   } = config;
 
   const eventBus = getEventBus();
@@ -209,6 +215,14 @@ export async function initializeOperatus(
     });
   }
 
+  // ── Step 7.5: Initialize mesh factory ───────────────────────────
+
+  let meshFactory: MeshFactory | null = null;
+  if (!skipMeshFactory) {
+    meshFactory = new MeshFactory(cache);
+    assetLoader.setMeshFactory(meshFactory);
+  }
+
   // ── Step 8: Initialize CDN loader (optional) ───────────────────
 
   let cdnLoader: CDNLoader | null = null;
@@ -253,6 +267,7 @@ export async function initializeOperatus(
     cache,
     assetLoader,
     cdnLoader,
+    meshFactory,
     autoSave,
     crossTabSync,
     tabRole,

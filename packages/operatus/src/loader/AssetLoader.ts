@@ -18,11 +18,13 @@ import type {
   AssetManifest,
   ProceduralPalette,
   CodeTopology,
+  FungalSpecimen,
   SerializedMeshData,
 } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { validateManifest } from '@dendrovia/shared/schemas';
 import { CacheManager } from '../cache/CacheManager';
+import type { MeshFactory } from '../mesh/MeshFactory';
 
 export enum AssetPriority {
   CRITICAL = 0,
@@ -57,6 +59,7 @@ export class AssetLoader {
   private basePath: string;
   private loadedAssets = new Map<string, string>();
   private onProgress: ProgressCallback | null = null;
+  private meshFactory: MeshFactory | null = null;
 
   constructor(basePath = '/generated') {
     this.cache = new CacheManager();
@@ -75,6 +78,15 @@ export class AssetLoader {
    */
   setProgressCallback(cb: ProgressCallback): void {
     this.onProgress = cb;
+  }
+
+  /**
+   * Set the MeshFactory for runtime mesh generation fallback.
+   * When set, loadMesh() will generate meshes on-demand if
+   * pre-baked files are unavailable.
+   */
+  setMeshFactory(factory: MeshFactory): void {
+    this.meshFactory = factory;
   }
 
   /**
@@ -369,9 +381,11 @@ export class AssetLoader {
 
   /**
    * Load and validate a serialized mesh asset.
+   * If pre-baked mesh is unavailable and a MeshFactory + specimen are
+   * provided, generates the mesh at runtime instead.
    * Returns null on failure (fallback-friendly).
    */
-  async loadMesh(path: string): Promise<SerializedMeshData | null> {
+  async loadMesh(path: string, specimen?: FungalSpecimen): Promise<SerializedMeshData | null> {
     try {
       const raw = await this.loadAsset({
         path,
@@ -382,6 +396,23 @@ export class AssetLoader {
       if (parsed.version !== 1) return null;
       return parsed as SerializedMeshData;
     } catch {
+      // Pre-baked mesh unavailable — try runtime generation
+      if (this.meshFactory && specimen) {
+        try {
+          const result = await this.meshFactory.getMesh(specimen);
+          return {
+            version: 1,
+            format: 'indexed',
+            positions: Array.from(result.cap.positions),
+            normals: Array.from(result.cap.normals),
+            indices: Array.from(result.cap.indices),
+            vertexCount: result.cap.positions.length / 3,
+            faceCount: result.cap.indices.length / 3,
+          };
+        } catch {
+          return null;
+        }
+      }
       return null;
     }
   }

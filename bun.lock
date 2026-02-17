@@ -380,6 +380,7 @@
       "name": "@dendrovia/operatus",
       "version": "0.3.0",
       "dependencies": {
+        "@dendrovia/imaginarium": "workspace:*",
         "@dendrovia/shared": "workspace:*",
         "zustand": "^5.0.0",
       },

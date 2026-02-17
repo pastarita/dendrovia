@@ -1,6 +1,7 @@
 import { describe, test, expect } from 'bun:test';
 import {
   buildTopology,
+  stripTreeMetadata,
   type TopologyInput,
   type TopologyOutput,
 } from '../src/builder/TopologyBuilder';
@@ -45,7 +46,7 @@ function makeTree(): FileTreeNode {
     type: 'directory',
     children: [
       { name: 'src', path: 'src', type: 'directory', children: [
-        { name: 'index.ts', path: 'src/index.ts', type: 'file' },
+        { name: 'index.ts', path: 'src/index.ts', type: 'file', metadata: makeFile('src/index.ts') },
       ]},
     ],
   };
@@ -136,11 +137,14 @@ describe('buildTopology — structure', () => {
     expect(output.contributors).toBeDefined();
   });
 
-  test('topology contains version, analyzedAt, repository', () => {
+  test('topology contains version, analyzedAt, repository, meta', () => {
     const output = buildTopology(makeInput());
     expect(output.topology.version).toBe('1.0.0');
     expect(output.topology.analyzedAt).toBeDefined();
     expect(output.topology.repository).toBe('test-repo');
+    expect(output.topology.meta).toBeDefined();
+    expect(output.topology.meta.pipelineVersion).toBe('1.0.0');
+    expect(output.topology.meta.repoPath).toBe('test-repo');
   });
 
   test('analyzedAt is a valid ISO date string', () => {
@@ -149,26 +153,124 @@ describe('buildTopology — structure', () => {
     expect(date.getTime()).not.toBeNaN();
   });
 
-  test('topology includes files, commits, tree, hotspots', () => {
-    const input = makeInput();
-    const output = buildTopology(input);
-    expect(output.topology.files).toEqual(input.files);
-    expect(output.topology.commits).toEqual(input.commits);
-    expect(output.topology.tree).toEqual(input.tree);
-    expect(output.topology.hotspots).toEqual(input.hotspots);
+  test('topology is slim — no commits, hotspots, or temporalCouplings', () => {
+    const output = buildTopology(makeInput());
+    expect(output.topology.commits).toBeUndefined();
+    expect(output.topology.hotspots).toBeUndefined();
+    expect(output.topology.temporalCouplings).toBeUndefined();
   });
 
-  test('commits output is the raw commits array', () => {
+  test('topology has commitCount and hotspotCount summary fields', () => {
     const input = makeInput();
     const output = buildTopology(input);
-    expect(output.commits).toBe(input.commits);
+    expect(output.topology.commitCount).toBe(2);
+    expect(output.topology.hotspotCount).toBe(2);
+  });
+
+  test('topology includes files and tree', () => {
+    const input = makeInput();
+    const output = buildTopology(input);
+    expect(output.topology.files.length).toBe(input.files.length);
+    expect(output.topology.tree).toBeDefined();
+  });
+
+  test('commits output is a versioned envelope', () => {
+    const input = makeInput();
+    const output = buildTopology(input);
+    expect(output.commits.version).toBe('1.0.0');
+    expect(output.commits.analyzedAt).toBeDefined();
+    expect(output.commits.meta).toBeDefined();
+    expect(output.commits.commits.length).toBe(input.commits.length);
+  });
+});
+
+describe('buildTopology — deterministic sorting', () => {
+  test('files are sorted by path', () => {
+    const input = makeInput({
+      files: [makeFile('z.ts'), makeFile('a.ts'), makeFile('m.ts')],
+    });
+    const output = buildTopology(input);
+    const paths = output.topology.files.map(f => f.path);
+    expect(paths).toEqual(['a.ts', 'm.ts', 'z.ts']);
+  });
+
+  test('hotspots are sorted by path', () => {
+    const input = makeInput({
+      hotspots: [makeHotspot('z.ts', 0.5), makeHotspot('a.ts', 0.8)],
+    });
+    const output = buildTopology(input);
+    const paths = output.hotspots.hotspots.map(h => h.path);
+    expect(paths).toEqual(['a.ts', 'z.ts']);
+  });
+
+  test('contributors are sorted by commitCount descending', () => {
+    const c1 = makeContributor('Low');
+    c1.commitCount = 3;
+    const c2 = makeContributor('High');
+    c2.commitCount = 50;
+    const input = makeInput({ contributors: [c1, c2] });
+    const output = buildTopology(input);
+    expect(output.contributors.contributors[0].name).toBe('High');
+    expect(output.contributors.contributors[1].name).toBe('Low');
+  });
+});
+
+describe('buildTopology — tree metadata stripping', () => {
+  test('tree nodes have no metadata field', () => {
+    const tree: FileTreeNode = {
+      name: 'root',
+      path: '',
+      type: 'directory',
+      children: [
+        { name: 'file.ts', path: 'file.ts', type: 'file', metadata: makeFile('file.ts') },
+      ],
+    };
+    const input = makeInput({ tree });
+    const output = buildTopology(input);
+    expect((output.topology.tree.children![0] as any).metadata).toBeUndefined();
+  });
+});
+
+describe('stripTreeMetadata', () => {
+  test('removes metadata from leaf nodes', () => {
+    const node: FileTreeNode = {
+      name: 'file.ts',
+      path: 'file.ts',
+      type: 'file',
+      metadata: makeFile('file.ts'),
+    };
+    const stripped = stripTreeMetadata(node);
+    expect(stripped.name).toBe('file.ts');
+    expect(stripped.metadata).toBeUndefined();
+  });
+
+  test('recurses through children', () => {
+    const tree: FileTreeNode = {
+      name: 'root',
+      path: '',
+      type: 'directory',
+      children: [
+        {
+          name: 'src',
+          path: 'src',
+          type: 'directory',
+          children: [
+            { name: 'a.ts', path: 'src/a.ts', type: 'file', metadata: makeFile('src/a.ts') },
+          ],
+        },
+      ],
+    };
+    const stripped = stripTreeMetadata(tree);
+    expect((stripped.children![0].children![0] as any).metadata).toBeUndefined();
+    expect(stripped.children![0].children![0].name).toBe('a.ts');
   });
 });
 
 describe('buildTopology — complexity output', () => {
-  test('complexity has version field', () => {
+  test('complexity has version and meta fields', () => {
     const output = buildTopology(makeInput());
     expect(output.complexity.version).toBe('1.0.0');
+    expect(output.complexity.meta).toBeDefined();
   });
 
   test('filters out files with zero complexity', () => {
@@ -203,9 +305,10 @@ describe('buildTopology — complexity output', () => {
 });
 
 describe('buildTopology — hotspots output', () => {
-  test('hotspots output has version', () => {
+  test('hotspots output has version and meta', () => {
     const output = buildTopology(makeInput());
     expect(output.hotspots.version).toBe('1.0.0');
+    expect(output.hotspots.meta).toBeDefined();
   });
 
   test('includes hotspot list', () => {
@@ -223,9 +326,10 @@ describe('buildTopology — hotspots output', () => {
 });
 
 describe('buildTopology — contributors output', () => {
-  test('contributors output has version', () => {
+  test('contributors output has version and meta', () => {
     const output = buildTopology(makeInput());
     expect(output.contributors.version).toBe('1.0.0');
+    expect(output.contributors.meta).toBeDefined();
   });
 
   test('includes contributor profiles', () => {
@@ -249,9 +353,25 @@ describe('buildTopology — edge cases', () => {
 
     const output = buildTopology(input);
     expect(output.topology.files).toEqual([]);
-    expect(output.commits).toEqual([]);
+    expect(output.commits.commits).toEqual([]);
     expect(output.complexity.files).toEqual([]);
     expect(output.hotspots.hotspots).toEqual([]);
     expect(output.contributors.contributors).toEqual([]);
+    expect(output.topology.commitCount).toBe(0);
+    expect(output.topology.hotspotCount).toBe(0);
+  });
+});
+
+describe('buildTopology — provenance meta', () => {
+  test('all output sections have meta block', () => {
+    const input = makeInput({ headHash: 'abc123def456' });
+    const output = buildTopology(input);
+    for (const section of [output.topology, output.commits, output.complexity, output.hotspots, output.contributors]) {
+      expect(section.meta).toBeDefined();
+      expect(section.meta.pipelineVersion).toBe('1.0.0');
+      expect(section.meta.headHash).toBe('abc123def456');
+      expect(section.meta.analyzedAt).toBeDefined();
+      expect(section.meta.repoPath).toBe('test-repo');
+    }
   });
 });

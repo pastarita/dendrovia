@@ -377,7 +377,7 @@ export interface TopologyInvariants {
 export function precomputeInvariants(topology: CodeTopology): TopologyInvariants {
   // Hotspot lookup — O(H) build, O(1) per query
   const hotspotMap = new Map<string, Hotspot>();
-  for (const h of topology.hotspots) {
+  for (const h of topology.hotspots ?? []) {
     hotspotMap.set(h.path, h);
   }
 
@@ -404,7 +404,7 @@ export function precomputeInvariants(topology: CodeTopology): TopologyInvariants
 
   // Commit count per file — O(C * avg_files_per_commit) build, O(1) per query
   const commitCountMap = new Map<string, number>();
-  for (const c of topology.commits) {
+  for (const c of topology.commits ?? []) {
     for (const path of c.filesChanged) {
       commitCountMap.set(path, (commitCountMap.get(path) ?? 0) + 1);
     }
@@ -426,7 +426,7 @@ export function buildFileContext(
   // Use pre-computed invariants when available, fall back to per-call computation
   const hotspot = invariants
     ? invariants.hotspotMap.get(file.path)
-    : topology.hotspots.find(h => h.path === file.path);
+    : (topology.hotspots ?? []).find(h => h.path === file.path);
 
   const newestTimestamp = invariants
     ? invariants.newestTimestamp
@@ -458,7 +458,7 @@ export function buildFileContext(
   // Count commits touching this file
   const commitCount = invariants
     ? (invariants.commitCountMap.get(file.path) ?? 0)
-    : topology.commits.filter(c => c.filesChanged.includes(file.path)).length;
+    : (topology.commits ?? []).filter(c => c.filesChanged.includes(file.path)).length;
 
   const avgComplexity = invariants
     ? invariants.avgComplexity
@@ -519,7 +519,7 @@ export function buildTaxonomy(file: ParsedFile, ctx: FileContext): FungalTaxonom
 export function buildCoChurnMap(topology: CodeTopology): Map<string, Set<string>> {
   const map = new Map<string, Set<string>>();
 
-  for (const commit of topology.commits) {
+  for (const commit of topology.commits ?? []) {
     const changed = commit.filesChanged;
     // Skip mega-commits — mass refactors provide no useful co-churn signal
     if (changed.length > MAX_COCHURN_COMMIT_FILES) continue;

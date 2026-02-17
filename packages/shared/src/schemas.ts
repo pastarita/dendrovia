@@ -58,13 +58,15 @@ export const TopologyZod = z.object({
   version: z.string().optional(),
   analyzedAt: z.string().optional(),
   files: z.array(TopologyFileZod),
-  commits: z.array(TopologyCommitZod),
+  commits: z.array(TopologyCommitZod).optional().default([]),
   tree: TopologyTreeNodeZod,
-  hotspots: z.array(TopologyHotspotZod).default([]),
+  hotspots: z.array(TopologyHotspotZod).optional().default([]),
   repository: z.unknown().optional(),
   languageDistribution: z.array(z.unknown()).optional(),
   contributorSummary: z.unknown().optional(),
   temporalCouplings: z.array(z.unknown()).optional(),
+  commitCount: z.number().optional(),
+  hotspotCount: z.number().optional(),
   deepwiki: z.unknown().optional(),
 });
 

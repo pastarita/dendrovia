@@ -22,9 +22,10 @@ fi
 
 # Invalidate CHRONOS cache if parser source changed
 if git diff HEAD@{1} --name-only 2>/dev/null | grep -q "packages/chronos/"; then
-    if [ -f ".chronos-state" ]; then
-        echo "  ▸ CHRONOS sources changed — invalidating .chronos-state cache"
+    if [ -f ".chronos-state" ] || [ -f "packages/chronos/generated/.chronos-manifest.json" ]; then
+        echo "  ▸ CHRONOS sources changed — invalidating CHRONOS cache"
         rm -f .chronos-state
+        rm -f packages/chronos/generated/.chronos-manifest.json
     fi
 fi
 

@@ -59,13 +59,13 @@ export async function distill(
 
   // 1. Read topology (falls back to mock if missing)
   const topology = await readTopology(topologyPath);
-  log.info({ files: topology.files.length, hotspots: topology.hotspots.length }, 'Topology loaded');
+  log.info({ files: topology.files.length, hotspots: (topology.hotspots ?? []).length }, 'Topology loaded');
 
   // 2. Init cache + topology hash for cache keys
   const cache = new DeterministicCache(outputDir);
   const topologyHash = hashObject({
     files: topology.files.map(f => ({ path: f.path, hash: f.hash })),
-    hotspots: topology.hotspots.map(h => h.path),
+    hotspots: (topology.hotspots ?? []).map(h => h.path),
   });
 
   // 3. Extract global palette (with cache)
@@ -111,7 +111,7 @@ export async function distill(
         files: langFiles,
         commits: topology.commits,
         tree: topology.tree,
-        hotspots: topology.hotspots.filter(h => langFiles.some(f => f.path === h.path)),
+        hotspots: (topology.hotspots ?? []).filter(h => langFiles.some(f => f.path === h.path)),
       };
       const palette = extractPalette(langTopology);
       const palettePath = join(outputDir, 'palettes', `${lang}.json`);

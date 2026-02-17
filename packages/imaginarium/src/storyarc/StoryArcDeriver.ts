@@ -18,7 +18,7 @@ export function deriveStoryArc(topology: CodeTopology): StoryArc {
     // Deterministic seed from topology structure
     const topologyHash = hashString(JSON.stringify({
       fileCount: topology.files.length,
-      hotspotCount: topology.hotspots.length,
+      hotspotCount: (topology.hotspots ?? []).length,
       treeName: topology.tree.name,
       paths: topology.files.map(f => f.path).sort(),
     }));
@@ -89,12 +89,12 @@ function buildFallbackArc(topology: CodeTopology): StoryArc {
         totalLoc: topology.files.reduce((s, f) => s + f.loc, 0),
         avgComplexity,
         maxComplexity: topology.files.length > 0 ? Math.max(...topology.files.map(f => f.complexity)) : 0,
-        hotspotCount: topology.hotspots.length,
-        avgChurn: topology.hotspots.length > 0
-          ? topology.hotspots.reduce((s, h) => s + h.churnRate, 0) / topology.hotspots.length
+        hotspotCount: (topology.hotspots ?? []).length,
+        avgChurn: (topology.hotspots ?? []).length > 0
+          ? (topology.hotspots ?? []).reduce((s, h) => s + h.churnRate, 0) / (topology.hotspots ?? []).length
           : 0,
         dominantLanguage,
-        encounterDensity: topology.files.length > 0 ? topology.hotspots.length / topology.files.length : 0,
+        encounterDensity: topology.files.length > 0 ? (topology.hotspots ?? []).length / topology.files.length : 0,
       },
       ordinal: 0,
     }],

@@ -134,13 +134,16 @@ export interface DeepWikiEnrichment {
 
 export interface CodeTopology {
   files: ParsedFile[];
-  commits: ParsedCommit[];
+  commits?: ParsedCommit[];
   tree: FileTreeNode;
-  hotspots: Hotspot[];
+  hotspots?: Hotspot[];
   repository?: RepositoryMetadata;
   languageDistribution?: LanguageDistribution[];
   contributorSummary?: ContributorSummary;
   temporalCouplings?: TemporalCoupling[];
+  /** Summary counts when full arrays are omitted (slim format) */
+  commitCount?: number;
+  hotspotCount?: number;
   /** Optional AI-generated documentation from DeepWiki. Absent = not fetched or unavailable. */
   deepwiki?: DeepWikiEnrichment;
 }

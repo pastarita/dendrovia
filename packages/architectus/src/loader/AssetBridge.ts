@@ -97,9 +97,13 @@ async function fetchJson<T>(url: string, timeoutMs = 5000): Promise<T | null> {
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.warn(`[ARCHITECTUS] fetchJson failed: ${response.status} ${response.statusText} for ${url}`);
+      return null;
+    }
     return (await response.json()) as T;
-  } catch {
+  } catch (err) {
+    console.warn(`[ARCHITECTUS] fetchJson error for ${url}:`, err);
     return null;
   }
 }
@@ -111,9 +115,13 @@ async function fetchText(url: string, timeoutMs = 5000): Promise<string | null> 
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.warn(`[ARCHITECTUS] fetchText failed: ${response.status} ${response.statusText} for ${url}`);
+      return null;
+    }
     return await response.text();
-  } catch {
+  } catch (err) {
+    console.warn(`[ARCHITECTUS] fetchText error for ${url}:`, err);
     return null;
   }
 }
@@ -216,6 +224,19 @@ export async function loadGeneratedAssets(
   }
 
   console.log('[ARCHITECTUS] Loaded asset manifest v' + manifest.version);
+
+  // Health summary: surface phantom references early
+  const shaderCount = Object.keys(manifest.shaders).length;
+  const paletteCount = Object.keys(manifest.palettes).length;
+  const meshCount = manifest.meshes ? Object.keys(manifest.meshes).length : 0;
+  console.log(
+    `[ARCHITECTUS] Manifest health: ${shaderCount} shaders, ${paletteCount} palettes, ${meshCount} meshes`,
+  );
+  if (meshCount > 0) {
+    console.warn(
+      `[ARCHITECTUS] Manifest references ${meshCount} mesh files — verify they exist on disk`,
+    );
+  }
 
   // 2. Load palettes (global + per-language) in parallel.
   const paletteEntries = Object.entries(manifest.palettes);

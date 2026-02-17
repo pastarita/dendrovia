@@ -73,7 +73,27 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   },
 };
 
+/** Ordered tiers for adaptive stepping */
+const TIER_ORDER: QualityTier[] = ['potato', 'low', 'medium', 'high', 'ultra'];
+
 export type CameraMode = 'falcon' | 'player';
+
+/**
+ * Adaptive quality tuning config (D3).
+ * Hysteresis prevents oscillation between tiers.
+ */
+const ADAPTIVE_CONFIG = {
+  /** FPS below this for downgrade threshold triggers tier decrease */
+  downgradeFps: 45,
+  /** FPS above this for upgrade threshold triggers tier increase */
+  upgradeFps: 55,
+  /** Consecutive low samples needed before downgrade */
+  downgradeSamples: 3,
+  /** Consecutive high samples needed before upgrade */
+  upgradeSamples: 5,
+  /** Ring buffer size for FPS history */
+  historySize: 10,
+} as const;
 
 interface RendererState {
   // Camera
@@ -86,6 +106,18 @@ interface RendererState {
   qualityTier: QualityTier;
   quality: QualitySettings;
   gpuBackend: 'webgpu' | 'webgl2' | null;
+  /** Whether auto-tuning is enabled (can be locked by user) */
+  autoQuality: boolean;
+  /** Maximum tier the auto-tuner can reach (set at startup from GPU detection) */
+  maxAutoTier: QualityTier;
+
+  // Adaptive quality (D3)
+  /** Ring buffer of recent FPS samples */
+  fpsHistory: number[];
+  /** Count of consecutive samples below downgrade threshold */
+  consecutiveLow: number;
+  /** Count of consecutive samples above upgrade threshold */
+  consecutiveHigh: number;
 
   // UI coordination
   isUiHovered: boolean;
@@ -122,10 +154,14 @@ interface RendererState {
   setGeneratedAssets: (assets: GeneratedAssets) => void;
   setUiHovered: (hovered: boolean) => void;
   toggleSdfBackdrop: () => void;
+  /** D3: Evaluate FPS history and shift tier if thresholds met */
+  autoTuneQuality: () => void;
+  /** Lock quality tier (disable auto-tuning) */
+  lockQuality: (tier: QualityTier) => void;
 }
 
 export const useRendererStore = create<RendererState>()(
-  subscribeWithSelector((set) => ({
+  subscribeWithSelector((set, get) => ({
     // Camera defaults
     cameraMode: 'falcon',
     playerPosition: [0, 5, -10],
@@ -136,6 +172,13 @@ export const useRendererStore = create<RendererState>()(
     qualityTier: 'high',
     quality: QUALITY_PRESETS.high,
     gpuBackend: null,
+    autoQuality: true,
+    maxAutoTier: 'ultra',
+
+    // Adaptive quality (D3)
+    fpsHistory: [],
+    consecutiveLow: 0,
+    consecutiveHigh: 0,
 
     // UI coordination
     isUiHovered: false,
@@ -169,7 +212,11 @@ export const useRendererStore = create<RendererState>()(
       set({ playerBranchId: branchId }),
 
     setQualityTier: (tier) =>
-      set({ qualityTier: tier, quality: QUALITY_PRESETS[tier] }),
+      set({
+        qualityTier: tier,
+        quality: QUALITY_PRESETS[tier],
+        maxAutoTier: tier, // Initial detection sets the ceiling
+      }),
 
     setGpuBackend: (backend) =>
       set({ gpuBackend: backend }),
@@ -186,8 +233,15 @@ export const useRendererStore = create<RendererState>()(
     setLoading: (loading, progress) =>
       set({ loading, loadingProgress: progress ?? (loading ? 0 : 100) }),
 
-    updatePerformance: (fps, drawCalls, triangles) =>
-      set({ fps, drawCalls, triangles }),
+    updatePerformance: (fps, drawCalls, triangles) => {
+      const state = get();
+      // Append to FPS history ring buffer
+      const history = [...state.fpsHistory, fps];
+      if (history.length > ADAPTIVE_CONFIG.historySize) {
+        history.shift();
+      }
+      set({ fps, drawCalls, triangles, fpsHistory: history });
+    },
 
     setGeneratedAssets: (assets) =>
       set({ generatedAssets: assets }),
@@ -197,6 +251,58 @@ export const useRendererStore = create<RendererState>()(
 
     toggleSdfBackdrop: () =>
       set((state) => ({ sdfBackdrop: !state.sdfBackdrop })),
+
+    autoTuneQuality: () => {
+      const state = get();
+      if (!state.autoQuality) return;
+      if (state.fpsHistory.length < 3) return; // Need minimum samples
+
+      const currentFps = state.fps;
+      const currentIdx = TIER_ORDER.indexOf(state.qualityTier);
+      const maxIdx = TIER_ORDER.indexOf(state.maxAutoTier);
+
+      if (currentFps < ADAPTIVE_CONFIG.downgradeFps) {
+        const newLow = state.consecutiveLow + 1;
+        if (newLow >= ADAPTIVE_CONFIG.downgradeSamples && currentIdx > 0) {
+          // Downgrade
+          const newTier = TIER_ORDER[currentIdx - 1]!;
+          set({
+            qualityTier: newTier,
+            quality: QUALITY_PRESETS[newTier],
+            consecutiveLow: 0,
+            consecutiveHigh: 0,
+          });
+        } else {
+          set({ consecutiveLow: newLow, consecutiveHigh: 0 });
+        }
+      } else if (currentFps > ADAPTIVE_CONFIG.upgradeFps) {
+        const newHigh = state.consecutiveHigh + 1;
+        if (newHigh >= ADAPTIVE_CONFIG.upgradeSamples && currentIdx < maxIdx) {
+          // Upgrade
+          const newTier = TIER_ORDER[currentIdx + 1]!;
+          set({
+            qualityTier: newTier,
+            quality: QUALITY_PRESETS[newTier],
+            consecutiveLow: 0,
+            consecutiveHigh: 0,
+          });
+        } else {
+          set({ consecutiveHigh: newHigh, consecutiveLow: 0 });
+        }
+      } else {
+        // In the sweet spot — reset counters
+        set({ consecutiveLow: 0, consecutiveHigh: 0 });
+      }
+    },
+
+    lockQuality: (tier) =>
+      set({
+        qualityTier: tier,
+        quality: QUALITY_PRESETS[tier],
+        autoQuality: false,
+        consecutiveLow: 0,
+        consecutiveHigh: 0,
+      }),
   }))
 );
 

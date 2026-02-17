@@ -71,8 +71,11 @@ function WithoutBloom() {
 export function PostProcessing() {
   const postProcessing = useRendererStore((s) => s.quality.postProcessing);
   const bloom = useRendererStore((s) => s.quality.bloom);
+  const gpuBackend = useRendererStore((s) => s.gpuBackend);
 
-  if (!postProcessing) return null;
+  // D2: pmndrs/postprocessing is GLSL-only — skip on WebGPU.
+  // TSL-based post-processing deferred to D9.
+  if (!postProcessing || gpuBackend === 'webgpu') return null;
 
   return bloom ? <WithBloom /> : <WithoutBloom />;
 }

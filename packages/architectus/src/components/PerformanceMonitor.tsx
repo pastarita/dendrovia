@@ -6,6 +6,9 @@ import { useRendererStore } from '../store/useRendererStore';
  * PERFORMANCE MONITOR
  *
  * Samples FPS and renderer stats every 30 frames, updates the store.
+ * After each sample, triggers adaptive quality tuning (D3) which
+ * shifts quality tier up/down based on FPS history with hysteresis.
+ *
  * Uses getState() for writes to avoid re-render churn.
  */
 
@@ -25,11 +28,16 @@ export function PerformanceMonitor() {
     const fps = Math.round((frameCount.current / elapsed) * 1000);
 
     const info = gl.info;
-    useRendererStore.getState().updatePerformance(
+    const store = useRendererStore.getState();
+
+    store.updatePerformance(
       fps,
       info.render.calls,
       info.render.triangles,
     );
+
+    // D3: Adaptive quality tuning after each FPS sample
+    store.autoTuneQuality();
 
     frameCount.current = 0;
     lastTime.current = now;

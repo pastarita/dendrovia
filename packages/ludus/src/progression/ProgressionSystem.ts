@@ -11,6 +11,7 @@ import type {
   Character,
   Quest,
   RngState,
+  InternalCombatEvent,
 } from '@dendrovia/shared';
 import { gainExperience, type LevelUpResult } from '../character/CharacterSystem';
 import { resolveLoot } from '../inventory/InventorySystem';
@@ -212,32 +213,53 @@ export function updateBattleStatistics(
   stats: BattleStatistics,
   state: BattleState,
   rewards: BattleRewards | null,
+  accumulatedEvents?: InternalCombatEvent[],
 ): BattleStatistics {
   const isVictory = state.phase.type === 'VICTORY';
   const turns = state.turn;
 
-  // Parse log for damage/heal/spell counts
   let damageDealt = 0;
   let damageReceived = 0;
   let healing = 0;
   let spells = 0;
   let crits = 0;
 
-  for (const entry of state.log) {
-    if (entry.actor === 'player') {
-      // Player actions
-      const dmgMatch = entry.result.match(/(\d+) damage/);
-      if (dmgMatch) damageDealt += parseInt(dmgMatch[1], 10);
+  if (accumulatedEvents && accumulatedEvents.length > 0) {
+    // Structured path: extract stats directly from combat events
+    const playerId = state.player.id;
+    for (const evt of accumulatedEvents) {
+      if (evt.type === 'DAMAGE') {
+        if (evt.attackerId === playerId) {
+          damageDealt += evt.damage;
+          if (evt.isCritical) crits++;
+        } else if (evt.targetId === playerId) {
+          damageReceived += evt.damage;
+        }
+      } else if (evt.type === 'SPELL') {
+        if (evt.casterId === playerId) {
+          spells++;
+          if (evt.effectType === 'heal' || evt.effectType === 'revive') {
+            healing += evt.value;
+          }
+        }
+      }
+    }
+  } else {
+    // Fallback: parse log strings (backward compat for test code)
+    for (const entry of state.log) {
+      if (entry.actor === 'player') {
+        const dmgMatch = entry.result.match(/(\d+) damage/);
+        if (dmgMatch) damageDealt += parseInt(dmgMatch[1], 10);
 
-      const healMatch = entry.result.match(/healing for (\d+)/i) || entry.result.match(/restoring (\d+)/i);
-      if (healMatch) healing += parseInt(healMatch[1], 10);
+        const healMatch = entry.result.match(/healing for (\d+)/i) || entry.result.match(/restoring (\d+)/i);
+        if (healMatch) healing += parseInt(healMatch[1], 10);
 
-      if (entry.result.includes('casts')) spells++;
-      if (entry.result.includes('CRITICAL')) crits++;
-    } else {
-      // Enemy actions
-      const dmgMatch = entry.result.match(/(\d+) damage/);
-      if (dmgMatch) damageReceived += parseInt(dmgMatch[1], 10);
+        if (entry.result.includes('casts')) spells++;
+        if (entry.result.includes('CRITICAL')) crits++;
+      } else {
+        const dmgMatch = entry.result.match(/(\d+) damage/);
+        if (dmgMatch) damageReceived += parseInt(dmgMatch[1], 10);
+      }
     }
   }
 

@@ -1,26 +1,24 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef } from 'react';
-import type { Character, Monster, BattleState, CharacterClass, BugType } from '@dendrovia/shared';
+import type { CharacterClass, BugType } from '@dendrovia/shared';
 import {
   createCharacter,
   computeStatsAtLevel,
   createMonster,
   createRngState,
-  initBattle,
-  executeTurn,
   getAvailableActions,
-  getSpell,
 } from '@dendrovia/ludus';
-import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { CombatStartedEvent, CombatEndedEvent, HealthChangedEvent, ManaChangedEvent } from '@dendrovia/shared';
 import PlayerCard from './components/PlayerCard';
 import EnemyCard from './components/EnemyCard';
 import ActionPanel from './components/ActionPanel';
 import BattleLog from './components/BattleLog';
+import VictoryOverlay from './components/VictoryOverlay';
 import MockEventPanel from './components/MockEventPanel';
 import { OrnateFrame, ProgressBar, StatLabel } from '@dendrovia/oculus';
 import { useGamePersistence } from './hooks/useGamePersistence';
+import { useGameSession } from './hooks/useGameSession';
+import { useProgressionEvents } from './hooks/useProgressionEvents';
 
 const CLASS_OPTIONS: { value: CharacterClass; label: string }[] = [
   { value: 'tank', label: 'Tank (Infrastructure)' },
@@ -58,8 +56,26 @@ export default function GymClient(): React.JSX.Element {
   const [severity, setSeverity] = useState<1 | 2 | 3 | 4 | 5>(2);
   const [seed, setSeed] = useState(42);
 
-  // Battle state
-  const [battleState, setBattleState] = useState<BattleState | null>(null);
+  // Build character for session (memoized by identity fields)
+  const initialCharacter = useMemo(
+    () => createCharacter(charClass, charName, charLevel),
+    [charClass, charName, charLevel],
+  );
+
+  // Session-based game loop
+  const {
+    character,
+    battleState,
+    terminalBattle,
+    inventoryItems,
+    startNewBattle,
+    doAction,
+    resetSession,
+    clearTerminal,
+  } = useGameSession(initialCharacter);
+
+  // Progression events (XP, level-up, loot)
+  const { summary: progression, clearSummary: clearProgression } = useProgressionEvents();
 
   // Persistence
   const { hydrated, savedCharacter, saveGame, loadCharacter, exportJSON, importJSON } = useGamePersistence();
@@ -78,69 +94,30 @@ export default function GymClient(): React.JSX.Element {
   }, [bugType, severity, seed]);
 
   const startBattle = useCallback(() => {
-    const player = createCharacter(charClass, charName, charLevel);
     const rng = createRngState(seed);
     const [monster] = createMonster(bugType, severity, 0, rng);
-    const initial = initBattle(player, [monster], seed);
-    setBattleState(initial);
+    clearProgression();
+    startNewBattle([monster], seed);
+  }, [bugType, severity, seed, startNewBattle, clearProgression]);
 
-    // Emit combat started event
-    const bus = getEventBus();
-    bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
-      monsterId: monster.id,
-      monsterName: monster.name,
-      monsterType: monster.type,
-      severity: monster.severity,
-    });
-  }, [charClass, charName, charLevel, bugType, severity, seed]);
+  const handleNewBattle = useCallback(() => {
+    clearTerminal();
+    clearProgression();
+    resetSession();
+  }, [clearTerminal, clearProgression, resetSession]);
 
-  const doAction = useCallback((action: import('@dendrovia/shared').Action) => {
-    if (!battleState) return;
-
-    let newState = executeTurn(battleState, action);
-
-    // Emit health/mana changed events
-    const bus = getEventBus();
-    if (newState.player.stats.health !== battleState.player.stats.health) {
-      bus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
-        entityId: newState.player.id,
-        current: newState.player.stats.health,
-        max: newState.player.stats.maxHealth,
-        delta: newState.player.stats.health - battleState.player.stats.health,
-      });
-    }
-    if (newState.player.stats.mana !== battleState.player.stats.mana) {
-      bus.emit<ManaChangedEvent>(GameEvents.MANA_CHANGED, {
-        entityId: newState.player.id,
-        current: newState.player.stats.mana,
-        max: newState.player.stats.maxMana,
-        delta: newState.player.stats.mana - battleState.player.stats.mana,
-      });
-    }
-
-    // If terminal, emit combat ended
-    if (newState.phase.type === 'VICTORY' || newState.phase.type === 'DEFEAT') {
-      bus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, {
-        outcome: newState.phase.type === 'VICTORY' ? 'victory' : 'defeat',
-        turns: newState.turn,
-        xpGained: newState.phase.type === 'VICTORY' ? newState.phase.xpGained : undefined,
-      });
-    }
-
-    setBattleState(newState);
-  }, [battleState]);
-
-  const resetBattle = useCallback(() => {
-    setBattleState(null);
-  }, []);
+  const handleRematch = useCallback(() => {
+    clearProgression();
+    startBattle();
+  }, [clearProgression, startBattle]);
 
   const handleSave = useCallback(async () => {
-    if (!battleState) return;
+    if (!character) return;
     setSaveStatus('Saving...');
-    await saveGame(battleState.player);
+    await saveGame(character);
     setSaveStatus('Saved');
     setTimeout(() => setSaveStatus(null), 2000);
-  }, [battleState, saveGame]);
+  }, [character, saveGame]);
 
   const handleLoad = useCallback(() => {
     const char = loadCharacter();
@@ -169,9 +146,11 @@ export default function GymClient(): React.JSX.Element {
     await importJSON(json);
   }, [importJSON]);
 
-  const isSetup = battleState === null;
-  const isTerminal = battleState?.phase.type === 'VICTORY' || battleState?.phase.type === 'DEFEAT';
-  const actions = battleState ? getAvailableActions(battleState) : null;
+  // Use terminalBattle for overlay, active battleState for combat
+  const activeBattle = terminalBattle ?? battleState;
+  const isSetup = activeBattle === null;
+  const isTerminal = terminalBattle !== null;
+  const actions = battleState && !isTerminal ? getAvailableActions(battleState) : null;
 
   return (
     <div>
@@ -294,10 +273,10 @@ export default function GymClient(): React.JSX.Element {
           {/* Turn indicator */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: '0.85rem', opacity: 0.5 }}>
-              Turn {battleState.turn} — {battleState.phase.type.replace('_', ' ')}
+              Turn {activeBattle.turn} — {activeBattle.phase.type.replace('_', ' ')}
             </span>
             <button
-              onClick={resetBattle}
+              onClick={handleNewBattle}
               style={{
                 padding: '0.35rem 0.75rem',
                 borderRadius: '4px',
@@ -314,78 +293,20 @@ export default function GymClient(): React.JSX.Element {
 
           {/* Arena */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <PlayerCard player={battleState.player} />
-            <EnemyCard enemy={battleState.enemies[0]!} />
+            <PlayerCard player={activeBattle.player} />
+            <EnemyCard enemy={activeBattle.enemies[0]!} />
           </div>
 
           {/* Result Overlay */}
           {isTerminal && (
-            <OrnateFrame
-              pillar="ludus"
-              variant="modal"
-              header={
-                <span style={{ color: battleState.phase.type === 'VICTORY' ? '#22C55E' : '#EF4444' }}>
-                  {battleState.phase.type === 'VICTORY' ? 'VICTORY' : 'DEFEAT'}
-                </span>
-              }
-            >
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '0.85rem', opacity: 0.6 }}>
-                  Completed in {battleState.turn} turns
-                  {battleState.phase.type === 'VICTORY' && battleState.phase.xpGained != null && (
-                    <span> — {battleState.phase.xpGained} XP earned</span>
-                  )}
-                </div>
-                <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <button
-                    onClick={resetBattle}
-                    style={{
-                      padding: '0.5rem 1.25rem',
-                      borderRadius: '6px',
-                      border: '1px solid #333',
-                      background: '#1a1a1a',
-                      color: '#ededed',
-                      cursor: 'pointer',
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    New Battle
-                  </button>
-                  <button
-                    onClick={startBattle}
-                    style={{
-                      padding: '0.5rem 1.25rem',
-                      borderRadius: '6px',
-                      border: '1px solid var(--pillar-accent)',
-                      background: 'transparent',
-                      color: 'var(--pillar-accent)',
-                      cursor: 'pointer',
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    Rematch (same seed)
-                  </button>
-                  {battleState.phase.type === 'VICTORY' && (
-                    <button
-                      onClick={handleSave}
-                      disabled={saveStatus === 'Saving...'}
-                      style={{
-                        padding: '0.5rem 1.25rem',
-                        borderRadius: '6px',
-                        border: '1px solid #22C55E',
-                        background: 'transparent',
-                        color: '#22C55E',
-                        cursor: saveStatus === 'Saving...' ? 'wait' : 'pointer',
-                        fontSize: '0.85rem',
-                        opacity: saveStatus === 'Saving...' ? 0.5 : 1,
-                      }}
-                    >
-                      {saveStatus ?? 'Save Character'}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </OrnateFrame>
+            <VictoryOverlay
+              battleState={terminalBattle}
+              progression={progression}
+              onNewBattle={handleNewBattle}
+              onRematch={handleRematch}
+              onSave={handleSave}
+              saveStatus={saveStatus}
+            />
           )}
 
           {/* Actions */}
@@ -395,12 +316,14 @@ export default function GymClient(): React.JSX.Element {
               onAttack={() => doAction({ type: 'ATTACK', targetIndex: 0 })}
               onSpell={(spellId) => doAction({ type: 'CAST_SPELL', spellId, targetIndex: 0 })}
               onDefend={() => doAction({ type: 'DEFEND' })}
-              disabled={battleState.phase.type !== 'PLAYER_TURN'}
+              onItem={(itemId) => doAction({ type: 'USE_ITEM', itemId })}
+              inventoryItems={inventoryItems}
+              disabled={battleState?.phase.type !== 'PLAYER_TURN'}
             />
           )}
 
           {/* Battle Log */}
-          <BattleLog log={battleState.log} />
+          <BattleLog log={activeBattle.log} />
         </div>
       )}
 

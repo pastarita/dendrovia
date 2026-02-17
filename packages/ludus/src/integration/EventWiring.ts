@@ -6,7 +6,7 @@
  *
  * Listens:
  *   ARCHITECTUS → LUDUS: PLAYER_MOVED, NODE_CLICKED, BRANCH_ENTERED
- *   OCULUS → LUDUS:      SPELL_CAST, ITEM_USED
+ *   OCULUS → LUDUS:      SPELL_CAST, ITEM_USED, COMBAT_ACTION
  *
  * Emits:
  *   LUDUS → OCULUS:      HEALTH_CHANGED, MANA_CHANGED, COMBAT_STARTED/ENDED, QUEST_UPDATED
@@ -41,6 +41,7 @@ import {
   type ExperienceGainedEvent,
   type LevelUpEvent,
   type ItemUsedEvent,
+  type CombatActionEvent,
   type CombatTurnEvent,
   type DamageDealtEvent,
   type SpellResolvedEvent,
@@ -96,6 +97,8 @@ export interface GameSession {
   hotspots: Hotspot[];
   /** Contributor profiles from CHRONOS — NPC data for encounters */
   contributors: ContributorProfile[];
+  /** Accumulated combat events for the current battle (for structured stats) */
+  currentBattleCombatEvents: InternalCombatEvent[];
 }
 
 export function createGameSession(
@@ -119,6 +122,7 @@ export function createGameSession(
     commits,
     hotspots,
     contributors,
+    currentBattleCombatEvents: [],
   };
 }
 
@@ -152,6 +156,18 @@ export function wireGameEvents(session: GameSession): () => void {
 
   unsubs.push(bus.on<ItemUsedEvent>(GameEvents.ITEM_USED, (event) => {
     handleItemUsed(session, event, bus);
+  }));
+
+  // ── ARCHITECTUS → LUDUS: Player enters a branch ──
+
+  unsubs.push(bus.on<BranchEnteredEvent>(GameEvents.BRANCH_ENTERED, (event) => {
+    handleBranchEntered(session, event, bus);
+  }));
+
+  // ── Any pillar → LUDUS: Generic combat action ──
+
+  unsubs.push(bus.on<CombatActionEvent>(GameEvents.COMBAT_ACTION, (event) => {
+    dispatchCombatAction(session, event.action);
   }));
 
   return () => {
@@ -194,6 +210,7 @@ function handleNodeClicked(
     const state = session.store.getState();
     const battleState = initBattle(state.character, [result.encounter.monster], session.rng.a);
     session.store.setState({ battleState });
+    session.currentBattleCombatEvents = [];
 
     bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
       monsterId: result.encounter.monster.id,
@@ -218,6 +235,53 @@ function handlePlayerMoved(
   };
 }
 
+function handleBranchEntered(
+  session: GameSession,
+  event: BranchEnteredEvent,
+  bus: EventBus,
+): void {
+  // Don't trigger encounters during active combat
+  const state = session.store.getState();
+  if (state.battleState) return;
+
+  const file = session.files.find(f => f.path === event.filePath);
+  if (!file) return;
+
+  // Check for encounter
+  const result = checkEncounter(
+    file,
+    session.commits,
+    session.hotspots,
+    session.encounterState,
+    session.rng,
+    session.encounterConfig,
+  );
+
+  session.encounterState = result.state;
+  session.rng = result.rng;
+
+  if (result.encounter) {
+    bus.emit<EncounterTriggeredEvent>(GameEvents.ENCOUNTER_TRIGGERED, {
+      type: result.encounter.type,
+      severity: result.encounter.monster.severity,
+      position: [0, 0, 0],
+    });
+
+    const battleState = initBattle(state.character, [result.encounter.monster], session.rng.a);
+    session.store.setState({ battleState });
+    session.currentBattleCombatEvents = [];
+
+    bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
+      monsterId: result.encounter.monster.id,
+      monsterName: result.encounter.monster.name,
+      monsterType: result.encounter.monster.type,
+      severity: result.encounter.monster.severity,
+      monsterHealth: result.encounter.monster.stats.health,
+      monsterMaxHealth: result.encounter.monster.stats.maxHealth,
+    });
+  }
+}
+
 function handleSpellCast(
   session: GameSession,
   event: SpellCastEvent,
@@ -236,7 +300,7 @@ function handleSpellCast(
   session.store.setState({ battleState: newBattle });
 
   // Emit granular combat events
-  emitCombatEvents(newBattle, bus);
+  emitCombatEvents(newBattle, bus, session);
 
   // Check for battle end
   checkBattleEnd(session, newBattle, bus);
@@ -255,7 +319,7 @@ function handleItemUsed(
     const action: Action = { type: 'USE_ITEM', itemId: event.itemId };
     const newBattle = executeTurn(state.battleState, action);
     session.store.setState({ battleState: newBattle });
-    emitCombatEvents(newBattle, bus);
+    emitCombatEvents(newBattle, bus, session);
     session.inventory = removeItem(session.inventory, event.itemId);
     checkBattleEnd(session, newBattle, bus);
   } else {
@@ -270,7 +334,11 @@ function handleItemUsed(
 
 // ─── Emit Granular Combat Events ────────────────────────────
 
-function emitCombatEvents(battleState: BattleState, bus: EventBus): void {
+function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: GameSession): void {
+  // Accumulate into session for structured stats
+  if (session) {
+    session.currentBattleCombatEvents.push(...battleState.combatEvents);
+  }
   for (const event of battleState.combatEvents) {
     switch (event.type) {
       case 'TURN_START':
@@ -356,11 +424,12 @@ function checkBattleEnd(
         battleState: null,
       });
 
-      // Update stats
+      // Update stats (structured path)
       session.battleStats = updateBattleStatistics(
         session.battleStats,
         battleState,
         rewardResult.rewards,
+        session.currentBattleCombatEvents,
       );
 
       // Mark encounter defeated
@@ -404,7 +473,7 @@ function checkBattleEnd(
   } else {
     // Defeat — clear battle, character keeps current state
     session.store.setState({ battleState: null });
-    session.battleStats = updateBattleStatistics(session.battleStats, battleState, null);
+    session.battleStats = updateBattleStatistics(session.battleStats, battleState, null, session.currentBattleCombatEvents);
   }
 
   bus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, {
@@ -428,7 +497,7 @@ export function dispatchCombatAction(
   session.store.setState({ battleState: newBattle });
 
   const bus = getEventBus();
-  emitCombatEvents(newBattle, bus);
+  emitCombatEvents(newBattle, bus, session);
   checkBattleEnd(session, newBattle, bus);
 
   return newBattle;
@@ -444,6 +513,7 @@ export function startBattle(
   const battleSeed = seed ?? session.rng.a;
   const battleState = initBattle(state.character, enemies, battleSeed);
   session.store.setState({ battleState });
+  session.currentBattleCombatEvents = [];
 
   const bus = getEventBus();
   bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {

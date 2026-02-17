@@ -9,7 +9,7 @@
  * defined correctly."
  */
 
-import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets } from '../types/index.js';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action } from '../types/index.js';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
@@ -142,6 +142,7 @@ export const GameEvents = {
   // OCULUS → LUDUS (User actions)
   SPELL_CAST: 'spell:cast',
   ITEM_USED: 'item:used',
+  COMBAT_ACTION: 'combat:action',
 
   // CHRONOS → IMAGINARIUM (Build-time events)
   PARSE_COMPLETE: 'parse:complete',
@@ -286,6 +287,10 @@ export interface ManaChangedEvent {
 export interface ItemUsedEvent {
   itemId: string;
   characterId?: string;
+}
+
+export interface CombatActionEvent {
+  action: Action;
 }
 
 export interface CollisionDetectedEvent {

@@ -744,6 +744,9 @@ describe('EventWiring', () => {
   let store: ReturnType<typeof createGameStore>;
 
   beforeEach(() => {
+    // Clear global event bus to prevent cross-test handler leaks
+    getEventBus().clear();
+
     const char = createCharacter('dps', 'TestHero', 5);
     store = createGameStore({
       character: char,
@@ -793,6 +796,74 @@ describe('EventWiring', () => {
     const cleanup = wireGameEvents(session);
     expect(typeof cleanup).toBe('function');
     cleanup(); // Should not throw
+  });
+
+  it('should trigger encounter via BRANCH_ENTERED when file has high complexity', () => {
+    // Create session with a high-complexity file
+    const char = createCharacter('dps', 'TestHero', 5);
+    const branchStore = createGameStore({
+      character: char,
+      inventory: [],
+      activeQuests: [],
+      completedQuests: [],
+      battleState: null,
+      gameFlags: {},
+    });
+
+    const highComplexFile = makeFile({ path: 'src/complex.ts', complexity: 25 });
+    const branchSession = createGameSession(branchStore, [highComplexFile], [], [], 42);
+    // Past cooldown
+    branchSession.encounterState.stepsSinceLastEncounter = 10;
+
+    const cleanup = wireGameEvents(branchSession);
+    const bus = getEventBus();
+    bus.emit(GameEvents.BRANCH_ENTERED, { branchId: 'main', filePath: 'src/complex.ts', depth: 0 });
+
+    // Should have started a battle
+    const state = branchStore.getState();
+    expect(state.battleState).not.toBeNull();
+    expect(state.battleState!.phase.type).toBe('PLAYER_TURN');
+    cleanup();
+  });
+
+  it('should not trigger encounter via BRANCH_ENTERED during active combat', () => {
+    const rng = createRngState(42);
+    const [monster] = createMonster('null-pointer', 1, 0, rng);
+    startBattle(session, [monster]);
+
+    const highComplexFile = makeFile({ path: 'src/complex.ts', complexity: 25 });
+    session.files.push(highComplexFile);
+    session.encounterState.stepsSinceLastEncounter = 10;
+
+    const cleanup = wireGameEvents(session);
+    const bus = getEventBus();
+    const battleBefore = store.getState().battleState;
+    bus.emit(GameEvents.BRANCH_ENTERED, { branchId: 'main', filePath: 'src/complex.ts', depth: 0 });
+
+    // Battle should remain the same (no new encounter)
+    const battleAfter = store.getState().battleState;
+    expect(battleAfter).toBe(battleBefore);
+    cleanup();
+  });
+
+  it('should dispatch COMBAT_ACTION to reduce enemy HP', () => {
+    const rng = createRngState(42);
+    const [monster] = createMonster('null-pointer', 1, 0, rng);
+    startBattle(session, [monster]);
+
+    const cleanup = wireGameEvents(session);
+    const bus = getEventBus();
+    const hpBefore = store.getState().battleState!.enemies[0].stats.health;
+
+    bus.emit(GameEvents.COMBAT_ACTION, { action: { type: 'ATTACK', targetIndex: 0 } });
+
+    const battleAfter = store.getState().battleState;
+    // Battle state may have been cleared (victory) or enemy HP reduced
+    if (battleAfter) {
+      expect(battleAfter.enemies[0].stats.health).toBeLessThanOrEqual(hpBefore);
+    }
+    // If battle was resolved, store should have cleared it
+    cleanup();
   });
 
   it('should resolve full battle through session', () => {

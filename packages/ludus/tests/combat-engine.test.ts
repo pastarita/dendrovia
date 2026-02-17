@@ -753,6 +753,7 @@ describe('EnemyAI', () => {
       action: { type: 'ENEMY_ACT' as const, enemyIndex: 0 },
       rng,
       log: 'test',
+      behavior: 'spell' as const,
     };
     const spellId = resolveEnemySpell(monster, decision);
     expect(spellId).toBe('spell-null-deref'); // first spell by default
@@ -767,6 +768,7 @@ describe('EnemyAI', () => {
       action: { type: 'ENEMY_ACT' as const, enemyIndex: 0 },
       rng,
       log: 'test',
+      behavior: 'spell' as const,
     };
     const spellId = resolveEnemySpell(monster, decision);
     expect(spellId).toBe('spell-deadlock-boss'); // last = strongest

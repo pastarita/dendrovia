@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { NodeClickedEvent, PlayerMovedEvent } from '@dendrovia/shared';
+import type { NodeClickedEvent, PlayerMovedEvent, BranchEnteredEvent } from '@dendrovia/shared';
 
 export default function MockEventPanel(): React.JSX.Element {
   const [collapsed, setCollapsed] = useState(true);
@@ -53,6 +53,16 @@ export default function MockEventPanel(): React.JSX.Element {
     bus.emit(GameEvents.PLAYER_MOVED, payload);
   };
 
+  const emitBranchEntered = () => {
+    const bus = getEventBus();
+    const payload: BranchEnteredEvent = {
+      branchId: 'main',
+      filePath: 'src/index.ts',
+      depth: 1,
+    };
+    bus.emit(GameEvents.BRANCH_ENTERED, payload);
+  };
+
   const btnStyle: React.CSSProperties = {
     padding: '0.35rem 0.6rem',
     borderRadius: '4px',
@@ -92,6 +102,9 @@ export default function MockEventPanel(): React.JSX.Element {
             </button>
             <button style={btnStyle} onClick={emitPlayerMoved}>
               Emit PLAYER_MOVED
+            </button>
+            <button style={btnStyle} onClick={emitBranchEntered}>
+              Emit BRANCH_ENTERED
             </button>
             <button style={{ ...btnStyle, opacity: 0.5 }} onClick={() => setLog([])}>
               Clear

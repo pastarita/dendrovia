@@ -85,6 +85,57 @@ Every bypass MUST be documented in the commit message.
 
 ---
 
+## Stash Anti-Pattern
+
+### Why Stashes Are Prohibited
+
+Stashes are invisible context lost between agentic sessions:
+- They have no branch association visible in `git branch` or `git log`
+- They don't appear in GitHub, PR diffs, or CI pipelines
+- They silently accumulate and are easily forgotten across sessions
+- Large stashes (100+ files) represent significant work at risk of loss
+
+### Tier 1 Block Coverage
+
+The Tier 1 policy engine blocks **stash creation** commands across all 4 modes:
+- `git stash` (bare command)
+- `git stash push`, `git stash save`, `git stash create`
+- `git stash --keep-index`, `git stash --patch`, and other creation flags
+
+The following **stash inspection and recovery** commands remain allowed:
+- `git stash list` — view existing stashes (read-only)
+- `git stash show` — inspect stash contents
+- `git stash pop`, `git stash apply` — recover stash contents
+- `git stash drop` — clean up after recovery
+- `git stash branch` — pop stash to a new branch (preferred recovery)
+
+### Recovery Workflow
+
+Instead of stashing, use branch-based workflows:
+
+```bash
+# Instead of: git stash && git checkout other-branch
+# Do:
+git checkout -b wip/current-work
+git add -A && git commit -m 'wip: save in progress work'
+git checkout other-branch
+
+# To recover existing stashes:
+git stash branch feat/recovered-work    # Pop to a new branch (preferred)
+# Or:
+git stash show -p                       # Review contents first
+git stash apply                         # Apply without dropping
+git add -A && git commit -m 'feat: recover stashed work'
+git stash drop                          # Clean up
+```
+
+### Cross-References
+
+- **Recon skill** (`.claude/skills/recon/cross-checkout-scan/SKILL.md`): Stash archaeology surfaces stash metadata during cross-checkout scans
+- **Pre-commit hook** (`.husky/pre-commit`): Wall 0 warns when stashes are detected and provides recovery guidance
+
+---
+
 ## Files
 
 | File | Purpose |
@@ -102,5 +153,5 @@ Every bypass MUST be documented in the commit message.
 
 ---
 
-_Version: 1.0.0_
-_Created: 2026-02-12_
+_Version: 1.1.0_
+_Updated: 2026-02-16_

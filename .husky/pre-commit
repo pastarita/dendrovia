@@ -81,9 +81,8 @@ if [ $EXPEDITION_MODE -eq 0 ]; then
         echo "  ⚠ WARNING: Committing directly to '$CURRENT_BRANCH'!"
         echo ""
         echo "  Recommended workflow:"
-        echo "    git stash"
         echo "    git checkout -b feat/your-feature-name"
-        echo "    git stash pop"
+        echo "    git add -A && git commit -m 'wip: migrate from main'"
         echo ""
         BRANCH_STATUS=1
     else
@@ -96,12 +95,12 @@ if [ $EXPEDITION_MODE -eq 0 ]; then
         echo "  ⚠ WARNING: $STASH_COUNT stash(es) detected!"
         echo "  Stashes are invisible context lost between agentic sessions."
         echo ""
+        git stash list --format='  %gd: %gs (%cr)' 2>/dev/null | head -5
+        echo ""
         echo "  Recover and segment into meaningful commits:"
         echo "    git stash show -p              # Review stash contents"
-        echo "    git stash apply                # Apply WITHOUT dropping"
-        echo "    git add -p                     # Interactive staging by hunk"
-        echo "    git commit -m 'feat(): ...'    # Commit logical group"
-        echo "    git stash drop                 # Clean up after all committed"
+        echo "    git stash branch new-branch    # Pop to a new branch (preferred)"
+        echo "    git stash drop                 # Clean up after committed"
         echo ""
         STASH_STATUS=1
     else

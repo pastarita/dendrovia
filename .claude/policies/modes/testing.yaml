@@ -25,6 +25,11 @@ blocked:
     reason: "Dendrovia uses bun exclusively"
     source: "CLAUDE.md:Runtime"
 
+  # Stash creation blocked — use branches instead
+  - pattern: "git stash$|git stash (push|save|create|--)"
+    reason: "Stashes are invisible context lost between sessions — commit to a branch instead"
+    source: "CASTLE_WALLS.rules.md:Stash Anti-Pattern"
+
 grants:
   bash:
     # All default grants

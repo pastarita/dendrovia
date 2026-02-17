@@ -1,7 +1,7 @@
 # Cross-Checkout Recon Skill
 
-_Version: 2.2.0_
-_Created: 2026-02-15_
+_Version: 2.3.0_
+_Updated: 2026-02-16_
 
 ## Purpose
 
@@ -21,6 +21,7 @@ Performs cross-checkout git state reconnaissance across all six Dendrovia pillar
 | `--json` | Output structured JSON instead of ASCII dashboard |
 | `--auto-clean` | List stale/orphaned branches with confirmation before deleting |
 | `--checkout={name}` | Scan only the named checkout (e.g., `--checkout=CHRONOS`) |
+| `--stash-deep` | Expand stash entries to show top files, packages, and full message |
 
 ## Pre-Flight: Mandatory Reading
 
@@ -133,6 +134,43 @@ Record for each checkout:
 - `diff_files`: list of changed files vs main
 - `diff_file_count`: number of files changed vs main
 
+### Step 1b: Stash Archaeology
+
+For each checkout with stashes, gather per-stash metadata:
+
+```bash
+cd {checkout_path}
+
+# List all stash entries with metadata
+git stash list --format='%gd|%gs|%ci'
+
+# For each stash entry (stash@{0}, stash@{1}, ...):
+git stash show stash@{N} --stat --format=''
+git stash show stash@{N} --shortstat
+git log -1 --format='%D' $(git rev-parse stash@{N}^)  # source branch
+```
+
+Record per-stash:
+- `ref`: stash ref (e.g., `stash@{0}`)
+- `message`: stash message (e.g., "WIP on feat/quest-wiring: abc1234")
+- `source_branch`: branch the stash was created on (parsed from message or parent)
+- `age`: human-readable age
+- `age_iso`: ISO timestamp
+- `file_count`: number of files in stash
+- `insertions`: lines added
+- `deletions`: lines removed
+- `significant_files`: top 5 files by change size (terse: path only)
+- `packages_touched`: list of packages/ and apps/ subdirs affected
+
+#### Stash Classification (4-tier)
+
+| Tier | Condition | Icon |
+|------|-----------|------|
+| minor | file_count < 5 AND insertions < 50 | `~` |
+| notable | file_count 5-20 OR insertions 50-200 | `*` |
+| major | file_count 21-100 OR insertions 201-1000 | `**` |
+| critical | file_count > 100 OR insertions > 1000 | `***` |
+
 ### Step 2: PR Linkage
 
 Run a single GitHub CLI query to fetch all open PRs:
@@ -219,7 +257,8 @@ If `--json` flag is NOT set, render an ASCII dashboard:
 │  Age:     {age}
 │  Behind:  {behind} commits {freshness_note}
 │  Status:  {modified_count} modified, {untracked_count} untracked
-│  Stash:   {stash_count} entries / (empty)
+│  Stash:   {stash_count} entries / (empty)     ← when no stashes
+│  Stash:   {stash_count} entries              ← when stashes present (see Stash Rendering below)
 │  PR:      {pr_info}
 │  Align:   {alignment_icon} {alignment_note}
 │
@@ -289,6 +328,31 @@ When significant untracked files exist:
 │    {file} (editor leftover)
 ```
 
+#### Stash Rendering
+
+**Terse mode (default):** Each stash entry shown on one line with classification, stats, source branch, and age:
+
+```
+│  Stash:   2 entries
+│    stash@{0} *** critical — 551 files +15872/-12177 (feat/quest-wiring) 3d ago
+│    stash@{1} ~ minor — 2 files +8/-3 (main) 1w ago
+```
+
+**Deep mode (`--stash-deep`):** Each stash entry expanded with source, message, packages, and top files:
+
+```
+│  Stash:   stash@{0} *** critical — 551 files +15872/-12177
+│    Source:   feat/quest-wiring (3 days ago)
+│    Message:  WIP on feat/quest-wiring: abc1234 initial layout
+│    Packages: apps/dendrovia-quest, apps/playground-*, packages/ui
+│    Top files:
+│      apps/dendrovia-quest/app/page.tsx (+639)
+│      packages/ui/src/pillar-nav.tsx (+69)
+│      packages/ui/src/domain-nav.tsx (+189)
+│      packages/ui/src/domain-registry.tsx (+145)
+│      apps/playground-architectus/app/layout.tsx (+85)
+```
+
 ### Step 7: JSON Output
 
 When `--json` flag IS set, output the same data as structured JSON:
@@ -306,6 +370,7 @@ When `--json` flag IS set, output the same data as structured JSON:
       "modified_count": 0,
       "untracked_count": 0,
       "stash_count": 0,
+      "stashes": [],
       "pr": null,
       "aligned": true,
       "alignment_note": "on main",
@@ -329,6 +394,24 @@ When `--json` flag IS set, output the same data as structured JSON:
         "pr_documentation": { "count": 5, "score": 3, "label": "strong" },
         "overall": 2.5
       }
+    },
+    "ARCHITECTUS": {
+      "stash_count": 1,
+      "stashes": [
+        {
+          "ref": "stash@{0}",
+          "message": "WIP on feat/quest-wiring: abc1234",
+          "source_branch": "feat/quest-wiring",
+          "age": "3 days ago",
+          "age_iso": "2026-02-13T10:00:00-08:00",
+          "file_count": 551,
+          "insertions": 15872,
+          "deletions": 12177,
+          "classification": "critical",
+          "significant_files": ["apps/dendrovia-quest/app/page.tsx", "packages/ui/src/pillar-nav.tsx", "packages/ui/src/domain-nav.tsx", "packages/ui/src/domain-registry.tsx", "apps/playground-architectus/app/layout.tsx"],
+          "packages_touched": ["apps/dendrovia-quest", "packages/ui"]
+        }
+      ]
     }
   },
   "shared_drift": {
@@ -589,6 +672,9 @@ Generate actionable recommendations based on the gathered data:
 | `behind >= 20` | `{PILLAR} is {n} commits behind — consider rebasing` |
 | `aligned == false` | `{PILLAR} branch may be misaligned with pillar scope` |
 | `stash_count > 0` | `{PILLAR} has {n} stashed changes — review or drop` |
+| Any stash classified `major` or `critical` | `{PILLAR} has a {classification} stash ({file_count} files, {age}) — recover to branch immediately` |
+| Any stash older than 7 days | `{PILLAR} stash@{N} is {age} old — likely orphaned, review and commit or drop` |
+| Stash source_branch matches open PR | `{PILLAR} stash may belong to PR #{n} ({title}) — check for missing work` |
 | `untracked_significant > 0` | `{PILLAR} has {n} significant untracked files — stage or gitignore` |
 | `stale_remotes > 3` | `{n} stale remote branches — consider running with --auto-clean` |
 | `modified_count > 0` and no PR | `{PILLAR} has uncommitted work with no open PR` |
@@ -648,10 +734,25 @@ interface CheckoutStatus {
   modified_count: number;
   untracked_count: number;
   stash_count: number;
+  stashes: StashEntry[];
   pr: { number: number; title: string; url: string } | null;
   aligned: boolean;
   shared_drift: { tree_hash: string; shared_behind_count: number; drift_group: string };
   maturity: { test_coverage: AxisScore; event_completeness: AxisScore; playground_density: AxisScore; pr_documentation: AxisScore; overall: number };
+}
+
+interface StashEntry {
+  ref: string;
+  message: string;
+  source_branch: string;
+  age: string;
+  age_iso: string;
+  file_count: number;
+  insertions: number;
+  deletions: number;
+  classification: 'minor' | 'notable' | 'major' | 'critical';
+  significant_files: string[];
+  packages_touched: string[];
 }
 
 interface AxisScore {
@@ -802,5 +903,5 @@ These events would be added to `GameEvents` in `packages/shared/src/events/Event
 
 ---
 
-_Version: 2.2.0_
-_Created: 2026-02-15_
+_Version: 2.3.0_
+_Updated: 2026-02-16_

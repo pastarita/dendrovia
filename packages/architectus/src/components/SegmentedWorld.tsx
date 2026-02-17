@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
+import * as THREE from 'three';
 import type { ProceduralPalette } from '@dendrovia/shared';
 import { useSegmentStore } from '../store/useSegmentStore';
 import { useRendererStore } from '../store/useRendererStore';
 import { SDFBackdrop } from './SDFBackdrop';
+import { RootPlatform } from './RootPlatform';
 import { SegmentRenderer } from './SegmentRenderer';
 import { SegmentDistanceUpdater } from './SegmentDistanceUpdater';
 import { WorldFog } from './WorldFog';
@@ -28,6 +30,7 @@ interface SegmentedWorldProps {
 
 export function SegmentedWorld({ palette }: SegmentedWorldProps) {
   const segments = useSegmentStore((s) => s.segments);
+  const worldIndex = useSegmentStore((s) => s.worldIndex);
   const generatedAssets = useRendererStore((s) => s.generatedAssets);
   const sdfBackdrop = useRendererStore((s) => s.sdfBackdrop);
 
@@ -41,6 +44,15 @@ export function SegmentedWorld({ palette }: SegmentedWorldProps) {
     return entries.length > 0 ? entries[0] : null;
   }, [generatedAssets?.shaders]);
 
+  // Derive route directions from world index placements
+  const routes = useMemo(() => {
+    if (!worldIndex?.placements) return [];
+    return worldIndex.placements.map((p) => ({
+      direction: new THREE.Vector3(p.centroid[0], 0, p.centroid[2]).normalize(),
+      label: p.label,
+    }));
+  }, [worldIndex]);
+
   // Convert segments map to array for rendering
   const segmentArray = useMemo(
     () => Array.from(segments.values()),
@@ -49,6 +61,9 @@ export function SegmentedWorld({ palette }: SegmentedWorldProps) {
 
   return (
     <group name="segmented-world">
+      {/* Root platform — persistent spawn base at origin (outside segment map) */}
+      <RootPlatform palette={palette} routes={routes} rootName="world" />
+
       {/* Distance tracking + load triggering */}
       <SegmentDistanceUpdater />
 

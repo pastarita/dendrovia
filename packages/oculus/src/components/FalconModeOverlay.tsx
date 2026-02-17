@@ -17,9 +17,6 @@ export function FalconModeOverlay() {
   const visitedNodes = useOculusStore((s) => s.visitedNodes);
   const deepwiki = useOculusStore((s) => s.deepwiki);
 
-  // Only show in falcon mode
-  if (cameraMode !== 'falcon') return null;
-
   const stats = useMemo(() => {
     if (!topology) return null;
 
@@ -41,6 +38,8 @@ export function FalconModeOverlay() {
     return { totalFiles, totalDirs, topHotspots, visited: visitedNodes.length };
   }, [topology, hotspots, visitedNodes.length]);
 
+  // Only show in falcon mode — early return AFTER all hooks
+  if (cameraMode !== 'falcon') return null;
   if (!stats) return null;
 
   return (

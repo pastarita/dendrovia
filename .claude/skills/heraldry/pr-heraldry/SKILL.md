@@ -1,3 +1,9 @@
+---
+name: pr-heraldry
+description: Generate a heraldic Coat of Arms for a PR — magnitude, domain, charges, supporters, motto
+disable-model-invocation: true
+---
+
 # PR Heraldry Skill — Coat of Arms Generation
 
 _Version: 1.0.0_

@@ -1,3 +1,9 @@
+---
+name: recon
+description: Cross-checkout git state recon across all six Dendrovia pillar checkouts
+disable-model-invocation: true
+---
+
 # Cross-Checkout Recon Skill
 
 _Version: 2.3.0_

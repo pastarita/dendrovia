@@ -1,3 +1,9 @@
+---
+name: pr-heterogeneous
+description: Handle PRs spanning 2+ feature spaces — unified description with divided shield
+disable-model-invocation: true
+---
+
 # Heterogeneous PR Skill
 
 _Version: 1.0.0_

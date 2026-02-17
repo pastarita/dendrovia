@@ -1,3 +1,10 @@
+---
+name: land
+description: Land a feature branch — semantic commit segmentation, rebase, PR description, push
+disable-model-invocation: true
+argument-hint: "[branch-name]"
+---
+
 # Skill: Landing Workflow
 
 > Semantic commit segmentation → PR description → rebase → push

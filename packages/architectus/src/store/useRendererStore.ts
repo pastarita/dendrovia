@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { GeneratedAssets } from '../loader/AssetBridge';
+import type { SpatialIndex } from '../systems/SpatialIndex';
 
 /**
  * Quality tiers from T5 research: 5-tier adaptive quality system.
@@ -129,6 +130,12 @@ interface RendererState {
   loading: boolean;
   loadingProgress: number;
 
+  // D8: Encounter feedback
+  /** Node currently under encounter (emissive pulse target) */
+  encounterNodeId: string | null;
+  /** Position of the most recent damage event (for particle burst) */
+  damagePosition: [number, number, number] | null;
+
   // Performance
   fps: number;
   drawCalls: number;
@@ -139,6 +146,9 @@ interface RendererState {
 
   // SDF backdrop toggle
   sdfBackdrop: boolean;
+
+  // D4: Spatial index ref for surface camera queries
+  spatialIndex: SpatialIndex | null;
 
   // Actions
   setCameraMode: (mode: CameraMode) => void;
@@ -154,6 +164,12 @@ interface RendererState {
   setGeneratedAssets: (assets: GeneratedAssets) => void;
   setUiHovered: (hovered: boolean) => void;
   toggleSdfBackdrop: () => void;
+  /** D4: Store spatial index for surface camera access */
+  setSpatialIndex: (index: SpatialIndex | null) => void;
+  /** D8: Set encounter node for emissive pulse */
+  setEncounterNode: (nodeId: string | null) => void;
+  /** D8: Set damage position for particle burst */
+  setDamagePosition: (pos: [number, number, number] | null) => void;
   /** D3: Evaluate FPS history and shift tier if thresholds met */
   autoTuneQuality: () => void;
   /** Lock quality tier (disable auto-tuning) */
@@ -190,6 +206,10 @@ export const useRendererStore = create<RendererState>()(
     loading: true,
     loadingProgress: 0,
 
+    // D8: Encounter feedback
+    encounterNodeId: null,
+    damagePosition: null,
+
     // Performance defaults
     fps: 0,
     drawCalls: 0,
@@ -200,6 +220,9 @@ export const useRendererStore = create<RendererState>()(
 
     // SDF backdrop (off by default)
     sdfBackdrop: false,
+
+    // D4: Spatial index
+    spatialIndex: null,
 
     // Actions
     setCameraMode: (mode) =>
@@ -251,6 +274,15 @@ export const useRendererStore = create<RendererState>()(
 
     toggleSdfBackdrop: () =>
       set((state) => ({ sdfBackdrop: !state.sdfBackdrop })),
+
+    setSpatialIndex: (index) =>
+      set({ spatialIndex: index }),
+
+    setEncounterNode: (nodeId) =>
+      set({ encounterNodeId: nodeId }),
+
+    setDamagePosition: (pos) =>
+      set({ damagePosition: pos }),
 
     autoTuneQuality: () => {
       const state = get();

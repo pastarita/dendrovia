@@ -2,17 +2,21 @@ import { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { ProceduralPalette } from '@dendrovia/shared';
+import { getQuality } from '../store/useRendererStore';
 
 /**
- * SDF BACKDROP
+ * SDF BACKDROP (D5)
  *
- * Fullscreen quad rendered behind the main scene that runs an IMAGINARIUM
- * raymarching shader. Positioned at the far plane so all scene geometry
- * renders in front of it.
+ * Fullscreen quad running an IMAGINARIUM raymarching shader.
  *
- * Props:
- *   - shaderSource: raw GLSL fragment shader from IMAGINARIUM
- *   - palette: ProceduralPalette for color uniforms
+ * D5 enhancements:
+ *   - maxRaymarchSteps wired from quality tier (adaptive LOD)
+ *   - lodThreshold + lodTransitionWidth uniforms for distance-based SDF/mesh blending
+ *   - depthWrite enabled so SDF can participate in depth compositing
+ *   - Camera-relative uniforms updated per frame
+ *
+ * The IMAGINARIUM shader is expected to honor u_maxSteps and u_lodThreshold
+ * when present. Shaders that don't declare them simply ignore the uniforms.
  */
 
 interface SDFBackdropProps {
@@ -29,6 +33,10 @@ function hexToRGB(hex: string): [number, number, number] {
     parseInt(h.substring(4, 6), 16) / 255,
   ];
 }
+
+/** LOD threshold distances per lodBias tier */
+const LOD_THRESHOLDS = [80, 50, 35, 20, 10] as const;
+const LOD_TRANSITION_WIDTHS = [20, 15, 10, 8, 5] as const;
 
 const VERTEX_SHADER = `
 precision highp float;
@@ -49,6 +57,8 @@ export function SDFBackdrop({ shaderSource, palette }: SDFBackdropProps) {
     const glow = hexToRGB(palette.glow);
     const bg = hexToRGB(palette.background);
 
+    const q = getQuality();
+
     return new THREE.RawShaderMaterial({
       vertexShader: VERTEX_SHADER,
       fragmentShader: shaderSource,
@@ -60,17 +70,28 @@ export function SDFBackdrop({ shaderSource, palette }: SDFBackdropProps) {
         u_color3: { value: new THREE.Vector3(c3[0], c3[1], c3[2]) },
         u_glow: { value: new THREE.Vector3(glow[0], glow[1], glow[2]) },
         u_background: { value: new THREE.Vector3(bg[0], bg[1], bg[2]) },
+        // D5: LOD pipeline uniforms
+        u_maxSteps: { value: q.maxRaymarchSteps },
+        u_lodThreshold: { value: LOD_THRESHOLDS[q.lodBias] ?? 50 },
+        u_lodTransitionWidth: { value: LOD_TRANSITION_WIDTHS[q.lodBias] ?? 15 },
+        u_cameraPos: { value: new THREE.Vector3() },
       },
-      depthWrite: false,
-      depthTest: false,
+      depthWrite: true,
+      depthTest: true,
     });
   }, [shaderSource, palette]);
 
-  // Update time uniform each frame
-  useFrame((_state, delta) => {
-    if (material.uniforms.time) {
-      material.uniforms.time.value += delta;
-    }
+  // Update per-frame uniforms: time, camera, quality-driven LOD
+  useFrame((state, delta) => {
+    const uniforms = material.uniforms;
+    uniforms.time.value += delta;
+    uniforms.u_cameraPos.value.copy(state.camera.position);
+
+    // Update quality-driven uniforms each frame (they change on tier shift)
+    const q = getQuality();
+    uniforms.u_maxSteps.value = q.maxRaymarchSteps;
+    uniforms.u_lodThreshold.value = LOD_THRESHOLDS[q.lodBias] ?? 50;
+    uniforms.u_lodTransitionWidth.value = LOD_TRANSITION_WIDTHS[q.lodBias] ?? 15;
   });
 
   // Update resolution on canvas resize

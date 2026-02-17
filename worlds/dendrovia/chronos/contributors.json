@@ -4,31 +4,34 @@
     {
       "name": "Patrick Astarita",
       "email": "",
-      "archetype": "striker",
+      "archetype": "adventurer",
       "timeArchetype": "midnight",
       "characterClass": "dps",
-      "commitCount": 123,
+      "commitCount": 468,
       "firstCommit": "2026-02-12T18:39:41.000Z",
-      "lastCommit": "2026-02-14T02:43:14.000Z",
-      "filesOwned": 525,
-      "peakHour": 0,
+      "lastCommit": "2026-02-17T03:08:05.000Z",
+      "uniqueFilesTouched": 1130,
+      "peakHour": 21,
+      "topCommitType": "feature",
       "typeDistribution": {
-        "docs": 13,
-        "feature": 78,
-        "merge": 10,
-        "bug-fix": 8,
-        "chore": 2,
-        "maintenance": 7,
-        "test": 3,
+        "merge": 70,
+        "bug-fix": 48,
+        "docs": 74,
+        "feature": 217,
+        "test": 10,
+        "refactor": 20,
+        "chore": 15,
+        "style": 3,
+        "maintenance": 9,
         "dependency": 2
       },
       "facets": {
         "energy": 50,
-        "discipline": 32,
-        "creativity": 63,
-        "protectiveness": 9,
-        "breadth": 85,
-        "collaboration": 16
+        "discipline": 68,
+        "creativity": 46,
+        "protectiveness": 12,
+        "breadth": 48,
+        "collaboration": 32
       }
     }
   ]

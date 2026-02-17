@@ -4,7 +4,7 @@
     {
       "path": "__tests__/commit-classifier.test.ts",
       "cyclomatic": 9,
-      "loc": 376,
+      "loc": 318,
       "functions": []
     },
     {
@@ -28,23 +28,23 @@
     {
       "path": "__tests__/contributor-profiler.test.ts",
       "cyclomatic": 1,
-      "loc": 436,
+      "loc": 434,
       "functions": [
         {
           "name": "makeCommit",
           "startLine": 13,
-          "endLine": 31,
+          "endLine": 29,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
-            "loc": 19,
+            "loc": 17,
             "difficulty": "trivial"
           }
         },
         {
           "name": "makeCommitsOfType",
-          "startLine": 36,
-          "endLine": 47,
+          "startLine": 34,
+          "endLine": 45,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -55,9 +55,27 @@
       ]
     },
     {
+      "path": "__tests__/go-parser.test.ts",
+      "cyclomatic": 3,
+      "loc": 437,
+      "functions": [
+        {
+          "name": "writeGoFile",
+          "startLine": 16,
+          "endLine": 22,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 7,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
       "path": "__tests__/hotspot-detector.test.ts",
       "cyclomatic": 7,
-      "loc": 313,
+      "loc": 311,
       "functions": [
         {
           "name": "makeFile",
@@ -73,11 +91,11 @@
         {
           "name": "makeCommit",
           "startLine": 24,
-          "endLine": 42,
+          "endLine": 40,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
-            "loc": 19,
+            "loc": 17,
             "difficulty": "trivial"
           }
         }
@@ -102,18 +120,18 @@
         {
           "name": "makeCommit",
           "startLine": 27,
-          "endLine": 40,
+          "endLine": 39,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
-            "loc": 14,
+            "loc": 13,
             "difficulty": "trivial"
           }
         },
         {
           "name": "makeTree",
-          "startLine": 42,
-          "endLine": 53,
+          "startLine": 41,
+          "endLine": 52,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -123,8 +141,8 @@
         },
         {
           "name": "makeHotspot",
-          "startLine": 55,
-          "endLine": 57,
+          "startLine": 54,
+          "endLine": 56,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -134,8 +152,8 @@
         },
         {
           "name": "makeCoupling",
-          "startLine": 59,
-          "endLine": 66,
+          "startLine": 58,
+          "endLine": 65,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -145,8 +163,8 @@
         },
         {
           "name": "makeFunctionComplexity",
-          "startLine": 68,
-          "endLine": 80,
+          "startLine": 67,
+          "endLine": 79,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -156,12 +174,12 @@
         },
         {
           "name": "makeContributor",
-          "startLine": 82,
+          "startLine": 81,
           "endLine": 104,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
-            "loc": 23,
+            "loc": 24,
             "difficulty": "trivial"
           }
         },
@@ -192,6 +210,24 @@
             "cognitive": 0,
             "loc": 11,
             "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/analyze.ts",
+      "cyclomatic": 15,
+      "loc": 146,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 42,
+          "endLine": 140,
+          "complexity": {
+            "cyclomatic": 14,
+            "cognitive": 24,
+            "loc": 99,
+            "difficulty": "medium"
           }
         }
       ]
@@ -301,12 +337,12 @@
     {
       "path": "src/builder/ContributorProfiler.ts",
       "cyclomatic": 31,
-      "loc": 213,
+      "loc": 179,
       "functions": [
         {
           "name": "profileContributors",
-          "startLine": 54,
-          "endLine": 73,
+          "startLine": 15,
+          "endLine": 34,
           "complexity": {
             "cyclomatic": 4,
             "cognitive": 4,
@@ -316,19 +352,19 @@
         },
         {
           "name": "buildProfile",
-          "startLine": 75,
-          "endLine": 133,
+          "startLine": 36,
+          "endLine": 99,
           "complexity": {
             "cyclomatic": 5,
             "cognitive": 6,
-            "loc": 59,
+            "loc": 64,
             "difficulty": "trivial"
           }
         },
         {
           "name": "determineArchetype",
-          "startLine": 135,
-          "endLine": 156,
+          "startLine": 101,
+          "endLine": 122,
           "complexity": {
             "cyclomatic": 9,
             "cognitive": 8,
@@ -338,8 +374,8 @@
         },
         {
           "name": "archetypeToClass",
-          "startLine": 158,
-          "endLine": 172,
+          "startLine": 124,
+          "endLine": 138,
           "complexity": {
             "cyclomatic": 9,
             "cognitive": 1,
@@ -349,8 +385,8 @@
         },
         {
           "name": "determineTimeArchetype",
-          "startLine": 174,
-          "endLine": 179,
+          "startLine": 140,
+          "endLine": 145,
           "complexity": {
             "cyclomatic": 7,
             "cognitive": 6,
@@ -360,8 +396,8 @@
         },
         {
           "name": "computeFacets",
-          "startLine": 181,
-          "endLine": 212,
+          "startLine": 147,
+          "endLine": 178,
           "complexity": {
             "cyclomatic": 2,
             "cognitive": 1,
@@ -374,12 +410,12 @@
     {
       "path": "src/builder/TopologyBuilder.ts",
       "cyclomatic": 10,
-      "loc": 198,
+      "loc": 202,
       "functions": [
         {
           "name": "buildLanguageDistribution",
-          "startLine": 75,
-          "endLine": 100,
+          "startLine": 76,
+          "endLine": 101,
           "complexity": {
             "cyclomatic": 6,
             "cognitive": 5,
@@ -389,8 +425,8 @@
         },
         {
           "name": "buildContributorSummary",
-          "startLine": 105,
-          "endLine": 117,
+          "startLine": 106,
+          "endLine": 118,
           "complexity": {
             "cyclomatic": 3,
             "cognitive": 2,
@@ -400,8 +436,8 @@
         },
         {
           "name": "buildTopology",
-          "startLine": 122,
-          "endLine": 171,
+          "startLine": 123,
+          "endLine": 172,
           "complexity": {
             "cyclomatic": 2,
             "cognitive": 1,
@@ -411,12 +447,12 @@
         },
         {
           "name": "writeOutputFiles",
-          "startLine": 176,
-          "endLine": 197,
+          "startLine": 177,
+          "endLine": 201,
           "complexity": {
             "cyclomatic": 2,
             "cognitive": 1,
-            "loc": 22,
+            "loc": 25,
             "difficulty": "trivial"
           }
         }
@@ -487,7 +523,7 @@
     {
       "path": "src/classifier/CommitClassifier.ts",
       "cyclomatic": 10,
-      "loc": 125,
+      "loc": 114,
       "functions": [
         {
           "name": "classifyCommit",
@@ -521,15 +557,95 @@
             "loc": 12,
             "difficulty": "trivial"
           }
+        }
+      ]
+    },
+    {
+      "path": "src/enrichment/DeepWikiFetcher.ts",
+      "cyclomatic": 20,
+      "loc": 208,
+      "functions": [
+        {
+          "name": "mcpCall",
+          "startLine": 36,
+          "endLine": 83,
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 4,
+            "loc": 48,
+            "difficulty": "trivial"
+          }
         },
         {
-          "name": "commitFlags",
-          "startLine": 117,
-          "endLine": 124,
+          "name": "getCachePath",
+          "startLine": 87,
+          "endLine": 89,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
-            "loc": 8,
+            "loc": 3,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "readCache",
+          "startLine": 91,
+          "endLine": 107,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 3,
+            "loc": 17,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "writeCache",
+          "startLine": 109,
+          "endLine": 113,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 5,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "flattenTopics",
+          "startLine": 117,
+          "endLine": 126,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 4,
+            "loc": 10,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "fetchDeepWikiEnrichment",
+          "startLine": 130,
+          "endLine": 207,
+          "complexity": {
+            "cyclomatic": 10,
+            "cognitive": 14,
+            "loc": 78,
+            "difficulty": "easy"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/enrichment/TopologyEnricher.ts",
+      "cyclomatic": 1,
+      "loc": 27,
+      "functions": [
+        {
+          "name": "enrichTopology",
+          "startLine": 15,
+          "endLine": 26,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 12,
             "difficulty": "trivial"
           }
         }
@@ -538,18 +654,18 @@
     {
       "path": "src/index.ts",
       "cyclomatic": 1,
-      "loc": 102,
+      "loc": 99,
       "functions": []
     },
     {
       "path": "src/parse.ts",
       "cyclomatic": 3,
-      "loc": 62,
+      "loc": 66,
       "functions": [
         {
           "name": "main",
-          "startLine": 30,
-          "endLine": 56,
+          "startLine": 34,
+          "endLine": 60,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -561,13 +677,13 @@
     },
     {
       "path": "src/parser/ASTParser.ts",
-      "cyclomatic": 14,
-      "loc": 222,
+      "cyclomatic": 15,
+      "loc": 229,
       "functions": [
         {
           "name": "createProject",
-          "startLine": 62,
-          "endLine": 73,
+          "startLine": 64,
+          "endLine": 75,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -577,8 +693,8 @@
         },
         {
           "name": "detectLanguage",
-          "startLine": 78,
-          "endLine": 81,
+          "startLine": 80,
+          "endLine": 83,
           "complexity": {
             "cyclomatic": 2,
             "cognitive": 1,
@@ -588,8 +704,8 @@
         },
         {
           "name": "canParse",
-          "startLine": 86,
-          "endLine": 89,
+          "startLine": 88,
+          "endLine": 91,
           "complexity": {
             "cyclomatic": 1,
             "cognitive": 0,
@@ -599,19 +715,19 @@
         },
         {
           "name": "parseFile",
-          "startLine": 94,
-          "endLine": 144,
+          "startLine": 96,
+          "endLine": 151,
           "complexity": {
-            "cyclomatic": 5,
-            "cognitive": 4,
-            "loc": 51,
-            "difficulty": "trivial"
+            "cyclomatic": 6,
+            "cognitive": 5,
+            "loc": 56,
+            "difficulty": "easy"
           }
         },
         {
           "name": "parseFiles",
-          "startLine": 149,
-          "endLine": 168,
+          "startLine": 156,
+          "endLine": 175,
           "complexity": {
             "cyclomatic": 5,
             "cognitive": 7,
@@ -621,8 +737,8 @@
         },
         {
           "name": "buildStubFile",
-          "startLine": 174,
-          "endLine": 211,
+          "startLine": 181,
+          "endLine": 218,
           "complexity": {
             "cyclomatic": 4,
             "cognitive": 3,
@@ -632,8 +748,8 @@
         },
         {
           "name": "simpleHash",
-          "startLine": 213,
-          "endLine": 221,
+          "startLine": 220,
+          "endLine": 228,
           "complexity": {
             "cyclomatic": 2,
             "cognitive": 1,
@@ -645,8 +761,8 @@
     },
     {
       "path": "src/parser/GitParser.ts",
-      "cyclomatic": 29,
-      "loc": 312,
+      "cyclomatic": 48,
+      "loc": 403,
       "functions": [
         {
           "name": "parseGitHistory",
@@ -695,18 +811,18 @@
         {
           "name": "toCommit",
           "startLine": 171,
-          "endLine": 192,
+          "endLine": 189,
           "complexity": {
             "cyclomatic": 3,
             "cognitive": 2,
-            "loc": 22,
+            "loc": 19,
             "difficulty": "trivial"
           }
         },
         {
           "name": "listFilesAtHead",
-          "startLine": 197,
-          "endLine": 212,
+          "startLine": 194,
+          "endLine": 209,
           "complexity": {
             "cyclomatic": 2,
             "cognitive": 1,
@@ -715,9 +831,20 @@
           }
         },
         {
+          "name": "unquoteGitPath",
+          "startLine": 216,
+          "endLine": 246,
+          "complexity": {
+            "cyclomatic": 13,
+            "cognitive": 39,
+            "loc": 31,
+            "difficulty": "medium"
+          }
+        },
+        {
           "name": "getHeadHash",
-          "startLine": 217,
-          "endLine": 232,
+          "startLine": 251,
+          "endLine": 266,
           "complexity": {
             "cyclomatic": 2,
             "cognitive": 1,
@@ -727,8 +854,8 @@
         },
         {
           "name": "getFileChurnCounts",
-          "startLine": 237,
-          "endLine": 268,
+          "startLine": 271,
+          "endLine": 302,
           "complexity": {
             "cyclomatic": 6,
             "cognitive": 6,
@@ -737,9 +864,20 @@
           }
         },
         {
+          "name": "getFileAuthors",
+          "startLine": 309,
+          "endLine": 359,
+          "complexity": {
+            "cyclomatic": 8,
+            "cognitive": 12,
+            "loc": 51,
+            "difficulty": "easy"
+          }
+        },
+        {
           "name": "extractRepositoryMetadata",
-          "startLine": 273,
-          "endLine": 311,
+          "startLine": 364,
+          "endLine": 402,
           "complexity": {
             "cyclomatic": 3,
             "cognitive": 2,
@@ -748,6 +886,275 @@
           }
         }
       ]
+    },
+    {
+      "path": "src/parser/GoParser.ts",
+      "cyclomatic": 64,
+      "loc": 376,
+      "functions": [
+        {
+          "name": "parseGoFile",
+          "startLine": 32,
+          "endLine": 92,
+          "complexity": {
+            "cyclomatic": 6,
+            "cognitive": 5,
+            "loc": 61,
+            "difficulty": "easy"
+          }
+        },
+        {
+          "name": "stripGoCommentsAndStrings",
+          "startLine": 100,
+          "endLine": 197,
+          "complexity": {
+            "cyclomatic": 31,
+            "cognitive": 89,
+            "loc": 98,
+            "difficulty": "hard"
+          }
+        },
+        {
+          "name": "findFunctions",
+          "startLine": 215,
+          "endLine": 246,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 5,
+            "loc": 32,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "findMatchingBrace",
+          "startLine": 252,
+          "endLine": 312,
+          "complexity": {
+            "cyclomatic": 21,
+            "cognitive": 45,
+            "loc": 61,
+            "difficulty": "hard"
+          }
+        },
+        {
+          "name": "countCyclomatic",
+          "startLine": 322,
+          "endLine": 330,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 9,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "countCognitive",
+          "startLine": 342,
+          "endLine": 363,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 5,
+            "loc": 22,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "simpleHash",
+          "startLine": 367,
+          "endLine": 375,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 9,
+            "difficulty": "trivial"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/pipeline.ts",
+      "cyclomatic": 12,
+      "loc": 279,
+      "functions": [
+        {
+          "name": "runPipeline",
+          "startLine": 72,
+          "endLine": 278,
+          "complexity": {
+            "cyclomatic": 12,
+            "cognitive": 13,
+            "loc": 207,
+            "difficulty": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/resolver/RepoResolver.ts",
+      "cyclomatic": 20,
+      "loc": 263,
+      "functions": [
+        {
+          "name": "parseGitHubUrl",
+          "startLine": 66,
+          "endLine": 90,
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 3,
+            "loc": 25,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "isLocalPath",
+          "startLine": 92,
+          "endLine": 98,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 7,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "runGit",
+          "startLine": 102,
+          "endLine": 112,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 11,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "cloneRepo",
+          "startLine": 114,
+          "endLine": 127,
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 1,
+            "loc": 14,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "refreshRepo",
+          "startLine": 129,
+          "endLine": 145,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 17,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "getRemoteHeadHash",
+          "startLine": 147,
+          "endLine": 151,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 5,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "getChronosHome",
+          "startLine": 155,
+          "endLine": 157,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 3,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "getReposDir",
+          "startLine": 159,
+          "endLine": 161,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 3,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "getGeneratedDir",
+          "startLine": 163,
+          "endLine": 165,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 3,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "getOutputDirForRepo",
+          "startLine": 167,
+          "endLine": 169,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 3,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "loadRegistry",
+          "startLine": 171,
+          "endLine": 181,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 2,
+            "loc": 11,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "saveRegistry",
+          "startLine": 183,
+          "endLine": 186,
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "loc": 4,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "upsertRegistryEntry",
+          "startLine": 188,
+          "endLine": 199,
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 3,
+            "loc": 12,
+            "difficulty": "trivial"
+          }
+        },
+        {
+          "name": "resolveRepo",
+          "startLine": 203,
+          "endLine": 262,
+          "complexity": {
+            "cyclomatic": 6,
+            "cognitive": 9,
+            "loc": 60,
+            "difficulty": "easy"
+          }
+        }
+      ]
+    },
+    {
+      "path": "src/resolver/index.ts",
+      "cyclomatic": 1,
+      "loc": 14,
+      "functions": []
     }
   ]
 }

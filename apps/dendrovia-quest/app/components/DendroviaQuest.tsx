@@ -25,7 +25,7 @@ import type { EventBus, TopologyGeneratedEvent } from '@dendrovia/shared';
 import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit, CharacterClass, ContributorProfile } from '@dendrovia/shared';
 
 // ── ARCHITECTUS (3D renderer) ─────────────────────────────────
-import { App as ArchitectusApp, useRendererStore } from '@dendrovia/architectus';
+import { App as ArchitectusApp, useRendererStore, useSegmentStore } from '@dendrovia/architectus';
 
 // ── OCULUS (UI layer) ─────────────────────────────────────────
 import {
@@ -212,13 +212,19 @@ export function DendroviaQuest({
         );
       }
 
-      // Step 2: Load CHRONOS topology (if a path was provided)
+      // Step 2: Load CHRONOS topology
+      // When segmented loading is available (world index loaded by ARCHITECTUS),
+      // skip the full 8.8MB topology.json — per-segment topology arrives on demand.
+      // Only fetch the monolith as fallback when chunked manifest is unavailable.
       let chronosFiles: ParsedFile[] = [];
       let chronosCommits: ParsedCommit[] = [];
       let chronosHotspots: Hotspot[] = [];
       let chronosContributors: ContributorProfile[] = [];
 
-      if (topologyPath && !cancelled) {
+      // Give ARCHITECTUS a moment to attempt world index loading
+      const worldReady = useSegmentStore.getState().worldReady;
+
+      if (topologyPath && !cancelled && !worldReady) {
         try {
           setInitMessage('Loading topology...');
 
@@ -253,6 +259,8 @@ export function DendroviaQuest({
         } catch (err) {
           console.warn('[DENDROVIA] Failed to load topology from', topologyPath, err);
         }
+      } else if (worldReady) {
+        setInitMessage('World index loaded, topology on demand...');
       }
 
       // Step 3: LUDUS — game session + event wiring (with real CHRONOS data)

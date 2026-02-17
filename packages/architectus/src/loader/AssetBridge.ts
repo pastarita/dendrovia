@@ -26,6 +26,11 @@ import type {
   SerializedMeshData,
   StoryArc,
   SegmentAssets,
+  ChunkedManifest,
+  WorldIndex,
+  TopologyChunk,
+  Hotspot,
+  ParsedFile,
 } from '@dendrovia/shared';
 import { deserializeToFlat } from '@dendrovia/imaginarium';
 import type { FlatMeshData } from '@dendrovia/imaginarium';
@@ -358,5 +363,198 @@ export async function loadGeneratedAssets(
     meshes,
     storyArc,
     segmentAssets,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Stage 1: World Index Loading (~15KB total, <100ms)
+// ---------------------------------------------------------------------------
+
+/** Lightweight initial load result — enough to render hulls and decide
+ *  which segments to load on demand. */
+export interface WorldIndexResult {
+  manifest: ChunkedManifest;
+  worldIndex: WorldIndex;
+  palette: ProceduralPalette | null;
+  palettes: Record<string, ProceduralPalette>;
+  shaders: Record<string, string>;
+  storyArc: StoryArc | null;
+  lsystem: LSystemRule | null;
+  noise: NoiseFunction | null;
+}
+
+/**
+ * Stage 1: Load only the world index, manifest, and global palette.
+ * This is ~15KB total and completes in <100ms, enabling immediate hull rendering.
+ *
+ * Falls back to loadGeneratedAssets() if chunked manifest is unavailable.
+ *
+ * @param manifestPath  Base path (the chunked manifest is at `manifest-chunked.json`
+ *                      relative to this path's directory).
+ */
+export async function loadWorldIndex(
+  manifestPath: string,
+  options: LoadGeneratedAssetsOptions = {},
+): Promise<WorldIndexResult | null> {
+  const loader = options.assetLoader ?? null;
+  const chunkedManifestPath = manifestPath.replace(/manifest\.json$/, 'manifest-chunked.json');
+
+  // Try chunked manifest first
+  let manifest: ChunkedManifest | null;
+  if (loader) {
+    try {
+      const raw = await loader.loadAsset({
+        path: 'manifest-chunked.json',
+        priority: PRIORITY.CRITICAL,
+        type: 'json',
+      });
+      manifest = JSON.parse(raw) as ChunkedManifest;
+    } catch {
+      manifest = null;
+    }
+  } else {
+    manifest = await fetchJson<ChunkedManifest>(chunkedManifestPath);
+  }
+
+  if (!manifest) {
+    console.warn('[ARCHITECTUS] No chunked manifest found, world segmentation unavailable');
+    return null;
+  }
+
+  console.log('[ARCHITECTUS] Loaded chunked manifest v' + manifest.version);
+
+  // Load world index, palettes, shaders, story arc in parallel (~15KB total)
+  const [worldIndex, storyArc, lsystem, noise, ...paletteAndShaderResults] = await Promise.all([
+    // World index (~2KB)
+    loadJson<WorldIndex>(
+      manifest.worldIndex, manifestPath, loader, PRIORITY.CRITICAL, 'json',
+    ),
+    // Story arc (small metadata)
+    manifest.storyArc
+      ? loadJson<StoryArc>(manifest.storyArc.arc, manifestPath, loader, PRIORITY.CRITICAL, 'json')
+      : Promise.resolve(null),
+    // Global L-system
+    manifest.lsystem
+      ? loadJson<LSystemRule>(manifest.lsystem, manifestPath, loader, PRIORITY.VISIBLE, 'json')
+      : Promise.resolve(null),
+    // Global noise
+    manifest.noise
+      ? loadJson<NoiseFunction>(manifest.noise, manifestPath, loader, PRIORITY.VISIBLE, 'json')
+      : Promise.resolve(null),
+    // Palettes
+    ...Object.entries(manifest.palettes).map(async ([id, path]) => {
+      const palette = await loadJson<ProceduralPalette>(path, manifestPath, loader, PRIORITY.VISIBLE, 'palette');
+      return { type: 'palette' as const, id, data: palette };
+    }),
+    // Shaders
+    ...Object.entries(manifest.shaders).map(async ([id, path]) => {
+      const source = await loadText(path, manifestPath, loader, PRIORITY.CRITICAL);
+      return { type: 'shader' as const, id, data: source };
+    }),
+  ]);
+
+  if (!worldIndex) {
+    console.warn('[ARCHITECTUS] Could not load world index');
+    return null;
+  }
+
+  const palettes: Record<string, ProceduralPalette> = {};
+  const shaders: Record<string, string> = {};
+  let globalPalette: ProceduralPalette | null = null;
+
+  for (const result of paletteAndShaderResults) {
+    if (result.type === 'palette' && result.data) {
+      palettes[result.id] = result.data as ProceduralPalette;
+      if (result.id === 'global') globalPalette = result.data as ProceduralPalette;
+    } else if (result.type === 'shader' && result.data) {
+      shaders[result.id] = result.data as string;
+    }
+  }
+
+  console.log(
+    `[ARCHITECTUS] World index loaded: ${worldIndex.segmentCount} segments, ` +
+    `radius=${Math.round(worldIndex.worldRadius)}`,
+  );
+
+  return {
+    manifest,
+    worldIndex,
+    palette: globalPalette,
+    palettes,
+    shaders,
+    storyArc,
+    lsystem,
+    noise,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Stage 2: Per-Segment Loading (triggered by camera proximity)
+// ---------------------------------------------------------------------------
+
+/** Data loaded for a single segment on demand. */
+export interface SegmentLoadResult {
+  segmentId: string;
+  topology: TopologyChunk | null;
+  specimens: FungalSpecimen[] | null;
+  palette: ProceduralPalette | null;
+  lsystem: LSystemRule | null;
+  noise: NoiseFunction | null;
+}
+
+/**
+ * Stage 2: Load data for a specific segment on demand.
+ * Called when camera moves close enough to warrant rendering the segment's
+ * branches and/or full detail.
+ *
+ * @param segmentId     The segment to load.
+ * @param manifest      The chunked manifest (from Stage 1).
+ * @param manifestPath  Base manifest URL for resolving relative paths.
+ */
+export async function loadSegmentData(
+  segmentId: string,
+  manifest: ChunkedManifest,
+  manifestPath: string,
+  options: LoadGeneratedAssetsOptions = {},
+): Promise<SegmentLoadResult | null> {
+  const loader = options.assetLoader ?? null;
+  const segPaths = manifest.segments[segmentId];
+
+  if (!segPaths) {
+    console.warn(`[ARCHITECTUS] No segment paths for ${segmentId}`);
+    return null;
+  }
+
+  // Load topology, specimens, palette, lsystem, noise in parallel
+  const [topology, specimens, palette, lsystem, noise] = await Promise.all([
+    loadJson<TopologyChunk>(
+      segPaths.topology, manifestPath, loader, PRIORITY.CRITICAL, 'json',
+    ),
+    segPaths.specimens
+      ? loadJson<FungalSpecimen[]>(segPaths.specimens, manifestPath, loader, PRIORITY.VISIBLE, 'json')
+      : Promise.resolve(null),
+    loadJson<ProceduralPalette>(
+      segPaths.palette, manifestPath, loader, PRIORITY.VISIBLE, 'palette',
+    ),
+    loadJson<LSystemRule>(
+      segPaths.lsystem, manifestPath, loader, PRIORITY.VISIBLE, 'json',
+    ),
+    loadJson<NoiseFunction>(
+      segPaths.noise, manifestPath, loader, PRIORITY.VISIBLE, 'json',
+    ),
+  ]);
+
+  console.log(
+    `[ARCHITECTUS] Segment ${segmentId} loaded: ` +
+    `${topology?.fileCount ?? 0} files, ${specimens?.length ?? 0} specimens`,
+  );
+
+  return {
+    segmentId,
+    topology,
+    specimens,
+    palette,
+    lsystem,
+    noise,
   };
 }

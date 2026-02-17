@@ -23,7 +23,7 @@ interface PillarInfo {
 const PILLARS: PillarInfo[] = [
   { name: 'CHRONOS', role: 'Git History + AST Parsing', color: '#c77b3f', tincture: 'Amber', emoji: '📜', packages: ['packages/chronos'] },
   { name: 'IMAGINARIUM', role: 'Procedural Art Generation', color: '#A855F7', tincture: 'Purpure', emoji: '🎨', packages: ['packages/imaginarium'] },
-  { name: 'ARCHITECTUS', role: '3D Rendering Engine', color: '#3B82F6', tincture: 'Azure', emoji: '🏛️', packages: ['packages/architectus', 'packages/dendrovia-engine'] },
+  { name: 'ARCHITECTUS', role: '3D Rendering Engine', color: '#3B82F6', tincture: 'Azure', emoji: '🏛️', packages: ['packages/architectus'] },
   { name: 'LUDUS', role: 'Game Mechanics + Rules', color: '#EF4444', tincture: 'Gules', emoji: '🎮', packages: ['packages/ludus'] },
   { name: 'OCULUS', role: 'UI + Navigation', color: '#22C55E', tincture: 'Vert', emoji: '👁️', packages: ['packages/oculus', 'packages/ui'] },
   { name: 'OPERATUS', role: 'Infrastructure + Persistence', color: '#1F2937', tincture: 'Sable', emoji: '💾', packages: ['packages/operatus'] },

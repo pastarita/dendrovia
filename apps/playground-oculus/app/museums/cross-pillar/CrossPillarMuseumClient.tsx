@@ -32,7 +32,7 @@ interface DataFlow {
 const PILLARS: PillarInfo[] = [
   { name: 'CHRONOS', role: 'Git History + AST Parsing', color: '#c77b3f', tincture: 'Amber', emoji: '\u{1F4DC}', packages: ['packages/chronos'] },
   { name: 'IMAGINARIUM', role: 'Procedural Art Generation', color: '#A855F7', tincture: 'Purpure', emoji: '\u{1F3A8}', packages: ['packages/imaginarium'] },
-  { name: 'ARCHITECTUS', role: '3D Rendering Engine', color: '#3B82F6', tincture: 'Azure', emoji: '\u{1F3DB}\uFE0F', packages: ['packages/architectus', 'packages/dendrovia-engine'] },
+  { name: 'ARCHITECTUS', role: '3D Rendering Engine', color: '#3B82F6', tincture: 'Azure', emoji: '\u{1F3DB}\uFE0F', packages: ['packages/architectus'] },
   { name: 'LUDUS', role: 'Game Mechanics + Rules', color: '#EF4444', tincture: 'Gules', emoji: '\u{1F3AE}', packages: ['packages/ludus'] },
   { name: 'OCULUS', role: 'UI + Navigation', color: '#22C55E', tincture: 'Vert', emoji: '\u{1F441}\uFE0F', packages: ['packages/oculus', 'packages/ui'] },
   { name: 'OPERATUS', role: 'Infrastructure + Persistence', color: '#1F2937', tincture: 'Sable', emoji: '\u{1F4BE}', packages: ['packages/operatus'] },

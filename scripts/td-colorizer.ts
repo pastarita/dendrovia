@@ -45,8 +45,6 @@ const PILLAR_COLORS: Record<string, PillarColor> = {
 // Supporting packages get dimmer/neutral colors
 const SUPPORT_COLORS: Record<string, PillarColor> = {
   'shared':            { hex: '#FFD700', ...hexToRgb('#FFD700'), emoji: '🔗', tincture: 'Or' },
-  'engine':            { hex: '#3B82F6', ...hexToRgb('#3B82F6'), emoji: '⚙️', tincture: 'Azure' },
-  'proof-of-concept':  { hex: '#CD853F', ...hexToRgb('#CD853F'), emoji: '🧪', tincture: 'Tenné' },
   'ui':                { hex: '#E5E7EB', ...hexToRgb('#E5E7EB'), emoji: '🎨', tincture: 'Argent' },
   'quest':             { hex: '#E5E7EB', ...hexToRgb('#E5E7EB'), emoji: '🌳', tincture: 'Argent' },
 };

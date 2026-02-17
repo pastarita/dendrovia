@@ -24,7 +24,7 @@ export type Domain =
 export const DOMAIN_FILE_PATTERNS: Record<Domain, RegExp[]> = {
   chronos:      [/^packages\/chronos\//],
   imaginarium:  [/^packages\/imaginarium\//],
-  architectus:  [/^packages\/architectus\//, /^packages\/dendrovia-engine\//],
+  architectus:  [/^packages\/architectus\//],
   ludus:        [/^packages\/ludus\//],
   oculus:       [/^packages\/oculus\//, /^packages\/ui\//],
   operatus:     [/^packages\/operatus\//, /^scripts\//],

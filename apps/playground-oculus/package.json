@@ -14,7 +14,6 @@
     "@repo/ui": "*",
     "@dendrovia/shared": "workspace:*",
     "@dendrovia/oculus": "workspace:*",
-    "@dendrovia/engine": "*",
     "@react-three/fiber": "^9.0.0",
     "@react-three/drei": "^10.0.0",
     "three": "^0.171.0",

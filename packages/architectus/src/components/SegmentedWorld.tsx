@@ -9,6 +9,9 @@ import { SegmentRenderer } from './SegmentRenderer';
 import { SegmentDistanceUpdater } from './SegmentDistanceUpdater';
 import { WorldFog } from './WorldFog';
 import { configFromWorldIndex } from '../systems/PlatformConfig';
+import { NestPlatform } from './NestPlatform';
+import { ViewFrame } from './ViewFrame';
+import { NestInspector } from './NestInspector';
 
 /**
  * SEGMENTED WORLD
@@ -27,6 +30,31 @@ import { configFromWorldIndex } from '../systems/PlatformConfig';
 
 interface SegmentedWorldProps {
   palette: ProceduralPalette;
+}
+
+/**
+ * Reads activeNest from store and renders NestPlatform + ViewFrame.
+ * Used in SegmentedWorld where full tree geometry isn't available locally.
+ */
+function NestFromStore({
+  palette,
+  viewFrameVisible,
+}: {
+  palette: { primary: string; secondary: string; glow: string; accent: string };
+  viewFrameVisible: boolean;
+}) {
+  const activeNest = useRendererStore((s) => s.activeNest);
+  if (!activeNest) return null;
+  return (
+    <>
+      <NestPlatform nestConfig={activeNest} palette={palette} />
+      <ViewFrame
+        nestConfig={activeNest}
+        visible={viewFrameVisible}
+        palette={palette}
+      />
+    </>
+  );
 }
 
 export function SegmentedWorld({ palette }: SegmentedWorldProps) {
@@ -59,6 +87,9 @@ export function SegmentedWorld({ palette }: SegmentedWorldProps) {
     return () => useRendererStore.getState().setPlatformConfig(null);
   }, [platformConfig]);
 
+  // Read view frame visibility from store
+  const viewFrameVisible = useRendererStore((s) => s.viewFrameVisible);
+
   // Derive route directions from world index placements
   const routes = useMemo(() => {
     if (!worldIndex?.placements) return [];
@@ -80,6 +111,12 @@ export function SegmentedWorld({ palette }: SegmentedWorldProps) {
       {platformConfig && (
         <RootPlatform palette={palette} routes={routes} config={platformConfig} />
       )}
+
+      {/* Nest platform + view frame (from store activeNest, set by DendriteWorld path) */}
+      <NestFromStore palette={palette} viewFrameVisible={viewFrameVisible} />
+
+      {/* Inspection mode — measurements + debug labels */}
+      <NestInspector />
 
       {/* Distance tracking + load triggering */}
       <SegmentDistanceUpdater />

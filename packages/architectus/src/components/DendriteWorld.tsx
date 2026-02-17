@@ -18,6 +18,10 @@ import { RootPlatform } from './RootPlatform';
 import { useRendererStore } from '../store/useRendererStore';
 import { ParticleSystem, BURST_CONFIG } from '../systems/ParticleSystem';
 import { configFromTreeGeometry } from '../systems/PlatformConfig';
+import { computeRootNest } from '../systems/NestConfig';
+import { NestPlatform } from './NestPlatform';
+import { ViewFrame } from './ViewFrame';
+import { NestInspector } from './NestInspector';
 
 /**
  * DENDRITE WORLD
@@ -135,6 +139,21 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     [treeGeometry],
   );
 
+  // Compute nest config from first fork junction
+  const nestConfig = useMemo(
+    () => computeRootNest(treeGeometry.branches, platformConfig),
+    [treeGeometry.branches, platformConfig],
+  );
+
+  // Publish nest config to store for CameraRig to read
+  useEffect(() => {
+    useRendererStore.getState().setActiveNest(nestConfig);
+    return () => useRendererStore.getState().setActiveNest(null);
+  }, [nestConfig]);
+
+  // Read view frame visibility from store
+  const viewFrameVisible = useRendererStore((s) => s.viewFrameVisible);
+
   // Compute route indicators from depth-0 branches that have the root trunk as parent
   const routes = useMemo(() => {
     return treeGeometry.branches
@@ -230,6 +249,21 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     <group name="dendrite-world">
       {/* Root platform — persistent spawn base, scaled to topology */}
       <RootPlatform palette={palette} routes={routes} config={platformConfig} />
+
+      {/* Nest platform — concave bowl at first fork junction */}
+      {nestConfig && <NestPlatform nestConfig={nestConfig} palette={palette} />}
+
+      {/* View frame — diagnostic hemispheres around nest */}
+      {nestConfig && (
+        <ViewFrame
+          nestConfig={nestConfig}
+          visible={viewFrameVisible}
+          palette={palette}
+        />
+      )}
+
+      {/* Inspection mode — measurements + debug labels (inside Canvas) */}
+      <NestInspector />
 
       {/* SDF backdrop — fullscreen raymarching shader behind the scene */}
       {sdfBackdrop && firstShaderSource && (

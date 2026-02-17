@@ -10,6 +10,7 @@ export { App } from './App';
 
 // Store
 export { useRendererStore } from './store/useRendererStore';
+export { useCameraEditorStore, getAuthoredParams, getFov } from './store/useCameraEditorStore';
 
 // Components
 export { DendriteWorld } from './components/DendriteWorld';
@@ -29,6 +30,12 @@ export { PerformanceMonitor } from './components/PerformanceMonitor';
 export { ParticleInstances } from './components/ParticleInstances';
 export { SegmentOverlay } from './components/SegmentOverlay';
 export { RootPlatform } from './components/RootPlatform';
+export { NestPlatform } from './components/NestPlatform';
+export { ViewFrame } from './components/ViewFrame';
+export { FalconAutoOrbit } from './components/FalconAutoOrbit';
+export { PlayerThirdPerson } from './components/PlayerThirdPerson';
+export { SpectatorCamera } from './components/SpectatorCamera';
+export { NestInspector, NestInspectorPanel } from './components/NestInspector';
 export { ErrorBoundary } from './components/ErrorBoundary';
 
 // Systems
@@ -39,10 +46,38 @@ export { ParticleSystem, FIREFLY_CONFIG, BURST_CONFIG } from './systems/Particle
 export { mapNodesToSegments } from './systems/SegmentMapper';
 export { configFromTreeGeometry, configFromWorldIndex, deriveDimensions } from './systems/PlatformConfig';
 export type { PlatformConfig, PlatformDimensions } from './systems/PlatformConfig';
+export {
+  computeNestConfig, computeRootNest, falconOrbitPosition, falconOrbitAtAngle,
+  falconPathPoints, findForkJunction, createBowlProfile,
+  FALCON_ORBIT_SPEED, FALCON_ORBIT_LAPS, FALCON_ORBIT_DURATION, FALCON_APPROACH_DURATION,
+  getFalconOrbitSpeed, getFalconOrbitLaps, getFalconApproachDuration,
+} from './systems/NestConfig';
+export type { NestConfig, NestBranchAnchor } from './systems/NestConfig';
 export type { BranchSegment, NodeMarker, TreeGeometry, TurtleState } from './systems/TurtleInterpreter';
 export type { NearestSegmentResult } from './systems/SpatialIndex';
 export type { Particle, EmitterConfig } from './systems/ParticleSystem';
-export type { QualityTier, QualitySettings } from './store/useRendererStore';
+export type { QualityTier, QualitySettings, CameraMode } from './store/useRendererStore';
+export { isPlayerMode, isSpectatorMode } from './store/useRendererStore';
+
+// Camera params taxonomy + view quality
+export { DEFAULT_AUTHORED_PARAMS, EMPTY_VIEW_QUALITY } from './systems/CameraParams';
+export { validateCameraView } from './systems/ViewQualityValidator';
+export type {
+  AuthoredCameraParams,
+  FalconAuthoredParams,
+  Player1pAuthoredParams,
+  Player3pAuthoredParams,
+  TransitionAuthoredParams,
+  ComputedCameraParams,
+  CameraMarkerState,
+  CameraMarkersMap,
+  EditableMarkerKey,
+  CameraStateSnapshot,
+  CameraPreset,
+  ViewIssue,
+  ViewIssueSeverity,
+  ViewQualityReport,
+} from './systems/CameraParams';
 
 // Renderer
 export { createWebGPURenderer } from './renderer/createRenderer';

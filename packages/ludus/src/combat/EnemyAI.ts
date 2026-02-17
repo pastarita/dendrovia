@@ -14,10 +14,13 @@
 import type { Action, Monster, Character, BattleState, RngState } from '@dendrovia/shared';
 import { rngNext, rngChance } from '../utils/SeededRandom';
 
+export type EnemyBehavior = 'attack' | 'spell' | 'buff' | 'skip' | 'heal-player' | 'self-hit';
+
 export interface EnemyDecision {
   action: Action;
   rng: RngState;
   log: string;
+  behavior: EnemyBehavior;
 }
 
 /** Choose an enemy action based on monster type and battle state */
@@ -43,7 +46,7 @@ export function chooseEnemyAction(
     case 'off-by-one':
       return chooseOffByOneAction(enemyIndex, monster, rng);
     default:
-      return { action: basicAttack(enemyIndex), rng, log: `${monster.name} attacks!` };
+      return { action: basicAttack(enemyIndex), rng, log: `${monster.name} attacks!`, behavior: 'attack' };
   }
 }
 
@@ -62,6 +65,7 @@ function chooseNullPointerAction(
       action: basicAttack(enemyIndex), // Action is issued but will be flagged as skipped
       rng: rng1,
       log: `${monster.name} tried to dereference null and crashed! (skips turn)`,
+      behavior: 'skip',
     };
   }
 
@@ -71,6 +75,7 @@ function chooseNullPointerAction(
       action: { type: 'ENEMY_ACT', enemyIndex },
       rng: rng1,
       log: `${monster.name} throws a ${monster.spells[0]}!`,
+      behavior: 'spell',
     };
   }
 
@@ -79,6 +84,7 @@ function chooseNullPointerAction(
     action: basicAttack(enemyIndex),
     rng: rng1,
     log: `${monster.name} attacks!`,
+    behavior: 'attack',
   };
 }
 
@@ -98,6 +104,7 @@ function chooseMemoryLeakAction(
       action: { type: 'ENEMY_ACT', enemyIndex },
       rng: rng1,
       log: `${monster.name}'s memory consumption grows... (ATK up!)`,
+      behavior: 'buff',
     };
   }
 
@@ -107,6 +114,7 @@ function chooseMemoryLeakAction(
       action: { type: 'ENEMY_ACT', enemyIndex },
       rng: rng1,
       log: `${monster.name} triggers OOM Killer!`,
+      behavior: 'spell',
     };
   }
 
@@ -114,6 +122,7 @@ function chooseMemoryLeakAction(
     action: basicAttack(enemyIndex),
     rng: rng1,
     log: `${monster.name} slowly leaks into your system...`,
+    behavior: 'attack',
   };
 }
 
@@ -133,6 +142,7 @@ function chooseRaceConditionAction(
       action: { type: 'ENEMY_ACT', enemyIndex },
       rng: rng1,
       log: `${monster.name} context-switches at the worst time! Double attack!`,
+      behavior: 'spell',
     };
   }
 
@@ -142,6 +152,7 @@ function chooseRaceConditionAction(
       action: basicAttack(enemyIndex),
       rng: rng1,
       log: `${monster.name} is waiting for a lock... (skips turn)`,
+      behavior: 'skip',
     };
   }
 
@@ -149,6 +160,7 @@ function chooseRaceConditionAction(
     action: basicAttack(enemyIndex),
     rng: rng1,
     log: `${monster.name} races ahead!`,
+    behavior: 'attack',
   };
 }
 
@@ -167,6 +179,7 @@ function chooseOffByOneAction(
       action: basicAttack(enemyIndex),
       rng: rng1,
       log: `${monster.name} miscounted and healed you instead! (off by one)`,
+      behavior: 'heal-player',
     };
   }
 
@@ -176,6 +189,7 @@ function chooseOffByOneAction(
       action: basicAttack(enemyIndex),
       rng: rng1,
       log: `${monster.name} hit itself in confusion! (index out of bounds)`,
+      behavior: 'self-hit',
     };
   }
 
@@ -183,6 +197,7 @@ function chooseOffByOneAction(
     action: basicAttack(enemyIndex),
     rng: rng1,
     log: `${monster.name} attacks... probably at the right target.`,
+    behavior: 'attack',
   };
 }
 
@@ -205,6 +220,7 @@ function chooseBossAction(
         action: { type: 'ENEMY_ACT', enemyIndex },
         rng: rng1,
         log: `${monster.name} enters CRITICAL PHASE! Unleashes ultimate ability!`,
+        behavior: 'spell',
       };
     }
   }
@@ -216,6 +232,7 @@ function chooseBossAction(
         action: { type: 'ENEMY_ACT', enemyIndex },
         rng: rng1,
         log: `${monster.name} is enraged! Uses special ability!`,
+        behavior: 'spell',
       };
     }
   }
@@ -226,6 +243,7 @@ function chooseBossAction(
       action: { type: 'ENEMY_ACT', enemyIndex },
       rng: rng1,
       log: `${monster.name} uses a special attack!`,
+      behavior: 'spell',
     };
   }
 
@@ -233,6 +251,7 @@ function chooseBossAction(
     action: basicAttack(enemyIndex),
     rng: rng1,
     log: `${monster.name} attacks with full force!`,
+    behavior: 'attack',
   };
 }
 
@@ -264,22 +283,21 @@ export function resolveEnemySpell(
 
 /**
  * Check if the enemy's action should be a "skip" (crash, waiting for lock, etc.)
- * This is encoded in the log message by convention.
  */
 export function isSkippedTurn(decision: EnemyDecision): boolean {
-  return decision.log.includes('skips turn') || decision.log.includes('crashed');
+  return decision.behavior === 'skip';
 }
 
 /**
  * Check if the off-by-one error healed the player instead.
  */
 export function isOffByOneHeal(decision: EnemyDecision): boolean {
-  return decision.log.includes('healed you instead');
+  return decision.behavior === 'heal-player';
 }
 
 /**
  * Check if the off-by-one error hit itself.
  */
 export function isOffByOneSelfHit(decision: EnemyDecision): boolean {
-  return decision.log.includes('hit itself');
+  return decision.behavior === 'self-hit';
 }

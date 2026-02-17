@@ -159,6 +159,7 @@ export function executeTurn(state: BattleState, action: Action): BattleState {
 function executePlayerAttack(state: BattleState, targetIndex: number): BattleState {
   let { player, enemies, rng, log, turn } = state;
   let events: InternalCombatEvent[] = [...state.combatEvents];
+  const playerAction: Action = { type: 'ATTACK', targetIndex };
 
   // TURN_START for player
   events.push({ type: 'TURN_START', turn, phase: 'player' });
@@ -168,7 +169,7 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
-  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', state.log.length, l))];
+  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', state.log.length, l, playerAction))];
 
   // Detect expired effects from tick
   events.push(...detectExpiredEffects(beforeEffects, playerTick.effects, player.id));
@@ -180,7 +181,7 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
 
   // Check stun
   if (isStunned(player.statusEffects)) {
-    log = [...log, makeLog(turn, 'player', log.length, `${player.name} is stunned and cannot act!`)];
+    log = [...log, makeLog(turn, 'player', log.length, `${player.name} is stunned and cannot act!`, playerAction)];
     return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
   }
 
@@ -229,7 +230,7 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
 
   let logMsg = `${player.name} attacks ${enemy.name} for ${result.log}`;
   if (absorbed > 0) logMsg += ` (${absorbed} absorbed by shield)`;
-  log = [...log, makeLog(turn, 'player', log.length, logMsg)];
+  log = [...log, makeLog(turn, 'player', log.length, logMsg, playerAction)];
 
   // Check victory
   if (enemies.every(e => e.stats.health <= 0)) {
@@ -244,6 +245,7 @@ function executePlayerAttack(state: BattleState, targetIndex: number): BattleSta
 function executePlayerSpell(state: BattleState, spellId: string, targetIndex: number): BattleState {
   let { player, enemies, rng, log, turn } = state;
   let events: InternalCombatEvent[] = [...state.combatEvents];
+  const spellAction: Action = { type: 'CAST_SPELL', spellId, targetIndex };
 
   // TURN_START for player
   events.push({ type: 'TURN_START', turn, phase: 'player' });
@@ -253,7 +255,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
-  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l))];
+  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l, spellAction))];
 
   events.push(...detectExpiredEffects(beforeEffects, playerTick.effects, player.id));
 
@@ -262,7 +264,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
   }
 
   if (isStunned(player.statusEffects)) {
-    log = [...log, makeLog(turn, 'player', log.length, `${player.name} is stunned!`)];
+    log = [...log, makeLog(turn, 'player', log.length, `${player.name} is stunned!`, spellAction)];
     return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
   }
 
@@ -270,19 +272,19 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
 
   const spell = getSpell(spellId);
   if (!spell) {
-    log = [...log, makeLog(turn, 'player', log.length, `Unknown spell: ${spellId}`)];
+    log = [...log, makeLog(turn, 'player', log.length, `Unknown spell: ${spellId}`, spellAction)];
     return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
   }
 
   // Check mana
   if (spell.manaCost > player.stats.mana) {
-    log = [...log, makeLog(turn, 'player', log.length, `Not enough mana for ${spell.name}!`)];
+    log = [...log, makeLog(turn, 'player', log.length, `Not enough mana for ${spell.name}!`, spellAction)];
     return { ...state, player, log, rng, combatEvents: events }; // Stay in PLAYER_TURN
   }
 
   // Check cooldown
   if ((player.cooldowns[spellId] ?? 0) > 0) {
-    log = [...log, makeLog(turn, 'player', log.length, `${spell.name} is on cooldown!`)];
+    log = [...log, makeLog(turn, 'player', log.length, `${spell.name} is on cooldown!`, spellAction)];
     return { ...state, player, log, rng, combatEvents: events };
   }
 
@@ -340,7 +342,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
 
       let msg = `${player.name} casts ${spell.name} on ${enemy.name} for ${result.log}`;
       if (absorbed > 0) msg += ` (${absorbed} absorbed)`;
-      log = [...log, makeLog(turn, 'player', log.length, msg)];
+      log = [...log, makeLog(turn, 'player', log.length, msg, spellAction)];
       break;
     }
 
@@ -384,7 +386,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
           element: spell.element,
         });
 
-        log = [...log, makeLog(turn, 'player', log.length, `${spell.name} hits ${enemies[i].name} for ${result.log}`)];
+        log = [...log, makeLog(turn, 'player', log.length, `${spell.name} hits ${enemies[i].name} for ${result.log}`, spellAction)];
       }
       break;
     }
@@ -392,7 +394,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
     case 'heal': {
       const healing = calculateHealing(spell.effect.value, effectiveAttack(player.stats, mods.attack ?? 0));
       player = applyHpDelta(player, healing);
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, healing for ${healing} HP`)];
+      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, healing for ${healing} HP`, spellAction)];
 
       events.push({
         type: 'SPELL',
@@ -422,7 +424,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       const shieldHP = calculateShield(spell.effect.value, player.stats.defense);
       const shieldEffect = createStatusEffect('shield', spell.name, shieldHP, 3, false);
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, shieldEffect) };
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, gaining ${shieldHP} shield`)];
+      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, gaining ${shieldHP} shield`, spellAction)];
 
       events.push({
         type: 'SPELL',
@@ -445,7 +447,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
     case 'buff': {
       const buffEffect = createStatusEffect('attack-up', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
       player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, buffEffect) };
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, ATK +${spell.effect.value}`)];
+      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, ATK +${spell.effect.value}`, spellAction)];
 
       events.push({
         type: 'SPELL',
@@ -473,7 +475,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       if (spell.effect.value === 0) {
         const stunEffect = createStatusEffect('stun', spell.name, 0, spell.effect.duration ?? 1, false);
         enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, stunEffect) } : e);
-        log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, stunning ${enemy.name}!`)];
+        log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, stunning ${enemy.name}!`, spellAction)];
 
         events.push({
           type: 'SPELL',
@@ -493,7 +495,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       } else {
         const defDown = createStatusEffect('defense-down', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
         enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, defDown) } : e);
-        log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, DEF -${spell.effect.value} on ${enemy.name}`)];
+        log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, DEF -${spell.effect.value} on ${enemy.name}`, spellAction)];
 
         events.push({
           type: 'SPELL',
@@ -520,7 +522,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
       const idx = enemies.indexOf(enemy);
       const poisonEffect = createStatusEffect('poison', spell.name, spell.effect.value, spell.effect.duration ?? 3, false);
       enemies = enemies.map((e, i) => i === idx ? { ...e, statusEffects: applyStatusEffect(e.statusEffects, poisonEffect) } : e);
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, poisoning ${enemy.name} for ${spell.effect.value}/turn`)];
+      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, poisoning ${enemy.name} for ${spell.effect.value}/turn`, spellAction)];
 
       events.push({
         type: 'SPELL',
@@ -543,7 +545,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
     case 'cleanse': {
       const beforeCleanse = player.statusEffects;
       player = { ...player, statusEffects: cleanse(player.statusEffects) };
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, removing all debuffs!`)];
+      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, removing all debuffs!`, spellAction)];
 
       events.push({
         type: 'SPELL',
@@ -561,7 +563,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
     case 'revive': {
       const reviveHP = spell.effect.value;
       player = applyHpDelta(player, reviveHP);
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, restoring ${reviveHP} HP!`)];
+      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, restoring ${reviveHP} HP!`, spellAction)];
 
       events.push({
         type: 'SPELL',
@@ -576,7 +578,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
 
     case 'taunt': {
       // Taunt doesn't do anything mechanically in 1v1; matters for multi-enemy
-      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, drawing enemy attention!`)];
+      log = [...log, makeLog(turn, 'player', log.length, `${player.name} casts ${spell.name}, drawing enemy attention!`, spellAction)];
 
       events.push({
         type: 'SPELL',
@@ -603,6 +605,7 @@ function executePlayerSpell(state: BattleState, spellId: string, targetIndex: nu
 function executePlayerDefend(state: BattleState): BattleState {
   let { player, log, turn, rng } = state;
   let events: InternalCombatEvent[] = [...state.combatEvents];
+  const defendAction: Action = { type: 'DEFEND' };
 
   // TURN_START for player
   events.push({ type: 'TURN_START', turn, phase: 'player' });
@@ -612,7 +615,7 @@ function executePlayerDefend(state: BattleState): BattleState {
   const playerTick = tickStatusEffects(player.statusEffects, player.name);
   player = applyHpDelta(player, playerTick.hpDelta);
   player = { ...player, statusEffects: playerTick.effects };
-  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l))];
+  log = [...log, ...playerTick.log.map(l => makeLog(turn, 'player', log.length, l, defendAction))];
 
   events.push(...detectExpiredEffects(beforeEffects, playerTick.effects, player.id));
 
@@ -625,7 +628,7 @@ function executePlayerDefend(state: BattleState): BattleState {
   // Defend: temporary defense boost
   const defBuff = createStatusEffect('defense-up', 'Defend', DEFAULT_BALANCE_CONFIG.combat.defendDefenseBonus, DEFAULT_BALANCE_CONFIG.combat.defendDuration, false);
   player = { ...player, statusEffects: applyStatusEffect(player.statusEffects, defBuff) };
-  log = [...log, makeLog(turn, 'player', log.length, `${player.name} takes a defensive stance! DEF +${DEFAULT_BALANCE_CONFIG.combat.defendDefenseBonus} this turn`)];
+  log = [...log, makeLog(turn, 'player', log.length, `${player.name} takes a defensive stance! DEF +${DEFAULT_BALANCE_CONFIG.combat.defendDefenseBonus} this turn`, defendAction)];
 
   events.push({
     type: 'STATUS_APPLIED',
@@ -643,6 +646,7 @@ function executePlayerDefend(state: BattleState): BattleState {
 function executeUseItem(state: BattleState, itemId: string): BattleState {
   let { player, log, turn, rng } = state;
   let events: InternalCombatEvent[] = [...state.combatEvents];
+  const itemAction: Action = { type: 'USE_ITEM', itemId };
 
   // TURN_START for player
   events.push({ type: 'TURN_START', turn, phase: 'player' });
@@ -685,7 +689,7 @@ function executeUseItem(state: BattleState, itemId: string): BattleState {
     events.push(...detectExpiredEffects(beforeItemEffects, player.statusEffects, player.id));
   }
 
-  log = [...log, makeLog(turn, 'player', log.length, itemResult.log)];
+  log = [...log, makeLog(turn, 'player', log.length, itemResult.log, itemAction)];
 
   return proceedToEnemyPhase({ ...state, player, log, rng, combatEvents: events });
 }
@@ -714,14 +718,15 @@ function executeEnemyTurn(state: BattleState): BattleState {
         health: Math.max(0, enemy.stats.health + enemyTick.hpDelta),
       },
     };
-    log = [...log, ...enemyTick.log.map(l => makeLog(turn, `enemy:${i}`, log.length, l))];
+    const enemyActAction: Action = { type: 'ENEMY_ACT', enemyIndex: i };
+    log = [...log, ...enemyTick.log.map(l => makeLog(turn, `enemy:${i}`, log.length, l, enemyActAction))];
 
     events.push(...detectExpiredEffects(beforeEnemyEffects, enemyTick.effects, enemy.id));
 
     // Check if enemy died from DoT
     if (updatedEnemy.stats.health <= 0) {
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
-      log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} was defeated by status effects!`)];
+      log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} was defeated by status effects!`, enemyActAction)];
       events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
@@ -729,7 +734,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
     // Check stun
     if (isStunned(updatedEnemy.statusEffects)) {
       enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
-      log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} is stunned and cannot act!`)];
+      log = [...log, makeLog(turn, `enemy:${i}`, log.length, `${enemy.name} is stunned and cannot act!`, enemyActAction)];
       events.push({ type: 'TURN_END', turn, phase: 'enemy' });
       continue;
     }
@@ -737,7 +742,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
     // AI decision
     const decision = chooseEnemyAction(i, { ...state, enemies: enemies.map((e, j) => j === i ? updatedEnemy : e), rng, log });
     rng = decision.rng;
-    log = [...log, makeLog(turn, `enemy:${i}`, log.length, decision.log)];
+    log = [...log, makeLog(turn, `enemy:${i}`, log.length, decision.log, decision.action)];
 
     // Handle special off-by-one behaviors
     if (isSkippedTurn(decision)) {
@@ -867,7 +872,7 @@ function executeEnemyTurn(state: BattleState): BattleState {
 
     let dmgLog = `${updatedEnemy.name} deals ${dmgResult.log} to ${player.name}`;
     if (absorbed > 0) dmgLog += ` (${absorbed} absorbed by shield)`;
-    log = [...log, makeLog(turn, `enemy:${i}`, log.length, dmgLog)];
+    log = [...log, makeLog(turn, `enemy:${i}`, log.length, dmgLog, decision.action)];
 
     enemies = enemies.map((e, j) => j === i ? updatedEnemy : e);
 
@@ -939,11 +944,11 @@ function victoryPhase(enemies: Monster[]): CombatPhase {
   return { type: 'VICTORY', xpGained, loot: [] };
 }
 
-function makeLog(turn: number, actor: string, idx: number, result: string): ActionLogEntry {
+function makeLog(turn: number, actor: string, idx: number, result: string, action?: Action): ActionLogEntry {
   return {
     turn,
     actor: actor as ActionLogEntry['actor'],
-    action: { type: 'ATTACK', targetIndex: 0 }, // simplified
+    action: action ?? { type: 'ATTACK', targetIndex: 0 },
     result,
   };
 }

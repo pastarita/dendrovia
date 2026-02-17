@@ -21,6 +21,7 @@ const backdropStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   padding: 'var(--oculus-space-xl)',
+  pointerEvents: 'auto',
 };
 
 const containerStyle: CSSProperties = {

@@ -1,6 +1,7 @@
 import { EffectComposer, Bloom, Vignette, ChromaticAberration } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import { useRendererStore } from '../store/useRendererStore';
+import { PostProcessingTSL } from './PostProcessingTSL';
 
 /**
  * POST-PROCESSING STACK
@@ -73,9 +74,11 @@ export function PostProcessing() {
   const bloom = useRendererStore((s) => s.quality.bloom);
   const gpuBackend = useRendererStore((s) => s.gpuBackend);
 
-  // D2: pmndrs/postprocessing is GLSL-only — skip on WebGPU.
-  // TSL-based post-processing deferred to D9.
-  if (!postProcessing || gpuBackend === 'webgpu') return null;
+  if (!postProcessing) return null;
 
+  // D9: WebGPU path uses TSL-based post-processing (WGSL-native)
+  if (gpuBackend === 'webgpu') return <PostProcessingTSL />;
+
+  // WebGL2 path: pmndrs/postprocessing (GLSL)
   return bloom ? <WithBloom /> : <WithoutBloom />;
 }

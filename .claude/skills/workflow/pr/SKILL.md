@@ -1,3 +1,9 @@
+---
+name: pr-workflow
+description: Generate a complete PR description with heraldic Coat of Arms classification
+disable-model-invocation: true
+---
+
 # PR Workflow Skill
 
 _Version: 1.0.0_

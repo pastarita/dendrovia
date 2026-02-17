@@ -3,9 +3,11 @@ import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import type { FileTreeNode, ProceduralPalette, Hotspot, LSystemRule } from '@dendrovia/shared';
 import { useRendererStore } from './store/useRendererStore';
-import { loadGeneratedAssets, type CacheableAssetLoader } from './loader/AssetBridge';
+import { useSegmentStore } from './store/useSegmentStore';
+import { loadGeneratedAssets, loadWorldIndex, type CacheableAssetLoader } from './loader/AssetBridge';
 import { detectGPU } from './renderer/detectGPU';
 import { DendriteWorld } from './components/DendriteWorld';
+import { SegmentedWorld } from './components/SegmentedWorld';
 import { CameraRig } from './components/CameraRig';
 import { Lighting } from './components/Lighting';
 import { PostProcessing } from './components/PostProcessing';
@@ -95,6 +97,8 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
   const sdfBackdrop = useRendererStore((s) => s.sdfBackdrop);
   const toggleSdfBackdrop = useRendererStore((s) => s.toggleSdfBackdrop);
 
+  const worldReady = useSegmentStore((s) => s.worldReady);
+
   const [gpuReady, setGpuReady] = useState(false);
 
   const activeTopology = topology ?? DEMO_TOPOLOGY;
@@ -120,15 +124,51 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
     return () => { cancelled = true; };
   }, [setQualityTier, setGpuBackend, setLoading]);
 
-  // Phase 2: Load IMAGINARIUM generated assets (non-blocking)
+  // Phase 2: Load IMAGINARIUM generated assets
+  // Strategy: try world index first (~15KB, <100ms) for segmented loading,
+  // fall back to monolithic loadGeneratedAssets (~28MB) if chunked manifest unavailable.
   useEffect(() => {
     if (!manifestPath) return;
     let cancelled = false;
 
-    loadGeneratedAssets(manifestPath, { assetLoader: assetLoader ?? undefined }).then((assets) => {
+    async function loadAssets() {
+      const opts = { assetLoader: assetLoader ?? undefined };
+
+      // Try Stage 1: world index + chunked manifest (~15KB)
+      const worldResult = await loadWorldIndex(manifestPath!, opts);
+
+      if (cancelled) return;
+
+      if (worldResult) {
+        // Segmented path: init segment store, render hulls immediately
+        useSegmentStore.getState().initFromWorldIndex(
+          worldResult.worldIndex,
+          worldResult.manifest,
+          manifestPath!,
+        );
+        // Also populate renderer store with palette/shaders for global use
+        setGeneratedAssets({
+          manifest: worldResult.manifest as any,
+          palette: worldResult.palette,
+          palettes: worldResult.palettes,
+          lsystem: worldResult.lsystem,
+          noise: worldResult.noise,
+          shaders: worldResult.shaders,
+          mycology: null,
+          meshes: null,
+          storyArc: worldResult.storyArc,
+          segmentAssets: null,
+        });
+        return;
+      }
+
+      // Fallback: monolithic load (~28MB)
+      const assets = await loadGeneratedAssets(manifestPath!, opts);
       if (cancelled || !assets) return;
       setGeneratedAssets(assets);
-    });
+    }
+
+    loadAssets();
 
     return () => { cancelled = true; };
   }, [manifestPath, assetLoader, setGeneratedAssets]);
@@ -185,12 +225,16 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
             {/* Scene contents */}
             <Lighting />
             <CameraRig />
-            <DendriteWorld
-              topology={activeTopology}
-              hotspots={hotspots}
-              palette={activePalette}
-              lsystemOverride={activeLSystem}
-            />
+            {worldReady ? (
+              <SegmentedWorld palette={activePalette} />
+            ) : (
+              <DendriteWorld
+                topology={activeTopology}
+                hotspots={hotspots}
+                palette={activePalette}
+                lsystemOverride={activeLSystem}
+              />
+            )}
             <PostProcessing />
           </Suspense>
 

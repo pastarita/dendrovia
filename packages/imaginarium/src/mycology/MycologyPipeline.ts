@@ -9,7 +9,7 @@
 
 import { join } from 'path';
 import { mkdirSync, existsSync } from 'fs';
-import type { CodeTopology } from '@dendrovia/shared';
+import type { CodeTopology, StoryArc } from '@dendrovia/shared';
 import { createLogger } from '@dendrovia/shared/logger';
 import type { MycologyManifest, FungalSpecimen, MycelialNetwork, FungalGenus } from './types';
 
@@ -22,6 +22,7 @@ import { generateSvg } from './assets/SvgTemplates';
 export async function distillMycology(
   topology: CodeTopology,
   outputDir: string,
+  storyArc?: StoryArc,
 ): Promise<MycologyManifest> {
   log.info('Starting mycology catalogization');
 
@@ -67,9 +68,14 @@ export async function distillMycology(
   }
   log.info({ count: svgCount }, 'SVGs generated');
 
-  // 5. Write specimens catalog
+  // 5. Write specimens catalog (monolithic — backward compat)
   const specimensPath = join(mycologyDir, 'specimens.json');
   await Bun.write(specimensPath, JSON.stringify(specimens, null, 2));
+
+  // 5.5. Partition specimens by segment (if story arc available)
+  if (storyArc) {
+    await partitionSpecimensBySegment(specimens, storyArc, outputDir);
+  }
 
   // 6. Write network
   const networkPath = join(mycologyDir, 'network.json');
@@ -92,4 +98,34 @@ export async function distillMycology(
 
   log.info('Catalogization complete');
   return manifest;
+}
+
+/**
+ * Partition specimens by segment: match each specimen's filePath against
+ * segment.filePaths[], write per-segment specimens.json files.
+ */
+async function partitionSpecimensBySegment(
+  specimens: FungalSpecimen[],
+  storyArc: StoryArc,
+  outputDir: string,
+): Promise<void> {
+  for (const segment of storyArc.segments) {
+    const fileSet = new Set(segment.filePaths);
+    const segSpecimens = specimens.filter(s => fileSet.has(s.filePath));
+
+    if (segSpecimens.length === 0) continue;
+
+    const segDir = join(outputDir, 'segments', segment.id);
+    if (!existsSync(segDir)) mkdirSync(segDir, { recursive: true });
+
+    await Bun.write(
+      join(segDir, 'specimens.json'),
+      JSON.stringify(segSpecimens, null, 2),
+    );
+  }
+
+  log.info(
+    { segments: storyArc.segments.length },
+    'Per-segment specimens partitioned',
+  );
 }

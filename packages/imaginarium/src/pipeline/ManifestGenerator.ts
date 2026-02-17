@@ -3,7 +3,7 @@
  */
 
 import { basename } from 'path';
-import type { AssetManifest, SDFShader, ProceduralPalette, MeshManifestEntry } from '@dendrovia/shared';
+import type { AssetManifest, SDFShader, ProceduralPalette, MeshManifestEntry, ChunkedManifest, SegmentChunkPaths } from '@dendrovia/shared';
 import { hashString } from '../utils/hash';
 
 export interface ManifestInput {
@@ -79,6 +79,71 @@ export function generateManifest(input: ManifestInput): AssetManifest {
   if (input.storyArc) {
     manifest.storyArc = input.storyArc;
   }
+
+  return manifest;
+}
+
+/**
+ * Input for generating a slim chunked manifest (~5KB instead of 4.7MB).
+ * Mesh entries are extracted to a separate mesh-index.json.
+ */
+export interface ChunkedManifestInput {
+  shaders: Array<{ id: string; path: string }>;
+  palettes: Array<{ id: string; path: string }>;
+  topologyHash: string;
+  noisePath?: string;
+  lsystemPath?: string;
+  worldIndexPath: string;
+  meshIndexPath?: string;
+  segments: Record<string, SegmentChunkPaths>;
+  storyArc?: {
+    arc: string;
+    segmentCount: number;
+  };
+  mycologyNetwork?: string;
+}
+
+/**
+ * Generate a slim chunked manifest that references per-segment files
+ * and world-index.json instead of embedding monolithic data.
+ */
+export function generateChunkedManifest(input: ChunkedManifestInput): ChunkedManifest {
+  const shaders: Record<string, string> = {};
+  for (const s of input.shaders) {
+    shaders[s.id] = s.path;
+  }
+
+  const palettes: Record<string, string> = {};
+  for (const p of input.palettes) {
+    palettes[p.id] = p.path;
+  }
+
+  const checksumParts = [
+    ...input.shaders.map(s => s.path),
+    ...input.palettes.map(p => p.path),
+    input.noisePath ?? '',
+    input.lsystemPath ?? '',
+    input.topologyHash,
+    `world-index:${input.worldIndexPath}`,
+    `segments:${Object.keys(input.segments).length}`,
+  ].filter(Boolean);
+
+  const checksum = hashString(checksumParts.sort().join(':'));
+
+  const manifest: ChunkedManifest = {
+    version: '2.0.0',
+    shaders,
+    palettes,
+    checksum,
+    worldIndex: input.worldIndexPath,
+    segments: input.segments,
+  };
+
+  if (input.noisePath) manifest.noise = input.noisePath;
+  if (input.lsystemPath) manifest.lsystem = input.lsystemPath;
+  if (input.meshIndexPath) manifest.meshIndex = input.meshIndexPath;
+  if (input.storyArc) manifest.storyArc = input.storyArc;
+  if (input.mycologyNetwork) manifest.mycologyNetwork = input.mycologyNetwork;
 
   return manifest;
 }

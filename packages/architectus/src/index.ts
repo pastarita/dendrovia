@@ -13,6 +13,11 @@ export { useRendererStore } from './store/useRendererStore';
 
 // Components
 export { DendriteWorld } from './components/DendriteWorld';
+export { SegmentedWorld } from './components/SegmentedWorld';
+export { SegmentRenderer } from './components/SegmentRenderer';
+export { SegmentHull } from './components/SegmentHull';
+export { SegmentDistanceUpdater } from './components/SegmentDistanceUpdater';
+export { WorldFog } from './components/WorldFog';
 export { BranchInstances } from './components/BranchInstances';
 export { NodeInstances } from './components/NodeInstances';
 export { MushroomInstances } from './components/MushroomInstances';
@@ -42,9 +47,15 @@ export { detectGPU } from './renderer/detectGPU';
 export type { GPUCapabilities } from './renderer/detectGPU';
 
 // Loader — IMAGINARIUM asset bridge
-export { loadGeneratedAssets } from './loader/AssetBridge';
+export { loadGeneratedAssets, loadWorldIndex, loadSegmentData } from './loader/AssetBridge';
 export type {
   GeneratedAssets,
+  WorldIndexResult,
+  SegmentLoadResult,
   CacheableAssetLoader,
   LoadGeneratedAssetsOptions,
 } from './loader/AssetBridge';
+
+// Segment store
+export { useSegmentStore } from './store/useSegmentStore';
+export type { SegmentState, SegmentLoadState } from './store/useSegmentStore';

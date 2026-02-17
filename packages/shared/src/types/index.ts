@@ -727,3 +727,73 @@ export interface SegmentPlacement {
   centroid: [number, number, number];
   radius: number;
 }
+
+/**
+ * WORLD SEGMENTATION TYPES
+ * (Build-time chunking for demand-loaded worlds)
+ */
+
+/** Pruned topology for a single story segment — ~200KB-1.5MB instead of 8.8MB monolith. */
+export interface TopologyChunk {
+  segmentId: string;
+  tree: FileTreeNode;
+  files: ParsedFile[];
+  hotspots: Hotspot[];
+  fileCount: number;
+}
+
+/** Precomputed spatial bounds for a segment — enables O(N_segments) distance checks at runtime. */
+export interface PrecomputedPlacement {
+  segmentId: string;
+  label: string;
+  ordinal: number;
+  centroid: [number, number, number];
+  radius: number;
+  hullVertices: Array<[number, number, number]>;
+  fileCount: number;
+  phase: StoryPhase;
+  mood: SegmentMood;
+}
+
+/** Lightweight index of all segment placements — ~2KB, loaded first at runtime. */
+export interface WorldIndex {
+  version: string;
+  segmentCount: number;
+  placements: PrecomputedPlacement[];
+  worldCentroid: [number, number, number];
+  worldRadius: number;
+  generatedAt: string;
+}
+
+/** Slim manifest that references per-segment chunk files instead of monolithic data. */
+export interface ChunkedManifest {
+  version: string;
+  shaders: Record<string, string>;
+  palettes: Record<string, string>;
+  checksum: string;
+  noise?: string;
+  lsystem?: string;
+  /** Path to world-index.json (~2KB) */
+  worldIndex: string;
+  /** Path to mesh-index.json (deferred mesh data) */
+  meshIndex?: string;
+  /** Per-segment file paths, keyed by segment ID */
+  segments: Record<string, SegmentChunkPaths>;
+  /** Story arc metadata */
+  storyArc?: {
+    arc: string;
+    segmentCount: number;
+  };
+  /** Mycology network (global, not per-segment) */
+  mycologyNetwork?: string;
+}
+
+/** Paths to all chunk files for a single segment. */
+export interface SegmentChunkPaths {
+  topology: string;
+  specimens?: string;
+  palette: string;
+  noise: string;
+  lsystem: string;
+  shader: string;
+}

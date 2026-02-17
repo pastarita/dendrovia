@@ -47,6 +47,7 @@ bun-debug.log*
 
 # CHRONOS state cache
 .chronos-state
+.chronos-manifest.json
 
 # Testing
 coverage/

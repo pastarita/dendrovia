@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@dendrovia/shared": "workspace:*",
-    "isomorphic-git": "^1.27.1",
     "ts-morph": "^24.0.0"
   },
   "devDependencies": {

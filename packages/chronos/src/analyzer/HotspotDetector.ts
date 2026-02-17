@@ -25,7 +25,7 @@ export function detectHotspots(
   commits: ParsedCommit[],
   opts: { minCouplingCount?: number; topN?: number } = {},
 ): HotspotAnalysis {
-  const minCoupling = opts.minCouplingCount ?? 5;
+  const minCoupling = opts.minCouplingCount ?? 2;
   const topN = opts.topN ?? 50;
 
   // Build churn map: file path → commit count

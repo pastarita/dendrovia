@@ -4,10 +4,10 @@
  * Generates AppleScript to launch iTerm2 windows for each pillar.
  * Each window has 3 panes:
  * ┌─────────────────────────┐
- * │      TOP (Claude)       │  <- Claude Code with CLAUDE.md context
+ * │    TOP (Pillar Root)    │  <- Pillar checkout root (where CLAUDE.md lives)
  * ├────────────┬────────────┤
  * │ Bottom L   │ Bottom R   │
- * │  (Dev)     │ (Shell)    │  <- Dev work / General shell
+ * │  (Dev)     │ (Shell)    │  <- Dev work / General shell (smaller font)
  * └────────────┴────────────┘
  */
 
@@ -78,7 +78,7 @@ export function generateItermAppleScript(
     const cdCommandTop = `cd '${pillar.path}'`;
     // Bottom panes open in the dendrovia monorepo (where production code lives)
     const cdCommandBottom = `cd '${pillar.path}/dendrovia'`;
-    const titleTop = `echo -e '\\\\033]0;${pillar.shortCode} Claude\\\\007'`;
+    const titleTop = `echo -e '\\\\033]0;${pillar.shortCode} Root\\\\007'`;
     const titleBottomLeft = `echo -e '\\\\033]0;${pillar.shortCode} Dev\\\\007'`;
     const titleBottomRight = `echo -e '\\\\033]0;${pillar.shortCode} Shell\\\\007'`;
 
@@ -87,9 +87,6 @@ export function generateItermAppleScript(
       ? ` && echo 'Starting dev server...' && bun run dev`
       : "";
 
-    // Claude Code pane shows CLAUDE.md on launch
-    const claudeSetup = ` && echo '\\n${pillar.name}\\n${pillar.description}\\n' && echo 'CLAUDE.md context loaded for this pillar\\n' && echo 'Run claude to start AI assistant\\n'`;
-
     return `
     -- Window ${i + 1}: ${pillar.name}
     -- Create window with ${pillar.profile} profile
@@ -97,9 +94,9 @@ export function generateItermAppleScript(
     delay 0.5
 
     tell newWindow
-      -- Top pane: Claude Code context (pillar checkout root)
+      -- Top pane: Pillar checkout root
       tell current session
-        write text "${cdCommandTop} && ${titleTop}${claudeSetup}"
+        write text "${cdCommandTop} && ${titleTop}"
       end tell
       delay 0.15
 
@@ -129,21 +126,64 @@ export function generateItermAppleScript(
     set bounds of newWindow to {${pos.x}, ${pos.y}, ${pos.x + pos.width}, ${pos.y + pos.height}}
     delay 0.1
 
-    -- Resize panes: make top pane ~70% of height (Claude gets more space)
+    -- Resize panes: make top pane larger (pillar root gets more space)
     tell application "System Events"
       tell process "iTerm2"
-        repeat 11 times
+        repeat 9 times
           key code 125 using {command down, control down}
           delay 0.02
         end repeat
       end tell
     end tell
-    delay 0.5`;
+    delay 0.3
+
+    -- Decrease font size in bottom panes (Cmd+- twice each)
+    -- The escape-sequence approach (OSC 1337 SetFontSize) doesn't exist in iTerm2,
+    -- so we use System Events keystrokes on the selected session instead.
+    tell newWindow
+      tell bottomLeftSession
+        select
+      end tell
+    end tell
+    delay 0.1
+    tell application "System Events"
+      tell process "iTerm2"
+        key code 27 using command down
+        delay 0.05
+        key code 27 using command down
+      end tell
+    end tell
+    delay 0.1
+    tell newWindow
+      tell bottomRightSession
+        select
+      end tell
+    end tell
+    delay 0.1
+    tell application "System Events"
+      tell process "iTerm2"
+        key code 27 using command down
+        delay 0.05
+        key code 27 using command down
+      end tell
+    end tell
+    delay 0.1
+    -- Re-apply window bounds (Cmd+- shrinks the window to maintain row/col count)
+    set bounds of newWindow to {${pos.x}, ${pos.y}, ${pos.x + pos.width}, ${pos.y + pos.height}}
+    delay 0.1
+
+    -- Re-select top pane so it's ready for use
+    tell newWindow
+      tell first session of current tab
+        select
+      end tell
+    end tell
+    delay 0.3`;
   });
 
   return `-- Dendrovia Workspace Launcher
 -- Launches ${pillars.length} pillar windows, each with 3 panes:
---   TOP: Claude Code with CLAUDE.md context
+--   TOP: Pillar checkout root
 --   BOTTOM-LEFT: Dev work
 --   BOTTOM-RIGHT: General shell
 

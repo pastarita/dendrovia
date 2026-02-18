@@ -27,7 +27,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
     {
       id: "CHRONOS",
       name: "The Archaeologist",
-      path: "/Users/Patmac/denroot/CHRONOS/dendrovia",
+      path: "/Users/Patmac/denroot/CHRONOS",
       shortCode: "CHR",
       description: "Git + AST Parsing",
       primaryPackage: "packages/chronos",
@@ -37,7 +37,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
     {
       id: "IMAGINARIUM",
       name: "The Compiler",
-      path: "/Users/Patmac/denroot/IMAGINARIUM/dendrovia",
+      path: "/Users/Patmac/denroot/IMAGINARIUM",
       shortCode: "IMG",
       description: "AI → Shader Distillation",
       primaryPackage: "packages/imaginarium",
@@ -47,7 +47,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
     {
       id: "ARCHITECTUS",
       name: "The Renderer",
-      path: "/Users/Patmac/denroot/ARCHITECTUS/dendrovia",
+      path: "/Users/Patmac/denroot/ARCHITECTUS",
       shortCode: "ARC",
       description: "WebGPU Rendering",
       primaryPackage: "packages/architectus",
@@ -57,7 +57,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
     {
       id: "LUDUS",
       name: "The Mechanics",
-      path: "/Users/Patmac/denroot/LUDUS/dendrovia",
+      path: "/Users/Patmac/denroot/LUDUS",
       shortCode: "LUD",
       description: "Game Logic",
       primaryPackage: "packages/ludus",
@@ -67,7 +67,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
     {
       id: "OCULUS",
       name: "The Interface",
-      path: "/Users/Patmac/denroot/OCULUS/dendrovia",
+      path: "/Users/Patmac/denroot/OCULUS",
       shortCode: "OCU",
       description: "UI/UX Components",
       primaryPackage: "packages/oculus",
@@ -77,7 +77,7 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
     {
       id: "OPERATUS",
       name: "The Infrastructure",
-      path: "/Users/Patmac/denroot/OPERATUS/dendrovia",
+      path: "/Users/Patmac/denroot/OPERATUS",
       shortCode: "OPR",
       description: "Asset Loading & Caching",
       primaryPackage: "packages/operatus",

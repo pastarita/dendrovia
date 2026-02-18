@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { PerspectiveCamera, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import type { FileTreeNode, ProceduralPalette, Hotspot, LSystemRule } from '@dendrovia/shared';
 import { useRendererStore } from './store/useRendererStore';
+import { useCameraEditorStore } from './store/useCameraEditorStore';
 import { useSegmentStore } from './store/useSegmentStore';
 import { loadGeneratedAssets, loadWorldIndex, type CacheableAssetLoader } from './loader/AssetBridge';
 import { detectGPU, type GPUCapabilities } from './renderer/detectGPU';
@@ -87,6 +88,12 @@ const DEMO_TOPOLOGY: FileTreeNode = {
     { name: 'main.tsx', path: 'src/main.tsx', type: 'file', metadata: { path: 'src/main.tsx', hash: 'd2', language: 'typescript', complexity: 1, loc: 10, lastModified: new Date(), author: 'dev' } },
   ],
 };
+
+/** Camera that subscribes to FOV from the camera editor store */
+function StoreCamera() {
+  const fov = useCameraEditorStore((s) => s.authoredParams.fov);
+  return <PerspectiveCamera makeDefault position={[10, 14, -16]} fov={fov} near={0.1} far={500} />;
+}
 
 export function App({ topology, palette, hotspots, manifestPath, assetLoader }: AppProps = {}) {
   const quality = useRendererStore((s) => s.quality);
@@ -242,13 +249,7 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
           }}
           style={{ background: activePalette.background }}
         >
-          <PerspectiveCamera
-            makeDefault
-            position={[10, 14, -16]}
-            fov={60}
-            near={0.1}
-            far={500}
-          />
+          <StoreCamera />
 
           {/* Adaptive quality from R3F/drei */}
           <AdaptiveDpr pixelated />
@@ -274,8 +275,7 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
           {/* Performance tracking (no visual output) */}
           <PerformanceMonitor />
 
-          {/* Debug grid (dev mode only) */}
-          <gridHelper args={[40, 40, '#1a1a2e', '#0a0a1e']} />
+          {/* Debug grid removed — RootPlatform provides ground reference */}
         </Canvas>
       </ErrorBoundary>
     </div>

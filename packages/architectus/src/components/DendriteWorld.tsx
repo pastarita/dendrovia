@@ -14,8 +14,14 @@ import { MushroomInstances } from './MushroomInstances';
 import { ParticleInstances } from './ParticleInstances';
 import { SegmentOverlay } from './SegmentOverlay';
 import { SDFBackdrop } from './SDFBackdrop';
+import { RootPlatform } from './RootPlatform';
 import { useRendererStore } from '../store/useRendererStore';
 import { ParticleSystem, BURST_CONFIG } from '../systems/ParticleSystem';
+import { configFromTreeGeometry } from '../systems/PlatformConfig';
+import { computeRootNest } from '../systems/NestConfig';
+import { NestPlatform } from './NestPlatform';
+import { ViewFrame } from './ViewFrame';
+import { NestInspector } from './NestInspector';
 
 /**
  * DENDRITE WORLD
@@ -127,6 +133,43 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     return () => useRendererStore.getState().setSpatialIndex(null);
   }, [spatialIndex]);
 
+  // Compute platform config from topology-derived tree geometry
+  const platformConfig = useMemo(
+    () => configFromTreeGeometry(treeGeometry),
+    [treeGeometry],
+  );
+
+  // Compute nest config from first fork junction
+  const nestConfig = useMemo(
+    () => computeRootNest(treeGeometry.branches, platformConfig),
+    [treeGeometry.branches, platformConfig],
+  );
+
+  // Publish nest config to store for CameraRig to read
+  useEffect(() => {
+    useRendererStore.getState().setActiveNest(nestConfig);
+    return () => useRendererStore.getState().setActiveNest(null);
+  }, [nestConfig]);
+
+  // Read view frame visibility from store
+  const viewFrameVisible = useRendererStore((s) => s.viewFrameVisible);
+
+  // Compute route indicators from depth-0 branches that have the root trunk as parent
+  const routes = useMemo(() => {
+    return treeGeometry.branches
+      .filter((b) => b.depth === 0 && b.parentIndex === 0)
+      .map((b) => ({
+        direction: new THREE.Vector3().subVectors(b.end, b.start).normalize(),
+        label: '',
+      }));
+  }, [treeGeometry.branches]);
+
+  // Publish platform config to store for CameraRig to read
+  useEffect(() => {
+    useRendererStore.getState().setPlatformConfig(platformConfig);
+    return () => useRendererStore.getState().setPlatformConfig(null);
+  }, [platformConfig]);
+
   // Resolve mushroom rendering data from generated assets.
   // Both specimens and meshes must be present to render mushroom instances.
   const mushroomSpecimens = generatedAssets?.mycology?.specimens ?? null;
@@ -204,6 +247,24 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
 
   return (
     <group name="dendrite-world">
+      {/* Root platform — persistent spawn base, scaled to topology */}
+      <RootPlatform palette={palette} routes={routes} config={platformConfig} />
+
+      {/* Nest platform — concave bowl at first fork junction */}
+      {nestConfig && <NestPlatform nestConfig={nestConfig} palette={palette} />}
+
+      {/* View frame — diagnostic hemispheres around nest */}
+      {nestConfig && (
+        <ViewFrame
+          nestConfig={nestConfig}
+          visible={viewFrameVisible}
+          palette={palette}
+        />
+      )}
+
+      {/* Inspection mode — measurements + debug labels (inside Canvas) */}
+      <NestInspector />
+
       {/* SDF backdrop — fullscreen raymarching shader behind the scene */}
       {sdfBackdrop && firstShaderSource && (
         <SDFBackdrop

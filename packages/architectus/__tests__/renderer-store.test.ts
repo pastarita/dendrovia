@@ -68,18 +68,23 @@ describe('initial state', () => {
 // ---------------------------------------------------------------------------
 
 describe('setCameraMode', () => {
-  test('switches to player mode', () => {
-    useRendererStore.getState().setCameraMode('player');
-    expect(useRendererStore.getState().cameraMode).toBe('player');
+  test('switches to player-1p mode', () => {
+    useRendererStore.getState().setCameraMode('player-1p');
+    expect(useRendererStore.getState().cameraMode).toBe('player-1p');
+  });
+
+  test('switches to player-3p mode', () => {
+    useRendererStore.getState().setCameraMode('player-3p');
+    expect(useRendererStore.getState().cameraMode).toBe('player-3p');
   });
 
   test('sets cameraTransitioning to true', () => {
-    useRendererStore.getState().setCameraMode('player');
+    useRendererStore.getState().setCameraMode('player-1p');
     expect(useRendererStore.getState().cameraTransitioning).toBe(true);
   });
 
   test('switches back to falcon mode', () => {
-    useRendererStore.getState().setCameraMode('player');
+    useRendererStore.getState().setCameraMode('player-1p');
     useRendererStore.getState().setCameraMode('falcon');
     expect(useRendererStore.getState().cameraMode).toBe('falcon');
   });

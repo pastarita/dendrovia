@@ -37,6 +37,42 @@ const PLAYGROUNDS: PlaygroundEntry[] = [
 const BRAVE_APP = '/Applications/Brave Browser.app';
 const BRAVE_BIN = `${BRAVE_APP}/Contents/MacOS/Brave Browser`;
 
+// ── Tab Refresh ─────────────────────────────────────────────────
+
+/**
+ * Try to refresh existing Brave tabs that match our playground ports.
+ * Returns the number of tabs refreshed (0 if none found).
+ */
+async function tryRefreshExistingTabs(entries: PlaygroundEntry[]): Promise<number> {
+  // Build port-matching conditions for AppleScript
+  const portChecks = entries
+    .map((e) => `URL of t contains "localhost:${e.port}"`)
+    .join(' or ');
+
+  const script = `
+tell application "Brave Browser"
+  set refreshed to 0
+  repeat with w in windows
+    repeat with t in tabs of w
+      if ${portChecks} then
+        tell t to reload
+        set refreshed to refreshed + 1
+      end if
+    end repeat
+  end repeat
+  return refreshed
+end tell
+  `.trim();
+
+  try {
+    const result = await $`osascript -e ${script}`.quiet();
+    const count = parseInt(result.text().trim(), 10);
+    return isNaN(count) ? 0 : count;
+  } catch {
+    return 0;
+  }
+}
+
 // ── Helpers ─────────────────────────────────────────────────────
 
 async function isBraveRunning(): Promise<boolean> {
@@ -145,6 +181,18 @@ export async function launchBrave(options: BraveLaunchOptions = {}): Promise<voi
     }
   }
 
+  // Try refreshing existing tabs before opening new ones
+  if (!dryRun) {
+    const running = await isBraveRunning();
+    if (running) {
+      const refreshed = await tryRefreshExistingTabs(entries);
+      if (refreshed > 0) {
+        console.log(`  Refreshed ${refreshed} existing browser tab${refreshed > 1 ? 's' : ''}`);
+        return;
+      }
+    }
+  }
+
   const urls = entries.map((e) => `http://localhost:${e.port}`);
   const script = buildAppleScript(urls);
 
@@ -162,8 +210,7 @@ export async function launchBrave(options: BraveLaunchOptions = {}): Promise<voi
   }
 
   // Launch
-  const running = await isBraveRunning();
-  if (!running) {
+  if (!(await isBraveRunning())) {
     console.log('  Starting Brave Browser...');
     await $`open -a "Brave Browser"`.quiet();
     await Bun.sleep(1500); // Give Brave time to initialize

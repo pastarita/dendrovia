@@ -9,12 +9,12 @@
 Dendrovia has **two orthogonal dev orchestration concerns**:
 
 ### Axis 1: Pillar Checkouts (existing `launch` system)
-Opens iTerm2/Ghostty windows for the 6 pillar checkouts at `/denroot/{PILLAR}/dendrovia/`. Each window is a full monorepo clone with pillar-specific `CLAUDE.md` context. This system is about **cognitive workspace layout** — giving each pillar its own terminal environment.
+Opens iTerm2/Ghostty windows for the 6 pillar checkouts at `/denroot/{PILLAR}/dendrovia/`. In the current topology, `OPERATUS/dendrovia` is canonical and other pillars are symlinked by default (promotable to isolated worktrees), with pillar-specific sidecar context files at `/denroot/{PILLAR}/CLAUDE.md`. This system is about **cognitive workspace layout** — giving each pillar its own terminal environment.
 
 **Commands:** `bun run launch`, `bun run launch:dev`, `bun run launch --ghostty`
 
 ### Axis 2: Playground Dev Servers (new `td` system)
-Runs `turbo dev` inside the ARCHITECTUS monorepo to start Next.js playground apps on ports 3010-3016 (Quest at 3010, playgrounds at 3011-3016). This system is about **process orchestration** — spinning up dev servers and managing their lifecycle.
+Runs `turbo dev` from the canonical monorepo (`OPERATUS/dendrovia`) to start Next.js playground apps on ports 3010-3016 (Quest at 3010, playgrounds at 3011-3016). This system is about **process orchestration** — spinning up dev servers and managing their lifecycle.
 
 **Commands:** `bun run td`, `bun run td:play`, `bun run td:architectus`, etc.
 

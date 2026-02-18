@@ -1,62 +1,56 @@
-import { useRef, useEffect } from 'react';
+import type React from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import type { PlayerMovedEvent } from '@dendrovia/shared';
 import { useRendererStore } from '../store/useRendererStore';
+import { useCameraEditorStore } from '../store/useCameraEditorStore';
+import { deriveDimensions } from '../systems/PlatformConfig';
+import type { PlatformDimensions } from '../systems/PlatformConfig';
+import { falconOrbitPosition } from '../systems/NestConfig';
+import { validateCameraView } from '../systems/ViewQualityValidator';
+import { FalconAutoOrbit } from './FalconAutoOrbit';
+import { PlayerThirdPerson } from './PlayerThirdPerson';
+import { SpectatorCamera } from './SpectatorCamera';
 
 /**
  * CAMERA RIG (D4)
  *
- * Two modes with smooth transition:
+ * Three modes with smooth transition:
  *
  * Falcon Mode (Overview):
- *   - Orbital controls, free-floating
- *   - For pattern recognition, hotspot detection
- *   - MinDistance: 5, MaxDistance: 100
+ *   - Automated elliptical orbit around nest center
+ *   - Smooth cinematic camera movement
  *
- * Player Mode (Exploration) — "Ant on a Manifold":
+ * Player First-Person (Exploration) — "Ant on a Manifold":
  *   - Surface-locked to nearest branch cylinder
- *   - Gravity vector = toward branch axis (not world-down)
- *   - Movement tangent to cylinder surface
- *   - Keyboard WASD: forward/back along branch, strafe around cylinder
- *   - Space: jump with parabolic return to surface
- *   - At branch junctions: smooth transition between segments
+ *   - Character scale proportional to trunk radius
+ *   - Platform detection: flat-ground physics when on platform
  *
- * Transition: Smooth cubic ease camera position + target over 1.5s.
+ * Player Third-Person (Chase):
+ *   - Chase camera behind + above player
+ *   - Same branch-walking physics as first-person
+ *
+ * All positioning and physics values are topology-derived via PlatformConfig.
  */
 
-const FALCON_DEFAULTS = {
-  position: new THREE.Vector3(10, 14, -16),
-  target: new THREE.Vector3(-2, 5, 3),
-  minDistance: 5,
-  maxDistance: 100,
-  dampingFactor: 0.05,
+/** Fallback physics when no config is available */
+const FALLBACK_PHYSICS = {
+  playerHeight: 1.5,
+  moveSpeed: 4.0,
+  strafeSpeed: 2.0,
+  jumpStrength: 5.0,
+  gravityStrength: 12.0,
+  lookAheadDistance: 3.0,
+  surfaceDamping: 0.15,
+  platformRadiusSq: 9,
+  platformYThreshold: 1.5,
 };
 
-const TRANSITION_DURATION = 1.5; // seconds
-
-/** Minimum distance (in world units) the camera must move before emitting PLAYER_MOVED */
+// Transition durations moved to useCameraEditorStore.authoredParams.transition
+// Read via getState() at transition start
 const MOVE_EMIT_THRESHOLD = 0.5;
-
-/** D4: Surface camera constants */
-const SURFACE_CONFIG = {
-  /** Distance from branch axis to camera (cylinder radius + offset) */
-  playerHeight: 1.5,
-  /** Movement speed along branch axis (units/sec) */
-  moveSpeed: 4.0,
-  /** Movement speed around branch circumference (rad/sec) */
-  strafeSpeed: 2.0,
-  /** Jump impulse strength */
-  jumpStrength: 5.0,
-  /** Gravity strength toward surface (units/sec^2) */
-  gravityStrength: 12.0,
-  /** Damping for smooth surface snap */
-  surfaceDamping: 0.15,
-  /** Camera look-ahead distance along branch */
-  lookAheadDistance: 3.0,
-} as const;
 
 // Reusable vectors to avoid per-frame allocation
 const _axisDir = new THREE.Vector3();
@@ -67,37 +61,82 @@ const _surfacePos = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
 const _movement = new THREE.Vector3();
 
-/**
- * SURFACE CAMERA (D4)
- *
- * Renders nothing — just manipulates camera position each frame
- * based on surface-lock physics relative to the nearest branch segment.
- */
-function SurfaceCamera() {
-  const { camera } = useThree();
+/** Read dimensions from store config, with fallback */
+function getDimensions(): PlatformDimensions | null {
+  const config = useRendererStore.getState().platformConfig;
+  if (!config) return null;
+  return deriveDimensions(config);
+}
 
-  // Input state tracked via keyboard events
+/** Max pitch angle (radians) — prevents flipping */
+const MAX_PITCH = Math.PI * 0.45;
+
+/**
+ * PLAYER FIRST-PERSON CAMERA (D4)
+ *
+ * Renders nothing — manipulates camera position each frame.
+ * Physics values scale with topology via PlatformDimensions.
+ *
+ * Mouse look: click canvas to enter pointer lock, mouse controls yaw/pitch.
+ * WASD moves relative to camera facing direction.
+ * Escape releases pointer lock.
+ */
+function PlayerFirstPerson() {
+  const { camera, gl } = useThree();
+
   const keys = useRef({ w: false, s: false, a: false, d: false, space: false });
 
-  // Surface physics state
   const physicsRef = useRef({
-    /** Current parametric position along segment (0-1) */
     t: 0.5,
-    /** Current angle around branch cylinder */
     theta: 0,
-    /** Vertical velocity for jump arc */
     jumpVelocity: 0,
-    /** Height offset from surface (non-zero during jump) */
     heightOffset: 0,
-    /** Whether player is on surface (not jumping) */
     grounded: true,
-    /** Smoothed position for damping */
     smoothPosition: new THREE.Vector3(),
-    /** Index of current segment in spatial index */
     currentSegmentIndex: -1,
   });
 
-  // Register keyboard listeners
+  // Mouse look state — euler angles for free look (right-click drag)
+  const lookRef = useRef({
+    yaw: 0,    // horizontal rotation (radians)
+    pitch: 0,  // vertical rotation (radians)
+    isRightDragging: false,
+    initialized: false,
+  });
+
+  // Right-click drag for mouse look (WoW/Google Earth style)
+  useEffect(() => {
+    const canvas = gl.domElement;
+
+    const preventContext = (e: Event) => e.preventDefault();
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 2) lookRef.current.isRightDragging = true;
+    };
+    const handleMouseUp = (e: MouseEvent) => {
+      if (e.button === 2) lookRef.current.isRightDragging = false;
+    };
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!lookRef.current.isRightDragging) return;
+      const sensitivity = useCameraEditorStore.getState().authoredParams.player1p.mouseSensitivity;
+      const look = lookRef.current;
+      look.yaw -= e.movementX * sensitivity;
+      look.pitch -= e.movementY * sensitivity;
+      look.pitch = Math.max(-MAX_PITCH, Math.min(MAX_PITCH, look.pitch));
+    };
+
+    canvas.addEventListener('contextmenu', preventContext);
+    canvas.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      canvas.removeEventListener('contextmenu', preventContext);
+      canvas.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [gl]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
@@ -125,29 +164,110 @@ function SurfaceCamera() {
     };
   }, []);
 
-  // Initialize smooth position
   useEffect(() => {
     physicsRef.current.smoothPosition.copy(camera.position);
   }, [camera]);
 
-  useFrame((_, delta) => {
-    const dt = Math.min(delta, 0.1); // Clamp for tab-switch
-    const spatialIndex = useRendererStore.getState().spatialIndex;
-    if (!spatialIndex || spatialIndex.nodeCount === 0) return;
+  // Apply yaw/pitch euler rotation to camera
+  const applyMouseLook = useCallback(() => {
+    const look = lookRef.current;
+    const euler = new THREE.Euler(look.pitch, look.yaw, 0, 'YXZ');
+    camera.quaternion.setFromEuler(euler);
+  }, [camera]);
 
+  // Initialize yaw from camera's current facing on first frame
+  const initializeLookDirection = useCallback(() => {
+    if (lookRef.current.initialized) return;
+    // Extract yaw from current camera direction
+    const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    lookRef.current.yaw = Math.atan2(-dir.x, -dir.z);
+    lookRef.current.pitch = Math.asin(Math.max(-1, Math.min(1, dir.y)));
+    lookRef.current.initialized = true;
+  }, [camera]);
+
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.1);
+    const spatialIndex = useRendererStore.getState().spatialIndex;
     const physics = physicsRef.current;
     const k = keys.current;
 
-    // Query nearest branch segment to current camera position
+    // Initialize look direction from camera's post-transition orientation
+    initializeLookDirection();
+
+    // Read topology-derived physics values
+    const dim = getDimensions();
+    const ph = dim ?? FALLBACK_PHYSICS;
+    const config = useRendererStore.getState().platformConfig;
+    const oy = config?.origin[1] ?? 0;
+
+    // --- Platform detection ---
+    const pos = camera.position;
+    const dxSq = (pos.x - (config?.origin[0] ?? 0)) ** 2;
+    const dzSq = (pos.z - (config?.origin[2] ?? 0)) ** 2;
+    const onPlatform = dxSq + dzSq < ph.platformRadiusSq && pos.y <= ph.platformYThreshold + 0.5;
+    const wasOnPlatform = useRendererStore.getState().isOnPlatform;
+    if (onPlatform !== wasOnPlatform) {
+      useRendererStore.getState().setOnPlatform(onPlatform);
+    }
+
+    if (onPlatform) {
+      // Apply mouse look rotation (user controls where they look)
+      applyMouseLook();
+
+      let moveX = 0;
+      let moveZ = 0;
+      if (k.w) moveZ -= ph.moveSpeed * dt;
+      if (k.s) moveZ += ph.moveSpeed * dt;
+      if (k.a) moveX -= ph.moveSpeed * dt;
+      if (k.d) moveX += ph.moveSpeed * dt;
+
+      // Movement relative to camera yaw (ignore pitch for ground movement)
+      const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+      forward.y = 0;
+      forward.normalize();
+      const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+      right.y = 0;
+      right.normalize();
+
+      _movement.set(0, 0, 0);
+      _movement.addScaledVector(forward, -moveZ);
+      _movement.addScaledVector(right, moveX);
+
+      const targetPos = _surfacePos.copy(pos).add(_movement);
+
+      if (k.space && physics.grounded) {
+        physics.jumpVelocity = ph.jumpStrength;
+        physics.grounded = false;
+        keys.current.space = false;
+      }
+
+      if (!physics.grounded) {
+        physics.heightOffset += physics.jumpVelocity * dt;
+        physics.jumpVelocity -= ph.gravityStrength * dt;
+        if (physics.heightOffset <= 0) {
+          physics.heightOffset = 0;
+          physics.jumpVelocity = 0;
+          physics.grounded = true;
+        }
+      }
+
+      targetPos.y = oy + ph.playerHeight + physics.heightOffset;
+
+      physics.smoothPosition.lerp(targetPos, 1 - Math.pow(ph.surfaceDamping, dt));
+      camera.position.copy(physics.smoothPosition);
+      return;
+    }
+
+    // --- Branch surface-lock physics ---
+    if (!spatialIndex || spatialIndex.nodeCount === 0) return;
+
     const nearest = spatialIndex.nearestSegment(camera.position);
     if (!nearest) return;
 
     const { segment, t: nearestT } = nearest;
 
-    // Segment axis direction (start → end)
     _axisDir.copy(segment.end).sub(segment.start).normalize();
 
-    // Current point on segment axis at parametric t
     const currentT = physics.currentSegmentIndex === nearest.index
       ? physics.t
       : nearestT;
@@ -156,9 +276,7 @@ function SurfaceCamera() {
       .copy(segment.start)
       .lerp(segment.end, currentT);
 
-    // Vector from axis to camera = radial direction (surface normal)
     _toCamera.copy(camera.position).sub(axisPoint);
-    // Project out the axis component to get pure radial
     const axisComponent = _toCamera.dot(_axisDir);
     _toCamera.addScaledVector(_axisDir, -axisComponent);
 
@@ -166,7 +284,6 @@ function SurfaceCamera() {
     if (radialDist > 0.001) {
       _normal.copy(_toCamera).normalize();
     } else {
-      // Camera is on axis — pick an arbitrary perpendicular
       _normal.set(0, 1, 0);
       if (Math.abs(_axisDir.dot(_normal)) > 0.9) {
         _normal.set(1, 0, 0);
@@ -174,60 +291,49 @@ function SurfaceCamera() {
       _normal.crossVectors(_axisDir, _normal).normalize();
     }
 
-    // Tangent = cross(axis, normal) — movement direction around cylinder
     _tangent.crossVectors(_axisDir, _normal).normalize();
 
-    // --- Process input ---
-
-    // Forward/back: move along branch axis (change t)
     let tDelta = 0;
-    if (k.w) tDelta += SURFACE_CONFIG.moveSpeed * dt;
-    if (k.s) tDelta -= SURFACE_CONFIG.moveSpeed * dt;
+    if (k.w) tDelta += ph.moveSpeed * dt;
+    if (k.s) tDelta -= ph.moveSpeed * dt;
 
-    // Convert world-space speed to parametric delta
     const segmentLength = segment.start.distanceTo(segment.end);
     if (segmentLength > 0.01) {
       physics.t += tDelta / segmentLength;
     }
 
-    // Strafe: rotate around cylinder (change theta)
-    if (k.a) physics.theta -= SURFACE_CONFIG.strafeSpeed * dt;
-    if (k.d) physics.theta += SURFACE_CONFIG.strafeSpeed * dt;
+    if (k.a) physics.theta -= ph.strafeSpeed * dt;
+    if (k.d) physics.theta += ph.strafeSpeed * dt;
 
-    // Junction detection: if t exceeds [0, 1], find connecting segment
     if (physics.t > 1.0) {
-      // Walked past segment end — snap to nearest segment from end point
       const nextNearest = spatialIndex.nearestSegment(segment.end);
       if (nextNearest && nextNearest.index !== nearest.index) {
         physics.currentSegmentIndex = nextNearest.index;
         physics.t = nextNearest.t;
       } else {
-        physics.t = 1.0; // Clamp at end
+        physics.t = 1.0;
       }
     } else if (physics.t < 0.0) {
-      // Walked past segment start
       const prevNearest = spatialIndex.nearestSegment(segment.start);
       if (prevNearest && prevNearest.index !== nearest.index) {
         physics.currentSegmentIndex = prevNearest.index;
         physics.t = prevNearest.t;
       } else {
-        physics.t = 0.0; // Clamp at start
+        physics.t = 0.0;
       }
     } else {
       physics.currentSegmentIndex = nearest.index;
     }
 
-    // Jump
     if (k.space && physics.grounded) {
-      physics.jumpVelocity = SURFACE_CONFIG.jumpStrength;
+      physics.jumpVelocity = ph.jumpStrength;
       physics.grounded = false;
-      keys.current.space = false; // Consume jump input
+      keys.current.space = false;
     }
 
-    // Update jump physics
     if (!physics.grounded) {
       physics.heightOffset += physics.jumpVelocity * dt;
-      physics.jumpVelocity -= SURFACE_CONFIG.gravityStrength * dt;
+      physics.jumpVelocity -= ph.gravityStrength * dt;
 
       if (physics.heightOffset <= 0) {
         physics.heightOffset = 0;
@@ -236,109 +342,349 @@ function SurfaceCamera() {
       }
     }
 
-    // --- Compute target position on cylinder surface ---
-
-    // Point on axis at current t
     const clampedT = Math.max(0, Math.min(1, physics.t));
     axisPoint.copy(segment.start).lerp(segment.end, clampedT);
 
-    // Compute radial direction at current theta
-    // Rotate the initial normal around the axis by theta
     const sinT = Math.sin(physics.theta);
     const cosT = Math.cos(physics.theta);
     _movement
       .copy(_normal).multiplyScalar(cosT)
       .addScaledVector(_tangent, sinT);
 
-    // Surface position = axis point + radius * radial + height offset * normal
-    const totalHeight = SURFACE_CONFIG.playerHeight + physics.heightOffset;
+    const totalHeight = ph.playerHeight + physics.heightOffset;
     const targetPos = _surfacePos
       .copy(axisPoint)
       .addScaledVector(_movement, totalHeight);
 
-    // Smooth camera movement (damped lerp)
-    physics.smoothPosition.lerp(targetPos, 1 - Math.pow(SURFACE_CONFIG.surfaceDamping, dt));
+    physics.smoothPosition.lerp(targetPos, 1 - Math.pow(ph.surfaceDamping, dt));
     camera.position.copy(physics.smoothPosition);
 
-    // Look-at target: point ahead on the branch
-    const lookT = Math.min(1, clampedT + SURFACE_CONFIG.lookAheadDistance / Math.max(segmentLength, 0.01));
-    _lookTarget.copy(segment.start).lerp(segment.end, lookT);
-    // Offset look target slightly toward the axis (look "into" the branch)
-    _lookTarget.addScaledVector(_movement, SURFACE_CONFIG.playerHeight * 0.3);
-    camera.lookAt(_lookTarget);
+    // Apply mouse look — user controls where they look on the branch
+    applyMouseLook();
+  });
+
+  return null;
+}
+
+/**
+ * SCENE KEYBOARD SHORTCUTS
+ *
+ * Global scene-level key bindings. Always mounted via CameraRig.
+ * Coordinates with OCULUS shortcuts (Q, M, Escape are taken).
+ *
+ *   C       — Cycle camera mode (falcon → player-1p → player-3p)
+ *   Tab     — Quick toggle between player-1p ↔ player-3p
+ *   Shift-V — Toggle spectator mode (free orbit + camera viz)
+ *   V       — Toggle view frame (diagnostic hemispheres)
+ *   `       — Toggle dev mode (orbit path, debug labels)
+ *   I       — Toggle inspection panel (distances, measurements)
+ */
+const CAMERA_CYCLE: Array<'falcon' | 'player-1p' | 'player-3p'> = ['falcon', 'player-1p', 'player-3p'];
+
+function SceneKeyboard() {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't capture when typing in inputs
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+      // Don't capture with Ctrl/Cmd combos (system shortcuts)
+      if (e.ctrlKey || e.metaKey) return;
+
+      const store = useRendererStore.getState();
+      const key = e.key.toLowerCase();
+
+      // Shift-C: copy camera state (spectator mode)
+      if (e.shiftKey && key === 'c') {
+        e.preventDefault();
+        if (store.cameraMode === 'spectator') {
+          const snapshot = useCameraEditorStore.getState().exportSnapshot();
+          navigator.clipboard.writeText(JSON.stringify(snapshot, null, 2)).catch(() => {});
+        }
+        return;
+      }
+
+      // Shift-V: toggle spectator mode (free camera + camera visualization)
+      if (e.shiftKey && key === 'v') {
+        e.preventDefault();
+        if (store.cameraMode === 'spectator') {
+          // Return to previous mode (default to falcon)
+          store.setCameraMode('falcon');
+        } else {
+          store.setCameraMode('spectator');
+        }
+        return;
+      }
+
+      // Skip non-shift shortcuts when Shift is held (except Tab)
+      if (e.shiftKey && key !== 'tab') return;
+
+      switch (key) {
+        case 'c': {
+          e.preventDefault();
+          // If in spectator, jump to falcon
+          if (store.cameraMode === 'spectator') {
+            store.setCameraMode('falcon');
+            break;
+          }
+          const currentIdx = CAMERA_CYCLE.indexOf(store.cameraMode);
+          const nextIdx = (currentIdx + 1) % CAMERA_CYCLE.length;
+          store.setCameraMode(CAMERA_CYCLE[nextIdx]!);
+          break;
+        }
+        case 'tab': {
+          e.preventDefault();
+          // Quick toggle between player-1p ↔ player-3p
+          if (store.cameraMode === 'player-1p') {
+            store.setCameraMode('player-3p');
+          } else if (store.cameraMode === 'player-3p') {
+            store.setCameraMode('player-1p');
+          } else {
+            // From falcon/spectator, go to player-1p
+            store.setCameraMode('player-1p');
+          }
+          break;
+        }
+        case 'v':
+          e.preventDefault();
+          store.toggleViewFrame();
+          break;
+        case '`':
+          e.preventDefault();
+          store.toggleDevMode();
+          break;
+        case 'i':
+          e.preventDefault();
+          store.toggleInspectionMode();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  return null;
+}
+
+// Module-scope temporaries for ViewQualityMonitor
+const _vqForward = new THREE.Vector3();
+const _vqPlayerPos = new THREE.Vector3();
+
+/**
+ * ViewQualityMonitor — thin useFrame wrapper calling validateCameraView.
+ * Runs every 15 frames (~4Hz at 60fps). Player modes only.
+ */
+function ViewQualityMonitor() {
+  const { camera } = useThree();
+  const frameCount = useRef(0);
+  const transitionTime = useRef(0);
+
+  // Reset transition timer on mode change
+  const cameraMode = useRendererStore((s) => s.cameraMode);
+  useEffect(() => {
+    transitionTime.current = 0;
+  }, [cameraMode]);
+
+  useFrame((_, delta) => {
+    frameCount.current += 1;
+    if (frameCount.current % 15 !== 0) return;
+
+    const viewQuality = useCameraEditorStore.getState().viewQuality;
+    if (!viewQuality.enabled) return;
+
+    const state = useRendererStore.getState();
+    const mode = state.cameraMode;
+    if (mode !== 'player-1p' && mode !== 'player-3p') return;
+
+    transitionTime.current += delta * 15; // approx seconds since last mode change
+
+    // Camera forward direction
+    camera.getWorldDirection(_vqForward);
+
+    // Player position for 3P occlusion check
+    _vqPlayerPos.set(...state.playerPosition);
+
+    const report = validateCameraView(
+      camera.position,
+      _vqForward,
+      state.activeNest,
+      state.spatialIndex,
+      mode,
+      mode === 'player-3p' ? _vqPlayerPos : null,
+      transitionTime.current,
+    );
+
+    useCameraEditorStore.getState().updateViewQuality(report);
   });
 
   return null;
 }
 
 export function CameraRig() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const controlsRef = useRef<any>(null);
   const cameraMode = useRendererStore((s) => s.cameraMode);
   const transitioning = useRendererStore((s) => s.cameraTransitioning);
   const playerPosition = useRendererStore((s) => s.playerPosition);
-  const isUiHovered = useRendererStore((s) => s.isUiHovered);
+  const platformConfig = useRendererStore((s) => s.platformConfig);
+  const activeNest = useRendererStore((s) => s.activeNest);
   const { camera } = useThree();
 
-  // Track last emitted position for PLAYER_MOVED debouncing
   const lastEmittedPos = useRef(new THREE.Vector3(Infinity, Infinity, Infinity));
+  /** Camera position saved when entering spectator mode */
+  const savedSpectatorPos = useRef(new THREE.Vector3(10, 14, -16));
 
-  // Transition state
   const transitionRef = useRef({
     active: false,
     elapsed: 0,
+    duration: 1.0, // overwritten at transition start from store
+    useBezier: false,
     startPosition: new THREE.Vector3(),
     startTarget: new THREE.Vector3(),
+    controlPosition: new THREE.Vector3(),
     endPosition: new THREE.Vector3(),
     endTarget: new THREE.Vector3(),
   });
+
+  // Track previous camera mode for detecting falcon→player transitions
+  const prevMode = useRef<string>(cameraMode);
+  /** Ensures initial FOV is only computed once per session */
+  const hasComputedFov = useRef(false);
+
+  // Save camera position when entering spectator + init marker states
+  useEffect(() => {
+    if (cameraMode === 'spectator') {
+      savedSpectatorPos.current.copy(camera.position);
+      // Initialize editable marker states from current nest/platform
+      if (activeNest && platformConfig) {
+        useCameraEditorStore.getState().initMarkerStates(activeNest, platformConfig);
+      }
+    }
+  }, [cameraMode, camera, activeNest, platformConfig]);
+
+  // Refresh computed params whenever nest or platform changes
+  useEffect(() => {
+    useCameraEditorStore.getState().refreshComputedParams(activeNest, platformConfig);
+    // Compute initial FOV once when platformConfig first becomes available
+    if (platformConfig && !hasComputedFov.current) {
+      hasComputedFov.current = true;
+      useCameraEditorStore.getState().computeInitialFov(platformConfig.treeSpan);
+    }
+  }, [activeNest, platformConfig]);
 
   // Start transition when camera mode changes
   useEffect(() => {
     if (!transitioning) return;
 
     const t = transitionRef.current;
+    const wasInFalcon = prevMode.current === 'falcon';
+    prevMode.current = cameraMode;
+
+    // Spectator transitions are instant (no animation needed)
+    if (cameraMode === 'spectator') {
+      useRendererStore.setState({ cameraTransitioning: false });
+      return;
+    }
+
+    const transParams = useCameraEditorStore.getState().authoredParams.transition;
     t.active = true;
     t.elapsed = 0;
+    t.useBezier = false;
+    t.duration = transParams.transitionDuration;
     t.startPosition.copy(camera.position);
-
-    if (controlsRef.current) {
-      t.startTarget.copy(controlsRef.current.target);
-    }
+    t.startTarget.set(0, 0, 0); // default fallback
 
     if (cameraMode === 'falcon') {
-      t.endPosition.copy(FALCON_DEFAULTS.position);
-      t.endTarget.copy(FALCON_DEFAULTS.target);
+      // Transition to falcon: use nest position as initial orbit target
+      if (activeNest && platformConfig) {
+        const orbit = falconOrbitPosition(0, activeNest, platformConfig);
+        t.endPosition.copy(orbit.position);
+        t.endTarget.copy(orbit.target);
+      } else {
+        const dim = getDimensions();
+        if (dim) {
+          t.endPosition.set(...dim.falconPosition);
+          t.endTarget.set(...dim.falconTarget);
+        } else {
+          t.endPosition.set(10, 14, -16);
+          t.endTarget.set(0, 3, 0);
+        }
+      }
     } else {
-      // Player mode: position behind and above the player
-      const [px, py, pz] = playerPosition;
-      t.endPosition.set(px, py + 3, pz - 5);
-      t.endTarget.set(px, py, pz);
-    }
-  }, [cameraMode, transitioning, camera, playerPosition]);
+      // Player modes: land at nest center when available, fallback to platform spawn
+      const dim = getDimensions();
+      const config = useRendererStore.getState().platformConfig;
+      const nestOffset = useCameraEditorStore.getState().authoredParams.nestVerticalOffset;
 
-  // Animate transition
+      if (activeNest) {
+        // Land at nest center + vertical offset
+        const nx = activeNest.nestPosition.x;
+        const ny = activeNest.nestPosition.y + nestOffset;
+        const nz = activeNest.nestPosition.z;
+        t.endPosition.set(nx, ny + activeNest.depth + 1, nz);
+        t.endTarget.set(nx, ny, nz);
+      } else if (dim && config) {
+        const [sx, sy, sz] = dim.spawnPoint;
+        t.endPosition.set(sx, sy, sz);
+        t.endTarget.set(
+          config.origin[0],
+          config.origin[1] + config.trunkLength * 0.5,
+          config.origin[2],
+        );
+      } else {
+        const [px, py, pz] = playerPosition;
+        t.endPosition.set(px, py + 3, pz - 5);
+        t.endTarget.set(px, py, pz);
+      }
+
+      // Falcon→player: swooping fly-in via elevated bezier control point
+      if (wasInFalcon) {
+        t.useBezier = true;
+        t.duration = transParams.flyinDuration;
+        // Control point: halfway XZ, elevated to smooth the descent arc
+        const midX = (t.startPosition.x + t.endPosition.x) * 0.5;
+        const midZ = (t.startPosition.z + t.endPosition.z) * 0.5;
+        const maxY = Math.max(t.startPosition.y, t.endPosition.y);
+        const elevate = platformConfig
+          ? platformConfig.treeHeight * 0.15
+          : 3;
+        t.controlPosition.set(midX, maxY + elevate, midZ);
+        // Reset falcon phase since we're leaving it
+        useRendererStore.getState().setFalconPhase('idle');
+      }
+
+      useRendererStore.getState().setOnPlatform(true);
+    }
+  }, [cameraMode, transitioning, camera, playerPosition, platformConfig, activeNest]);
+
+  // Animate transition (linear or bezier)
   useFrame((_, delta) => {
     const t = transitionRef.current;
     if (!t.active) return;
 
     t.elapsed += delta;
-    const progress = Math.min(t.elapsed / TRANSITION_DURATION, 1);
+    const progress = Math.min(t.elapsed / t.duration, 1);
 
-    // Smooth ease-in-out
+    // Cubic ease-in-out
     const ease = progress < 0.5
       ? 4 * progress * progress * progress
       : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-    camera.position.lerpVectors(t.startPosition, t.endPosition, ease);
-
-    if (controlsRef.current) {
-      controlsRef.current.target.lerpVectors(
-        t.startTarget,
-        t.endTarget,
-        ease
+    if (t.useBezier) {
+      // Quadratic bezier: P = (1-t)²·Start + 2(1-t)t·Control + t²·End
+      const inv = 1 - ease;
+      camera.position.set(
+        inv * inv * t.startPosition.x + 2 * inv * ease * t.controlPosition.x + ease * ease * t.endPosition.x,
+        inv * inv * t.startPosition.y + 2 * inv * ease * t.controlPosition.y + ease * ease * t.endPosition.y,
+        inv * inv * t.startPosition.z + 2 * inv * ease * t.controlPosition.z + ease * ease * t.endPosition.z,
       );
+    } else {
+      camera.position.lerpVectors(t.startPosition, t.endPosition, ease);
     }
+
+    // During transition, smoothly rotate toward target
+    _lookTarget.lerpVectors(t.startTarget, t.endTarget, ease);
+    camera.lookAt(_lookTarget);
 
     if (progress >= 1) {
       t.active = false;
@@ -346,8 +692,12 @@ export function CameraRig() {
     }
   });
 
-  // Emit PLAYER_MOVED when camera moves more than MOVE_EMIT_THRESHOLD units
+  // Emit PLAYER_MOVED when camera moves more than threshold (shared across modes)
   useFrame(() => {
+    // Skip emission during transition, falcon mode (handles its own), and spectator
+    if (transitionRef.current.active) return;
+    if (cameraMode === 'falcon' || cameraMode === 'spectator') return;
+
     const dist = camera.position.distanceTo(lastEmittedPos.current);
     if (dist >= MOVE_EMIT_THRESHOLD) {
       lastEmittedPos.current.copy(camera.position);
@@ -362,22 +712,32 @@ export function CameraRig() {
     }
   });
 
-  // Falcon mode: orbital controls
-  if (cameraMode === 'falcon') {
-    return (
-      <OrbitControls
-        ref={controlsRef}
-        enabled={!isUiHovered}
-        enableDamping
-        dampingFactor={FALCON_DEFAULTS.dampingFactor}
-        minDistance={FALCON_DEFAULTS.minDistance}
-        maxDistance={FALCON_DEFAULTS.maxDistance}
-        maxPolarAngle={Math.PI * 0.85}
-        makeDefault
+  // Determine which camera sub-component to render
+  let cameraChild: React.ReactNode = null;
+
+  if (cameraMode === 'spectator') {
+    cameraChild = (
+      <SpectatorCamera
+        nestConfig={activeNest}
+        platformConfig={platformConfig}
+        savedPosition={savedSpectatorPos.current}
       />
     );
+  } else if (cameraMode === 'falcon') {
+    if (activeNest && platformConfig) {
+      cameraChild = <FalconAutoOrbit nestConfig={activeNest} platformConfig={platformConfig} />;
+    }
+  } else if (cameraMode === 'player-3p') {
+    cameraChild = <PlayerThirdPerson />;
+  } else {
+    cameraChild = <PlayerFirstPerson />;
   }
 
-  // Player mode: D4 surface-locked camera ("ant on a manifold")
-  return <SurfaceCamera />;
+  return (
+    <>
+      <SceneKeyboard />
+      <ViewQualityMonitor />
+      {cameraChild}
+    </>
+  );
 }

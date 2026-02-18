@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * HUD — Always-visible heads-up display
  *

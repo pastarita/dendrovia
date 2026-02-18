@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * WorldHeader — Compact panel showing world name, repo info, and performance stats.
  *

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * ProgressBar — Animated fill bar for health, mana, XP, quest progress
  */

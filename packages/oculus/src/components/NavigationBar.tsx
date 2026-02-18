@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * NavigationBar — Horizontal row of toggle buttons for discoverable panel access.
  *

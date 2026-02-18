@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * BattleUI — Turn-based combat interface
  *

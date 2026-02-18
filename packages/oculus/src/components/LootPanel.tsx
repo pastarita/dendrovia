@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * LootPanel — Toast-like notifications for loot drops
  *

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Minimap — SVG spatial awareness widget
  *

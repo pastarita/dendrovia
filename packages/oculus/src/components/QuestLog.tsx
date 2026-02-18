@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * QuestLog — Compact tracker + full overlay
  *

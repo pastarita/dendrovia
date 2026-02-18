@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * OrnateFrame — Composable SVG-overlay frame with pillar-specific ornaments
  *

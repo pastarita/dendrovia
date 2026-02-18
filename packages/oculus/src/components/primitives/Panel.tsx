@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Panel — Glass-morphism container with optional border glow
  */

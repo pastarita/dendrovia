@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * MillerColumns — Three-column file tree navigator
  *

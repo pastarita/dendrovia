@@ -7,6 +7,13 @@ export type DomainSlug = "museums" | "zoos" | "halls" | "gyms" | "generators" | 
 export type PillarName = "ARCHITECTUS" | "CHRONOS" | "IMAGINARIUM" | "LUDUS" | "OCULUS" | "OPERATUS";
 export type AffinityTier = "hero" | "featured" | "reference";
 
+export interface DomainSubPage {
+  name: string;
+  shortName: string;
+  /** Relative slug within the domain, e.g. "primitives" */
+  slug: string;
+}
+
 export interface DomainDef {
   name: string;
   slug: DomainSlug;
@@ -29,6 +36,8 @@ export const ALL_DOMAINS: DomainDef[] = [
   { name: "Spatial Docs", slug: "spatial-docs",  path: "/spatial-docs", icon: "\u{1F4D0}" },
   { name: "Foundry",      slug: "foundry",       path: "/foundry",      icon: "\u{1F525}" },
 ];
+
+const DOMAIN_SLUG_SET = new Set<DomainSlug>(ALL_DOMAINS.map((d) => d.slug));
 
 /**
  * Affinity matrix: each pillar rates each domain 1-5.
@@ -141,4 +150,123 @@ export function getPillarsForDomain(slug: DomainSlug): { pillar: PillarName; aff
   return pillars
     .map((p) => ({ pillar: p, affinity: PILLAR_DOMAIN_AFFINITY[p][slug] }))
     .sort((a, b) => b.affinity - a.affinity);
+}
+
+export function isDomainSlug(value: string): value is DomainSlug {
+  return DOMAIN_SLUG_SET.has(value as DomainSlug);
+}
+
+export function isPillarName(value: string): value is PillarName {
+  return value in PILLAR_DOMAIN_AFFINITY;
+}
+
+// ── Sub-page definitions per pillar per domain ─────────────────────────────
+
+/**
+ * Sub-pages that exist within a domain for a specific pillar.
+ * Only pillars with actual content have entries here.
+ */
+export const DOMAIN_SUB_PAGES: Partial<Record<PillarName, Partial<Record<DomainSlug, DomainSubPage[]>>>> = {
+  ARCHITECTUS: {
+    gyms: [
+      { name: "Dendrite Observatory", shortName: "Dendrite", slug: "dendrite" },
+      { name: "L-System Sandbox", shortName: "L-Systems", slug: "l-systems" },
+    ],
+    museums: [
+      { name: "Topology Museum", shortName: "Topology", slug: "topology" },
+    ],
+    zoos: [
+      { name: "Component Gallery", shortName: "Components", slug: "components" },
+    ],
+  },
+  CHRONOS: {
+    gyms: [
+      { name: "Dendrite Observatory", shortName: "Dendrite", slug: "dendrite" },
+      { name: "Analysis Pipeline", shortName: "Analyze", slug: "analyze" },
+    ],
+    zoos: [
+      { name: "Overview", shortName: "Overview", slug: "overview" },
+      { name: "Files", shortName: "Files", slug: "files" },
+      { name: "Commits", shortName: "Commits", slug: "commits" },
+      { name: "Hotspots", shortName: "Hotspots", slug: "hotspots" },
+      { name: "Contributors", shortName: "Contributors", slug: "contributors" },
+      { name: "Couplings", shortName: "Couplings", slug: "couplings" },
+      { name: "Complexity", shortName: "Complexity", slug: "complexity" },
+      { name: "Contract", shortName: "Contract", slug: "contract" },
+    ],
+  },
+  IMAGINARIUM: {
+    gyms: [
+      { name: "Dendrite Observatory", shortName: "Dendrite", slug: "dendrite" },
+    ],
+    museums: [
+      { name: "Specimen Gallery", shortName: "Gallery", slug: "gallery" },
+    ],
+  },
+  LUDUS: {
+    gyms: [
+      { name: "Dendrite Observatory", shortName: "Dendrite", slug: "dendrite" },
+      { name: "Combat Sandbox", shortName: "Combat", slug: "combat" },
+      { name: "Balance Simulator", shortName: "Balance", slug: "balance" },
+    ],
+    museums: [
+      { name: "Game Mechanics Museum", shortName: "Mechanics", slug: "mechanics" },
+    ],
+    zoos: [
+      { name: "Bestiary & Catalogs", shortName: "Bestiary", slug: "bestiary" },
+    ],
+    halls: [
+      { name: "Game Rules Hall", shortName: "Rules", slug: "rules" },
+    ],
+    generators: [
+      { name: "Game Content Generators", shortName: "Content", slug: "content" },
+    ],
+  },
+  OCULUS: {
+    zoos: [
+      { name: "Primitives Gallery", shortName: "Primitives", slug: "primitives" },
+      { name: "View Components", shortName: "Views", slug: "views" },
+      { name: "Compositions", shortName: "Compositions", slug: "compositions" },
+      { name: "Ornate Frames", shortName: "Frames", slug: "frames" },
+    ],
+    museums: [
+      { name: "Event Flow Exhibition", shortName: "Event Flow", slug: "event-flow" },
+      { name: "Cross-Pillar Interface Map", shortName: "Cross-Pillar", slug: "cross-pillar" },
+    ],
+    gyms: [
+      { name: "Dendrite Observatory", shortName: "Dendrite", slug: "dendrite" },
+      { name: "HUD Sandbox", shortName: "HUD Sandbox", slug: "hud-sandbox" },
+      { name: "Battle Arena", shortName: "Battle Arena", slug: "battle-arena" },
+    ],
+    foundry: [
+      { name: "Frame Matrix", shortName: "Frame Matrix", slug: "frame-matrix" },
+    ],
+  },
+  OPERATUS: {
+    gyms: [
+      { name: "Dendrite Observatory", shortName: "Dendrite", slug: "dendrite" },
+      { name: "Cache Inspector", shortName: "Cache", slug: "cache-inspector" },
+      { name: "Event Stream", shortName: "Events", slug: "event-stream" },
+      { name: "Persistence Sandbox", shortName: "Persistence", slug: "persistence-sandbox" },
+    ],
+    museums: [
+      { name: "Asset Lifecycle", shortName: "Lifecycle", slug: "asset-lifecycle" },
+      { name: "Cross-Pillar Map", shortName: "Cross-Pillar", slug: "cross-pillar" },
+    ],
+    zoos: [
+      { name: "Manifest Catalog", shortName: "Manifest", slug: "manifest" },
+      { name: "Contract Validator", shortName: "Contract", slug: "contract" },
+    ],
+  },
+};
+
+/** Returns sub-pages for a given pillar+domain, or empty array if none. */
+export function getSubPages(pillar: PillarName, domain: DomainSlug): DomainSubPage[] {
+  return DOMAIN_SUB_PAGES[pillar]?.[domain] ?? [];
+}
+
+/** Returns the default sub-page slug for a pillar+domain, or null if no sub-pages. */
+export function getDefaultSubPage(pillar: PillarName, domain: DomainSlug): string | null {
+  const pages = getSubPages(pillar, domain);
+  return pages.at(0)?.slug ?? null;
 }

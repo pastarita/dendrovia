@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Billboard3D — In-world UI anchored to 3D positions
  *

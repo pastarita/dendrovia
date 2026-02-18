@@ -34,7 +34,7 @@ export function FrameZooClient() {
 
   return (
     <div>
-      <Link href="/zoos" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; Zoos</Link>
+      <Link href="/" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; OCULUS</Link>
 
       <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <span>{'\u{1F5BC}'}</span> Ornate Frames

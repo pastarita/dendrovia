@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * FalconModeOverlay — Macro-view overlay for bird's-eye camera mode
  *

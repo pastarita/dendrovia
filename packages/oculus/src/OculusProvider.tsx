@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * OculusProvider — Root context wrapper for all OCULUS components
  *

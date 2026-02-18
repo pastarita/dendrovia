@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Keyboard Shortcuts — Global shortcut handler for OCULUS panels
  *

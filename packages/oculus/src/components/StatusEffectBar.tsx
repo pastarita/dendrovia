@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * StatusEffectBar — Horizontal row of active buff/debuff badges
  *

@@ -11,7 +11,7 @@ const variantEntries = Object.entries(variants) as [FrameVariant, (typeof varian
 export default function FrameMatrixPage() {
   return (
     <div>
-      <Link href="/foundry" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; Foundry</Link>
+      <Link href="/" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; OCULUS</Link>
       <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', marginBottom: '0.5rem' }}>
         Frame Matrix
       </h1>

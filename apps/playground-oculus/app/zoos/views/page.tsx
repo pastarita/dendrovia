@@ -118,7 +118,7 @@ function ViewsContent() {
 export default function ViewsPage() {
   return (
     <div>
-      <Link href="/zoos" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; Zoos</Link>
+      <Link href="/" style={{ fontSize: '0.85rem', opacity: 0.5 }}>&larr; OCULUS</Link>
       <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '1rem', marginBottom: '0.5rem' }}>
         View Components
       </h1>

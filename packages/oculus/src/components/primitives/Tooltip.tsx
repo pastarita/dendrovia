@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Tooltip — Floating info popup anchored to an element
  */

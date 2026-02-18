@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * OCULUS Store — Central read-only UI state
  *

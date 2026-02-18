@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * CodeReader — Syntax-highlighted read-only code viewer
  *

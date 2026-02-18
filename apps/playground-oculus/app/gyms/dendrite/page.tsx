@@ -27,7 +27,7 @@ export default function DendritePage() {
   return (
     <div>
       <div>
-        <Link href="/gyms" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; Gyms</Link>
+        <Link href="/" style={{ fontSize: "0.85rem", opacity: 0.5 }}>&larr; OCULUS</Link>
         <h1 style={{ fontSize: "1.25rem", fontWeight: 700, marginTop: "0.5rem" }}>
           Dendrite Observatory
         </h1>

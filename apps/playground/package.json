@@ -1,0 +1,46 @@
+{
+  "name": "@dendrovia/playground",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3020 --webpack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint --max-warnings 0",
+    "check-types": "next typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/ui": "*",
+    "@dendrovia/shared": "workspace:*",
+    "@dendrovia/chronos": "workspace:*",
+    "@dendrovia/oculus": "workspace:*",
+    "@dendrovia/architectus": "workspace:*",
+    "@dendrovia/imaginarium": "workspace:*",
+    "@dendrovia/ludus": "workspace:*",
+    "@dendrovia/operatus": "workspace:*",
+    "@dendrovia/engine": "*",
+    "@dendrovia/dendrite": "workspace:*",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/drei": "^10.0.0",
+    "@react-three/postprocessing": "^3.0.4",
+    "three": "^0.171.0",
+    "next": "16.1.5",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zustand": "^5.0.3",
+    "@xyflow/react": "^12.6.0",
+    "@dagrejs/dagre": "^1.1.4",
+    "immer": "^10.1.1"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/node": "^22.15.3",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@types/three": "^0.171.0",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}

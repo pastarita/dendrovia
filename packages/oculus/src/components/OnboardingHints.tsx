@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * OnboardingHints — Sequential contextual hint system
  *

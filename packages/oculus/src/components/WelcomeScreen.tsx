@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * WelcomeScreen — Full-screen onboarding modal overlay
  *

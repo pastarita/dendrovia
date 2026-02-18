@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * useOnboarding — Onboarding state with localStorage persistence
  *

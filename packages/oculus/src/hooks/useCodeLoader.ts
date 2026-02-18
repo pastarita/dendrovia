@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * useCodeLoader — Fetches file content when CodeReader opens
  *

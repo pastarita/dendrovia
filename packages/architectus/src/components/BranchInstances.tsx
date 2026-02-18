@@ -68,7 +68,17 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
       // Direction from start to end
       _direction.subVectors(branch.end, branch.start);
       const length = _direction.length();
-      if (length < 0.001) continue;
+      if (length < 0.001) {
+        // Degenerate branch: set zero-scale matrix instead of skipping.
+        // Raw zero matrices (default Float32Array) cause NaN in
+        // computeBoundingSphere via Vector3.applyMatrix4 dividing by e[15]=0.
+        _scale.set(0, 0, 0);
+        _matrix.compose(branch.start, _quaternion.identity(), _scale);
+        mesh.setMatrixAt(i, _matrix);
+        _colorA.set(palette.primary);
+        mesh.setColorAt(i, _colorA);
+        continue;
+      }
 
       _direction.normalize();
 

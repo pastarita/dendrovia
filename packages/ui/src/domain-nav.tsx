@@ -11,6 +11,8 @@ import {
 } from "./domain-registry";
 import { DomainIcon, PillarIcon } from "./icons";
 import { devUrl } from "./dev-urls";
+import { usePillarMaybe } from "./pillar-context";
+import { useSidebarMaybe } from "./sidebar-provider";
 
 const STORAGE_KEY = "domainnav-expanded";
 
@@ -21,6 +23,10 @@ function readExpanded(): string | null {
 export function DomainNav({ currentPillar }: { currentPillar: string }) {
   const [expanded, setExpandedRaw] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const pillarCtx = usePillarMaybe();
+  const sidebar = useSidebarMaybe();
+  const collapsed = sidebar?.collapsed ?? false;
+  const unified = pillarCtx?.unifiedMode ?? false;
 
   // Restore from sessionStorage after hydration to avoid SSR mismatch
   useEffect(() => {
@@ -51,6 +57,45 @@ export function DomainNav({ currentPillar }: { currentPillar: string }) {
       )
     : sorted;
 
+  function domainHref(domainPath: string, pillarPort: number, isCurrent: boolean): string {
+    if (unified) {
+      const pillarSlug = currentPillar.toLowerCase();
+      return `/${pillarSlug}${domainPath}`;
+    }
+    return isCurrent ? domainPath : devUrl(pillarPort, domainPath);
+  }
+
+  // ── Collapsed mode: icon rail ──
+  if (collapsed) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.15rem" }}>
+        {sorted.map((d) => {
+          const affinity = PILLAR_DOMAIN_AFFINITY[currentPillar as PillarName]?.[d.slug] ?? 0;
+          const isHero = affinity >= 5;
+          return (
+            <a
+              key={d.path}
+              href={domainHref(d.path, 0, true)}
+              data-tooltip={d.name}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "0.45rem",
+                borderRadius: "4px",
+                opacity: isHero ? 1 : 0.6,
+                position: "relative",
+              }}
+            >
+              <DomainIcon domain={d.slug} size={20} />
+            </a>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // ── Expanded mode: full domain nav ──
   return (
     <div>
       <div
@@ -140,11 +185,7 @@ export function DomainNav({ currentPillar }: { currentPillar: string }) {
                   return (
                     <a
                       key={p.name}
-                      href={
-                        isCurrent
-                          ? d.path
-                          : devUrl(p.port, d.path)
-                      }
+                      href={domainHref(d.path, p.port, isCurrent)}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -174,7 +215,7 @@ export function DomainNav({ currentPillar }: { currentPillar: string }) {
                           marginLeft: "auto",
                         }}
                       >
-                        {isCurrent ? "(you)" : `:${p.port}`}
+                        {isCurrent ? "(you)" : unified ? "" : `:${p.port}`}
                       </span>
                     </a>
                   );

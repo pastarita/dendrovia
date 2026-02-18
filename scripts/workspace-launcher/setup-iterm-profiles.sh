@@ -118,8 +118,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       </dict>
 
       <!-- ANSI Colors -->
+      <!-- Ansi 0 (Black): #6B5940 — promoted from old Ansi 8 for visibility -->
       <key>Ansi 0 Color</key>
-      <dict><key>Red Component</key><real>0.2902</real><key>Green Component</key><real>0.2196</real><key>Blue Component</key><real>0.1333</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.4196</real><key>Green Component</key><real>0.3490</real><key>Blue Component</key><real>0.2510</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 1 Color</key>
       <dict><key>Red Component</key><real>0.7216</real><key>Green Component</key><real>0.3608</real><key>Blue Component</key><real>0.2196</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 2 Color</key>
@@ -134,8 +135,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.6157</real><key>Green Component</key><real>0.6667</real><key>Blue Component</key><real>0.6118</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 7 Color</key>
       <dict><key>Red Component</key><real>0.9098</real><key>Green Component</key><real>0.8431</real><key>Blue Component</key><real>0.7647</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <!-- Ansi 8 (Bright Black): #8B7960 — brightened for comment-level text -->
       <key>Ansi 8 Color</key>
-      <dict><key>Red Component</key><real>0.4196</real><key>Green Component</key><real>0.3490</real><key>Blue Component</key><real>0.2510</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.5451</real><key>Green Component</key><real>0.4745</real><key>Blue Component</key><real>0.3765</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 9 Color</key>
       <dict><key>Red Component</key><real>0.8667</real><key>Green Component</key><real>0.6314</real><key>Blue Component</key><real>0.3686</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 10 Color</key>
@@ -176,8 +178,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.4314</real><key>Green Component</key><real>0.3294</real><key>Blue Component</key><real>0.5804</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
 
       <!-- ANSI Colors -->
+      <!-- Ansi 0 (Black): #5D5270 — promoted from old Ansi 8 for visibility -->
       <key>Ansi 0 Color</key>
-      <dict><key>Red Component</key><real>0.2431</real><key>Green Component</key><real>0.2118</real><key>Blue Component</key><real>0.3137</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.3647</real><key>Green Component</key><real>0.3216</real><key>Blue Component</key><real>0.4392</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 1 Color</key>
       <dict><key>Red Component</key><real>0.8471</real><key>Green Component</key><real>0.5882</real><key>Blue Component</key><real>1.0000</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 2 Color</key>
@@ -192,8 +195,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.6471</real><key>Green Component</key><real>0.6275</real><key>Blue Component</key><real>0.8510</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 7 Color</key>
       <dict><key>Red Component</key><real>0.9294</real><key>Green Component</key><real>0.9059</real><key>Blue Component</key><real>0.9647</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <!-- Ansi 8 (Bright Black): #7D7290 — brightened for comment-level text -->
       <key>Ansi 8 Color</key>
-      <dict><key>Red Component</key><real>0.3647</real><key>Green Component</key><real>0.3216</real><key>Blue Component</key><real>0.4392</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.4902</real><key>Green Component</key><real>0.4471</real><key>Blue Component</key><real>0.5647</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 9 Color</key>
       <dict><key>Red Component</key><real>0.9098</real><key>Green Component</key><real>0.7255</real><key>Blue Component</key><real>1.0000</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 10 Color</key>
@@ -234,8 +238,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.2392</real><key>Green Component</key><real>0.3529</real><key>Blue Component</key><real>0.4941</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
 
       <!-- ANSI Colors -->
+      <!-- Ansi 0 (Black): #475569 — promoted from old Ansi 8 for visibility -->
       <key>Ansi 0 Color</key>
-      <dict><key>Red Component</key><real>0.1765</real><key>Green Component</key><real>0.2157</real><key>Blue Component</key><real>0.2824</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.2784</real><key>Green Component</key><real>0.3333</real><key>Blue Component</key><real>0.4118</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 1 Color</key>
       <dict><key>Red Component</key><real>0.3882</real><key>Green Component</key><real>0.6588</real><key>Blue Component</key><real>0.9098</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 2 Color</key>
@@ -250,8 +255,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.4902</real><key>Green Component</key><real>0.7020</real><key>Blue Component</key><real>0.7882</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 7 Color</key>
       <dict><key>Red Component</key><real>0.8902</real><key>Green Component</key><real>0.9216</real><key>Blue Component</key><real>0.9608</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <!-- Ansi 8 (Bright Black): #677589 — brightened for comment-level text -->
       <key>Ansi 8 Color</key>
-      <dict><key>Red Component</key><real>0.2784</real><key>Green Component</key><real>0.3333</real><key>Blue Component</key><real>0.4118</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.4039</real><key>Green Component</key><real>0.4588</real><key>Blue Component</key><real>0.5373</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 9 Color</key>
       <dict><key>Red Component</key><real>0.5216</real><key>Green Component</key><real>0.7529</real><key>Blue Component</key><real>1.0000</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 10 Color</key>
@@ -292,8 +298,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.2392</real><key>Green Component</key><real>0.3686</real><key>Blue Component</key><real>0.2902</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
 
       <!-- ANSI Colors -->
+      <!-- Ansi 0 (Black): #475A50 — promoted from old Ansi 8 for visibility -->
       <key>Ansi 0 Color</key>
-      <dict><key>Red Component</key><real>0.1765</real><key>Green Component</key><real>0.2431</real><key>Blue Component</key><real>0.2078</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.2784</real><key>Green Component</key><real>0.3529</real><key>Blue Component</key><real>0.3137</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 1 Color</key>
       <dict><key>Red Component</key><real>0.4784</real><key>Green Component</key><real>0.7216</real><key>Blue Component</key><real>0.5569</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 2 Color</key>
@@ -308,8 +315,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.4902</real><key>Green Component</key><real>0.7490</real><key>Blue Component</key><real>0.6471</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 7 Color</key>
       <dict><key>Red Component</key><real>0.8941</real><key>Green Component</key><real>0.9412</real><key>Blue Component</key><real>0.9059</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <!-- Ansi 8 (Bright Black): #677A70 — brightened for comment-level text -->
       <key>Ansi 8 Color</key>
-      <dict><key>Red Component</key><real>0.2784</real><key>Green Component</key><real>0.3529</real><key>Blue Component</key><real>0.3137</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.4039</real><key>Green Component</key><real>0.4784</real><key>Blue Component</key><real>0.4392</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 9 Color</key>
       <dict><key>Red Component</key><real>0.5843</real><key>Green Component</key><real>0.8314</real><key>Blue Component</key><real>0.6510</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 10 Color</key>
@@ -350,8 +358,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.5451</real><key>Green Component</key><real>0.3882</real><key>Blue Component</key><real>0.3137</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
 
       <!-- ANSI Colors -->
+      <!-- Ansi 0 (Black): #6B5044 — promoted from old Ansi 8 for visibility -->
       <key>Ansi 0 Color</key>
-      <dict><key>Red Component</key><real>0.2902</real><key>Green Component</key><real>0.2039</real><key>Blue Component</key><real>0.1647</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.4196</real><key>Green Component</key><real>0.3137</real><key>Blue Component</key><real>0.2667</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 1 Color</key>
       <dict><key>Red Component</key><real>0.9608</real><key>Green Component</key><real>0.6627</real><key>Blue Component</key><real>0.4980</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 2 Color</key>
@@ -366,8 +375,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.7216</real><key>Green Component</key><real>0.6275</real><key>Blue Component</key><real>0.5843</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 7 Color</key>
       <dict><key>Red Component</key><real>0.9412</real><key>Green Component</key><real>0.9020</real><key>Blue Component</key><real>0.8627</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <!-- Ansi 8 (Bright Black): #8B7064 — brightened for comment-level text -->
       <key>Ansi 8 Color</key>
-      <dict><key>Red Component</key><real>0.4196</real><key>Green Component</key><real>0.3137</real><key>Blue Component</key><real>0.2667</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.5451</real><key>Green Component</key><real>0.4392</real><key>Blue Component</key><real>0.3922</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 9 Color</key>
       <dict><key>Red Component</key><real>1.0000</real><key>Green Component</key><real>0.7608</real><key>Blue Component</key><real>0.6000</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 10 Color</key>
@@ -408,8 +418,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.2941</real><key>Green Component</key><real>0.3333</real><key>Blue Component</key><real>0.3882</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
 
       <!-- ANSI Colors -->
+      <!-- Ansi 0 (Black): #52606F — promoted from old Ansi 8 for visibility -->
       <key>Ansi 0 Color</key>
-      <dict><key>Red Component</key><real>0.2157</real><key>Green Component</key><real>0.2549</real><key>Blue Component</key><real>0.3176</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.3216</real><key>Green Component</key><real>0.3765</real><key>Blue Component</key><real>0.4353</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 1 Color</key>
       <dict><key>Red Component</key><real>0.5451</real><key>Green Component</key><real>0.5725</real><key>Blue Component</key><real>0.6275</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 2 Color</key>
@@ -424,8 +435,9 @@ cat > "$PROFILES_DIR/Dendrovia.plist" <<'EOF'
       <dict><key>Red Component</key><real>0.5451</real><key>Green Component</key><real>0.6000</real><key>Blue Component</key><real>0.6588</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 7 Color</key>
       <dict><key>Red Component</key><real>0.8980</real><key>Green Component</key><real>0.9059</real><key>Blue Component</key><real>0.9216</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <!-- Ansi 8 (Bright Black): #72808F — brightened for comment-level text -->
       <key>Ansi 8 Color</key>
-      <dict><key>Red Component</key><real>0.3216</real><key>Green Component</key><real>0.3765</real><key>Blue Component</key><real>0.4353</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
+      <dict><key>Red Component</key><real>0.4471</real><key>Green Component</key><real>0.5020</real><key>Blue Component</key><real>0.5608</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 9 Color</key>
       <dict><key>Red Component</key><real>0.6588</real><key>Green Component</key><real>0.6902</real><key>Blue Component</key><real>0.7490</real><key>Alpha Component</key><real>1</real><key>Color Space</key><string>sRGB</string></dict>
       <key>Ansi 10 Color</key>

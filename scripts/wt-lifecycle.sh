@@ -22,6 +22,33 @@ SYMLINK_TARGET="../${CANONICAL_PILLAR}/dendrovia"
 fail() { echo "✗ $*" >&2; exit 1; }
 info() { echo "→ $*"; }
 
+ensure_hooks_active() {
+  if [[ -d "$CANONICAL/.git" ]]; then
+    git -C "$CANONICAL" config core.hooksPath .husky
+  fi
+}
+
+is_dirty_including_untracked() {
+  local dir="$1"
+  [[ -d "$dir/.git" || -f "$dir/.git" ]] || return 1
+  [[ -n "$(git -C "$dir" status --porcelain --untracked-files=normal 2>/dev/null || true)" ]]
+}
+
+branch_exists_local() {
+  local branch="$1"
+  git -C "$CANONICAL" show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null
+}
+
+branch_exists_remote() {
+  local branch="$1"
+  git -C "$CANONICAL" show-ref --verify --quiet "refs/remotes/origin/$branch" 2>/dev/null
+}
+
+branch_checked_out_anywhere() {
+  local branch="$1"
+  git -C "$CANONICAL" worktree list --porcelain | grep -q "^branch refs/heads/$branch\$"
+}
+
 validate_pillar() {
   local pillar="${1:-}"
   local upper
@@ -49,6 +76,7 @@ cmd_new() {
   local target="$DENROOT/$pillar/dendrovia"
 
   [[ -d "$CANONICAL/.git" ]] || fail "Canonical repo not found at $CANONICAL"
+  ensure_hooks_active
 
   # OPERATUS is the canonical — branching is just git switch
   if [[ "$pillar" == "$CANONICAL_PILLAR" ]]; then
@@ -56,9 +84,9 @@ cmd_new() {
     local current
     current=$(git -C "$CANONICAL" rev-parse --abbrev-ref HEAD 2>/dev/null)
 
-    # Check for uncommitted changes before switching
-    if ! git -C "$CANONICAL" diff --quiet 2>/dev/null || ! git -C "$CANONICAL" diff --cached --quiet 2>/dev/null; then
-      fail "$CANONICAL_PILLAR has uncommitted changes. Commit first."
+    # Check for uncommitted/untracked changes before switching
+    if is_dirty_including_untracked "$CANONICAL"; then
+      fail "$CANONICAL_PILLAR has uncommitted or untracked changes. Commit/stash/clean first."
     fi
 
     # Create branch if it doesn't exist, otherwise switch to it
@@ -85,8 +113,20 @@ cmd_new() {
     fail "$target is a full clone, not a symlink or worktree. Run setup-canonical-worktrees.sh first."
   fi
 
+  # git worktree cannot check out the same local branch in multiple worktrees
+  if branch_exists_local "$branch" && branch_checked_out_anywhere "$branch"; then
+    fail "Branch '$branch' is already checked out in another worktree. Pick a different branch."
+  fi
+
   info "Creating worktree: $pillar → $branch"
-  git -C "$CANONICAL" worktree add "$target" "$branch"
+  if branch_exists_local "$branch"; then
+    git -C "$CANONICAL" worktree add "$target" "$branch"
+  elif branch_exists_remote "$branch"; then
+    git -C "$CANONICAL" worktree add --track -b "$branch" "$target" "origin/$branch"
+  else
+    # Create a brand-new branch from current canonical HEAD
+    git -C "$CANONICAL" worktree add -b "$branch" "$target"
+  fi
 
   info "Done. $pillar is now on branch: $branch"
   info "Run 'bun install' in the new worktree if needed."
@@ -104,8 +144,8 @@ cmd_release() {
   if [[ "$pillar" == "$CANONICAL_PILLAR" ]]; then
     info "$CANONICAL_PILLAR hosts the canonical repo — switching back to main"
 
-    if ! git -C "$CANONICAL" diff --quiet 2>/dev/null || ! git -C "$CANONICAL" diff --cached --quiet 2>/dev/null; then
-      fail "$CANONICAL_PILLAR has uncommitted changes. Commit first."
+    if is_dirty_including_untracked "$CANONICAL"; then
+      fail "$CANONICAL_PILLAR has uncommitted or untracked changes. Commit/stash/clean first."
     fi
 
     local current
@@ -131,8 +171,8 @@ cmd_release() {
   fi
 
   # Check for uncommitted changes
-  if ! git -C "$target" diff --quiet 2>/dev/null || ! git -C "$target" diff --cached --quiet 2>/dev/null; then
-    fail "$pillar has uncommitted changes. Commit or discard first."
+  if is_dirty_including_untracked "$target"; then
+    fail "$pillar has uncommitted or untracked changes. Commit/stash/clean first."
   fi
 
   local branch

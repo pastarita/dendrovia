@@ -1,343 +1,129 @@
-# Dendrovia: Multi-Checkout Workflow
+# Dendrovia Workflow (Canonical + Worktrees)
 
-## Architecture Overview
+## Current Architecture
 
-Dendrovia uses a **single monorepo** with **multiple working copies** (checkouts). Each checkout has a pillar-specific `CLAUDE.md` that provides focused context for AI assistants.
+Dendrovia now runs in a **canonical repo + symbolic checkout/worktree** model:
 
-### Structure
-
+```text
+~/denroot/
+  OPERATUS/
+    dendrovia/                  # canonical git repo (.git directory)
+  CHRONOS/
+    dendrovia -> ../OPERATUS/dendrovia   # default symlink, promotable to worktree
+  IMAGINARIUM/
+    dendrovia -> ../OPERATUS/dendrovia
+  ARCHITECTUS/
+    dendrovia -> ../OPERATUS/dendrovia
+  LUDUS/
+    dendrovia -> ../OPERATUS/dendrovia
+  OCULUS/
+    dendrovia -> ../OPERATUS/dendrovia
 ```
-denroot/
-├── CHRONOS/              ← git clone of dendrovia (focus: packages/chronos)
-├── IMAGINARIUM/          ← git clone of dendrovia (focus: packages/imaginarium)
-├── ARCHITECTUS/
-│   └── dendrovia/        ← THE SOURCE monorepo
-├── LUDUS/                ← git clone of dendrovia (focus: packages/ludus)
-├── OCULUS/               ← git clone of dendrovia (focus: packages/oculus)
-└── OPERATUS/             ← git clone of dendrovia (focus: packages/operatus)
-```
 
-**Key Concept:** It's like having 6 developers on different machines, all working on the same codebase - except they're all you, wearing different "hats."
+- `OPERATUS/dendrovia` is the canonical host.
+- Other pillars are symlinked by default.
+- Any non-canonical pillar can be promoted to its own git worktree for branch isolation.
+
+Reference: `docs/SYMBOLIC_CHECKOUT_CONVENTIONS.md`
 
 ---
 
-## Why This Architecture?
+## One-Time Setup
 
-### 1. Cognitive Focus
+Run from the canonical repo:
 
-Each checkout has a **pillar-specific CLAUDE.md** that tells AI assistants:
-- "You're working in CHRONOS - focus on Git/AST parsing"
-- "You're working in IMAGINARIUM - focus on AI distillation"
-- etc.
-
-This provides **strong context** without the AI needing to understand the entire system.
-
-### 2. Parallel Development
-
-You can:
-- Have CHRONOS open in one terminal (working on parsing)
-- Have IMAGINARIUM open in another (working on shaders)
-- Have ARCHITECTUS open in a third (working on rendering)
-
-Each has **focused context**, but they all share the same commit history.
-
-### 3. Simpler Than Worktrees
-
-Unlike git worktrees:
-- ✅ Standard `git clone` (everyone understands this)
-- ✅ Each checkout is fully independent
-- ✅ No special commands needed
-- ✅ Can use any git GUI/tool
-
-### 4. Production Code Only
-
-All experimentation happens **inside the monorepo**:
-```
-packages/chronos/
-  ├── src/              # Production code
-  ├── experiments/      # Tracked experiments
-  └── README.md
+```bash
+cd /Users/Patmac/denroot/OPERATUS/dendrovia
+scripts/setup-canonical-worktrees.sh --dry-run
+scripts/setup-canonical-worktrees.sh
+bun run hooks:install
 ```
 
-No need for separate "experiment repos."
+What this does:
+1. Validates canonical repo in OPERATUS.
+2. Converts remaining pillar clones to symlinks/worktrees.
+3. Activates Castle Walls git hooks (`core.hooksPath=.husky`).
 
 ---
 
-## Initial Setup (One Time)
+## Daily Operations
 
-### 1. Initialize the Source Monorepo
-
-```bash
-cd /Users/Patmac/denroot/ARCHITECTUS/dendrovia
-git add .
-git commit -m "feat: Initial six-pillar architecture"
-git remote add origin git@github.com:yourusername/dendrovia.git
-git push -u origin main
-```
-
-### 2. Clone into Each Checkout Folder
+### Check state
 
 ```bash
-# CHRONOS
-cd /Users/Patmac/denroot
-git clone git@github.com:yourusername/dendrovia.git CHRONOS
-
-# IMAGINARIUM
-git clone git@github.com:yourusername/dendrovia.git IMAGINARIUM
-
-# LUDUS
-git clone git@github.com:yourusername/dendrovia.git LUDUS
-
-# OCULUS
-git clone git@github.com:yourusername/dendrovia.git OCULUS
-
-# OPERATUS
-git clone git@github.com:yourusername/dendrovia.git OPERATUS
-
-# Note: ARCHITECTUS already contains the source, so skip it
+cd /Users/Patmac/denroot/OPERATUS/dendrovia
+bun run wt:status
+bun run wt:list
+bun run hooks:verify
 ```
 
-### 3. Add Pillar-Specific CLAUDE.md to Each Checkout
-
-These files are **untracked** (excluded via .gitignore):
+### Promote a pillar to an isolated branch worktree
 
 ```bash
-# Copy the existing CLAUDE.md files
-cp /Users/Patmac/denroot/CHRONOS/CLAUDE.md /Users/Patmac/denroot/CHRONOS/CLAUDE.md
-cp /Users/Patmac/denroot/IMAGINARIUM/CLAUDE.md /Users/Patmac/denroot/IMAGINARIUM/CLAUDE.md
-# etc.
+bun run wt:new CHRONOS feat/chronos-parser
 ```
 
-Each checkout now has:
-- Full dendrovia monorepo code
-- Pillar-specific CLAUDE.md for context
+Behavior:
+- If branch exists locally: attaches worktree to that branch.
+- If branch exists on `origin`: creates tracking local branch and attaches.
+- If branch does not exist: creates new local branch from canonical HEAD.
+
+### Release a pillar back to symlink mode
+
+```bash
+bun run wt:release CHRONOS
+```
+
+Safety checks:
+- Refuses release if worktree has uncommitted/untracked changes.
+
+### OPERATUS special behavior
+
+`OPERATUS` is canonical, so it cannot be promoted into a second worktree at its own path.
+
+```bash
+bun run wt:new OPERATUS feat/some-branch   # maps to git switch
+bun run wt:release OPERATUS                # maps to git switch main
+```
+
+Caveat: when OPERATUS switches branch, all symlinked pillars see the same branch.
 
 ---
 
-## Daily Workflow
+## Sidecar Context Model
 
-### Scenario: Working on CHRONOS Git Parser
+Pillar identity/context lives outside git-tracked code:
 
-#### 1. Switch to CHRONOS Checkout
+- `~/denroot/PILLAR/CLAUDE.md` (untracked sidecar)
+- `~/denroot/PILLAR/.claude/` (untracked sidecar)
 
-```bash
-cd /Users/Patmac/denroot/CHRONOS
-```
+This avoids repo-context collisions while preserving strong per-pillar cognitive framing.
 
-When an AI assistant starts here, it reads `CLAUDE.md` and knows:
-> "You're working in CHRONOS - focus on Git/AST parsing. Production code is in packages/chronos/."
-
-#### 2. Make Changes
-
-```bash
-cd packages/chronos/src/parser
-# Edit GitParser.ts
-```
-
-#### 3. Test Locally
-
-```bash
-bun run test
-```
-
-#### 4. Commit and Push
-
-```bash
-git add packages/chronos/src/parser/GitParser.ts
-git commit -m "feat(chronos): Add Git history parser"
-git push
-```
-
-#### 5. Pull in Other Checkouts
-
-```bash
-# Switch to IMAGINARIUM checkout
-cd /Users/Patmac/denroot/IMAGINARIUM
-git pull  # Get the CHRONOS changes
-
-# Now IMAGINARIUM can use the new Git parser
-```
+For upcoming dual-agent context parity (`CLAUDE.md` + `AGENTS.md` sidecars), see:
+- `docs/AGENT_PARITY_ROADMAP.md`
+- `docs/WORKTREE_CONTEXT_CANONICALIZATION_ANALYSIS.md`
 
 ---
 
-## Working Across Pillars
+## Castle Walls Enforcement
 
-### Scenario: IMAGINARIUM Needs CHRONOS Output
-
-#### In CHRONOS Checkout:
+Castle Walls runs via git hooks in `.husky/` and is enforced only when hooks path is configured.
 
 ```bash
-cd /Users/Patmac/denroot/CHRONOS
-cd packages/chronos
-bun run parse --output generated/topology.json
-git add generated/topology.json
-git commit -m "feat(chronos): Generate topology for Dendrovia codebase"
-git push
+bun run hooks:install
+bun run hooks:verify
 ```
 
-#### In IMAGINARIUM Checkout:
+Active blocking gates:
+- Secret detection (pre-commit)
+- Protected branch push block (`main`/`master` in pre-push)
 
-```bash
-cd /Users/Patmac/denroot/IMAGINARIUM
-git pull  # Get topology.json
-
-cd packages/imaginarium
-bun run distill --topology ../chronos/generated/topology.json
-git add generated/shaders/*.glsl
-git commit -m "feat(imaginarium): Generate shaders from topology"
-git push
-```
+Advisory gates remain active for static analysis, tests, dependency checks, and asset boundaries.
 
 ---
 
-## CLAUDE.md Files
+## Migration Note
 
-Each checkout has a **pillar-specific CLAUDE.md** (untracked):
+Legacy full-clone workflow has been superseded by this worktree-first model.
 
-```
-CHRONOS/CLAUDE.md         → Focus on Git/AST parsing
-IMAGINARIUM/CLAUDE.md     → Focus on AI distillation
-ARCHITECTUS/dendrovia/    → (no CLAUDE.md at root, it's the source)
-LUDUS/CLAUDE.md           → Focus on game mechanics
-OCULUS/CLAUDE.md          → Focus on UI/UX
-OPERATUS/CLAUDE.md        → Focus on infrastructure
-```
-
-### Why Untracked?
-
-If tracked, every checkout would have the same `CLAUDE.md`. By keeping them **untracked**, each checkout can have its **own context** without polluting the main repo.
-
-### How to Keep Them Synced
-
-If you update a CLAUDE.md file, **manually copy** it to that pillar's checkout:
-
-```bash
-# Update CHRONOS CLAUDE.md
-cd /Users/Patmac/denroot
-vim CHRONOS/CLAUDE.md
-
-# Copy to all CHRONOS checkouts
-# (only one in this case, but if you had multiple machines...)
-```
-
----
-
-## Git Configuration
-
-### Exclude CLAUDE.md in Checkouts
-
-Add to each checkout's `.git/info/exclude`:
-
-```bash
-cd /Users/Patmac/denroot/CHRONOS
-echo "CLAUDE.md" >> .git/info/exclude
-```
-
-This prevents `CLAUDE.md` from showing up in `git status`.
-
----
-
-## Advantages
-
-### 1. Strong Context for AI Assistants
-
-When you start Claude in a checkout:
-```bash
-cd /Users/Patmac/denroot/CHRONOS
-claude
-```
-
-Claude reads `CLAUDE.md` and immediately knows:
-- You're working on Git/AST parsing
-- Production code is in `packages/chronos/`
-- Steering heuristic: "Reward the discovery of 'Why,' not just 'What.'"
-
-### 2. Full Monorepo, Focused Work
-
-You have access to **all code** (monorepo), but the **context suggests** focusing on one pillar.
-
-### 3. Parallel Development
-
-Open 6 terminal windows, one per checkout:
-- Terminal 1: `cd CHRONOS` (working on parsing)
-- Terminal 2: `cd IMAGINARIUM` (working on shaders)
-- Terminal 3: `cd ARCHITECTUS/dendrovia` (working on rendering)
-
-Each has different context, but they all share the same repo.
-
-### 4. Standard Git Workflow
-
-No special commands:
-- `git clone` (everyone knows this)
-- `git pull` (get others' changes)
-- `git push` (share your changes)
-
----
-
-## Deployment
-
-### Vercel Setup
-
-Deploy the proof-of-concept:
-
-```bash
-cd /Users/Patmac/denroot/ARCHITECTUS/dendrovia
-vercel init
-
-# Deploy packages/proof-of-concept
-cd packages/proof-of-concept
-vercel deploy
-```
-
-Vercel will:
-1. Read `package.json` for build command
-2. Build the Vite app
-3. Deploy to a URL
-
----
-
-## FAQ
-
-### Q: Why not use git worktrees?
-
-**A:** Worktrees are more complex and less intuitive. This approach uses standard `git clone`, which everyone understands.
-
-### Q: What if I commit in the wrong checkout?
-
-**A:** No problem! All checkouts point to the same remote. Just push from wherever you committed.
-
-### Q: How do I add a new checkout?
-
-**A:**
-```bash
-cd /Users/Patmac/denroot
-git clone git@github.com:yourusername/dendrovia.git NEW_CHECKOUT
-cp denroot/NEW_PILLAR/CLAUDE.md NEW_CHECKOUT/CLAUDE.md
-cd NEW_CHECKOUT && echo "CLAUDE.md" >> .git/info/exclude
-```
-
-### Q: Can I delete a checkout?
-
-**A:** Yes! Just `rm -rf CHRONOS`. Your work is safe in the remote repo.
-
-### Q: What if checkouts get out of sync?
-
-**A:**
-```bash
-cd /Users/Patmac/denroot/CHRONOS
-git fetch origin
-git reset --hard origin/main  # Nuclear option: match remote exactly
-```
-
----
-
-## Summary
-
-**One monorepo, multiple checkouts, focused context.**
-
-- All production code in `packages/*`
-- Each checkout has pillar-specific `CLAUDE.md` (untracked)
-- Standard git workflow: clone, pull, commit, push
-- Simpler than worktrees, more intuitive than submodules
-
-This architecture provides **cognitive boundaries** without **technical complexity**.
+If you still need strict clone-level isolation for a special case, use it as an opt-in profile, not the default.

@@ -41,12 +41,11 @@ run() {
   fi
 }
 
-# Check if a directory has uncommitted changes
+# Check if a directory has uncommitted or untracked changes
 is_dirty() {
   local dir="$1"
   [[ -d "$dir/.git" || -f "$dir/.git" ]] || return 1
-  cd "$dir"
-  ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null
+  [[ -n "$(git -C "$dir" status --porcelain --untracked-files=normal 2>/dev/null || true)" ]]
 }
 
 # Get current branch of a git directory
@@ -66,6 +65,14 @@ has_unpushed() {
     return 0  # No upstream — treat as unpushed
   fi
   [[ -n "$(git -C "$dir" log "$upstream..$branch" --oneline 2>/dev/null)" ]]
+}
+
+safe_remove_dendrovia_dir() {
+  local path="$1"
+  local expected_suffix="/dendrovia"
+  [[ "$path" == "$DENROOT/"*"$expected_suffix" ]] || fail "Refusing unsafe rm -rf target: $path"
+  [[ "$path" != "/" ]] || fail "Refusing unsafe rm -rf target: /"
+  run rm -rf "$path"
 }
 
 # ── Phase 1: Validate canonical ──────────────────────────────────
@@ -96,6 +103,7 @@ fi
 
 info "Canonical repo confirmed at $CANONICAL_DIR"
 log "Branch: $(current_branch "$CANONICAL_DIR")"
+git -C "$CANONICAL_DIR" config core.hooksPath .husky
 echo ""
 
 # ── Phase 2: Convert remaining pillars ──────────────────────────
@@ -143,7 +151,7 @@ for PILLAR in "${PILLARS[@]}"; do
 
   # Safety checks
   if is_dirty "$PILLAR_DENDROVIA"; then
-    warn "$PILLAR has uncommitted changes — SKIPPING"
+    warn "$PILLAR has uncommitted or untracked changes — SKIPPING"
     log "Resolve manually: cd $PILLAR_DENDROVIA && git status"
     echo ""
     continue
@@ -160,7 +168,7 @@ for PILLAR in "${PILLARS[@]}"; do
   log "Current branch: $BRANCH"
 
   # Remove the full clone
-  run rm -rf "$PILLAR_DENDROVIA"
+  safe_remove_dendrovia_dir "$PILLAR_DENDROVIA"
 
   if [[ "$BRANCH" == "main" || "$BRANCH" == "master" || "$BRANCH" == "unknown" ]]; then
     # Pillar on main — use symlink to canonical

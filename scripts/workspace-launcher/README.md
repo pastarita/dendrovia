@@ -142,10 +142,11 @@ const screenHeight = 1440; // Your display height
 
 ### Dev servers don't start
 
-Make sure dependencies are installed in each checkout:
+Make sure dependencies are installed in each active worktree/canonical tree:
 ```bash
-cd /Users/Patmac/denroot/CHRONOS && bun install
-cd /Users/Patmac/denroot/IMAGINARIUM && bun install
+cd /Users/Patmac/denroot/OPERATUS/dendrovia && bun install
+# If a pillar is promoted to its own worktree, run bun install there too
+# e.g. /Users/Patmac/denroot/CHRONOS/dendrovia
 # ... etc
 ```
 
@@ -153,10 +154,10 @@ cd /Users/Patmac/denroot/IMAGINARIUM && bun install
 
 This launcher embodies the **multi-checkout cognitive architecture**:
 
-- Each checkout is a **full clone** of dendrovia
+- `OPERATUS/dendrovia` is canonical; other pillars are symlinked by default and may be promoted to worktrees
 - Each has a **pillar-specific CLAUDE.md** (untracked)
 - Claude Code in the top pane **reads that context**
 - You can work on **multiple pillars in parallel**
-- All share the same GitHub remote
+- All share the same canonical git history/object store
 
 It's like having 6 developers on different machines, but they're all you with different "hats."

@@ -58,7 +58,9 @@
     "wt:release": "scripts/wt-lifecycle.sh release",
     "wt:status": "scripts/wt-lifecycle.sh status",
     "wt:list": "git worktree list",
-    "wt:prune": "git worktree prune"
+    "wt:prune": "git worktree prune",
+    "hooks:install": "scripts/install-castle-walls-hooks.sh",
+    "hooks:verify": "scripts/install-castle-walls-hooks.sh --verify"
   },
   "devDependencies": {
     "turbo": "^2.7.0",

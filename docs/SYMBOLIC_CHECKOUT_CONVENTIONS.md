@@ -67,11 +67,13 @@ All commands run from any `dendrovia/` directory (canonical or worktree — they
 
 | Command | What It Does |
 |---------|-------------|
-| `bun run wt:new <PILLAR> <branch>` | Remove symlink, create worktree for pillar on `<branch>` |
+| `bun run wt:new <PILLAR> <branch>` | Remove symlink, create worktree for pillar on `<branch>` (creates branch if needed) |
 | `bun run wt:release <PILLAR>` | Remove worktree, restore symlink to canonical |
 | `bun run wt:status` | Show all pillars' current state (canonical/symlink/worktree/clone) |
 | `bun run wt:list` | `git worktree list` — show all active worktrees |
 | `bun run wt:prune` | `git worktree prune` — clean up stale references |
+| `bun run hooks:install` | Activate Castle Walls via `core.hooksPath=.husky` |
+| `bun run hooks:verify` | Verify Castle Walls hook activation |
 
 ### Creating a Worktree
 
@@ -83,8 +85,12 @@ bun run wt:new CHRONOS feat/chronos-parser
 
 The script:
 1. Removes the existing symlink at `~/denroot/CHRONOS/dendrovia`
-2. Runs `git worktree add ~/denroot/CHRONOS/dendrovia feat/chronos-parser`
-3. The pillar now has its own independent working tree on that branch
+2. Resolves branch source:
+   - local branch if present
+   - `origin/<branch>` tracking branch if remote exists
+   - new local branch from canonical HEAD if branch is new
+3. Runs `git worktree add ...` with the resolved branch mode
+4. The pillar now has its own independent working tree on that branch
 
 ### Releasing a Worktree
 
@@ -180,6 +186,20 @@ The script:
 4. Verifies the result
 
 Safety: refuses to touch any pillar with uncommitted changes or unpushed branches.
+
+---
+
+## Castle Walls Hook Activation
+
+Hooks are only enforced if git is configured to use `.husky/`.
+
+```bash
+cd ~/denroot/OPERATUS/dendrovia
+bun run hooks:install
+bun run hooks:verify
+```
+
+This ensures pre-commit/pre-push/post-rebase gates are active in the shared canonical git config used by worktrees.
 
 ---
 

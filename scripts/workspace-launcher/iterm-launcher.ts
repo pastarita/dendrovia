@@ -74,7 +74,10 @@ export function generateItermAppleScript(
     const pos = positions[i] || positions[positions.length - 1];
 
     // Commands for each pane
-    const cdCommand = `cd '${pillar.path}'`;
+    // Top pane (Claude Code) opens at pillar checkout root (where CLAUDE.md lives)
+    const cdCommandTop = `cd '${pillar.path}'`;
+    // Bottom panes open in the dendrovia monorepo (where production code lives)
+    const cdCommandBottom = `cd '${pillar.path}/dendrovia'`;
     const titleTop = `echo -e '\\\\033]0;${pillar.shortCode} Claude\\\\007'`;
     const titleBottomLeft = `echo -e '\\\\033]0;${pillar.shortCode} Dev\\\\007'`;
     const titleBottomRight = `echo -e '\\\\033]0;${pillar.shortCode} Shell\\\\007'`;
@@ -94,9 +97,9 @@ export function generateItermAppleScript(
     delay 0.5
 
     tell newWindow
-      -- Top pane: Claude Code context
+      -- Top pane: Claude Code context (pillar checkout root)
       tell current session
-        write text "${cdCommand} && ${titleTop}${claudeSetup}"
+        write text "${cdCommandTop} && ${titleTop}${claudeSetup}"
       end tell
       delay 0.15
 
@@ -106,18 +109,18 @@ export function generateItermAppleScript(
       end tell
       delay 0.2
 
-      -- Bottom left pane: Dev work
+      -- Bottom left pane: Dev work (dendrovia monorepo)
       tell bottomLeftSession
-        write text "${cdCommand} && ${titleBottomLeft}${devServerCmd}"
+        write text "${cdCommandBottom} && ${titleBottomLeft}${devServerCmd}"
         delay 0.1
         -- Split vertically to create bottom right
         set bottomRightSession to (split vertically with profile "${pillar.profile}")
       end tell
       delay 0.15
 
-      -- Bottom right pane: General shell
+      -- Bottom right pane: General shell (dendrovia monorepo)
       tell bottomRightSession
-        write text "${cdCommand} && ${titleBottomRight}"
+        write text "${cdCommandBottom} && ${titleBottomRight}"
       end tell
     end tell
     delay 0.2
@@ -129,7 +132,7 @@ export function generateItermAppleScript(
     -- Resize panes: make top pane ~70% of height (Claude gets more space)
     tell application "System Events"
       tell process "iTerm2"
-        repeat 15 times
+        repeat 11 times
           key code 125 using {command down, control down}
           delay 0.02
         end repeat

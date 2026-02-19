@@ -1,4 +1,7 @@
 import { Component, type ReactNode } from 'react';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('ARCHITECTUS', 'error-boundary');
 
 /**
  * ERROR BOUNDARY
@@ -34,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error('[ARCHITECTUS] Scene crashed:', error, info.componentStack);
+    log.error({ err: error, componentStack: info.componentStack }, 'Scene crashed');
   }
 
   private handleRetry = () => {

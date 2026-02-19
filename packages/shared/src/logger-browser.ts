@@ -84,4 +84,7 @@ export function createLogger(pillar: string, component?: string): Logger {
 // Pre-built pillar loggers for convenience
 export const chronosLog = createLogger('CHRONOS');
 export const imaginariumLog = createLogger('IMAGINARIUM');
+export const architectusLog = createLogger('ARCHITECTUS');
+export const ludusLog = createLogger('LUDUS');
+export const oculusLog = createLogger('OCULUS');
 export const operatusLog = createLogger('OPERATUS');

@@ -80,6 +80,9 @@ import {
   type Inventory,
 } from '../inventory/InventorySystem';
 import { createRngState } from '../utils/SeededRandom';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('LUDUS', 'event-wiring');
 
 // ─── Game Session ───────────────────────────────────────────
 
@@ -136,6 +139,8 @@ export function wireGameEvents(session: GameSession): () => void {
   const bus = getEventBus();
   const unsubs: Array<() => void> = [];
 
+  log.info('Wiring game events');
+
   // ── ARCHITECTUS → LUDUS: Player moved to a new location ──
 
   unsubs.push(bus.on<NodeClickedEvent>(GameEvents.NODE_CLICKED, (event) => {
@@ -170,8 +175,11 @@ export function wireGameEvents(session: GameSession): () => void {
     dispatchCombatAction(session, event.action);
   }));
 
+  log.info({ listeners: unsubs.length }, 'Game events wired');
+
   return () => {
     for (const unsub of unsubs) unsub();
+    log.info('Game events unwired');
   };
 }
 

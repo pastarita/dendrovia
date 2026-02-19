@@ -8,7 +8,7 @@
 import './setup.js';
 import { describe, test, expect, beforeEach, afterEach } from 'bun:test';
 import { StateAdapter } from '../src/persistence/StateAdapter.js';
-import { useGameStore } from '../src/persistence/GameStore.js';
+import { useSaveStateStore } from '../src/persistence/SaveStateStore.js';
 import type { Character, Quest, Item } from '@dendrovia/shared';
 
 // Mock LUDUS GameStore
@@ -43,7 +43,7 @@ function createMockLudusStore() {
 }
 
 beforeEach(() => {
-  useGameStore.getState().reset();
+  useSaveStateStore.getState().reset();
 });
 
 describe('StateAdapter — construction', () => {
@@ -64,19 +64,19 @@ describe('StateAdapter — construction', () => {
 describe('StateAdapter — connect with hydration', () => {
   test('hydrates LUDUS store from OPERATUS state', async () => {
     // Set up OPERATUS state
-    useGameStore.getState().setCharacter({ name: 'TestHero' });
-    useGameStore.getState().addItem({ id: 'sw1', name: 'Sword', type: 'weapon', rarity: 'common' });
-    useGameStore.getState().addQuest({
+    useSaveStateStore.getState().setCharacter({ name: 'TestHero' });
+    useSaveStateStore.getState().addItem({ id: 'sw1', name: 'Sword', type: 'weapon', rarity: 'common' });
+    useSaveStateStore.getState().addQuest({
       id: 'q1', title: 'Test', description: 'A test quest',
       status: 'active', objectives: [],
     });
-    useGameStore.getState().addQuest({
+    useSaveStateStore.getState().addQuest({
       id: 'q2', title: 'Done', description: 'A completed quest',
       status: 'completed', objectives: [],
     });
-    useGameStore.getState().setGameFlag('tutorial', true);
+    useSaveStateStore.getState().setGameFlag('tutorial', true);
     // Mark hydrated so waitForHydration resolves
-    useGameStore.setState({ _hasHydrated: true });
+    useSaveStateStore.setState({ _hasHydrated: true });
 
     const ludus = createMockLudusStore();
     const adapter = new StateAdapter();
@@ -95,8 +95,8 @@ describe('StateAdapter — connect with hydration', () => {
   });
 
   test('skips hydration when configured', async () => {
-    useGameStore.getState().setCharacter({ name: 'ShouldNotSync' });
-    useGameStore.setState({ _hasHydrated: true });
+    useSaveStateStore.getState().setCharacter({ name: 'ShouldNotSync' });
+    useSaveStateStore.setState({ _hasHydrated: true });
 
     const ludus = createMockLudusStore();
     const adapter = new StateAdapter({ skipHydration: true });
@@ -111,7 +111,7 @@ describe('StateAdapter — connect with hydration', () => {
 
 describe('StateAdapter — disconnect', () => {
   test('disconnect cleans up subscriptions', async () => {
-    useGameStore.setState({ _hasHydrated: true });
+    useSaveStateStore.setState({ _hasHydrated: true });
 
     const ludus = createMockLudusStore();
     const adapter = new StateAdapter({ skipHydration: true });
@@ -130,14 +130,14 @@ describe('StateAdapter — disconnect', () => {
 
 describe('StateAdapter — OPERATUS → LUDUS sync', () => {
   test('character changes in OPERATUS propagate to LUDUS', async () => {
-    useGameStore.setState({ _hasHydrated: true });
+    useSaveStateStore.setState({ _hasHydrated: true });
 
     const ludus = createMockLudusStore();
     const adapter = new StateAdapter({ skipHydration: true });
     await adapter.connect(ludus);
 
     // Change OPERATUS character
-    useGameStore.getState().setCharacter({ name: 'UpdatedHero' });
+    useSaveStateStore.getState().setCharacter({ name: 'UpdatedHero' });
 
     // The sync fires via subscription (synchronous in Zustand)
     const ludusState = ludus.getState();
@@ -147,14 +147,14 @@ describe('StateAdapter — OPERATUS → LUDUS sync', () => {
   });
 
   test('quest changes split into active/completed for LUDUS', async () => {
-    useGameStore.setState({ _hasHydrated: true });
+    useSaveStateStore.setState({ _hasHydrated: true });
 
     const ludus = createMockLudusStore();
     const adapter = new StateAdapter({ skipHydration: true });
     await adapter.connect(ludus);
 
     // Add quests to OPERATUS
-    useGameStore.getState().addQuest({
+    useSaveStateStore.getState().addQuest({
       id: 'q1', title: 'Active', description: '',
       status: 'active', objectives: [],
     });
@@ -164,7 +164,7 @@ describe('StateAdapter — OPERATUS → LUDUS sync', () => {
     expect(ludusState.completedQuests).toHaveLength(0);
 
     // Complete the quest
-    useGameStore.getState().updateQuestStatus('q1', 'completed');
+    useSaveStateStore.getState().updateQuestStatus('q1', 'completed');
 
     ludusState = ludus.getState();
     expect(ludusState.activeQuests).toHaveLength(0);

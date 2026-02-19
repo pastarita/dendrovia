@@ -23,7 +23,7 @@ export const ASSET_STAGES: Stage[] = [
 ];
 
 export const PERSIST_STAGES: Stage[] = [
-  { id: 'game-state', label: 'Game State', description: 'Live Zustand store with character, quests, inventory', api: 'useGameStore.getState()', track: 'persist' },
+  { id: 'game-state', label: 'Game State', description: 'Live Zustand store with character, quests, inventory', api: 'useSaveStateStore.getState()', track: 'persist' },
   { id: 'zustand-persist', label: 'Zustand Persist', description: 'Middleware serializes state on every mutation', api: 'createDendroviaStorage()', track: 'persist' },
   { id: 'idb-write', label: 'IndexedDB', description: 'Persisted to IndexedDB via custom storage engine', api: 'IDBCache.write()', track: 'persist' },
   { id: 'state-persisted', label: 'STATE_PERSISTED', description: 'Confirmation event emitted to all pillars', api: 'EventBus.emit(STATE_PERSISTED)', track: 'persist' },

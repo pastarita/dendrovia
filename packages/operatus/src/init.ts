@@ -33,7 +33,7 @@ import { CacheManager } from './cache/CacheManager';
 const log = createLogger('OPERATUS', 'init');
 import { AssetLoader } from './loader/AssetLoader';
 import { CDNLoader, type CDNConfig } from './loader/CDNLoader';
-import { useGameStore, waitForHydration } from './persistence/GameStore';
+import { useSaveStateStore, waitForHydration } from './persistence/SaveStateStore';
 import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth';
 import { MeshFactory } from './mesh/MeshFactory';
 import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave';

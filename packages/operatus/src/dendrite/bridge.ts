@@ -25,7 +25,7 @@ import {
   collectAssetLoader,
   collectCDNLoader,
   collectAutoSave,
-  collectGameStore,
+  collectSaveStateStore,
   collectCrossTabSync,
   collectPerfMonitor,
   collectStatePersistence,
@@ -38,7 +38,7 @@ import {
 import {
   cacheManagerActions,
   autoSaveActions,
-  gameStoreActions,
+  saveStateStoreActions,
   perfMonitorActions,
 } from './actions.js';
 
@@ -144,7 +144,7 @@ export class OperatusRuntimeBridge {
     const loaderState = collectAssetLoader(ctx.assetLoader);
     const cdnState = collectCDNLoader(ctx.cdnLoader);
     const autoSaveState = collectAutoSave(ctx.autoSave);
-    const gameState = collectGameStore(ctx.gameStore.getState);
+    const gameState = collectSaveStateStore(ctx.gameStore.getState);
     const syncState = collectCrossTabSync(ctx.crossTabSync);
     const perfState = collectPerfMonitor(ctx.perfMonitor);
     const persistState = collectStatePersistence();
@@ -197,7 +197,7 @@ export class OperatusRuntimeBridge {
 
     registerActions('op-cache-mgr', cacheManagerActions(this.ctx.cache));
     registerActions('op-autosave', autoSaveActions(this.ctx.autoSave));
-    registerActions('op-game-store', gameStoreActions(this.ctx.gameStore.reset));
+    registerActions('op-game-store', saveStateStoreActions(this.ctx.gameStore.reset));
     registerActions('op-perf-monitor', perfMonitorActions(this.ctx.perfMonitor.reset));
   }
 

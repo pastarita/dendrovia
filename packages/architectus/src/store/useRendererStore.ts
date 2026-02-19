@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
+import type { CameraMode } from '@dendrovia/shared';
 import type { GeneratedAssets } from '../loader/AssetBridge';
 import type { SpatialIndex } from '../systems/SpatialIndex';
 import type { PlatformConfig } from '../systems/PlatformConfig';
@@ -79,7 +80,7 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
 /** Ordered tiers for adaptive stepping */
 const TIER_ORDER: QualityTier[] = ['potato', 'low', 'medium', 'high', 'ultra'];
 
-export type CameraMode = 'falcon' | 'player-1p' | 'player-3p' | 'spectator';
+export type { CameraMode } from '@dendrovia/shared';
 
 /** Check if a camera mode is any player variant */
 export function isPlayerMode(mode: CameraMode): boolean {

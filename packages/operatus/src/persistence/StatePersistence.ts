@@ -205,7 +205,7 @@ registerMigration(1, (v1: any) => {
     inventory: v1.inventory ?? [],
     gameFlags: v1.gameFlags ?? {},
     playtimeMs: v1.playtimeMs ?? 0,
-    worldPosition: v1.worldPosition ?? [0, 0, 0],
+    playerPosition: v1.playerPosition ?? [0, 0, 0],
     cameraMode: v1.cameraMode ?? 'falcon',
   };
 });

@@ -55,7 +55,7 @@ export function autoSaveActions(autoSave: AutoSave): NodeAction[] {
   ];
 }
 
-export function gameStoreActions(resetFn: () => void): NodeAction[] {
+export function saveStateStoreActions(resetFn: () => void): NodeAction[] {
   return [
     {
       id: 'gamestore-reset',

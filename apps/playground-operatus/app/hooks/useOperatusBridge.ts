@@ -35,7 +35,7 @@ export function useOperatusBridge(
         const perf = operatus.getPerfMonitor(true);
         const autoSave = new operatus.AutoSave();
         const crossTabSync = new operatus.CrossTabSync();
-        const gameStoreRef = operatus.useGameStore;
+        const gameStoreRef = operatus.useSaveStateStore;
 
         bridge.attach({
           cache: infra.cacheManager!,

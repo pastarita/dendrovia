@@ -49,7 +49,7 @@ export function useGamePersistence(): PersistenceState {
 
   const refreshCharacter = useCallback(() => {
     if (!operatusRef.current) return;
-    const { character } = operatusRef.current.useGameStore.getState();
+    const { character } = operatusRef.current.useSaveStateStore.getState();
     if (character.name !== DEFAULT_NAME || character.level !== 1 || character.experience !== 0) {
       setSavedCharacter(character);
     } else {
@@ -71,7 +71,7 @@ export function useGamePersistence(): PersistenceState {
       refreshSaves();
 
       // Subscribe to store changes so savedCharacter stays reactive
-      mod.useGameStore.subscribe(() => {
+      mod.useSaveStateStore.subscribe(() => {
         if (!cancelled) refreshCharacter();
       });
     });
@@ -82,7 +82,7 @@ export function useGamePersistence(): PersistenceState {
   const saveGame = useCallback(async (player: Character) => {
     const mod = operatusRef.current;
     if (!mod) return;
-    mod.useGameStore.getState().setCharacter({
+    mod.useSaveStateStore.getState().setCharacter({
       id: player.id,
       name: player.name,
       class: player.class,
@@ -101,7 +101,7 @@ export function useGamePersistence(): PersistenceState {
   const loadCharacter = useCallback((): Character | null => {
     const mod = operatusRef.current;
     if (!mod) return null;
-    const { character } = mod.useGameStore.getState();
+    const { character } = mod.useSaveStateStore.getState();
     if (character.name === DEFAULT_NAME && character.level === 1 && character.experience === 0) {
       return null;
     }

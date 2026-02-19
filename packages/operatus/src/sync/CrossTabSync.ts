@@ -12,7 +12,7 @@
  *   - No Web Locks → all tabs are leaders (last-write-wins)
  */
 
-import { useGameStore } from '../persistence/GameStore';
+import { useSaveStateStore } from '../persistence/SaveStateStore';
 
 export interface CrossTabConfig {
   /** BroadcastChannel name (default: 'dendrovia-sync') */
@@ -95,7 +95,7 @@ export class CrossTabSync {
     }
 
     // Subscribe to store changes and broadcast to other tabs
-    this.unsubscribe = useGameStore.subscribe((state, prevState) => {
+    this.unsubscribe = useSaveStateStore.subscribe((state, prevState) => {
       if (this.role !== 'follower') {
         this.debouncedBroadcast(state);
       }
@@ -200,7 +200,7 @@ export class CrossTabSync {
           if (incoming.visitedNodes && Array.isArray(incoming.visitedNodes)) {
             incoming.visitedNodes = new Set(incoming.visitedNodes);
           }
-          useGameStore.setState(incoming, false);
+          useSaveStateStore.setState(incoming, false);
         }
         break;
       }
@@ -217,8 +217,8 @@ export class CrossTabSync {
         // A follower wants the leader to save
         if (this.role === 'leader') {
           // Trigger persist middleware write
-          const state = useGameStore.getState();
-          useGameStore.setState({ character: { ...state.character } });
+          const state = useSaveStateStore.getState();
+          useSaveStateStore.setState({ character: { ...state.character } });
         }
         break;
       }
@@ -231,7 +231,7 @@ export class CrossTabSync {
   private debouncedBroadcast(state: any): void {
     // Serialize Set<string> for transport
     const serialized: any = {};
-    const persistKeys = ['character', 'quests', 'visitedNodes', 'unlockedKnowledge', 'worldPosition', 'inventory', 'gameFlags', 'playtimeMs'];
+    const persistKeys = ['character', 'quests', 'visitedNodes', 'unlockedKnowledge', 'playerPosition', 'inventory', 'gameFlags', 'playtimeMs'];
 
     for (const key of persistKeys) {
       const val = state[key];

@@ -27,7 +27,6 @@ function resetStore() {
     hotspots: [],
     codeReader: { filePath: null, content: null, language: 'typescript', loading: false, error: null },
     millerSelection: [],
-    isUiHovered: false,
     deepwiki: null,
     playerPosition: [0, 0, 0],
     visitedNodes: [],
@@ -274,15 +273,6 @@ describe('useOculusStore', () => {
     it('sets player position', () => {
       useOculusStore.getState().setPlayerPosition([10, 20, 30]);
       expect(useOculusStore.getState().playerPosition).toEqual([10, 20, 30]);
-    });
-  });
-
-  describe('input coordination', () => {
-    it('sets ui hovered state', () => {
-      useOculusStore.getState().setUiHovered(true);
-      expect(useOculusStore.getState().isUiHovered).toBe(true);
-      useOculusStore.getState().setUiHovered(false);
-      expect(useOculusStore.getState().isUiHovered).toBe(false);
     });
   });
 

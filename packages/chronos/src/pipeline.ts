@@ -366,7 +366,6 @@ export async function runPipeline(options: PipelineOptions): Promise<PipelineRes
 
   if (emitEvents) {
     await getEventBus().emit(GameEvents.TOPOLOGY_GENERATED, {
-      topology: output.topology,
       tree,
       hotspots,
     });

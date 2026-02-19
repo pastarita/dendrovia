@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { getEventBus, GameEvents, type NodeClickedEvent } from '@dendrovia/shared';
+import { getEventBus, GameEvents } from '@dendrovia/shared';
 
 export function HUD() {
   const [lastClicked, setLastClicked] = useState<string | null>(null);
@@ -14,7 +14,7 @@ export function HUD() {
   useEffect(() => {
     const eventBus = getEventBus();
 
-    const unsubscribe = eventBus.on<NodeClickedEvent>(
+    const unsubscribe = eventBus.on(
       GameEvents.NODE_CLICKED,
       (data) => {
         setLastClicked(data.filePath);

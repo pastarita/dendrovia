@@ -2,7 +2,6 @@ import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { PlayerMovedEvent } from '@dendrovia/shared';
 import { useRendererStore } from '../store/useRendererStore';
 import { useCameraEditorStore } from '../store/useCameraEditorStore';
 import { deriveDimensions } from '../systems/PlatformConfig';
@@ -392,7 +391,7 @@ function emitMoveIfNeeded(
   if (dist >= MOVE_EMIT_THRESHOLD) {
     lastEmittedPos.current.copy(camera.position);
     const branchId = useRendererStore.getState().playerBranchId;
-    getEventBus().emit<PlayerMovedEvent>(GameEvents.PLAYER_MOVED, {
+    getEventBus().emit(GameEvents.PLAYER_MOVED, {
       position: camera.position.toArray() as [number, number, number],
       branchId: branchId ?? 'root',
       velocity: [0, 0, 0],

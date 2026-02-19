@@ -245,8 +245,8 @@ export async function initializeOperatus(
   });
 
   // LEVEL_LOADED → preload zone-specific assets
-  const unsubLevelLoaded = eventBus.on(GameEvents.LEVEL_LOADED, async (data: any) => {
-    const paths: string[] = data?.assetPaths ?? [];
+  const unsubLevelLoaded = eventBus.on(GameEvents.LEVEL_LOADED, async (data) => {
+    const paths: string[] = data.assetPaths ?? [];
     if (paths.length > 0) {
       try {
         await assetLoader.preload(paths);

@@ -21,7 +21,7 @@ import { useEffect, useRef, useState, useCallback, type ReactNode } from 'react'
 
 // ── Shared ────────────────────────────────────────────────────
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { EventBus, TopologyGeneratedEvent } from '@dendrovia/shared';
+import type { EventBus } from '@dendrovia/shared';
 import type { FileTreeNode, Hotspot, ParsedFile, ParsedCommit, CharacterClass, ContributorProfile } from '@dendrovia/shared';
 
 // ── ARCHITECTUS (3D renderer) ─────────────────────────────────
@@ -253,7 +253,7 @@ export function DendroviaQuest({
               setTopology(tree);
               setHotspots(spots);
               // T09: Emit topology to OCULUS via EventBus
-              bus.emit<TopologyGeneratedEvent>(GameEvents.TOPOLOGY_GENERATED, {
+              bus.emit(GameEvents.TOPOLOGY_GENERATED, {
                 tree,
                 hotspots: spots,
               });

@@ -10,13 +10,6 @@
 
 import { useState, useCallback } from 'react';
 import { GameEvents } from '@dendrovia/shared';
-import type {
-  HealthChangedEvent,
-  ManaChangedEvent,
-  ExperienceGainedEvent,
-  LevelUpEvent,
-  QuestUpdatedEvent,
-} from '@dendrovia/shared';
 import type { EventBus } from '@dendrovia/shared';
 import { HUD, useOculusStore } from '@dendrovia/oculus';
 import { GymShell, GymControlPanel } from '../_gym-kit';
@@ -45,21 +38,21 @@ function SandboxControls({ eventBus }: { eventBus: EventBus }) {
 
   const emitHealth = useCallback((val: number) => {
     setHealth(val);
-    eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
+    eventBus.emit(GameEvents.HEALTH_CHANGED, {
       entityId: 'player', current: val, max: maxHealth, delta: val - health,
     });
   }, [eventBus, health, maxHealth]);
 
   const emitMana = useCallback((val: number) => {
     setMana(val);
-    eventBus.emit<ManaChangedEvent>(GameEvents.MANA_CHANGED, {
+    eventBus.emit(GameEvents.MANA_CHANGED, {
       entityId: 'player', current: val, max: maxMana, delta: val - mana,
     });
   }, [eventBus, mana, maxMana]);
 
   const emitXp = useCallback((val: number) => {
     setXp(val);
-    eventBus.emit<ExperienceGainedEvent>(GameEvents.EXPERIENCE_GAINED, {
+    eventBus.emit(GameEvents.EXPERIENCE_GAINED, {
       characterId: 'player', amount: val - xp, totalExperience: val,
     });
   }, [eventBus, xp]);
@@ -67,13 +60,13 @@ function SandboxControls({ eventBus }: { eventBus: EventBus }) {
   const emitLevelUp = useCallback(() => {
     const newLevel = level + 1;
     setLevel(newLevel);
-    eventBus.emit<LevelUpEvent>(GameEvents.LEVEL_UP, {
+    eventBus.emit(GameEvents.LEVEL_UP, {
       characterId: 'player', newLevel, statChanges: { health: 10, mana: 5 },
     });
   }, [eventBus, level]);
 
   const emitQuestComplete = useCallback(() => {
-    eventBus.emit<QuestUpdatedEvent>(GameEvents.QUEST_UPDATED, {
+    eventBus.emit(GameEvents.QUEST_UPDATED, {
       questId: 'q1', status: 'completed', title: 'Hunt the Null Pointer', description: 'Completed!',
     });
   }, [eventBus]);
@@ -82,7 +75,7 @@ function SandboxControls({ eventBus }: { eventBus: EventBus }) {
     const dmg = Math.min(health, 15);
     const newHealth = health - dmg;
     setHealth(newHealth);
-    eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
+    eventBus.emit(GameEvents.HEALTH_CHANGED, {
       entityId: 'player', current: newHealth, max: maxHealth, delta: -dmg,
     });
   }, [eventBus, health, maxHealth]);

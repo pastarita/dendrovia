@@ -32,8 +32,11 @@ import type {
   Hotspot,
   ParsedFile,
 } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import { deserializeToFlat } from '@dendrovia/imaginarium';
 import type { FlatMeshData } from '@dendrovia/imaginarium';
+
+const log = createLogger('ARCHITECTUS', 'asset-bridge');
 
 /** The typed shape returned to consumers. Every field is optional — callers
  *  must fall back to their own defaults when a field is null/undefined. */
@@ -99,13 +102,17 @@ async function fetchJson<T>(url: string, timeoutMs = 5000): Promise<T | null> {
     clearTimeout(timer);
     if (!response.ok) {
       // 404s are expected for optional resources (e.g. chunked manifest) — debug only
-      const log = response.status === 404 ? console.debug : console.warn;
-      log(`[ARCHITECTUS] fetchJson failed: ${response.status} ${response.statusText} for ${url}`);
+      const msg = `fetchJson failed: ${response.status} ${response.statusText} for ${url}`;
+      if (response.status === 404) {
+        log.debug(msg);
+      } else {
+        log.warn(msg);
+      }
       return null;
     }
     return (await response.json()) as T;
   } catch (err) {
-    console.warn(`[ARCHITECTUS] fetchJson error for ${url}:`, err);
+    log.warn({ err, url }, 'fetchJson error');
     return null;
   }
 }
@@ -118,12 +125,12 @@ async function fetchText(url: string, timeoutMs = 5000): Promise<string | null> 
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     if (!response.ok) {
-      console.warn(`[ARCHITECTUS] fetchText failed: ${response.status} ${response.statusText} for ${url}`);
+      log.warn(`fetchText failed: ${response.status} ${response.statusText} for ${url}`);
       return null;
     }
     return await response.text();
   } catch (err) {
-    console.warn(`[ARCHITECTUS] fetchText error for ${url}:`, err);
+    log.warn({ err, url }, 'fetchText error');
     return null;
   }
 }
@@ -221,23 +228,19 @@ export async function loadGeneratedAssets(
   }
 
   if (!manifest) {
-    console.warn('[ARCHITECTUS] Could not load asset manifest from', manifestPath);
+    log.warn({ manifestPath }, 'Could not load asset manifest');
     return null;
   }
 
-  console.log('[ARCHITECTUS] Loaded asset manifest v' + manifest.version);
+  log.info('Loaded asset manifest v' + manifest.version);
 
   // Health summary: surface phantom references early
   const shaderCount = Object.keys(manifest.shaders).length;
   const paletteCount = Object.keys(manifest.palettes).length;
   const meshCount = manifest.meshes ? Object.keys(manifest.meshes).length : 0;
-  console.log(
-    `[ARCHITECTUS] Manifest health: ${shaderCount} shaders, ${paletteCount} palettes, ${meshCount} meshes`,
-  );
+  log.info({ shaderCount, paletteCount, meshCount }, 'Manifest health');
   if (meshCount > 0) {
-    console.warn(
-      `[ARCHITECTUS] Manifest references ${meshCount} mesh files — verify they exist on disk`,
-    );
+    log.warn({ meshCount }, 'Manifest references mesh files — verify they exist on disk');
   }
 
   // 2. Load palettes (global + per-language) in parallel.
@@ -341,7 +344,7 @@ export async function loadGeneratedAssets(
     }
 
     if (meshes.size > 0) {
-      console.log(`[ARCHITECTUS] Loaded ${meshes.size} mesh assets`);
+      log.info({ count: meshes.size }, 'Loaded mesh assets');
     }
   }
 
@@ -360,7 +363,7 @@ export async function loadGeneratedAssets(
       ),
     ]);
     if (storyArc) {
-      console.log(`[ARCHITECTUS] Loaded story arc with ${storyArc.segments.length} segments`);
+      log.info({ segments: storyArc.segments.length }, 'Loaded story arc');
     }
   }
 
@@ -373,7 +376,7 @@ export async function loadGeneratedAssets(
     (meshes ? meshes.size : 0) +
     (storyArc ? 1 : 0);
 
-  console.log(`[ARCHITECTUS] Loaded ${assetCount} generated assets`);
+  log.info({ assetCount }, 'Loaded generated assets');
 
   return {
     manifest,
@@ -440,11 +443,11 @@ export async function loadWorldIndex(
   }
 
   if (!manifest) {
-    console.debug('[ARCHITECTUS] No chunked manifest found, world segmentation unavailable');
+    log.debug('No chunked manifest found, world segmentation unavailable');
     return null;
   }
 
-  console.log('[ARCHITECTUS] Loaded chunked manifest v' + manifest.version);
+  log.info('Loaded chunked manifest v' + manifest.version);
 
   // Load world index, palettes, shaders, story arc in parallel (~15KB total)
   const [worldIndex, storyArc, lsystem, noise, ...paletteAndShaderResults] = await Promise.all([
@@ -477,7 +480,7 @@ export async function loadWorldIndex(
   ]);
 
   if (!worldIndex) {
-    console.warn('[ARCHITECTUS] Could not load world index');
+    log.warn('Could not load world index');
     return null;
   }
 
@@ -494,9 +497,9 @@ export async function loadWorldIndex(
     }
   }
 
-  console.log(
-    `[ARCHITECTUS] World index loaded: ${worldIndex.segmentCount} segments, ` +
-    `radius=${Math.round(worldIndex.worldRadius)}`,
+  log.info(
+    { segments: worldIndex.segmentCount, radius: Math.round(worldIndex.worldRadius) },
+    'World index loaded',
   );
 
   return {
@@ -544,7 +547,7 @@ export async function loadSegmentData(
   const segPaths = manifest.segments[segmentId];
 
   if (!segPaths) {
-    console.warn(`[ARCHITECTUS] No segment paths for ${segmentId}`);
+    log.warn({ segmentId }, 'No segment paths found');
     return null;
   }
 
@@ -567,9 +570,9 @@ export async function loadSegmentData(
     ),
   ]);
 
-  console.log(
-    `[ARCHITECTUS] Segment ${segmentId} loaded: ` +
-    `${topology?.fileCount ?? 0} files, ${specimens?.length ?? 0} specimens`,
+  log.info(
+    { segmentId, files: topology?.fileCount ?? 0, specimens: specimens?.length ?? 0 },
+    'Segment loaded',
   );
 
   return {

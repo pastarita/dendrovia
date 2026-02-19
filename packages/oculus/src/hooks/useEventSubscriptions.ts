@@ -8,6 +8,7 @@
  */
 
 import { useEffect } from 'react';
+import { createLogger } from '@dendrovia/shared/logger';
 import {
   type EventBus,
   GameEvents,
@@ -15,6 +16,8 @@ import {
 } from '@dendrovia/shared';
 import type { Bug } from '@dendrovia/shared';
 import { useOculusStore } from '../store/useOculusStore';
+
+const log = createLogger('OCULUS', 'events');
 
 /** Map file extension to language name for CodeReader */
 const EXT_LANG: Record<string, string> = {
@@ -272,6 +275,11 @@ export function useEventSubscriptions(eventBus: EventBus) {
       )
     );
 
-    return () => unsubs.forEach((fn) => fn());
+    log.debug({ count: unsubs.length }, 'Event subscriptions wired');
+
+    return () => {
+      unsubs.forEach((fn) => fn());
+      log.debug('Event subscriptions cleaned up');
+    };
   }, [eventBus]);
 }

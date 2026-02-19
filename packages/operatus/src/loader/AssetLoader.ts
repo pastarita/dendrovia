@@ -22,9 +22,12 @@ import type {
   SerializedMeshData,
 } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import { validateManifest } from '@dendrovia/shared/schemas';
 import { CacheManager } from '../cache/CacheManager';
 import type { MeshFactory } from '../mesh/MeshFactory';
+
+const log = createLogger('OPERATUS', 'asset-loader');
 
 export enum AssetPriority {
   CRITICAL = 0,
@@ -291,7 +294,7 @@ export class AssetLoader {
     for (let i = 0; i < results.length; i++) {
       const r = results[i]!;
       if (r.status === 'rejected') {
-        console.error(`[OPERATUS] Failed to load ${phase} asset: ${assets[i]!.path}`, r.reason);
+        log.error({ err: r.reason, path: assets[i]!.path, phase }, 'Failed to load asset');
       }
     }
   }
@@ -333,7 +336,7 @@ export class AssetLoader {
         }
       }).catch(() => {
         // Log but don't halt the chain — background assets are non-critical
-        console.warn(`[OPERATUS] Background asset failed: ${asset.path}`);
+        log.warn({ path: asset.path }, 'Background asset failed');
       }).finally(() => {
         // Schedule next load during idle regardless of success/failure
         if (typeof requestIdleCallback !== 'undefined') {

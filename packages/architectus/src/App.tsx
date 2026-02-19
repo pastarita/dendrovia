@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import { PerspectiveCamera, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import type { FileTreeNode, ProceduralPalette, Hotspot, LSystemRule } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import { useRendererStore } from './store/useRendererStore';
 import { useCameraEditorStore } from './store/useCameraEditorStore';
 import { useSegmentStore } from './store/useSegmentStore';
@@ -40,6 +41,8 @@ interface AppProps {
   /** OPERATUS AssetLoader for cached loading (optional — direct fetch when omitted) */
   assetLoader?: CacheableAssetLoader | null;
 }
+
+const log = createLogger('ARCHITECTUS', 'app');
 
 // Default "beautiful fallback" palette (Tron-inspired)
 const DEFAULT_PALETTE: ProceduralPalette = {
@@ -137,7 +140,7 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           webgpuRendererClass.current = (mod as any).WebGPURenderer;
         } catch (err) {
-          console.warn('[ARCHITECTUS] WebGPU module unavailable, falling back to WebGL2:', err);
+          log.warn({ err }, 'WebGPU module unavailable, falling back to WebGL2');
           caps.backend = 'webgl2';
         }
       }
@@ -245,7 +248,7 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
               renderer.init().then(() => {
                 setRendererReady(true);
               }).catch((err: unknown) => {
-                console.warn('[ARCHITECTUS] WebGPU renderer init failed:', err);
+                log.warn({ err }, 'WebGPU renderer init failed');
                 setRendererReady(true); // Allow fallback rendering
               });
               return renderer;

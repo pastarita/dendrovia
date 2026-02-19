@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
+import { createLogger } from '@dendrovia/shared/logger';
+
+const log = createLogger('ARCHITECTUS', 'post-processing-tsl');
 
 /**
  * POST-PROCESSING TSL (D9)
@@ -73,7 +76,7 @@ export function PostProcessingTSL() {
         initialized.current = true;
       } catch (err) {
         // TSL modules unavailable — graceful skip
-        console.warn('[ARCHITECTUS/D9] TSL PostProcessing unavailable:', err);
+        log.warn({ err }, 'TSL PostProcessing unavailable');
       }
     })();
 

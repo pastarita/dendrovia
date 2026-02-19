@@ -15,6 +15,14 @@ import { useRendererStore } from '../store/useRendererStore';
  * The burst() API is exposed via the ParticleSystem ref for VFX events.
  */
 
+/**
+ * WebGPU's maxUniformBufferBindingSize is 64KB (65,536 bytes).
+ * Three.js puts instance matrices into a UBO when count <= 1000,
+ * and each instance matrix is 64 bytes. At 1000 instances = exactly 64KB.
+ * Exceeding this causes cascading WebGPU validation errors.
+ */
+const WEBGPU_MAX_INSTANCES_PER_MESH = 1000;
+
 interface ParticleInstancesProps {
   /** Scene bounding box for ambient particle spawning */
   bounds: THREE.Box3;
@@ -25,7 +33,12 @@ interface ParticleInstancesProps {
 }
 
 export function ParticleInstances({ bounds, color, systemRef }: ParticleInstancesProps) {
-  const maxParticles = useRendererStore((s) => s.quality.maxParticles);
+  const rawMaxParticles = useRendererStore((s) => s.quality.maxParticles);
+  const gpuBackend = useRendererStore((s) => s.gpuBackend);
+  // Cap instance count on WebGPU to stay within the 64KB UBO limit
+  const maxParticles = gpuBackend === 'webgpu'
+    ? Math.min(rawMaxParticles, WEBGPU_MAX_INSTANCES_PER_MESH)
+    : rawMaxParticles;
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const ambientTimer = useRef(0);
 

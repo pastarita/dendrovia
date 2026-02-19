@@ -98,7 +98,9 @@ async function fetchJson<T>(url: string, timeoutMs = 5000): Promise<T | null> {
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     if (!response.ok) {
-      console.warn(`[ARCHITECTUS] fetchJson failed: ${response.status} ${response.statusText} for ${url}`);
+      // 404s are expected for optional resources (e.g. chunked manifest) — debug only
+      const log = response.status === 404 ? console.debug : console.warn;
+      log(`[ARCHITECTUS] fetchJson failed: ${response.status} ${response.statusText} for ${url}`);
       return null;
     }
     return (await response.json()) as T;
@@ -438,7 +440,7 @@ export async function loadWorldIndex(
   }
 
   if (!manifest) {
-    console.warn('[ARCHITECTUS] No chunked manifest found, world segmentation unavailable');
+    console.debug('[ARCHITECTUS] No chunked manifest found, world segmentation unavailable');
     return null;
   }
 

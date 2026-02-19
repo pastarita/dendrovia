@@ -19,6 +19,9 @@ import { useRendererStore } from '../store/useRendererStore';
  *   - Hovered: increased emissive
  *
  * Interaction: Click emits NODE_CLICKED event via EventBus.
+ *
+ * When running on WebGPU with >1000 nodes, splits into multiple
+ * instancedMesh groups to stay within the 64KB UBO limit.
  */
 
 interface NodeInstancesProps {
@@ -29,44 +32,49 @@ interface NodeInstancesProps {
   };
 }
 
+/** WebGPU UBO limit: 64KB / 64 bytes per instance matrix = 1000 instances max */
+const WEBGPU_MAX_INSTANCES_PER_MESH = 1000;
+
 const _matrix = new THREE.Matrix4();
 const _position = new THREE.Vector3();
 const _scale = new THREE.Vector3();
 const _quaternion = new THREE.Quaternion();
 const _color = new THREE.Color();
 
-export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
+/** Split an array into chunks of at most `size` elements */
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
+interface NodeMeshProps {
+  nodes: NodeMarker[];
+  /** Global offset: index of the first node in this chunk within the full array */
+  globalOffset: number;
+  geometry: THREE.SphereGeometry;
+  material: THREE.MeshStandardMaterial;
+  palette: { accent: string; glow: string };
+  onClick: (event: ThreeEvent<MouseEvent>, globalOffset: number) => void;
+  onPointerOver: (event: ThreeEvent<PointerEvent>, globalOffset: number) => void;
+  onPointerOut: () => void;
+}
+
+/** Single instanced mesh for a batch of nodes */
+function NodeMesh({
+  nodes,
+  globalOffset,
+  geometry,
+  material,
+  palette,
+  onClick,
+  onPointerOver,
+  onPointerOut,
+}: NodeMeshProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const selectedNodeId = useRendererStore((s) => s.selectedNodeId);
-  const hoveredNodeId = useRendererStore((s) => s.hoveredNodeId);
-  const encounterNodeId = useRendererStore((s) => s.encounterNodeId);
 
-  const material = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      color: new THREE.Color(palette.accent),
-      emissive: new THREE.Color(palette.glow),
-      emissiveIntensity: 1.2, // Above 1.0 → bloom catches it
-      roughness: 0.1,
-      metalness: 0.6,
-      transparent: true,
-      opacity: 0.9,
-    });
-  }, [palette.accent, palette.glow]);
-
-  const geometry = useMemo(() => {
-    return new THREE.SphereGeometry(1, 16, 12);
-  }, []);
-
-  // Build a path→index map for click detection
-  const pathToIndex = useMemo(() => {
-    const map = new Map<number, string>();
-    for (let i = 0; i < nodes.length; i++) {
-      map.set(i, nodes[i]!.path);
-    }
-    return map;
-  }, [nodes]);
-
-  // Update instance matrices
   useEffect(() => {
     const mesh = meshRef.current;
     if (!mesh || nodes.length === 0) return;
@@ -77,7 +85,6 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
       _position.copy(node.position);
       _quaternion.identity();
 
-      // Size based on type (directories larger) and depth (deeper = smaller)
       const isDir = node.type === 'directory';
       const baseSize = isDir ? 0.2 : 0.12;
       const depthScale = Math.max(0.5, 1 - node.depth * 0.1);
@@ -87,7 +94,6 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
       _matrix.compose(_position, _quaternion, _scale);
       mesh.setMatrixAt(i, _matrix);
 
-      // Color: directories are accent, files are glow (reuse temp — no allocation)
       if (isDir) {
         _color.set(palette.accent);
       } else {
@@ -101,11 +107,61 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
     mesh.computeBoundingSphere();
   }, [nodes, palette.accent, palette.glow]);
 
+  const handleClick = useCallback(
+    (event: ThreeEvent<MouseEvent>) => onClick(event, globalOffset),
+    [onClick, globalOffset],
+  );
+
+  const handlePointerOver = useCallback(
+    (event: ThreeEvent<PointerEvent>) => onPointerOver(event, globalOffset),
+    [onPointerOver, globalOffset],
+  );
+
+  return (
+    <instancedMesh
+      ref={meshRef}
+      args={[geometry, material, nodes.length]}
+      onClick={handleClick}
+      onPointerOver={handlePointerOver}
+      onPointerOut={onPointerOut}
+      frustumCulled={true}
+    />
+  );
+}
+
+export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
+  const gpuBackend = useRendererStore((s) => s.gpuBackend);
+  const encounterNodeId = useRendererStore((s) => s.encounterNodeId);
+
+  const material = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color(palette.accent),
+      emissive: new THREE.Color(palette.glow),
+      emissiveIntensity: 1.2,
+      roughness: 0.1,
+      metalness: 0.6,
+      transparent: true,
+      opacity: 0.9,
+    });
+  }, [palette.accent, palette.glow]);
+
+  const geometry = useMemo(() => {
+    return new THREE.SphereGeometry(1, 16, 12);
+  }, []);
+
+  // Build a global path→index map for click detection
+  const pathToIndex = useMemo(() => {
+    const map = new Map<number, string>();
+    for (let i = 0; i < nodes.length; i++) {
+      map.set(i, nodes[i]!.path);
+    }
+    return map;
+  }, [nodes]);
+
   // Pulsing glow on all nodes + D8 encounter emissive pulse
   useFrame((state) => {
     if (!material) return;
 
-    // D8: When encounter active, intensify pulse
     if (encounterNodeId) {
       const encounterPulse = Math.sin(state.clock.elapsedTime * 6) * 0.8 + 2.5;
       material.emissiveIntensity = encounterPulse;
@@ -117,20 +173,20 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
     }
   });
 
-  // Click handler
+  // Click handler — receives globalOffset from the chunk
   const handleClick = useCallback(
-    (event: ThreeEvent<MouseEvent>) => {
+    (event: ThreeEvent<MouseEvent>, globalOffset: number) => {
       event.stopPropagation();
       const instanceId = event.instanceId;
       if (instanceId === undefined) return;
 
-      const path = pathToIndex.get(instanceId);
+      const globalIndex = globalOffset + instanceId;
+      const path = pathToIndex.get(globalIndex);
       if (!path) return;
 
-      const node = nodes[instanceId]!;
+      const node = nodes[globalIndex]!;
       useRendererStore.getState().selectNode(path);
 
-      // Emit event for other pillars
       getEventBus().emit(GameEvents.NODE_CLICKED, {
         nodeId: path,
         filePath: path,
@@ -142,12 +198,13 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
 
   // Hover handler
   const handlePointerOver = useCallback(
-    (event: ThreeEvent<PointerEvent>) => {
+    (event: ThreeEvent<PointerEvent>, globalOffset: number) => {
       event.stopPropagation();
       const instanceId = event.instanceId;
       if (instanceId === undefined) return;
 
-      const path = pathToIndex.get(instanceId);
+      const globalIndex = globalOffset + instanceId;
+      const path = pathToIndex.get(globalIndex);
       if (path) {
         useRendererStore.getState().hoverNode(path);
         document.body.style.cursor = 'pointer';
@@ -163,14 +220,27 @@ export function NodeInstances({ nodes, palette }: NodeInstancesProps) {
 
   if (nodes.length === 0) return null;
 
+  // On WebGPU, split into chunks of 1000 to stay within the 64KB UBO limit
+  const needsChunking = gpuBackend === 'webgpu' && nodes.length > WEBGPU_MAX_INSTANCES_PER_MESH;
+  const chunks = needsChunking
+    ? chunkArray(nodes, WEBGPU_MAX_INSTANCES_PER_MESH)
+    : [nodes];
+
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[geometry, material, nodes.length]}
-      onClick={handleClick}
-      onPointerOver={handlePointerOver}
-      onPointerOut={handlePointerOut}
-      frustumCulled={true}
-    />
+    <>
+      {chunks.map((chunk, i) => (
+        <NodeMesh
+          key={i}
+          nodes={chunk}
+          globalOffset={i * WEBGPU_MAX_INSTANCES_PER_MESH}
+          geometry={geometry}
+          material={material}
+          palette={palette}
+          onClick={handleClick}
+          onPointerOver={handlePointerOver}
+          onPointerOut={handlePointerOut}
+        />
+      ))}
+    </>
   );
 }

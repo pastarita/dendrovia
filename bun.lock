@@ -428,11 +428,13 @@
         "vite": "^6.0.11",
       },
       "peerDependencies": {
+        "@dendrovia/architectus": "workspace:*",
         "@react-three/drei": ">=9.0.0",
         "@react-three/fiber": ">=8.0.0",
         "three": ">=0.150.0",
       },
       "optionalPeers": [
+        "@dendrovia/architectus",
         "@react-three/drei",
         "@react-three/fiber",
         "three",

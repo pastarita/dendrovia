@@ -14,7 +14,7 @@
  */
 
 import type { Character, Quest, Item } from '@dendrovia/shared';
-import { useGameStore, waitForHydration } from './GameStore';
+import { useSaveStateStore, waitForHydration } from './SaveStateStore';
 
 // ── Types ────────────────────────────────────────────────────
 
@@ -79,7 +79,7 @@ export class StateAdapter {
     });
 
     // Step 3: OPERATUS → LUDUS sync (import save, manual reset, etc.)
-    this.unsubOperatus = useGameStore.subscribe((operatusState, prevOperatusState) => {
+    this.unsubOperatus = useSaveStateStore.subscribe((operatusState, prevOperatusState) => {
       if (this.syncing) return;
       this.syncToLudus(ludusStore, operatusState, prevOperatusState);
     });
@@ -107,7 +107,7 @@ export class StateAdapter {
    * Called once at connect time.
    */
   private hydrateFromOperatus(ludusStore: LudusGameStore): void {
-    const operatus = useGameStore.getState();
+    const operatus = useSaveStateStore.getState();
 
     // Split OPERATUS flat quests into active/completed for LUDUS
     const activeQuests = operatus.quests.filter(
@@ -161,7 +161,7 @@ export class StateAdapter {
 
     this.syncing = true;
     try {
-      useGameStore.setState({
+      useSaveStateStore.setState({
         character: ludusState.character,
         inventory: ludusState.inventory,
         quests,

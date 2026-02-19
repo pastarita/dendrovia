@@ -16,7 +16,7 @@ export {
   collectAssetLoader,
   collectCDNLoader,
   collectAutoSave,
-  collectGameStore,
+  collectSaveStateStore,
   collectCrossTabSync,
   collectPerfMonitor,
   collectManifest,
@@ -30,6 +30,6 @@ export {
 export {
   cacheManagerActions,
   autoSaveActions,
-  gameStoreActions,
+  saveStateStoreActions,
   perfMonitorActions,
 } from './actions.js';

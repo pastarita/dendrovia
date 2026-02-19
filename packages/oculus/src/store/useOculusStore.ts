@@ -28,7 +28,8 @@ export type ActivePanel =
   | 'code-reader'
   | 'battle-ui';
 
-export type CameraMode = 'falcon' | 'player';
+export type { CoarseCameraMode } from '@dendrovia/shared';
+import type { CoarseCameraMode } from '@dendrovia/shared';
 
 export interface BattleState {
   active: boolean;
@@ -72,7 +73,7 @@ export interface OculusState {
   previousPanel: ActivePanel;
 
   // Camera
-  cameraMode: CameraMode;
+  cameraMode: CoarseCameraMode;
 
   // Quests
   quests: Quest[];
@@ -105,13 +106,6 @@ export interface OculusState {
     description: string;
     tincture: { hex: string; name: string };
   } | null;
-
-  // Performance (bridged from ARCHITECTUS)
-  fps: number;
-  qualityTier: string;
-
-  // Input coordination
-  isUiHovered: boolean;
 
   // Player position (for minimap)
   playerPosition: [number, number, number];
@@ -160,16 +154,10 @@ export interface OculusActions {
   setDeepWiki: (deepwiki: DeepWikiEnrichment | null) => void;
 
   // Camera
-  setCameraMode: (mode: CameraMode) => void;
+  setCameraMode: (mode: CoarseCameraMode) => void;
 
   // World metadata
   setWorldMeta: (meta: OculusState['worldMeta']) => void;
-
-  // Performance
-  setPerformance: (fps: number, qualityTier: string) => void;
-
-  // Input coordination
-  setUiHovered: (hovered: boolean) => void;
 
   // Player position
   setPlayerPosition: (position: [number, number, number]) => void;
@@ -209,10 +197,6 @@ export const useOculusStore = create<OculusStore>((set) => ({
   deepwiki: null,
 
   worldMeta: null,
-  fps: 0,
-  qualityTier: 'medium',
-
-  isUiHovered: false,
 
   playerPosition: [0, 0, 0],
   visitedNodes: [],
@@ -355,10 +339,6 @@ export const useOculusStore = create<OculusStore>((set) => ({
   setCameraMode: (mode) => set({ cameraMode: mode }),
 
   setWorldMeta: (meta) => set({ worldMeta: meta }),
-
-  setPerformance: (fps, qualityTier) => set({ fps, qualityTier }),
-
-  setUiHovered: (hovered) => set({ isUiHovered: hovered }),
 
   setPlayerPosition: (position) => set({ playerPosition: position }),
 

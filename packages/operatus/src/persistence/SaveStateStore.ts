@@ -23,19 +23,20 @@ import type {
   Quest,
   Item,
   GameSaveState,
+  CoarseCameraMode,
 } from '@dendrovia/shared';
 import { createDendroviaStorage, SAVE_VERSION } from './StatePersistence';
 
 // ── State Shape ──────────────────────────────────────────────────
 
-export interface GameStoreState {
+export interface SaveStateStoreState {
   // Persisted state (matches GameSaveState)
   character: Character;
   quests: Quest[];
   visitedNodes: Set<string>;
   unlockedKnowledge: string[];
-  worldPosition: [number, number, number];
-  cameraMode: 'falcon' | 'player';
+  playerPosition: [number, number, number];
+  cameraMode: CoarseCameraMode;
   inventory: Item[];
   gameFlags: Record<string, boolean>;
   playtimeMs: number;
@@ -56,8 +57,8 @@ export interface GameStoreState {
   updateQuestStatus: (questId: string, status: Quest['status']) => void;
   visitNode: (nodeId: string) => void;
   unlockKnowledge: (knowledgeId: string) => void;
-  setWorldPosition: (pos: [number, number, number]) => void;
-  setCameraMode: (mode: 'falcon' | 'player') => void;
+  setPlayerPosition: (pos: [number, number, number]) => void;
+  setCameraMode: (mode: CoarseCameraMode) => void;
   setMenuOpen: (open: boolean) => void;
   addItem: (item: Item) => void;
   removeItem: (itemId: string) => void;
@@ -95,7 +96,7 @@ const INITIAL_STATE = {
   quests: [] as Quest[],
   visitedNodes: new Set<string>(),
   unlockedKnowledge: [] as string[],
-  worldPosition: [0, 0, 0] as [number, number, number],
+  playerPosition: [0, 0, 0] as [number, number, number],
   cameraMode: 'falcon' as const,
   inventory: [] as Item[],
   gameFlags: {} as Record<string, boolean>,
@@ -156,7 +157,7 @@ function deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>)
 
 // ── Store Creation ───────────────────────────────────────────────
 
-export const useGameStore = create<GameStoreState>()(
+export const useSaveStateStore = create<SaveStateStoreState>()(
   persist(
     (set, get) => ({
       ...INITIAL_STATE,
@@ -257,7 +258,7 @@ export const useGameStore = create<GameStoreState>()(
             : { unlockedKnowledge: [...s.unlockedKnowledge, knowledgeId] },
         ),
 
-      setWorldPosition: (pos) => set({ worldPosition: pos }),
+      setPlayerPosition: (pos) => set({ playerPosition: pos }),
 
       setCameraMode: (mode) => set({ cameraMode: mode }),
 
@@ -289,7 +290,7 @@ export const useGameStore = create<GameStoreState>()(
           if (raw.state) {
             raw.state = deserializeState(raw.state);
           }
-          return raw as StorageValue<GameStoreState>;
+          return raw as StorageValue<SaveStateStoreState>;
         },
         setItem: async (name, value) => {
           const storage = createDendroviaStorage();
@@ -310,21 +311,21 @@ export const useGameStore = create<GameStoreState>()(
         quests: state.quests,
         visitedNodes: state.visitedNodes,
         unlockedKnowledge: state.unlockedKnowledge,
-        worldPosition: state.worldPosition,
+        playerPosition: state.playerPosition,
         cameraMode: state.cameraMode,
         inventory: state.inventory,
         gameFlags: state.gameFlags,
         playtimeMs: state.playtimeMs,
-      }) as GameStoreState,
+      }) as SaveStateStoreState,
 
       merge: (persisted, current) => {
         if (!persisted || typeof persisted !== 'object') return current;
-        return deepMerge(current, persisted as Partial<GameStoreState>);
+        return deepMerge(current, persisted as Partial<SaveStateStoreState>);
       },
 
       onRehydrateStorage: () => (state) => {
         state?._hasHydrated && void 0;
-        useGameStore.setState({ _hasHydrated: true });
+        useSaveStateStore.setState({ _hasHydrated: true });
       },
     },
   ),
@@ -335,12 +336,12 @@ export const useGameStore = create<GameStoreState>()(
  */
 export function waitForHydration(): Promise<void> {
   return new Promise((resolve) => {
-    if (useGameStore.getState()._hasHydrated) {
+    if (useSaveStateStore.getState()._hasHydrated) {
       resolve();
       return;
     }
 
-    const unsub = useGameStore.subscribe((state) => {
+    const unsub = useSaveStateStore.subscribe((state) => {
       if (state._hasHydrated) {
         unsub();
         resolve();
@@ -352,11 +353,11 @@ export function waitForHydration(): Promise<void> {
 /**
  * Get a snapshot of game state suitable for GameSaveState.
  */
-export function getGameSaveSnapshot(): GameSaveState {
+export function getSaveStateSnapshot(): GameSaveState {
   const {
     character, quests, visitedNodes, unlockedKnowledge,
-    inventory, gameFlags, worldPosition, cameraMode, playtimeMs,
-  } = useGameStore.getState();
+    inventory, gameFlags, playerPosition, cameraMode, playtimeMs,
+  } = useSaveStateStore.getState();
   return {
     timestamp: Date.now(),
     character,
@@ -365,7 +366,7 @@ export function getGameSaveSnapshot(): GameSaveState {
     unlockedKnowledge,
     inventory,
     gameFlags,
-    worldPosition,
+    playerPosition,
     cameraMode,
     playtimeMs,
   };

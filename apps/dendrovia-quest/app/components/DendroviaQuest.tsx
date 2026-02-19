@@ -87,27 +87,6 @@ export interface DendroviaQuestProps {
   children?: ReactNode;
 }
 
-// ─── T11: Bridge OCULUS isUiHovered → ARCHITECTUS renderer store ──
-
-function UiHoverBridge() {
-  const isUiHovered = useOculusStore((s) => s.isUiHovered);
-  useEffect(() => {
-    useRendererStore.getState().setUiHovered(isUiHovered);
-  }, [isUiHovered]);
-  return null;
-}
-
-// ─── Bridge ARCHITECTUS performance metrics → OCULUS store ──
-
-function PerformanceBridge() {
-  const fps = useRendererStore((s) => s.fps);
-  const qualityTier = useRendererStore((s) => s.qualityTier);
-  useEffect(() => {
-    useOculusStore.getState().setPerformance(fps, qualityTier);
-  }, [fps, qualityTier]);
-  return null;
-}
-
 // ─── Loading Screen ───────────────────────────────────────────
 
 function LoadingScreen({ message }: { message: string }) {
@@ -405,8 +384,6 @@ export function DendroviaQuest({
         </div>
       )}
       {enableOculus && <HUD />}
-      {enableOculus && <UiHoverBridge />}
-      {enableOculus && <PerformanceBridge />}
       {enableOculus && onboarding.phase === 'exploring' && (
         <OnboardingHints onboarding={onboarding} />
       )}

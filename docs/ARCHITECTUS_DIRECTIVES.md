@@ -505,6 +505,141 @@ Use the dendrovia monorepo self-portrait (`dendrovia` world) as standard test:
 
 ---
 
-*Document version: 1.0.0*
-*Generated: 2026-02-16*
-*Baseline commit: 9f24285*
+## Lane E: Deployment Resilience (2026-02-18 addendum)
+
+New directives from the cross-pillar visual audit. These address issues visible on the deployed app that aren't covered by the original D1-D10.
+
+### D11 — Gate Downstream Segment Requests
+
+**Priority:** P0
+**Complexity:** Low
+**Files to modify:** `components/SegmentedWorld.tsx`, `loader/SegmentLoadManager.ts` (if exists)
+**Cross-pillar:** OPERATUS D1 (gate from API side), IMAGINARIUM D1 (deploy segment artifacts)
+
+#### Problem
+
+When `loadWorldIndex()` returns null (chunked manifest absent), the segment store initializes empty but downstream code still fires per-segment requests for `stem.json` and `cap.json` files. This produces 350+ 404 errors per page load on the deployed app.
+
+The ARCHITECTUS fix in PR #91 silenced the manifest-level 404, but per-file segment requests continue to fire because `SegmentedWorld` or `SegmentLoadManager` doesn't check whether world index data actually loaded.
+
+#### Target State
+
+- When `worldReady === false` (segment store not initialized), no segment loads are attempted
+- When `worldReady === true` but a specific segment path 404s, log at `console.debug` and skip
+- The monolithic `DendriteWorld` path renders the full tree without any segment-related network requests
+
+#### Approach
+
+1. Guard `SegmentLoadManager` (or equivalent proximity-triggered loader) with `worldReady` check
+2. If the segment store's `manifest` is null, disable the proximity-based segment loader entirely
+3. Add `console.debug` for individual segment load failures (consistent with P3 convention)
+
+#### Exit Criteria
+
+- [ ] Zero network requests for segment data when chunked manifest is absent
+- [ ] Monolithic path (`DendriteWorld`) renders without any segment-related 404s
+- [ ] When segments ARE available, proximity loading works correctly
+- [ ] No regression in `worldReady` state management
+
+---
+
+### D12 — Segment Hull Visualization in Falcon Mode
+
+**Priority:** P2
+**Complexity:** Medium
+**Files to modify:** `components/SegmentedWorld.tsx`, `components/SegmentHull.tsx`
+**Depends on:** D11 (segment request gating must work first)
+
+#### Problem
+
+When segments are loaded, there's no visual indication of segment boundaries. In Falcon mode (orbital overview), the player can't tell where one code segment ends and another begins. This makes the world feel like an undifferentiated blob rather than an organized codebase.
+
+#### Target State
+
+- In Falcon mode: translucent hull outlines around each loaded segment
+- Hull color matches segment's story arc mood (from IMAGINARIUM palette)
+- Active segment (nearest to camera) highlighted with brighter hull
+- Hulls fade out in Player mode (they're spatial reference, not gameplay obstacles)
+
+#### Approach
+
+1. `SegmentHull` already exists — verify it renders convex hull geometry for loaded segments
+2. In `SegmentedWorld`, conditionally render hulls when `cameraMode === 'falcon'`
+3. Hull material: `MeshBasicMaterial({ transparent: true, opacity: 0.08, wireframe: true })`
+4. Active segment hull: increase opacity to 0.15, add subtle emissive glow
+
+#### Exit Criteria
+
+- [ ] Segment boundaries visible in Falcon mode
+- [ ] Hulls color-coded by mood/palette
+- [ ] Active segment highlighted
+- [ ] Hulls hidden in Player mode
+- [ ] Performance: <0.5ms for hull rendering (few instances)
+
+---
+
+### D13 — Enable Ambient Particles and Bloom by Default
+
+**Priority:** P2
+**Complexity:** Trivial
+**Files to modify:** `App.tsx` or `components/DendriteWorld.tsx`, `store/useRendererStore.ts`
+
+#### Problem
+
+The deployed scene has no visible particles (fireflies) and no bloom glow. Both systems exist (`ParticleInstances`, `PostProcessing`) but are either not mounted or configured too conservatively. The scene looks clinical rather than atmospheric.
+
+#### Target State
+
+- `ParticleInstances` mounted by default when quality tier >= `medium`
+- Bloom enabled in `PostProcessing` at default settings (threshold 0.8, intensity 0.5)
+- `sdfBackdrop` remains `false` by default (SDF is heavy; opt-in only)
+- Ambient firefly spawn rate tuned for visual presence without performance cost
+
+#### Approach
+
+1. In `DendriteWorld`, always render `<ParticleInstances>` when `quality.maxParticles > 0`
+2. Ensure `PostProcessing` bloom is active when `quality.bloom === true` (it is at medium+ tiers)
+3. Verify that `PostProcessing` component actually mounts in the current scene graph
+4. If bloom is mounting but invisible: lower the emissive threshold or increase intensity
+
+#### Exit Criteria
+
+- [ ] Fireflies visible in the default scene at HIGH quality
+- [ ] Bloom glow visible on bright emissive surfaces (node orbs, branch edges)
+- [ ] No performance regression at target FPS
+- [ ] Particles and bloom disabled at LOW/POTATO tiers
+- [ ] `sdfBackdrop` unchanged (opt-in only)
+
+---
+
+## Updated File Impact Summary
+
+| File | Directives | Type |
+|------|-----------|------|
+| `systems/SpatialIndex.ts` | D1 | **New** |
+| `systems/ParticleSystem.ts` | D6 | **New** |
+| `components/ParticleInstances.tsx` | D6, D13 | **New** (exists post-PR#91) |
+| `components/SegmentOverlay.tsx` | D7 | **New** |
+| `components/ErrorBoundary.tsx` | D10 | **New** (exists post-PR#91) |
+| `components/PostProcessingTSL.tsx` | D9 | **New** |
+| `renderer/createRenderer.ts` | D2 | **New** (exists) |
+| `components/DendriteWorld.tsx` | D1, D7, D8, D13 | Modify |
+| `components/CameraRig.tsx` | D4 | Modify |
+| `components/SDFBackdrop.tsx` | D5 | Modify |
+| `components/PostProcessing.tsx` | D9, D13 | Modify |
+| `components/NodeInstances.tsx` | D8 | Modify |
+| `components/PerformanceMonitor.tsx` | D3 | Modify |
+| `components/SegmentedWorld.tsx` | D11, D12 | Modify |
+| `components/SegmentHull.tsx` | D12 | Modify |
+| `loader/SegmentLoadManager.ts` | D11 | Modify (if exists) |
+| `store/useRendererStore.ts` | D1, D3, D13 | Modify |
+| `renderer/detectGPU.ts` | D2 | Modify |
+| `App.tsx` | D2, D9, D10, D11, D13 | Modify |
+
+**New files: 7 | Modified files: 13 | Total directives: 13**
+
+---
+
+*Document version: 1.1.0*
+*Updated: 2026-02-18 (D11-D13 addendum from cross-pillar visual audit)*
+*Baseline commit: 9f24285 + PR #91 (fix/architectus-webgpu-renderer)*

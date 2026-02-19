@@ -1,7 +1,8 @@
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, Fragment } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { BranchSegment } from '../systems/TurtleInterpreter';
+import { useRendererStore } from '../store/useRendererStore';
 
 /**
  * BRANCH INSTANCES
@@ -14,6 +15,9 @@ import type { BranchSegment } from '../systems/TurtleInterpreter';
  *
  * Visual: Tron-aesthetic metallic material with Fresnel rim glow
  * that bloom picks up (emissive > 1.0 on edges).
+ *
+ * When running on WebGPU with >1000 branches, splits into multiple
+ * instancedMesh groups to stay within the 64KB UBO limit.
  */
 
 interface BranchInstancesProps {
@@ -28,6 +32,9 @@ interface BranchInstancesProps {
 // Shared geometry — single cylinder template
 const CYLINDER_SEGMENTS = 8;
 
+/** WebGPU UBO limit: 64KB / 64 bytes per instance matrix = 1000 instances max */
+const WEBGPU_MAX_INSTANCES_PER_MESH = 1000;
+
 // Temp objects for matrix computation (avoid allocation per frame)
 const _matrix = new THREE.Matrix4();
 const _position = new THREE.Vector3();
@@ -38,26 +45,26 @@ const _direction = new THREE.Vector3();
 const _colorA = new THREE.Color();
 const _colorB = new THREE.Color();
 
-export function BranchInstances({ branches, palette }: BranchInstancesProps) {
+/** Split an array into chunks of at most `size` elements */
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
+interface BranchMeshProps {
+  branches: BranchSegment[];
+  geometry: THREE.CylinderGeometry;
+  material: THREE.MeshStandardMaterial;
+  palette: { primary: string; secondary: string };
+}
+
+/** Single instanced mesh for a batch of branches */
+function BranchMesh({ branches, geometry, material, palette }: BranchMeshProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
 
-  // Memoize material — Tron aesthetic: dark metallic with bright emissive edges
-  const material = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      color: new THREE.Color(palette.primary),
-      emissive: new THREE.Color(palette.glow),
-      emissiveIntensity: 0.3,
-      roughness: 0.2,
-      metalness: 0.9,
-    });
-  }, [palette.primary, palette.glow]);
-
-  // Memoize geometry
-  const geometry = useMemo(() => {
-    return new THREE.CylinderGeometry(1, 1, 1, CYLINDER_SEGMENTS);
-  }, []);
-
-  // Update instance matrices when branches change
   useEffect(() => {
     const mesh = meshRef.current;
     if (!mesh || branches.length === 0) return;
@@ -65,13 +72,9 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
     for (let i = 0; i < branches.length; i++) {
       const branch = branches[i]!;
 
-      // Direction from start to end
       _direction.subVectors(branch.end, branch.start);
       const length = _direction.length();
       if (length < 0.001) {
-        // Degenerate branch: set zero-scale matrix instead of skipping.
-        // Raw zero matrices (default Float32Array) cause NaN in
-        // computeBoundingSphere via Vector3.applyMatrix4 dividing by e[15]=0.
         _scale.set(0, 0, 0);
         _matrix.compose(branch.start, _quaternion.identity(), _scale);
         mesh.setMatrixAt(i, _matrix);
@@ -81,21 +84,15 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
       }
 
       _direction.normalize();
-
-      // Position: midpoint of start→end
       _position.addVectors(branch.start, branch.end).multiplyScalar(0.5);
-
-      // Orientation: rotate cylinder (Y-up) to match branch direction
       _quaternion.setFromUnitVectors(_up, _direction);
 
-      // Scale: average radius for X/Z, length for Y
       const avgRadius = (branch.startRadius + branch.endRadius) / 2;
       _scale.set(avgRadius, length, avgRadius);
 
       _matrix.compose(_position, _quaternion, _scale);
       mesh.setMatrixAt(i, _matrix);
 
-      // Depth-based color variation (reuse temp colors — no allocation)
       const depthFactor = Math.max(0, 1 - branch.depth * 0.15);
       _colorA.set(palette.primary).lerp(
         _colorB.set(palette.secondary),
@@ -109,6 +106,32 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
     mesh.computeBoundingSphere();
   }, [branches, palette.primary, palette.secondary]);
 
+  return (
+    <instancedMesh
+      ref={meshRef}
+      args={[geometry, material, branches.length]}
+      frustumCulled={true}
+    />
+  );
+}
+
+export function BranchInstances({ branches, palette }: BranchInstancesProps) {
+  const gpuBackend = useRendererStore((s) => s.gpuBackend);
+
+  const material = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color(palette.primary),
+      emissive: new THREE.Color(palette.glow),
+      emissiveIntensity: 0.3,
+      roughness: 0.2,
+      metalness: 0.9,
+    });
+  }, [palette.primary, palette.glow]);
+
+  const geometry = useMemo(() => {
+    return new THREE.CylinderGeometry(1, 1, 1, CYLINDER_SEGMENTS);
+  }, []);
+
   // Subtle pulsing glow
   useFrame((state) => {
     if (material) {
@@ -119,11 +142,23 @@ export function BranchInstances({ branches, palette }: BranchInstancesProps) {
 
   if (branches.length === 0) return null;
 
+  // On WebGPU, split into chunks of 1000 to stay within the 64KB UBO limit
+  const needsChunking = gpuBackend === 'webgpu' && branches.length > WEBGPU_MAX_INSTANCES_PER_MESH;
+  const chunks = needsChunking
+    ? chunkArray(branches, WEBGPU_MAX_INSTANCES_PER_MESH)
+    : [branches];
+
   return (
-    <instancedMesh
-      ref={meshRef}
-      args={[geometry, material, branches.length]}
-      frustumCulled={true}
-    />
+    <>
+      {chunks.map((chunk, i) => (
+        <BranchMesh
+          key={i}
+          branches={chunk}
+          geometry={geometry}
+          material={material}
+          palette={palette}
+        />
+      ))}
+    </>
   );
 }

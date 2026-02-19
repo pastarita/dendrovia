@@ -108,6 +108,7 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
   const worldReady = useSegmentStore((s) => s.worldReady);
 
   const [gpuReady, setGpuReady] = useState(false);
+  const [rendererReady, setRendererReady] = useState(false);
   const [gpuCaps, setGpuCaps] = useState<GPUCapabilities | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const webgpuRendererClass = useRef<any>(null);
@@ -229,17 +230,27 @@ export function App({ topology, palette, hotspots, manifestPath, assetLoader }: 
       <ErrorBoundary background={activePalette.background} accent={activePalette.glow}>
         <Canvas
           dpr={quality.dpr}
+          frameloop={gpuCaps?.backend === 'webgpu' && !rendererReady ? 'never' : 'always'}
           gl={({ canvas }) => {
             // D2: Use WebGPU renderer when available, WebGL2 fallback otherwise
             if (gpuCaps?.backend === 'webgpu' && webgpuRendererClass.current) {
               const WebGPURenderer = webgpuRendererClass.current;
-              return new WebGPURenderer({
+              const renderer = new WebGPURenderer({
                 canvas,
                 antialias: true,
                 powerPreference: 'high-performance',
                 alpha: false,
               });
+              // Await async init before allowing the render loop to start
+              renderer.init().then(() => {
+                setRendererReady(true);
+              }).catch((err: unknown) => {
+                console.warn('[ARCHITECTUS] WebGPU renderer init failed:', err);
+                setRendererReady(true); // Allow fallback rendering
+              });
+              return renderer;
             }
+            setRendererReady(true);
             return new THREE.WebGLRenderer({
               canvas,
               antialias: true,

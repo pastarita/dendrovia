@@ -6,6 +6,7 @@
 import { join } from 'path';
 import { existsSync, mkdirSync, rmSync } from 'fs';
 import { hashObject, hashString } from '../utils/hash';
+import { IMAGINARIUM_SCHEMA_VERSION } from '../pipeline/types';
 
 interface CacheEntry<T> {
   inputHash: string;
@@ -13,8 +14,6 @@ interface CacheEntry<T> {
   version: string;
   data: T;
 }
-
-const CACHE_VERSION = '1.0.0';
 
 export class DeterministicCache {
   private cacheDir: string;
@@ -50,7 +49,7 @@ export class DeterministicCache {
       try {
         const raw = await Bun.file(path).text();
         const entry = JSON.parse(raw) as CacheEntry<T>;
-        if (entry.version === CACHE_VERSION) {
+        if (entry.version === IMAGINARIUM_SCHEMA_VERSION) {
           this.memoryCache.set(key, entry);
           return entry.data;
         }
@@ -67,7 +66,7 @@ export class DeterministicCache {
     const entry: CacheEntry<T> = {
       inputHash: key,
       timestamp: Date.now(),
-      version: CACHE_VERSION,
+      version: IMAGINARIUM_SCHEMA_VERSION,
       data,
     };
 

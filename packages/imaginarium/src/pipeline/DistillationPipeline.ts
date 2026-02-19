@@ -29,6 +29,8 @@ import { chunkTopology } from './TopologyChunker';
 import { precomputePlacements } from './SegmentPlacementPrecomputer';
 import type { FungalSpecimen } from '../mycology/types';
 import type { MeshManifestEntry } from '@dendrovia/shared';
+import { IMAGINARIUM_SCHEMA_VERSION } from './types';
+import type { GlobalGenerationContext } from './types';
 
 const log = createLogger('IMAGINARIUM', 'pipeline');
 
@@ -67,6 +69,15 @@ export async function distill(
     files: topology.files.map(f => ({ path: f.path, hash: f.hash })),
     hotspots: (topology.hotspots ?? []).map(h => h.path),
   });
+
+  // Build generation context for downstream pipeline stages
+  const ctx: GlobalGenerationContext = {
+    topology,
+    topologyHash,
+    outputDir,
+    cache,
+    schemaVersion: IMAGINARIUM_SCHEMA_VERSION,
+  };
 
   // 3. Extract global palette (with cache)
   let paletteResults: PipelineResult['palettes'] = [];
@@ -124,7 +135,7 @@ export async function distill(
   }
 
   const globalPalette = paletteResults.find(p => p.id === 'global')!.palette;
-  await eventBus.emit(GameEvents.PALETTE_GENERATED, globalPalette);
+  await eventBus.emit(GameEvents.PALETTE_GENERATED, { palette: globalPalette });
 
   // 4. Compile L-system (with cache)
   const lsystemCacheKey = `lsystem:${topologyHash}`;
@@ -218,7 +229,7 @@ export async function distill(
       log.info({ segments: cachedStoryArc.arc.segments.length, cached: true }, 'Story arc loaded');
     } else {
       const storyArc = deriveStoryArc(topology);
-      const segmentAssets = await distillSegments(topology, storyArc, outputDir);
+      const segmentAssets = await distillSegments(topology, storyArc, outputDir, ctx);
 
       // Write story arc and segment assets manifest
       await Bun.write(join(outputDir, 'story-arc.json'), JSON.stringify(storyArc, null, 2));

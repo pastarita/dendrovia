@@ -164,6 +164,9 @@ export const GameEvents = {
   CACHE_UPDATED: 'cache:updated',
   SAVE_COMPLETED: 'save:completed',
 
+  // LUDUS → OCULUS (System control)
+  SYSTEM_STATUS_CHANGED: 'system:status:changed',
+
   // Lifecycle triggers (All → OPERATUS)
   GAME_STARTED: 'game:started',
   LEVEL_LOADED: 'level:loaded',
@@ -291,6 +294,12 @@ export interface ItemUsedEvent {
 
 export interface CombatActionEvent {
   action: Action;
+}
+
+export interface SystemStatusChangedEvent {
+  system: string;
+  enabled: boolean;
+  effectiveStates: Record<string, boolean>;
 }
 
 export interface CollisionDetectedEvent {

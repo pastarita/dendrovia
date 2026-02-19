@@ -9,7 +9,7 @@
  * defined correctly."
  */
 
-import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action, ProceduralPalette, SDFShader, ParsedFile, CodeTopology, MycologyCatalogedEvent } from '../types/index.js';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action, ProceduralPalette, SDFShader, ParsedFile, CodeTopology, MycologyCatalogedEvent } from '../types/index';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 

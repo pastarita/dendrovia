@@ -5,7 +5,7 @@
  */
 
 import type { ParsedCommit, CommitType, Archetype, TimeArchetype, ContributorProfile, ContributorFacets } from '@dendrovia/shared';
-import { classifyCommit } from '../classifier/CommitClassifier.js';
+import { classifyCommit } from '../classifier/CommitClassifier';
 
 export type { Archetype, TimeArchetype, ContributorProfile, ContributorFacets } from '@dendrovia/shared';
 

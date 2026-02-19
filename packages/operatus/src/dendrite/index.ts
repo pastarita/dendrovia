@@ -5,10 +5,10 @@
  * for live observation of OPERATUS subsystems through the dendrite surface.
  */
 
-export { OperatusRuntimeBridge } from './bridge.js';
-export type { BridgeConfig, BridgeContext } from './bridge.js';
-export { deriveHealth } from './health.js';
-export type { HealthCondition } from './health.js';
+export { OperatusRuntimeBridge } from './bridge';
+export type { BridgeConfig, BridgeContext } from './bridge';
+export { deriveHealth } from './health';
+export type { HealthCondition } from './health';
 export {
   collectCacheManager,
   collectOPFS,
@@ -26,10 +26,10 @@ export {
   collectServiceWorker,
   collectGenerate,
   aggregatePhaseHealth,
-} from './collectors.js';
+} from './collectors';
 export {
   cacheManagerActions,
   autoSaveActions,
   saveStateStoreActions,
   perfMonitorActions,
-} from './actions.js';
+} from './actions';

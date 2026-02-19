@@ -6,7 +6,7 @@
  */
 
 import type { DeepWikiEnrichment } from '@dendrovia/shared';
-import type { TopologyOutput } from '../builder/TopologyBuilder.js';
+import type { TopologyOutput } from '../builder/TopologyBuilder';
 
 /**
  * Enrich a TopologyOutput with DeepWiki documentation data.

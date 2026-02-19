@@ -2,7 +2,7 @@
  * Symbol and Motto Mappings for PR Heraldry
  */
 
-import type { Magnitude } from './types.js';
+import type { Magnitude } from './types';
 
 // ============================================================
 // Motto Registry

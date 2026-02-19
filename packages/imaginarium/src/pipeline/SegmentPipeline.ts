@@ -19,11 +19,11 @@ import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { createLogger } from '@dendrovia/shared/logger';
 
 const log = createLogger('IMAGINARIUM', 'segment-pipeline');
-import { extractPalette } from '../distillation/ColorExtractor.js';
-import { generate as generateNoise } from '../distillation/NoiseGenerator.js';
-import { compile as compileLSystem } from '../distillation/LSystemCompiler.js';
-import { compile as compileSDF } from '../distillation/SDFCompiler.js';
-import { hashString } from '../utils/hash.js';
+import { extractPalette } from '../distillation/ColorExtractor';
+import { generate as generateNoise } from '../distillation/NoiseGenerator';
+import { compile as compileLSystem } from '../distillation/LSystemCompiler';
+import { compile as compileSDF } from '../distillation/SDFCompiler';
+import { hashString } from '../utils/hash';
 import type { GlobalGenerationContext, SegmentGenerationContext, MoodStrategy } from './types';
 
 export type { MoodStrategy };

@@ -1,9 +1,54 @@
 /**
- * JSON SCHEMA CONTRACTS
+ * SHARED CONTRACTS
  *
- * These define the exact JSON formats for files generated at build-time.
- * Used by CHRONOS → IMAGINARIUM → ARCHITECTUS pipeline.
+ * Pillar boundary contracts: runtime state interfaces + build-time JSON schemas.
  */
+
+// ── Runtime State Contracts ─────────────────────────────────────
+export type {
+  ViewMode,
+  IGameState,
+  ICombatState,
+  IEngineState,
+  IGameStore,
+  IHudView,
+  IBattleView,
+  ISaveSnapshot,
+  StateListener,
+  ActiveQuests,
+} from './state.js';
+
+export {
+  isActiveQuest,
+  isCompletedQuest,
+  isAvailableQuest,
+} from './state.js';
+
+// ── Pillar Service Contracts ────────────────────────────────────
+export type {
+  IPersistence,
+  SaveSlotInfo,
+  ICacheService,
+  CacheOptions,
+  CacheStats,
+  ILifecycle,
+  LifecycleConfig,
+  LifecycleHealth,
+  ICombatSystem,
+  AvailableActions,
+  IGameSession,
+  ISpatialQuery,
+  IMeshProvider,
+  FlatMeshResult,
+  MeshGenerationResult,
+  MeshPipelineInfo,
+  ITopologyProvider,
+  SegmentTopology,
+  IServiceRegistry,
+  ServiceMap,
+} from './services.js';
+
+// ── Build-Time JSON Schema Contracts ────────────────────────────
 
 /**
  * topology.json - Output from CHRONOS

@@ -23,6 +23,7 @@ export * from './encounter/EncounterSystem';
 export * from './inventory/InventorySystem';
 export * from './progression/ProgressionSystem';
 export * from './integration/EventWiring';
+export * from './controller/GameSystemController';
 
 // Simulation, save, and config
 export * from './simulation/SimulationHarness';

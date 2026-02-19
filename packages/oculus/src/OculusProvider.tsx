@@ -7,11 +7,12 @@
  * to the component tree.
  */
 
-import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react';
 import type { EventBus } from '@dendrovia/shared';
 import { useEventSubscriptions } from './hooks/useEventSubscriptions';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useCodeLoader, type CodeLoaderOptions } from './hooks/useCodeLoader';
+import { usePanelStore } from './store/usePanelStore';
 import './styles/base.css';
 import './styles/responsive.css';
 
@@ -22,6 +23,8 @@ export interface OculusConfig {
   showQuestTracker?: boolean;
   /** Enable keyboard shortcuts */
   enableShortcuts?: boolean;
+  /** Enable panel window management (drag, resize, lock, dev panels) */
+  enablePanelManagement?: boolean;
   /** Theme overrides (CSS custom properties) */
   themeOverrides?: Record<string, string>;
   /** Code loader options (base URL or custom fetch) */
@@ -32,6 +35,7 @@ const defaultConfig: OculusConfig = {
   showMinimap: true,
   showQuestTracker: true,
   enableShortcuts: true,
+  enablePanelManagement: false,
 };
 
 interface OculusContextValue {
@@ -61,6 +65,13 @@ export function OculusProvider({ eventBus, config, children }: OculusProviderPro
 
   // Auto-load file content when CodeReader opens
   useCodeLoader(mergedConfig.codeLoader);
+
+  // Register default panels when panel management is enabled
+  useEffect(() => {
+    if (mergedConfig.enablePanelManagement) {
+      usePanelStore.getState().registerDefaults();
+    }
+  }, [mergedConfig.enablePanelManagement]);
 
   const value = useMemo(
     () => ({ eventBus, config: mergedConfig }),

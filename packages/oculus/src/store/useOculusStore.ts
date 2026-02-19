@@ -220,13 +220,42 @@ export const useOculusStore = create<OculusStore>((set) => ({
   // ── Actions ────────────────────────────────────────
 
   setActivePanel: (panel) =>
-    set((s) => ({ activePanel: panel, previousPanel: s.activePanel })),
+    set((s) => {
+      // Bridge to panel store if panels are registered
+      try {
+        const { usePanelStore } = require('./usePanelStore');
+        const ps = usePanelStore.getState();
+        if (Object.keys(ps.panels).length > 0) {
+          if (panel === 'none') {
+            // Hide all exclusive panels
+            for (const [id, p] of Object.entries(ps.panels)) {
+              if ((p as any).exclusive && (p as any).visible) ps.hidePanel(id);
+            }
+          } else {
+            ps.showPanel(panel);
+          }
+        }
+      } catch { /* panel store not loaded yet */ }
+      return { activePanel: panel, previousPanel: s.activePanel };
+    }),
 
   togglePanel: (panel) =>
-    set((s) => ({
-      activePanel: s.activePanel === panel ? 'none' : panel,
-      previousPanel: s.activePanel,
-    })),
+    set((s) => {
+      const next = s.activePanel === panel ? 'none' : panel;
+      // Bridge to panel store if panels are registered
+      try {
+        const { usePanelStore } = require('./usePanelStore');
+        const ps = usePanelStore.getState();
+        if (Object.keys(ps.panels).length > 0) {
+          if (next === 'none') {
+            ps.hidePanel(panel);
+          } else {
+            ps.showPanel(panel);
+          }
+        }
+      } catch { /* panel store not loaded yet */ }
+      return { activePanel: next, previousPanel: s.activePanel };
+    }),
 
   setHealth: (health, maxHealth) =>
     set((s) => ({
@@ -265,18 +294,37 @@ export const useOculusStore = create<OculusStore>((set) => ({
 
   setActiveQuest: (quest) => set({ activeQuest: quest }),
 
-  startCombat: (enemy, playerSpells) =>
+  startCombat: (enemy, playerSpells) => {
+    // Bridge to panel store
+    try {
+      const { usePanelStore } = require('./usePanelStore');
+      const ps = usePanelStore.getState();
+      if (Object.keys(ps.panels).length > 0) {
+        ps.showPanel('battle-ui');
+      }
+    } catch { /* panel store not loaded yet */ }
     set({
       battle: { active: true, enemy, log: [`A wild ${enemy.type} appeared!`] },
       playerSpells,
       activePanel: 'battle-ui',
-    }),
+    });
+  },
 
   endCombat: () =>
-    set((s) => ({
-      battle: { active: false, enemy: null, log: [] },
-      activePanel: s.previousPanel !== 'battle-ui' ? s.previousPanel : 'none',
-    })),
+    set((s) => {
+      // Bridge to panel store
+      try {
+        const { usePanelStore } = require('./usePanelStore');
+        const ps = usePanelStore.getState();
+        if (Object.keys(ps.panels).length > 0) {
+          ps.hidePanel('battle-ui');
+        }
+      } catch { /* panel store not loaded yet */ }
+      return {
+        battle: { active: false, enemy: null, log: [] },
+        activePanel: s.previousPanel !== 'battle-ui' ? s.previousPanel : 'none',
+      };
+    }),
 
   addBattleLog: (message) =>
     set((s) => {

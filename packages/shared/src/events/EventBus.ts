@@ -9,7 +9,7 @@
  * defined correctly."
  */
 
-import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action } from '../types/index.js';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action, ParsedFile, CodeTopology, ProceduralPalette, SDFShader } from '../types/index.js';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
@@ -331,6 +331,7 @@ export interface LevelLoadedEvent {
 }
 
 export interface TopologyGeneratedEvent {
+  topology: CodeTopology;
   tree: FileTreeNode;
   hotspots: Hotspot[];
   deepwiki?: DeepWikiEnrichment;
@@ -350,6 +351,76 @@ export interface SegmentEnteredEvent {
   segmentId: string;
   phase: string;
   mood: string;
+}
+
+// ── CHRONOS Build-Time Event Payloads ────────────────────────────
+
+export interface ParseCompleteEvent {
+  files: ParsedFile[];
+}
+
+// ── IMAGINARIUM Build-Time Event Payloads ────────────────────────
+
+export interface PaletteGeneratedEvent {
+  palette: ProceduralPalette;
+}
+
+export interface ShadersCompiledEvent {
+  shaders: SDFShader[];
+}
+
+export interface MycologyCatalogedEvent {
+  specimenCount: number;
+  networkEdgeCount: number;
+  manifestPath: string;
+}
+
+// ── State Persistence ────────────────────────────────────────────
+
+export interface StatePersisted {
+  timestamp: number;
+  trigger: string;
+}
+
+// ── GameEventPayloadMap — single source of truth for event→payload types ──
+
+export interface GameEventPayloadMap {
+  [GameEvents.PLAYER_MOVED]: PlayerMovedEvent;
+  [GameEvents.BRANCH_ENTERED]: BranchEnteredEvent;
+  [GameEvents.NODE_CLICKED]: NodeClickedEvent;
+  [GameEvents.COLLISION_DETECTED]: CollisionDetectedEvent;
+  [GameEvents.ENCOUNTER_TRIGGERED]: EncounterTriggeredEvent;
+  [GameEvents.DAMAGE_DEALT]: DamageDealtEvent;
+  [GameEvents.HEALTH_CHANGED]: HealthChangedEvent;
+  [GameEvents.MANA_CHANGED]: ManaChangedEvent;
+  [GameEvents.QUEST_UPDATED]: QuestUpdatedEvent;
+  [GameEvents.COMBAT_STARTED]: CombatStartedEvent;
+  [GameEvents.COMBAT_ENDED]: CombatEndedEvent;
+  [GameEvents.COMBAT_TURN_START]: CombatTurnEvent;
+  [GameEvents.COMBAT_TURN_END]: CombatTurnEvent;
+  [GameEvents.SPELL_RESOLVED]: SpellResolvedEvent;
+  [GameEvents.STATUS_EFFECT_APPLIED]: StatusEffectEvent;
+  [GameEvents.STATUS_EFFECT_EXPIRED]: StatusEffectEvent;
+  [GameEvents.EXPERIENCE_GAINED]: ExperienceGainedEvent;
+  [GameEvents.LEVEL_UP]: LevelUpEvent;
+  [GameEvents.LOOT_DROPPED]: LootDroppedEvent;
+  [GameEvents.SPELL_CAST]: SpellCastEvent;
+  [GameEvents.ITEM_USED]: ItemUsedEvent;
+  [GameEvents.COMBAT_ACTION]: CombatActionEvent;
+  [GameEvents.PARSE_COMPLETE]: ParseCompleteEvent;
+  [GameEvents.TOPOLOGY_GENERATED]: TopologyGeneratedEvent;
+  [GameEvents.SHADERS_COMPILED]: ShadersCompiledEvent;
+  [GameEvents.PALETTE_GENERATED]: PaletteGeneratedEvent;
+  [GameEvents.MYCOLOGY_CATALOGED]: MycologyCatalogedEvent;
+  [GameEvents.STORY_ARC_DERIVED]: StoryArcDerivedEvent;
+  [GameEvents.SEGMENT_DISTILLED]: SegmentDistilledEvent;
+  [GameEvents.SEGMENT_ENTERED]: SegmentEnteredEvent;
+  [GameEvents.ASSETS_LOADED]: AssetsLoadedEvent;
+  [GameEvents.STATE_PERSISTED]: StatePersisted;
+  [GameEvents.CACHE_UPDATED]: CacheUpdatedEvent;
+  [GameEvents.SAVE_COMPLETED]: SaveCompletedEvent;
+  [GameEvents.GAME_STARTED]: GameStartedEvent;
+  [GameEvents.LEVEL_LOADED]: LevelLoadedEvent;
 }
 
 // Global singleton (lazy initialization)

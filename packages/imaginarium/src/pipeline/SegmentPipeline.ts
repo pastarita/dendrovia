@@ -19,19 +19,16 @@ import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { createLogger } from '@dendrovia/shared/logger';
 
 const log = createLogger('IMAGINARIUM', 'segment-pipeline');
-import { extractPalette, type PaletteOverrides } from '../distillation/ColorExtractor.js';
-import { generate as generateNoise, type NoiseOverrides } from '../distillation/NoiseGenerator.js';
-import { compile as compileLSystem, type LSystemOverrides } from '../distillation/LSystemCompiler.js';
+import { extractPalette } from '../distillation/ColorExtractor.js';
+import { generate as generateNoise } from '../distillation/NoiseGenerator.js';
+import { compile as compileLSystem } from '../distillation/LSystemCompiler.js';
 import { compile as compileSDF } from '../distillation/SDFCompiler.js';
 import { hashString } from '../utils/hash.js';
+import type { GlobalGenerationContext, SegmentGenerationContext, MoodStrategy } from './types';
 
-interface MoodStrategy {
-  palette: PaletteOverrides;
-  noise: NoiseOverrides;
-  lsystem: LSystemOverrides;
-}
+export type { MoodStrategy };
 
-const MOOD_STRATEGIES: Record<SegmentMood, MoodStrategy> = {
+export const MOOD_STRATEGIES: Record<SegmentMood, MoodStrategy> = {
   serene: {
     palette: { harmonyScheme: 'analogous', saturationMultiplier: 0.7, lightnessOffset: 0.1 },
     noise: { typeOverride: 'simplex' },
@@ -61,11 +58,15 @@ const MOOD_STRATEGIES: Record<SegmentMood, MoodStrategy> = {
 
 /**
  * Run per-segment distillation, writing assets to segments/{segmentId}/ directories.
+ *
+ * When `ctx` is provided, a SegmentGenerationContext is constructed per segment
+ * for future utilization by downstream directive branches.
  */
 export async function distillSegments(
   topology: CodeTopology,
   storyArc: StoryArc,
   outputDir: string,
+  ctx?: GlobalGenerationContext,
 ): Promise<SegmentAssets[]> {
   const eventBus = getEventBus();
   const results: SegmentAssets[] = [];
@@ -91,6 +92,18 @@ export async function distillSegments(
 
       // Get mood-based strategy
       const strategy = MOOD_STRATEGIES[segment.mood];
+
+      // Build per-segment generation context (used by future directive branches)
+      if (ctx) {
+        const _segCtx: SegmentGenerationContext = {
+          global: ctx,
+          segment,
+          subTopology,
+          strategy,
+          segmentOutputDir: segDir,
+        };
+        // _segCtx will be threaded through sub-steps in directive branches
+      }
 
       // 1. Extract palette with overrides
       const palette = extractPalette(subTopology, strategy.palette);

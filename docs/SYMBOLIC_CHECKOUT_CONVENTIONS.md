@@ -69,6 +69,7 @@ All commands run from any `dendrovia/` directory (canonical or worktree — they
 |---------|-------------|
 | `bun run wt:new <PILLAR> <branch>` | Remove symlink, create worktree for pillar on `<branch>` (creates branch if needed) |
 | `bun run wt:release <PILLAR>` | Remove worktree, restore symlink to canonical |
+| `bun run wt:rebranch <PILLAR> <new-name>` | Rename the current worktree branch (safe — no checkout) |
 | `bun run wt:status` | Show all pillars' current state (canonical/symlink/worktree/clone) |
 | `bun run wt:list` | `git worktree list` — show all active worktrees |
 | `bun run wt:prune` | `git worktree prune` — clean up stale references |
@@ -91,6 +92,19 @@ The script:
    - new local branch from canonical HEAD if branch is new
 3. Runs `git worktree add ...` with the resolved branch mode
 4. The pillar now has its own independent working tree on that branch
+
+### Renaming a Worktree Branch
+
+```bash
+cd dendrovia/
+bun run wt:rebranch CHRONOS feat/chronos-parser-v2
+# Branch renamed in place — no checkout, no symlink disruption
+```
+
+The script:
+1. Validates the pillar is in worktree state (not a symlink)
+2. Checks the new name isn't already taken locally
+3. Runs `git branch -m <old> <new>` within the worktree
 
 ### Releasing a Worktree
 
@@ -120,6 +134,67 @@ Each git worktree is a separate working tree that shares the same `.git/` object
 | `dist/`, `generated/` | **Per-worktree** | Build outputs are local to each working tree |
 
 **Key implication:** After creating a worktree, run `bun install` before building. Turbo caches don't cross worktree boundaries, but since they're content-addressed, identical code produces identical cache hits.
+
+---
+
+## Branch Naming Convention (Feature-First)
+
+When creating a worktree, **always name the branch after the actual feature**, not the pillar:
+
+```bash
+# GOOD — feature-first naming
+bun run wt:new IMAGINARIUM feat/wave0-imaginarium-reactive-foundations
+bun run wt:new CHRONOS feat/chronos-incremental-parsing
+
+# BAD — generic edge branches
+bun run wt:new IMAGINARIUM feat/wt-edge-imaginarium
+bun run wt:new CHRONOS feat/wt-edge-chronos
+```
+
+**Rationale:** The branch name is what appears in `git log`, PR titles, and `wt:status`. Feature-first naming makes the branch self-documenting. Generic "edge" names require extra context to understand what's being worked on.
+
+If you need to rename an existing worktree branch to match a feature:
+
+```bash
+bun run wt:rebranch IMAGINARIUM feat/wave0-imaginarium-reactive-foundations
+```
+
+### Pillar Prefix in Branch Names
+
+Include the pillar name in the branch when the work is pillar-scoped:
+
+| Branch Pattern | When |
+|----------------|------|
+| `feat/<pillar>-<feature>` | Work scoped to one pillar |
+| `feat/<feature>` | Cross-pillar work |
+| `fix/<pillar>-<issue>` | Pillar-specific bug fix |
+| `refactor/<scope>` | Structural changes |
+
+---
+
+## Branching From Within a Worktree
+
+Once a pillar is in worktree mode, the worktree is **fully isolated** — branch operations only affect that worktree, not other pillars.
+
+### What's Safe in Worktree Mode
+
+| Operation | Safe? | Notes |
+|-----------|-------|-------|
+| `git branch -m old new` | Yes | Rename the current branch |
+| `git checkout -b feat/...` | Yes | Create a new branch from current HEAD |
+| `git switch -c feat/...` | Yes | Same as above |
+| `git push -u origin <branch>` | Yes | Push the worktree's branch |
+| `bun run wt:rebranch` | Yes | Convenience wrapper for rename |
+
+### What's Blocked in Symlink Mode
+
+| Operation | Blocked? | Why |
+|-----------|----------|-----|
+| `git checkout -b` | **Blocked by hook** | Would change branch for all symlinked pillars |
+| `git switch` | **Blocked by hook** | Same reason |
+| `bun run wt:new` | **Allowed** | Safe — replaces symlink with isolated worktree first |
+
+The `symlink-branch-guard.sh` hook (installed per-pillar at `~/<PILLAR>/.claude/hooks/`) detects whether `dendrovia/` is a symlink or a worktree. It only blocks in symlink mode. In worktree mode, raw git branching commands are allowed.
 
 ---
 
@@ -213,8 +288,14 @@ bun run wt:list                                # Active worktrees
 # Create worktree (agent: autonomous)
 bun run wt:new CHRONOS feat/chronos-parser
 
+# Rename branch in existing worktree
+bun run wt:rebranch CHRONOS feat/chronos-parser-v2
+
 # Release worktree (agent: ask user first)
 bun run wt:release CHRONOS
+
+# Push worktree branch to remote
+git push -u origin feat/chronos-parser-v2
 
 # Clean up
 bun run wt:prune
@@ -222,5 +303,5 @@ bun run wt:prune
 
 ---
 
-_Version: 2.0.0 — OPERATUS-canonical topology_
+_Version: 2.1.0 — Feature-first branch naming, smart branch guard, wt:rebranch_
 _Updated: 2026-02-18_

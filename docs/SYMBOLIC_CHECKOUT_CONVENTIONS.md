@@ -278,15 +278,58 @@ This ensures pre-commit/pre-push/post-rebase gates are active in the shared cano
 
 ---
 
+## Terminal Parity: The `den` Function
+
+When `wt:new` replaces a symlink with a worktree, shells that were already `cd`'d through the old symlink still have their working directory bound to the canonical repo's inode. The shell's `$PWD` says `IMAGINARIUM/dendrovia` but the OS-level file descriptor points to `OPERATUS/dendrovia`. Git commands, file reads, and branch indicators all reflect the wrong checkout.
+
+**`den` re-resolves the path.** One command, the shell lands in the correct working tree.
+
+### Install
+
+Add to `~/.zshrc` or `~/.bashrc`:
+
+```bash
+source "${DENROOT:-$HOME/denroot}/OPERATUS/dendrovia/scripts/shell/den.sh"
+```
+
+### Usage
+
+```bash
+den                  # Re-enter current pillar's dendrovia (inferred from $PWD)
+den IMAGINARIUM      # Jump to IMAGINARIUM's dendrovia
+den chronos          # Case-insensitive
+den status           # Show all pillars' state (symlink/worktree/canonical)
+```
+
+### When to Use
+
+| Situation | Command |
+|-----------|---------|
+| After `wt:new` — peer terminal shows wrong branch | `den` |
+| After `wt:release` — peer terminal shows stale worktree | `den` |
+| Switching between pillars in one terminal | `den CHRONOS` |
+| Quick topology check without `bun run` | `den status` |
+
+### How It Works
+
+`den` resolves the pillar from `$PWD` (or an explicit argument), then `cd`s to `$DENROOT/<PILLAR>/dendrovia`. Because `cd` re-resolves the path through the filesystem, it picks up whatever is currently at that location — symlink, worktree, or canonical repo. No state files, no watchers, no dependencies.
+
+---
+
 ## Quick Reference
 
 ```bash
 # Check state
 bun run wt:status                              # All pillars
 bun run wt:list                                # Active worktrees
+den status                                     # Quick pillar state (no bun needed)
 
 # Create worktree (agent: autonomous)
 bun run wt:new CHRONOS feat/chronos-parser
+
+# Re-enter after worktree swap (peer terminal)
+den                                            # Re-resolve current pillar
+den CHRONOS                                    # Jump to specific pillar
 
 # Rename branch in existing worktree
 bun run wt:rebranch CHRONOS feat/chronos-parser-v2
@@ -303,5 +346,5 @@ bun run wt:prune
 
 ---
 
-_Version: 2.1.0 — Feature-first branch naming, smart branch guard, wt:rebranch_
-_Updated: 2026-02-18_
+_Version: 2.2.0 — `den` shell function for terminal parity after worktree swaps_
+_Updated: 2026-02-19_

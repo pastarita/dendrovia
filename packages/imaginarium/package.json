@@ -14,7 +14,9 @@
     "./utils/glsl": "./src/utils/glsl.ts",
     "./mycology": "./src/mycology/index.ts",
     "./storyarc": "./src/storyarc/index.ts",
-    "./mesh-runtime": "./src/mesh-runtime/index.ts"
+    "./mesh-runtime": "./src/mesh-runtime/index.ts",
+    "./pipeline-types": "./src/pipeline/types.ts",
+    "./build": "./src/pipeline/index.ts"
   },
   "scripts": {
     "dev": "bun run src/index.ts --watch",

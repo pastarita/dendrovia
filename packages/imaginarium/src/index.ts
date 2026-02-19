@@ -32,7 +32,13 @@ export { generateVariants } from './pipeline/VariantGenerator';
 export { generateManifest, type ManifestInput } from './pipeline/ManifestGenerator';
 export { readTopology } from './pipeline/TopologyReader';
 export { generateMockTopology } from './pipeline/MockTopology';
-export { distillSegments } from './pipeline/SegmentPipeline';
+export { distillSegments, MOOD_STRATEGIES } from './pipeline/SegmentPipeline';
+export { chunkTopology } from './pipeline/TopologyChunker';
+export { precomputePlacements } from './pipeline/SegmentPlacementPrecomputer';
+
+// --- Pipeline Types ---
+export type { GlobalGenerationContext, SegmentGenerationContext, MoodStrategy, VersionedArtifact } from './pipeline/types';
+export { IMAGINARIUM_SCHEMA_VERSION } from './pipeline/types';
 
 // --- Story Arc ---
 export {

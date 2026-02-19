@@ -1,0 +1,160 @@
+/**
+ * ManagedPanel Styles — Draggable panel chrome
+ */
+
+/* ── Panel Container ─────────────────────────────── */
+
+.managed-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--oculus-panel-bg);
+  border: var(--oculus-panel-border);
+  border-radius: var(--oculus-panel-radius);
+  backdrop-filter: var(--oculus-panel-blur);
+  -webkit-backdrop-filter: var(--oculus-panel-blur);
+  box-shadow: var(--oculus-panel-shadow);
+  pointer-events: auto;
+  animation: oculus-fade-in var(--oculus-transition-fast);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.managed-panel--locked {
+  border-color: var(--oculus-amber, #d97706);
+}
+
+/* ── Title Bar ───────────────────────────────────── */
+
+.managed-panel__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--oculus-space-xs) var(--oculus-space-sm);
+  background: rgba(0, 0, 0, 0.2);
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.managed-panel__titlebar:active {
+  cursor: grabbing;
+}
+
+.managed-panel--locked .managed-panel__titlebar {
+  cursor: default;
+}
+
+.managed-panel__title {
+  font-size: var(--oculus-font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--oculus-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Controls ────────────────────────────────────── */
+
+.managed-panel__controls {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.managed-panel__btn {
+  background: transparent;
+  border: none;
+  color: var(--oculus-text-muted);
+  font-size: var(--oculus-font-xs);
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: background var(--oculus-transition-fast),
+              color var(--oculus-transition-fast);
+}
+
+.managed-panel__btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--oculus-text);
+}
+
+.managed-panel__btn--close:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: var(--oculus-danger, #ef4444);
+}
+
+/* ── Content ─────────────────────────────────────── */
+
+.managed-panel__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--oculus-space-sm) var(--oculus-space-md);
+  min-height: 0;
+}
+
+/* ── Resize Grip ─────────────────────────────────── */
+
+.managed-panel__grip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+.managed-panel__grip::after {
+  content: '';
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--oculus-text-muted);
+  border-bottom: 2px solid var(--oculus-text-muted);
+  opacity: 0.5;
+}
+
+.managed-panel:hover .managed-panel__grip::after {
+  opacity: 0.8;
+}
+
+/* ── Minimized Dock ──────────────────────────────── */
+
+.minimized-dock {
+  position: absolute;
+  bottom: var(--oculus-space-md);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--oculus-space-xs);
+  pointer-events: auto;
+  z-index: 200;
+}
+
+.minimized-dock__chip {
+  background: var(--oculus-panel-bg);
+  border: var(--oculus-panel-border);
+  border-radius: 12px;
+  padding: var(--oculus-space-xs) var(--oculus-space-md);
+  font-size: var(--oculus-font-xs);
+  color: var(--oculus-text);
+  cursor: pointer;
+  backdrop-filter: var(--oculus-panel-blur);
+  -webkit-backdrop-filter: var(--oculus-panel-blur);
+  transition: background var(--oculus-transition-fast);
+  white-space: nowrap;
+  font-family: var(--oculus-font-ui);
+}
+
+.minimized-dock__chip:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

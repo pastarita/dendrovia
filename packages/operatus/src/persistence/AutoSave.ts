@@ -174,8 +174,8 @@ export class AutoSave {
     const eventBus = getEventBus();
 
     // Save on quest completion
-    const unsubQuest = eventBus.on(GameEvents.QUEST_UPDATED, (data: any) => {
-      if (data?.status === 'completed') {
+    const unsubQuest = eventBus.on(GameEvents.QUEST_UPDATED, (data) => {
+      if (data.status === 'completed') {
         this.save('quest-completed');
       }
     });

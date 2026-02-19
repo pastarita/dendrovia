@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { ExperienceGainedEvent, LevelUpEvent, LootDroppedEvent } from '@dendrovia/shared';
 
 export interface ProgressionSummary {
   xpGained: number;
@@ -22,14 +21,14 @@ export function useProgressionEvents() {
     let pending: Partial<ProgressionSummary> = {};
 
     unsubs.push(
-      bus.on<ExperienceGainedEvent>(GameEvents.EXPERIENCE_GAINED, (event) => {
+      bus.on(GameEvents.EXPERIENCE_GAINED, (event) => {
         pending = { ...pending, xpGained: event.amount };
         flush();
       }),
     );
 
     unsubs.push(
-      bus.on<LevelUpEvent>(GameEvents.LEVEL_UP, (event) => {
+      bus.on(GameEvents.LEVEL_UP, (event) => {
         pending = {
           ...pending,
           leveledUp: true,
@@ -41,7 +40,7 @@ export function useProgressionEvents() {
     );
 
     unsubs.push(
-      bus.on<LootDroppedEvent>(GameEvents.LOOT_DROPPED, (event) => {
+      bus.on(GameEvents.LOOT_DROPPED, (event) => {
         pending = { ...pending, lootItems: event.items };
         flush();
       }),

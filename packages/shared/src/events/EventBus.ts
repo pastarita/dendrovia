@@ -9,7 +9,7 @@
  * defined correctly."
  */
 
-import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action } from '../types/index.js';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action, ProceduralPalette, SDFShader, ParsedFile, MycologyCatalogedEvent } from '../types/index.js';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
@@ -25,9 +25,13 @@ export class EventBus {
   }
 
   /**
-   * Subscribe to an event
+   * Subscribe to a typed event (preferred).
+   * Type is inferred from the event name when using GameEvents constants.
    */
-  on<T = any>(event: string, handler: EventHandler<T>): () => void {
+  on<K extends keyof EventMap>(event: K, handler: EventHandler<EventMap[K]>): () => void;
+  /** Subscribe to an untyped/custom event (extensibility fallback). */
+  on(event: string, handler: EventHandler): () => void;
+  on(event: string, handler: EventHandler): () => void {
     if (!this.handlers.has(event)) {
       this.handlers.set(event, new Set());
     }
@@ -51,9 +55,13 @@ export class EventBus {
   }
 
   /**
-   * Emit an event to all subscribers
+   * Emit a typed event (preferred).
+   * Payload type is enforced when using GameEvents constants.
    */
-  async emit<T = any>(event: string, data?: T): Promise<void> {
+  emit<K extends keyof EventMap>(event: K, data: EventMap[K]): Promise<void>;
+  /** Emit an untyped/custom event (extensibility fallback). */
+  emit(event: string, data?: unknown): Promise<void>;
+  async emit(event: string, data?: unknown): Promise<void> {
     if (this.debug) {
       console.debug('[shared/event-bus]', 'Event emitted', { event, data });
     }
@@ -78,10 +86,11 @@ export class EventBus {
     }
   }
 
-  /**
-   * One-time event subscription
-   */
-  once<T = any>(event: string, handler: EventHandler<T>): void {
+  /** One-time typed event subscription. */
+  once<K extends keyof EventMap>(event: K, handler: EventHandler<EventMap[K]>): void;
+  /** One-time untyped event subscription (extensibility fallback). */
+  once(event: string, handler: EventHandler): void;
+  once(event: string, handler: EventHandler): void {
     const unsubscribe = this.on(event, (data) => {
       unsubscribe();
       handler(data);
@@ -109,64 +118,126 @@ export class EventBus {
  *
  * These define the exact shape of data passed between pillars.
  * NEVER change these without updating all consumers.
+ *
+ * Events are split into two lifecycle phases:
+ *   - BuildEvents:   Emitted during the CHRONOS → IMAGINARIUM build pipeline.
+ *   - RuntimeEvents: Emitted during gameplay.
+ *
+ * Import BuildEvents or RuntimeEvents directly. The combined GameEvents
+ * re-export is deprecated.
  */
 
-export const GameEvents = {
+// ── Build-time Events ─────────────────────────────────────────────
+//
+// Emitted during the CHRONOS → IMAGINARIUM build pipeline.
+// Not available at runtime — consumed before the app starts.
+
+/** Build-time events emitted during the CHRONOS → IMAGINARIUM pipeline. */
+export const BuildEvents = {
+  /** CHRONOS → IMAGINARIUM: AST parsing complete, file data ready. */
+  PARSE_COMPLETE: 'build:parse:complete',
+  /** IMAGINARIUM → ARCHITECTUS: SDF shaders compiled for rendering. */
+  SHADERS_COMPILED: 'build:shaders:compiled',
+  /** IMAGINARIUM → ARCHITECTUS: Procedural palette generated from topology. */
+  PALETTE_GENERATED: 'build:palette:generated',
+  /** IMAGINARIUM → ARCHITECTUS: Mycology specimens cataloged for 3D placement. */
+  MYCOLOGY_CATALOGED: 'build:mycology:cataloged',
+  /** IMAGINARIUM → ARCHITECTUS: Story arc derived from commit topology. */
+  STORY_ARC_DERIVED: 'build:storyarc:derived',
+  /** IMAGINARIUM → ARCHITECTUS: Segment assets distilled and ready. */
+  SEGMENT_DISTILLED: 'build:segment:distilled',
+} as const;
+
+// ── Runtime Events ──────────────────────────────────────────────
+//
+// Emitted during gameplay. Consumed by the EventBus at runtime.
+
+/** Runtime events emitted during gameplay. */
+export const RuntimeEvents = {
   // ARCHITECTUS → LUDUS (Spatial events)
+  /** ARCHITECTUS → LUDUS, OCULUS: Player moved to a new position. */
   PLAYER_MOVED: 'player:moved',
+  /** ARCHITECTUS → LUDUS: Player entered a code branch. */
   BRANCH_ENTERED: 'branch:entered',
+  /** ARCHITECTUS → LUDUS, OCULUS: Player clicked a code node. */
   NODE_CLICKED: 'node:clicked',
+  /** @planned — ARCHITECTUS → LUDUS, OCULUS: Player collided with an entity. Not yet emitted. */
   COLLISION_DETECTED: 'collision:detected',
 
   // LUDUS → ARCHITECTUS (Feedback events)
+  /** LUDUS → ARCHITECTUS: Encounter triggered at location. */
   ENCOUNTER_TRIGGERED: 'encounter:triggered',
+  /** LUDUS → ARCHITECTUS: Damage dealt in combat (for VFX). */
   DAMAGE_DEALT: 'damage:dealt',
 
   // LUDUS → OCULUS (UI updates)
+  /** LUDUS → OCULUS: Entity health changed. */
   HEALTH_CHANGED: 'health:changed',
+  /** LUDUS → OCULUS: Entity mana changed. */
   MANA_CHANGED: 'mana:changed',
+  /** LUDUS → OCULUS: Quest status updated. */
   QUEST_UPDATED: 'quest:updated',
+  /** LUDUS → OCULUS: Combat encounter started. */
   COMBAT_STARTED: 'combat:started',
+  /** LUDUS → all: Combat encounter ended. */
   COMBAT_ENDED: 'combat:ended',
 
   // LUDUS combat granularity
+  /** LUDUS → OCULUS: Combat turn started. */
   COMBAT_TURN_START: 'combat:turn:start',
+  /** LUDUS → OCULUS: Combat turn ended. */
   COMBAT_TURN_END: 'combat:turn:end',
+  /** LUDUS → OCULUS: Spell resolved with effect. */
   SPELL_RESOLVED: 'spell:resolved',
+  /** LUDUS → OCULUS: Status effect applied to entity. */
   STATUS_EFFECT_APPLIED: 'status:applied',
+  /** LUDUS → OCULUS: Status effect expired on entity. */
   STATUS_EFFECT_EXPIRED: 'status:expired',
+  /** LUDUS → all: Experience gained from combat. */
   EXPERIENCE_GAINED: 'experience:gained',
+  /** LUDUS → all: Character leveled up. */
   LEVEL_UP: 'level:up',
+  /** LUDUS → all: Loot dropped from defeated enemy. */
   LOOT_DROPPED: 'loot:dropped',
 
   // OCULUS → LUDUS (User actions)
+  /** OCULUS → LUDUS: Player cast a spell. */
   SPELL_CAST: 'spell:cast',
+  /** OCULUS → LUDUS: Player used an item. */
   ITEM_USED: 'item:used',
+  /** any → LUDUS: Generic combat action dispatched. */
   COMBAT_ACTION: 'combat:action',
 
-  // CHRONOS → IMAGINARIUM (Build-time events)
-  PARSE_COMPLETE: 'parse:complete',
+  // CHRONOS → all (Topology — dual lifecycle: build-time + runtime)
+  /** CHRONOS → IMAGINARIUM, OCULUS, OPERATUS: Topology generated from git data. Dual-lifecycle: emitted at build-time by CHRONOS and at runtime by DendroviaQuest. */
   TOPOLOGY_GENERATED: 'topology:generated',
 
-  // IMAGINARIUM → ARCHITECTUS (Build-time events)
-  SHADERS_COMPILED: 'shaders:compiled',
-  PALETTE_GENERATED: 'palette:generated',
-  MYCOLOGY_CATALOGED: 'mycology:cataloged',
-  STORY_ARC_DERIVED: 'storyarc:derived',
-  SEGMENT_DISTILLED: 'segment:distilled',
-
-  // ARCHITECTUS runtime — segment navigation
-  SEGMENT_ENTERED: 'segment:entered',
-
-  // OPERATUS → All (Infrastructure events)
+  // OPERATUS → all (Infrastructure events)
+  /** OPERATUS → all: Assets loaded and ready. */
   ASSETS_LOADED: 'assets:loaded',
+  /** OPERATUS → all: State persisted to storage. */
   STATE_PERSISTED: 'state:persisted',
+  /** OPERATUS → all: Cache entry updated. */
   CACHE_UPDATED: 'cache:updated',
+  /** OPERATUS → all: Save completed. */
   SAVE_COMPLETED: 'save:completed',
 
-  // Lifecycle triggers (All → OPERATUS)
+  // Lifecycle triggers (all → OPERATUS)
+  /** all → OPERATUS: Game session started. */
   GAME_STARTED: 'game:started',
+  /** all → OPERATUS: Level loaded and ready. */
   LEVEL_LOADED: 'level:loaded',
+} as const;
+
+/**
+ * All game events — build-time and runtime combined.
+ *
+ * @deprecated Import `BuildEvents` or `RuntimeEvents` directly.
+ * This combined object is provided for backward compatibility.
+ */
+export const GameEvents = {
+  ...RuntimeEvents,
+  ...BuildEvents,
 } as const;
 
 /**
@@ -293,6 +364,7 @@ export interface CombatActionEvent {
   action: Action;
 }
 
+/** @planned — Not yet emitted by ARCHITECTUS. Will be wired when collision physics are implemented. */
 export interface CollisionDetectedEvent {
   entityId: string;
   collidedWith: string;
@@ -346,11 +418,97 @@ export interface SegmentDistilledEvent {
   assets: SegmentAssets;
 }
 
-export interface SegmentEnteredEvent {
-  segmentId: string;
-  phase: string;
-  mood: string;
+// ── Build-time Event Payloads ─────────────────────────────────
+
+export interface ParseCompleteEvent {
+  files: ParsedFile[];
 }
+
+export interface ShadersCompiledEvent {
+  shaders: SDFShader[];
+}
+
+/** Palette generation emits the palette directly. */
+export type PaletteGeneratedEvent = ProceduralPalette;
+
+export interface StatePersistedEvent {
+  key: string;
+  timestamp: number;
+  size: number;
+}
+
+// Re-export MycologyCatalogedEvent from types (already defined there)
+export type { MycologyCatalogedEvent };
+
+// ── Build Event Map ──────────────────────────────────────────────
+
+/** Maps build-time event string literals to their payload types. */
+export interface BuildEventMap {
+  'build:parse:complete': ParseCompleteEvent;
+  'build:shaders:compiled': ShadersCompiledEvent;
+  'build:palette:generated': PaletteGeneratedEvent;
+  'build:mycology:cataloged': MycologyCatalogedEvent;
+  'build:storyarc:derived': StoryArcDerivedEvent;
+  'build:segment:distilled': SegmentDistilledEvent;
+}
+
+// ── Runtime Event Map ────────────────────────────────────────────
+
+/** Maps runtime event string literals to their payload types. */
+export interface RuntimeEventMap {
+  // ARCHITECTUS → LUDUS (Spatial events)
+  'player:moved': PlayerMovedEvent;
+  'branch:entered': BranchEnteredEvent;
+  'node:clicked': NodeClickedEvent;
+  'collision:detected': CollisionDetectedEvent;
+
+  // LUDUS → ARCHITECTUS (Feedback events)
+  'encounter:triggered': EncounterTriggeredEvent;
+  'damage:dealt': DamageDealtEvent;
+
+  // LUDUS → OCULUS (UI updates)
+  'health:changed': HealthChangedEvent;
+  'mana:changed': ManaChangedEvent;
+  'quest:updated': QuestUpdatedEvent;
+  'combat:started': CombatStartedEvent;
+  'combat:ended': CombatEndedEvent;
+
+  // LUDUS combat granularity
+  'combat:turn:start': CombatTurnEvent;
+  'combat:turn:end': CombatTurnEvent;
+  'spell:resolved': SpellResolvedEvent;
+  'status:applied': StatusEffectEvent;
+  'status:expired': StatusEffectEvent;
+  'experience:gained': ExperienceGainedEvent;
+  'level:up': LevelUpEvent;
+  'loot:dropped': LootDroppedEvent;
+
+  // OCULUS → LUDUS (User actions)
+  'spell:cast': SpellCastEvent;
+  'item:used': ItemUsedEvent;
+  'combat:action': CombatActionEvent;
+
+  // CHRONOS → all (Topology — dual lifecycle)
+  'topology:generated': TopologyGeneratedEvent;
+
+  // OPERATUS → all (Infrastructure events)
+  'assets:loaded': AssetsLoadedEvent;
+  'state:persisted': StatePersistedEvent;
+  'cache:updated': CacheUpdatedEvent;
+  'save:completed': SaveCompletedEvent;
+
+  // Lifecycle triggers (all → OPERATUS)
+  'game:started': GameStartedEvent;
+  'level:loaded': LevelLoadedEvent;
+}
+
+// ── Combined Event Map ───────────────────────────────────────────
+
+/**
+ * Full event map — all build-time and runtime events.
+ * Used by EventBus typed overloads.
+ */
+export interface EventMap extends BuildEventMap, RuntimeEventMap {}
 
 // Global singleton (lazy initialization)
 let globalEventBus: EventBus | null = null;

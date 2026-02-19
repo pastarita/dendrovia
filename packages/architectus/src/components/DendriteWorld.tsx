@@ -3,7 +3,6 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { FileTreeNode, Hotspot, ProceduralPalette, LSystemRule, StoryArc } from '@dendrovia/shared';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { BranchEnteredEvent, EncounterTriggeredEvent, DamageDealtEvent } from '@dendrovia/shared';
 import { LSystem } from '../systems/LSystem';
 import { TurtleInterpreter } from '../systems/TurtleInterpreter';
 import { SpatialIndex } from '../systems/SpatialIndex';
@@ -88,7 +87,7 @@ function BranchTracker({ spatialIndex }: { spatialIndex: SpatialIndex }) {
     if (newBranchId !== currentBranchId) {
       useRendererStore.getState().setPlayerBranch(newBranchId);
 
-      getEventBus().emit<BranchEnteredEvent>(GameEvents.BRANCH_ENTERED, {
+      getEventBus().emit(GameEvents.BRANCH_ENTERED, {
         branchId: newBranchId,
         filePath: closestNode.path,
         depth: closestNode.depth,
@@ -199,7 +198,7 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     const store = useRendererStore.getState;
 
     // ENCOUNTER_TRIGGERED → emissive pulse on target node
-    const unsubEncounter = bus.on<EncounterTriggeredEvent>(
+    const unsubEncounter = bus.on(
       GameEvents.ENCOUNTER_TRIGGERED,
       (event) => {
         // Use the nearest node to the encounter position as the target
@@ -215,7 +214,7 @@ export function DendriteWorld({ topology, hotspots = [], palette, lsystemOverrid
     );
 
     // DAMAGE_DEALT → particle burst at impact position
-    const unsubDamage = bus.on<DamageDealtEvent>(
+    const unsubDamage = bus.on(
       GameEvents.DAMAGE_DEALT,
       (event) => {
         // DamageDealtEvent has no position — use encounter node position or camera

@@ -13,7 +13,6 @@ import {
   getSpell,
 } from '@dendrovia/ludus';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
-import type { CombatStartedEvent, CombatEndedEvent, HealthChangedEvent, ManaChangedEvent } from '@dendrovia/shared';
 import PlayerCard from './components/PlayerCard';
 import EnemyCard from './components/EnemyCard';
 import ActionPanel from './components/ActionPanel';
@@ -86,7 +85,7 @@ export default function GymClient(): React.JSX.Element {
 
     // Emit combat started event
     const bus = getEventBus();
-    bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
+    bus.emit(GameEvents.COMBAT_STARTED, {
       monsterId: monster.id,
       monsterName: monster.name,
       monsterType: monster.type,
@@ -102,7 +101,7 @@ export default function GymClient(): React.JSX.Element {
     // Emit health/mana changed events
     const bus = getEventBus();
     if (newState.player.stats.health !== battleState.player.stats.health) {
-      bus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
+      bus.emit(GameEvents.HEALTH_CHANGED, {
         entityId: newState.player.id,
         current: newState.player.stats.health,
         max: newState.player.stats.maxHealth,
@@ -110,7 +109,7 @@ export default function GymClient(): React.JSX.Element {
       });
     }
     if (newState.player.stats.mana !== battleState.player.stats.mana) {
-      bus.emit<ManaChangedEvent>(GameEvents.MANA_CHANGED, {
+      bus.emit(GameEvents.MANA_CHANGED, {
         entityId: newState.player.id,
         current: newState.player.stats.mana,
         max: newState.player.stats.maxMana,
@@ -120,7 +119,7 @@ export default function GymClient(): React.JSX.Element {
 
     // If terminal, emit combat ended
     if (newState.phase.type === 'VICTORY' || newState.phase.type === 'DEFEAT') {
-      bus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, {
+      bus.emit(GameEvents.COMBAT_ENDED, {
         outcome: newState.phase.type === 'VICTORY' ? 'victory' : 'defeat',
         turns: newState.turn,
         xpGained: newState.phase.type === 'VICTORY' ? newState.phase.xpGained : undefined,

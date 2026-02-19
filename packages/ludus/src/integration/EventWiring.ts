@@ -30,22 +30,11 @@ import {
   EventBus,
   getEventBus,
   GameEvents,
-  type PlayerMovedEvent,
   type NodeClickedEvent,
+  type PlayerMovedEvent,
   type BranchEnteredEvent,
   type SpellCastEvent,
-  type CombatStartedEvent,
-  type CombatEndedEvent,
-  type EncounterTriggeredEvent,
-  type LootDroppedEvent,
-  type ExperienceGainedEvent,
-  type LevelUpEvent,
   type ItemUsedEvent,
-  type CombatActionEvent,
-  type CombatTurnEvent,
-  type DamageDealtEvent,
-  type SpellResolvedEvent,
-  type StatusEffectEvent,
 } from '@dendrovia/shared';
 import { type GameStore, type GameState } from '../state/GameStore';
 import { initBattle, executeTurn } from '../combat/TurnBasedEngine';
@@ -138,35 +127,35 @@ export function wireGameEvents(session: GameSession): () => void {
 
   // ── ARCHITECTUS → LUDUS: Player moved to a new location ──
 
-  unsubs.push(bus.on<NodeClickedEvent>(GameEvents.NODE_CLICKED, (event) => {
+  unsubs.push(bus.on(GameEvents.NODE_CLICKED, (event) => {
     handleNodeClicked(session, event, bus);
   }));
 
-  unsubs.push(bus.on<PlayerMovedEvent>(GameEvents.PLAYER_MOVED, (event) => {
+  unsubs.push(bus.on(GameEvents.PLAYER_MOVED, (event) => {
     handlePlayerMoved(session, event, bus);
   }));
 
   // ── OCULUS → LUDUS: Player casts a spell in combat ──
 
-  unsubs.push(bus.on<SpellCastEvent>(GameEvents.SPELL_CAST, (event) => {
+  unsubs.push(bus.on(GameEvents.SPELL_CAST, (event) => {
     handleSpellCast(session, event, bus);
   }));
 
   // ── OCULUS → LUDUS: Player uses an item ──
 
-  unsubs.push(bus.on<ItemUsedEvent>(GameEvents.ITEM_USED, (event) => {
+  unsubs.push(bus.on(GameEvents.ITEM_USED, (event) => {
     handleItemUsed(session, event, bus);
   }));
 
   // ── ARCHITECTUS → LUDUS: Player enters a branch ──
 
-  unsubs.push(bus.on<BranchEnteredEvent>(GameEvents.BRANCH_ENTERED, (event) => {
+  unsubs.push(bus.on(GameEvents.BRANCH_ENTERED, (event) => {
     handleBranchEntered(session, event, bus);
   }));
 
   // ── Any pillar → LUDUS: Generic combat action ──
 
-  unsubs.push(bus.on<CombatActionEvent>(GameEvents.COMBAT_ACTION, (event) => {
+  unsubs.push(bus.on(GameEvents.COMBAT_ACTION, (event) => {
     dispatchCombatAction(session, event.action);
   }));
 
@@ -200,7 +189,7 @@ function handleNodeClicked(
 
   if (result.encounter) {
     // Emit encounter trigger for ARCHITECTUS visual feedback
-    bus.emit<EncounterTriggeredEvent>(GameEvents.ENCOUNTER_TRIGGERED, {
+    bus.emit(GameEvents.ENCOUNTER_TRIGGERED, {
       type: result.encounter.type,
       severity: result.encounter.monster.severity,
       position: event.position,
@@ -212,7 +201,7 @@ function handleNodeClicked(
     session.store.setState({ battleState });
     session.currentBattleCombatEvents = [];
 
-    bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
+    bus.emit(GameEvents.COMBAT_STARTED, {
       monsterId: result.encounter.monster.id,
       monsterName: result.encounter.monster.name,
       monsterType: result.encounter.monster.type,
@@ -261,7 +250,7 @@ function handleBranchEntered(
   session.rng = result.rng;
 
   if (result.encounter) {
-    bus.emit<EncounterTriggeredEvent>(GameEvents.ENCOUNTER_TRIGGERED, {
+    bus.emit(GameEvents.ENCOUNTER_TRIGGERED, {
       type: result.encounter.type,
       severity: result.encounter.monster.severity,
       position: [0, 0, 0],
@@ -271,7 +260,7 @@ function handleBranchEntered(
     session.store.setState({ battleState });
     session.currentBattleCombatEvents = [];
 
-    bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
+    bus.emit(GameEvents.COMBAT_STARTED, {
       monsterId: result.encounter.monster.id,
       monsterName: result.encounter.monster.name,
       monsterType: result.encounter.monster.type,
@@ -342,19 +331,19 @@ function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: Gam
   for (const event of battleState.combatEvents) {
     switch (event.type) {
       case 'TURN_START':
-        bus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, {
+        bus.emit(GameEvents.COMBAT_TURN_START, {
           turn: event.turn,
           phase: event.phase,
         });
         break;
       case 'TURN_END':
-        bus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_END, {
+        bus.emit(GameEvents.COMBAT_TURN_END, {
           turn: event.turn,
           phase: event.phase,
         });
         break;
       case 'DAMAGE':
-        bus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
+        bus.emit(GameEvents.DAMAGE_DEALT, {
           attackerId: event.attackerId,
           targetId: event.targetId,
           damage: event.damage,
@@ -363,7 +352,7 @@ function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: Gam
         });
         break;
       case 'SPELL':
-        bus.emit<SpellResolvedEvent>(GameEvents.SPELL_RESOLVED, {
+        bus.emit(GameEvents.SPELL_RESOLVED, {
           spellId: event.spellId,
           casterId: event.casterId,
           targetId: event.targetId,
@@ -372,7 +361,7 @@ function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: Gam
         });
         break;
       case 'STATUS_APPLIED':
-        bus.emit<StatusEffectEvent>(GameEvents.STATUS_EFFECT_APPLIED, {
+        bus.emit(GameEvents.STATUS_EFFECT_APPLIED, {
           targetId: event.targetId,
           effectId: event.effectId,
           effectType: event.effectType,
@@ -380,7 +369,7 @@ function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: Gam
         });
         break;
       case 'STATUS_EXPIRED':
-        bus.emit<StatusEffectEvent>(GameEvents.STATUS_EFFECT_EXPIRED, {
+        bus.emit(GameEvents.STATUS_EFFECT_EXPIRED, {
           targetId: event.targetId,
           effectId: event.effectId,
           effectType: event.effectType,
@@ -444,14 +433,14 @@ function checkBattleEnd(
       }
 
       // Emit events
-      bus.emit<ExperienceGainedEvent>(GameEvents.EXPERIENCE_GAINED, {
+      bus.emit(GameEvents.EXPERIENCE_GAINED, {
         characterId: progression.character.id,
         amount: rewardResult.rewards.xp,
         totalExperience: progression.character.experience,
       });
 
       if (progression.levelUpResult.leveledUp) {
-        bus.emit<LevelUpEvent>(GameEvents.LEVEL_UP, {
+        bus.emit(GameEvents.LEVEL_UP, {
           characterId: progression.character.id,
           newLevel: progression.character.level,
           statChanges: {
@@ -464,7 +453,7 @@ function checkBattleEnd(
       }
 
       if (rewardResult.rewards.lootItems.length > 0) {
-        bus.emit<LootDroppedEvent>(GameEvents.LOOT_DROPPED, {
+        bus.emit(GameEvents.LOOT_DROPPED, {
           monsterId: battleState.enemies[0].id,
           items: rewardResult.rewards.lootItems.map(id => ({ itemId: id, name: id })),
         });
@@ -476,7 +465,7 @@ function checkBattleEnd(
     session.battleStats = updateBattleStatistics(session.battleStats, battleState, null, session.currentBattleCombatEvents);
   }
 
-  bus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, {
+  bus.emit(GameEvents.COMBAT_ENDED, {
     outcome: battleState.phase.type === 'VICTORY' ? 'victory' : 'defeat',
     turns: battleState.turn,
     xpGained: battleState.phase.type === 'VICTORY' ? battleState.phase.xpGained : undefined,
@@ -516,7 +505,7 @@ export function startBattle(
   session.currentBattleCombatEvents = [];
 
   const bus = getEventBus();
-  bus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
+  bus.emit(GameEvents.COMBAT_STARTED, {
     monsterId: enemies[0].id,
     monsterName: enemies[0].name,
     monsterType: enemies[0].type,

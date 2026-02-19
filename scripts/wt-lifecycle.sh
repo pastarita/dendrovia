@@ -7,9 +7,10 @@ set -euo pipefail
 # or get promoted to worktrees for branch isolation.
 #
 # Usage:
-#   scripts/wt-lifecycle.sh new <PILLAR> <branch>   # Switch pillar to worktree on branch
-#   scripts/wt-lifecycle.sh release <PILLAR>         # Switch pillar back to symlink
-#   scripts/wt-lifecycle.sh status                   # Show all pillars' state
+#   scripts/wt-lifecycle.sh new <PILLAR> <branch>    # Switch pillar to worktree on branch
+#   scripts/wt-lifecycle.sh release <PILLAR>          # Switch pillar back to symlink
+#   scripts/wt-lifecycle.sh rebranch <PILLAR> <name>  # Rename current worktree branch
+#   scripts/wt-lifecycle.sh status                    # Show all pillars' state
 
 DENROOT="${DENROOT:-$HOME/denroot}"
 CANONICAL_PILLAR="OPERATUS"
@@ -186,6 +187,59 @@ cmd_release() {
   info "Done. $pillar is back on canonical (follows $CANONICAL_PILLAR)."
 }
 
+cmd_rebranch() {
+  local pillar_raw="${1:-}"
+  local new_name="${2:-}"
+
+  [[ -n "$pillar_raw" ]] || fail "Usage: wt-lifecycle.sh rebranch <PILLAR> <new-branch-name>"
+  [[ -n "$new_name" ]]   || fail "Usage: wt-lifecycle.sh rebranch <PILLAR> <new-branch-name>"
+
+  local pillar
+  pillar=$(validate_pillar "$pillar_raw")
+  local target="$DENROOT/$pillar/dendrovia"
+
+  # OPERATUS: standard rename on canonical
+  if [[ "$pillar" == "$CANONICAL_PILLAR" ]]; then
+    [[ -d "$CANONICAL/.git" ]] || fail "Canonical repo not found at $CANONICAL"
+    local current
+    current=$(git -C "$CANONICAL" rev-parse --abbrev-ref HEAD 2>/dev/null)
+    git -C "$CANONICAL" branch -m "$current" "$new_name"
+    info "Done. $CANONICAL_PILLAR branch renamed: $current → $new_name"
+    info "Note: all symlinked pillars now see branch $new_name"
+    return 0
+  fi
+
+  # Must be a worktree (not a symlink)
+  if [[ -L "$target" ]]; then
+    fail "$pillar is a symlink — nothing to rename. Use 'wt:new $pillar <branch>' to create a worktree first."
+  fi
+  if [[ ! -f "$target/.git" ]]; then
+    fail "$target is not a worktree. Cannot rebranch."
+  fi
+
+  local current
+  current=$(git -C "$target" rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+  if [[ "$current" == "$new_name" ]]; then
+    info "$pillar is already on branch $new_name — nothing to do"
+    return 0
+  fi
+
+  # Check new name isn't already taken by a different branch
+  if branch_exists_local "$new_name"; then
+    fail "Branch '$new_name' already exists locally (on a different worktree or detached). Pick a different name."
+  fi
+
+  # Rename the branch
+  git -C "$target" branch -m "$current" "$new_name"
+  info "Done. $pillar branch renamed: $current → $new_name"
+
+  # If the old branch was tracking a remote, update the upstream
+  if git -C "$target" config "branch.$new_name.remote" >/dev/null 2>&1; then
+    info "Note: upstream tracking preserved. Push with: git push -u origin $new_name"
+  fi
+}
+
 cmd_status() {
   echo "Dendrovia worktree status:"
   echo ""
@@ -221,16 +275,18 @@ cmd_status() {
 CMD="${1:-}"
 
 case "$CMD" in
-  new)      shift; cmd_new "$@" ;;
-  release)  shift; cmd_release "$@" ;;
-  status)   cmd_status ;;
+  new)       shift; cmd_new "$@" ;;
+  release)   shift; cmd_release "$@" ;;
+  rebranch)  shift; cmd_rebranch "$@" ;;
+  status)    cmd_status ;;
   *)
     echo "Usage: wt-lifecycle.sh <command> [args]"
     echo ""
     echo "Commands:"
-    echo "  new <PILLAR> <branch>   Create worktree (or git switch for $CANONICAL_PILLAR)"
-    echo "  release <PILLAR>        Remove worktree and restore symlink (or switch to main)"
-    echo "  status                  Show all pillars' worktree/symlink state"
+    echo "  new <PILLAR> <branch>        Create worktree (or git switch for $CANONICAL_PILLAR)"
+    echo "  release <PILLAR>             Remove worktree and restore symlink (or switch to main)"
+    echo "  rebranch <PILLAR> <new-name> Rename the current worktree branch"
+    echo "  status                       Show all pillars' worktree/symlink state"
     echo ""
     echo "Canonical host: $CANONICAL_PILLAR ($CANONICAL)"
     exit 1

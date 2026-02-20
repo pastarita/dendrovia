@@ -33,7 +33,7 @@ import { CacheManager } from './cache/CacheManager';
 const log = createLogger('OPERATUS', 'init');
 import { AssetLoader } from './loader/AssetLoader';
 import { CDNLoader, type CDNConfig } from './loader/CDNLoader';
-import { useGameStore, waitForHydration } from './persistence/GameStore';
+import { useSaveStateStore, waitForHydration } from './persistence/SaveStateStore';
 import { validateManifestStructure, type ManifestHealthReport } from './manifest/ManifestHealth';
 import { MeshFactory } from './mesh/MeshFactory';
 import { AutoSave, type AutoSaveConfig } from './persistence/AutoSave';
@@ -245,8 +245,8 @@ export async function initializeOperatus(
   });
 
   // LEVEL_LOADED → preload zone-specific assets
-  const unsubLevelLoaded = eventBus.on(GameEvents.LEVEL_LOADED, async (data: any) => {
-    const paths: string[] = data?.assetPaths ?? [];
+  const unsubLevelLoaded = eventBus.on(GameEvents.LEVEL_LOADED, async (data) => {
+    const paths: string[] = data.assetPaths ?? [];
     if (paths.length > 0) {
       try {
         await assetLoader.preload(paths);

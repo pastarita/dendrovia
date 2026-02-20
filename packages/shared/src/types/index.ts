@@ -212,9 +212,31 @@ export interface DendriteConfig {
   scale: number;
 }
 
+/**
+ * Fine-grained camera mode — ARCHITECTUS owns the 4-value enum.
+ * Use CoarseCameraMode for persistence (OPERATUS) and UI toggles (OCULUS).
+ */
+export type CameraMode = 'falcon' | 'player-1p' | 'player-3p' | 'spectator';
+
+/**
+ * Coarse camera mode — 2 values for persistence and UI.
+ * Maps to CameraMode via toCoarseCameraMode / fromCoarseCameraMode.
+ */
+export type CoarseCameraMode = 'falcon' | 'player';
+
+/** Collapse a fine-grained CameraMode to its coarse equivalent. */
+export function toCoarseCameraMode(mode: CameraMode): CoarseCameraMode {
+  return mode === 'falcon' ? 'falcon' : 'player';
+}
+
+/** Expand a coarse mode to the default fine-grained mode. */
+export function fromCoarseCameraMode(mode: CoarseCameraMode): CameraMode {
+  return mode === 'falcon' ? 'falcon' : 'player-3p';
+}
+
 export interface GameWorldState {
   playerPosition: [number, number, number];
-  cameraMode: 'falcon' | 'player';
+  cameraMode: CoarseCameraMode;
   currentBranch: string;
   visitedNodes: string[];
 }
@@ -578,8 +600,8 @@ export interface GameSaveState {
   unlockedKnowledge: string[];
   inventory: Item[];
   gameFlags: Record<string, boolean>;
-  worldPosition: [number, number, number];
-  cameraMode: 'falcon' | 'player';
+  playerPosition: [number, number, number];
+  cameraMode: CoarseCameraMode;
   playtimeMs: number;
 }
 

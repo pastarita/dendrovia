@@ -52,9 +52,9 @@ export {
   exportSave,
   importSave,
   SAVE_VERSION,
-  useGameStore,
+  useSaveStateStore,
   waitForHydration,
-  getGameSaveSnapshot,
+  getSaveStateSnapshot,
   AutoSave,
   StateAdapter,
 } from './persistence/index';
@@ -62,7 +62,7 @@ export type {
   PersistenceConfig,
   MigrationFn,
   SaveSlot,
-  GameStoreState,
+  SaveStateStoreState,
   AutoSaveConfig,
   StateAdapterConfig,
 } from './persistence/index';

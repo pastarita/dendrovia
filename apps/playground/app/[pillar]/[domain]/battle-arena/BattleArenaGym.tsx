@@ -11,15 +11,7 @@
 
 import { useState, useCallback } from 'react';
 import { GameEvents } from '@dendrovia/shared';
-import type {
-  CombatStartedEvent,
-  CombatEndedEvent,
-  DamageDealtEvent,
-  HealthChangedEvent,
-  CombatTurnEvent,
-  SpellResolvedEvent,
-  EventBus,
-} from '@dendrovia/shared';
+import type { EventBus } from '@dendrovia/shared';
 import { HUD, useOculusStore } from '@dendrovia/oculus';
 import { GymShell, GymControlPanel } from '../_gym-kit';
 import type { GymPageConfig } from '../_gym-kit';
@@ -62,10 +54,10 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     setEnemyHp(100);
     setPlayerHp(100);
     const name = ENEMY_NAMES[Math.floor(Math.random() * ENEMY_NAMES.length)] ?? 'NullPointerBug';
-    eventBus.emit<CombatStartedEvent>(GameEvents.COMBAT_STARTED, {
+    eventBus.emit(GameEvents.COMBAT_STARTED, {
       monsterId: 'arena-enemy', monsterName: name, monsterType: 'null-pointer', severity: 3,
     });
-    eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
+    eventBus.emit(GameEvents.HEALTH_CHANGED, {
       entityId: 'player', current: 100, max: 100, delta: 0,
     });
   }, [eventBus]);
@@ -74,47 +66,47 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     const newTurn = turn + 1;
     setTurn(newTurn);
 
-    eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'player' });
+    eventBus.emit(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'player' });
     const dmg = 10 + Math.floor(Math.random() * 15);
     const crit = Math.random() < 0.2;
     const el = ELEMENTS[Math.floor(Math.random() * ELEMENTS.length)] ?? 'none';
-    eventBus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
+    eventBus.emit(GameEvents.DAMAGE_DEALT, {
       attackerId: 'player', targetId: 'arena-enemy', damage: crit ? dmg * 2 : dmg, isCritical: crit, element: el,
     });
     const newEnemyHp = Math.max(0, enemyHp - (crit ? dmg * 2 : dmg));
     setEnemyHp(newEnemyHp);
 
     if (newEnemyHp <= 0) {
-      eventBus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, { outcome: 'victory', turns: newTurn, xpGained: 50 });
+      eventBus.emit(GameEvents.COMBAT_ENDED, { outcome: 'victory', turns: newTurn, xpGained: 50 });
       setInCombat(false);
       return;
     }
 
-    eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'enemy' });
+    eventBus.emit(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'enemy' });
     const eDmg = 5 + Math.floor(Math.random() * 10);
-    eventBus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
+    eventBus.emit(GameEvents.DAMAGE_DEALT, {
       attackerId: 'arena-enemy', targetId: 'player', damage: eDmg, isCritical: false, element: 'none',
     });
     const newPlayerHp = Math.max(0, playerHp - eDmg);
     setPlayerHp(newPlayerHp);
-    eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
+    eventBus.emit(GameEvents.HEALTH_CHANGED, {
       entityId: 'player', current: newPlayerHp, max: 100, delta: -eDmg,
     });
 
     if (newPlayerHp <= 0) {
-      eventBus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, { outcome: 'defeat', turns: newTurn });
+      eventBus.emit(GameEvents.COMBAT_ENDED, { outcome: 'defeat', turns: newTurn });
       setInCombat(false);
     }
 
-    eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_END, { turn: newTurn, phase: 'enemy' });
+    eventBus.emit(GameEvents.COMBAT_TURN_END, { turn: newTurn, phase: 'enemy' });
   }, [eventBus, turn, enemyHp, playerHp]);
 
   const castSpell = useCallback(() => {
     const newTurn = turn + 1;
     setTurn(newTurn);
 
-    eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'player' });
-    eventBus.emit<SpellResolvedEvent>(GameEvents.SPELL_RESOLVED, {
+    eventBus.emit(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'player' });
+    eventBus.emit(GameEvents.SPELL_RESOLVED, {
       spellId: 'git-bisect', casterId: 'player', targetId: 'arena-enemy', effectType: 'damage', value: 30,
     });
 
@@ -122,28 +114,28 @@ function ArenaControls({ eventBus }: { eventBus: EventBus }) {
     setEnemyHp(newEnemyHp);
 
     if (newEnemyHp <= 0) {
-      eventBus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, { outcome: 'victory', turns: newTurn, xpGained: 75 });
+      eventBus.emit(GameEvents.COMBAT_ENDED, { outcome: 'victory', turns: newTurn, xpGained: 75 });
       setInCombat(false);
       return;
     }
 
-    eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'enemy' });
+    eventBus.emit(GameEvents.COMBAT_TURN_START, { turn: newTurn, phase: 'enemy' });
     const eDmg = 8 + Math.floor(Math.random() * 8);
-    eventBus.emit<DamageDealtEvent>(GameEvents.DAMAGE_DEALT, {
+    eventBus.emit(GameEvents.DAMAGE_DEALT, {
       attackerId: 'arena-enemy', targetId: 'player', damage: eDmg, isCritical: false, element: 'none',
     });
     const newPlayerHp = Math.max(0, playerHp - eDmg);
     setPlayerHp(newPlayerHp);
-    eventBus.emit<HealthChangedEvent>(GameEvents.HEALTH_CHANGED, {
+    eventBus.emit(GameEvents.HEALTH_CHANGED, {
       entityId: 'player', current: newPlayerHp, max: 100, delta: -eDmg,
     });
 
     if (newPlayerHp <= 0) {
-      eventBus.emit<CombatEndedEvent>(GameEvents.COMBAT_ENDED, { outcome: 'defeat', turns: newTurn });
+      eventBus.emit(GameEvents.COMBAT_ENDED, { outcome: 'defeat', turns: newTurn });
       setInCombat(false);
     }
 
-    eventBus.emit<CombatTurnEvent>(GameEvents.COMBAT_TURN_END, { turn: newTurn, phase: 'enemy' });
+    eventBus.emit(GameEvents.COMBAT_TURN_END, { turn: newTurn, phase: 'enemy' });
   }, [eventBus, turn, enemyHp, playerHp]);
 
   const btnStyle = { padding: '0.5rem 1rem', border: '1px solid #444', borderRadius: 4, background: 'transparent', color: 'inherit', cursor: 'pointer', fontSize: '0.85rem' } as const;

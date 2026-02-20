@@ -8,13 +8,14 @@
 
 import React from 'react';
 import { useOculusStore } from '../store/useOculusStore';
+import { useRendererStore } from '@dendrovia/architectus';
 import { Panel } from './primitives/Panel';
 import { StatLabel } from './primitives/StatLabel';
 
 export function WorldHeader() {
   const worldMeta = useOculusStore((s) => s.worldMeta);
-  const fps = useOculusStore((s) => s.fps);
-  const qualityTier = useOculusStore((s) => s.qualityTier);
+  const fps = useRendererStore((s) => s.fps);
+  const qualityTier = useRendererStore((s) => s.qualityTier);
   const cameraMode = useOculusStore((s) => s.cameraMode);
 
   return (

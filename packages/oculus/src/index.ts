@@ -18,7 +18,7 @@ export type {
   OculusActions,
   OculusStore,
   ActivePanel,
-  CameraMode,
+  CoarseCameraMode,
   BattleState,
   CodeReaderState,
   StatusEffect,

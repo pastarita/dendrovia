@@ -60,7 +60,7 @@ function StateModifier({ mod, onModify }: { mod: OperatusMod; onModify: () => vo
   const [name, setName] = useState('');
   const [flagKey, setFlagKey] = useState('');
 
-  const store = mod.useGameStore;
+  const store = mod.useSaveStateStore;
 
   useEffect(() => {
     const state = store.getState();

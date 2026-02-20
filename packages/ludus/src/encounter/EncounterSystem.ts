@@ -18,6 +18,7 @@ import type {
   Hotspot,
   RngState,
 } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import {
   generateBugMonster,
   generateBoss,
@@ -25,6 +26,8 @@ import {
 } from '../combat/MonsterFactory';
 import { rngNext, rngChance } from '../utils/SeededRandom';
 import { DEFAULT_BALANCE_CONFIG } from '../config/BalanceConfig';
+
+const log = createLogger('LUDUS', 'encounter');
 
 // ─── Configuration ──────────────────────────────────────────
 
@@ -97,6 +100,7 @@ export function checkEncounter(
   // Priority 1: Boss encounter (high complexity file)
   if (file.complexity > config.bossComplexityThreshold && !state.defeatedBosses.has(file.path)) {
     const [monster, rng1] = generateBoss(file, rng);
+    log.info({ file: file.path, complexity: file.complexity }, 'Boss encounter triggered');
     const encounter: Encounter = {
       type: 'boss',
       monster,
@@ -114,6 +118,7 @@ export function checkEncounter(
     h => h.path === file.path && h.riskScore >= config.minibossRiskThreshold && !state.defeatedMinibosses.has(h.path),
   );
   if (hotspot) {
+    log.info({ file: file.path, riskScore: hotspot.riskScore }, 'Miniboss encounter triggered');
     const [monster, rng1] = generateMiniboss(hotspot, rng);
     const encounter: Encounter = {
       type: 'miniboss',

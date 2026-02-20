@@ -9,12 +9,15 @@
 
 import React, { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react';
 import type { EventBus } from '@dendrovia/shared';
+import { createLogger } from '@dendrovia/shared/logger';
 import { useEventSubscriptions } from './hooks/useEventSubscriptions';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useCodeLoader, type CodeLoaderOptions } from './hooks/useCodeLoader';
 import { usePanelStore } from './store/usePanelStore';
 import './styles/base.css';
 import './styles/responsive.css';
+
+const log = createLogger('OCULUS', 'provider');
 
 export interface OculusConfig {
   /** Show minimap */
@@ -56,6 +59,11 @@ export function OculusProvider({ eventBus, config, children }: OculusProviderPro
     () => ({ ...defaultConfig, ...config }),
     [config]
   );
+
+  // Log initialization on mount
+  useEffect(() => {
+    log.info('OculusProvider initialized');
+  }, []);
 
   // Wire EventBus → Zustand store
   useEventSubscriptions(eventBus);

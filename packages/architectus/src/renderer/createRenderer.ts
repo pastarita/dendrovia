@@ -10,7 +10,10 @@
  * Phase 2 (D9): TSL-based post-processing for WebGPU path.
  */
 
+import { createLogger } from '@dendrovia/shared/logger';
 import type { GPUCapabilities } from './detectGPU';
+
+const log = createLogger('ARCHITECTUS', 'renderer');
 
 /**
  * Configuration for the renderer factory.
@@ -54,7 +57,7 @@ export async function createWebGPURenderer(config: RendererConfig) {
       await renderer.init();
       return renderer;
     } catch (err) {
-      console.warn('[ARCHITECTUS] WebGPU renderer init failed, falling back to WebGL2:', err);
+      log.warn({ err }, 'WebGPU renderer init failed, falling back to WebGL2');
       // Fall through to WebGL2
     }
   }

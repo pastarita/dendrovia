@@ -114,7 +114,7 @@ export function collectAutoSave(autoSave: AutoSave): RuntimeNodeState {
   };
 }
 
-export function collectGameStore(
+export function collectSaveStateStore(
   getState: () => { character: { stats: { health: number }; level: number }; visitedNodes: Set<string>; playtimeMs: number }
 ): RuntimeNodeState {
   const state = getState();

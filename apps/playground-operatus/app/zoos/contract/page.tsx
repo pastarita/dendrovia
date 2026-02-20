@@ -33,11 +33,11 @@ const EXPECTED_EXPORTS = {
     functions: [
       "createDendroviaStorage", "registerMigration", "listSaveSlots",
       "deleteSaveSlot", "exportSave", "importSave", "SAVE_VERSION",
-      "useGameStore", "waitForHydration", "getGameSaveSnapshot",
+      "useSaveStateStore", "waitForHydration", "getSaveStateSnapshot",
       "AutoSave", "StateAdapter",
     ],
     types: [
-      "PersistenceConfig", "MigrationFn", "SaveSlot", "GameStoreState",
+      "PersistenceConfig", "MigrationFn", "SaveSlot", "SaveStateStoreState",
       "AutoSaveConfig", "StateAdapterConfig",
     ],
   },

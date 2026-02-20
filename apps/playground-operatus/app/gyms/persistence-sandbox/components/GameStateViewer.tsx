@@ -10,7 +10,7 @@ export function GameStateViewer({ mod, refreshKey }: { mod: OperatusMod; refresh
 
   useEffect(() => {
     const update = () => {
-      const raw = mod.useGameStore.getState();
+      const raw = mod.useSaveStateStore.getState();
       // Filter out functions and transient state for display
       const display: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(raw)) {
@@ -28,7 +28,7 @@ export function GameStateViewer({ mod, refreshKey }: { mod: OperatusMod; refresh
     };
 
     update();
-    const unsub = mod.useGameStore.subscribe(update);
+    const unsub = mod.useSaveStateStore.subscribe(update);
     return () => unsub();
   }, [mod, refreshKey]);
 

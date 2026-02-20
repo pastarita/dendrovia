@@ -9,8 +9,8 @@ export {
 } from './StatePersistence';
 export type { PersistenceConfig, MigrationFn, SaveSlot } from './StatePersistence';
 
-export { useGameStore, waitForHydration, getGameSaveSnapshot } from './GameStore';
-export type { GameStoreState } from './GameStore';
+export { useSaveStateStore, waitForHydration, getSaveStateSnapshot } from './SaveStateStore';
+export type { SaveStateStoreState } from './SaveStateStore';
 
 export { AutoSave } from './AutoSave';
 export type { AutoSaveConfig } from './AutoSave';

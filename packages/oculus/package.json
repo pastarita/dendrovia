@@ -17,11 +17,15 @@
     "zustand": "^5.0.2"
   },
   "peerDependencies": {
+    "@dendrovia/architectus": "workspace:*",
     "@react-three/drei": ">=9.0.0",
     "@react-three/fiber": ">=8.0.0",
     "three": ">=0.150.0"
   },
   "peerDependenciesMeta": {
+    "@dendrovia/architectus": {
+      "optional": true
+    },
     "@react-three/drei": {
       "optional": true
     },

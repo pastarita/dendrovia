@@ -12,7 +12,7 @@
 
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { createLogger } from '@dendrovia/shared/logger';
-import { useGameStore, getGameSaveSnapshot } from './GameStore';
+import { useSaveStateStore, getSaveStateSnapshot } from './SaveStateStore';
 
 const log = createLogger('OPERATUS', 'autosave');
 
@@ -112,8 +112,8 @@ export class AutoSave {
     try {
       // Force persist middleware to write current state
       // Touch state to trigger persist write
-      const state = useGameStore.getState();
-      useGameStore.setState({ character: { ...state.character } });
+      const state = useSaveStateStore.getState();
+      useSaveStateStore.setState({ character: { ...state.character } });
 
       // Emit SAVE_COMPLETED (fire-and-forget)
       const eventBus = getEventBus();
@@ -174,8 +174,8 @@ export class AutoSave {
     const eventBus = getEventBus();
 
     // Save on quest completion
-    const unsubQuest = eventBus.on(GameEvents.QUEST_UPDATED, (data: any) => {
-      if (data?.status === 'completed') {
+    const unsubQuest = eventBus.on(GameEvents.QUEST_UPDATED, (data) => {
+      if (data.status === 'completed') {
         this.save('quest-completed');
       }
     });
@@ -199,7 +199,7 @@ export class AutoSave {
     // IndexedDB is async and may not complete before tab closes,
     // so localStorage is the last resort.
     try {
-      const snapshot = getGameSaveSnapshot();
+      const snapshot = getSaveStateSnapshot();
       localStorage.setItem(
         this.config.emergencyKey,
         JSON.stringify(snapshot),

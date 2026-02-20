@@ -8,31 +8,16 @@
  */
 
 import { useEffect } from 'react';
+import { createLogger } from '@dendrovia/shared/logger';
 import {
   type EventBus,
   GameEvents,
-  type NodeClickedEvent,
-  type PlayerMovedEvent,
-  type QuestUpdatedEvent,
-  type HealthChangedEvent,
-  type ManaChangedEvent,
-  type DamageDealtEvent,
-  type CombatStartedEvent,
-  type CombatEndedEvent,
-  type CombatTurnEvent,
-  type SpellResolvedEvent,
-  type ExperienceGainedEvent,
-  type LevelUpEvent,
-  type TopologyGeneratedEvent,
-  type ItemUsedEvent,
-  type CollisionDetectedEvent,
-  type EncounterTriggeredEvent,
-  type StatusEffectEvent,
-  type LootDroppedEvent,
   type BugType,
 } from '@dendrovia/shared';
 import type { Bug } from '@dendrovia/shared';
 import { useOculusStore } from '../store/useOculusStore';
+
+const log = createLogger('OCULUS', 'events');
 
 /** Map file extension to language name for CodeReader */
 const EXT_LANG: Record<string, string> = {
@@ -55,7 +40,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T01: Health changes (uses HealthChangedEvent contract) ──
     unsubs.push(
-      eventBus.on<HealthChangedEvent>(
+      eventBus.on(
         GameEvents.HEALTH_CHANGED,
         (data) => store.getState().setHealth(data.current, data.max)
       )
@@ -63,7 +48,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T02: Mana changes (uses ManaChangedEvent contract) ──
     unsubs.push(
-      eventBus.on<ManaChangedEvent>(
+      eventBus.on(
         GameEvents.MANA_CHANGED,
         (data) => store.getState().setMana(data.current, data.max)
       )
@@ -71,7 +56,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T10: Quest updates (maps event status → Quest status) ──
     unsubs.push(
-      eventBus.on<QuestUpdatedEvent>(
+      eventBus.on(
         GameEvents.QUEST_UPDATED,
         (data) => {
           // QuestUpdatedEvent uses 'started'|'in-progress'|'completed'
@@ -84,7 +69,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T05: Combat started (constructs Bug from CombatStartedEvent) ──
     unsubs.push(
-      eventBus.on<CombatStartedEvent>(
+      eventBus.on(
         GameEvents.COMBAT_STARTED,
         (data) => {
           const enemy: Bug = {
@@ -102,14 +87,14 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // Combat ended
     unsubs.push(
-      eventBus.on<CombatEndedEvent>(GameEvents.COMBAT_ENDED, () => {
+      eventBus.on(GameEvents.COMBAT_ENDED, () => {
         store.getState().endCombat();
       })
     );
 
     // ── T07: Combat turn phases ──
     unsubs.push(
-      eventBus.on<CombatTurnEvent>(
+      eventBus.on(
         GameEvents.COMBAT_TURN_START,
         (data) => {
           const actor = data.phase === 'player' ? 'Your' : "Enemy's";
@@ -119,7 +104,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
     );
 
     unsubs.push(
-      eventBus.on<CombatTurnEvent>(
+      eventBus.on(
         GameEvents.COMBAT_TURN_END,
         (data) => {
           store.getState().addBattleLog(`Turn ${data.turn} ended`);
@@ -129,7 +114,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T07: Spell resolved ──
     unsubs.push(
-      eventBus.on<SpellResolvedEvent>(
+      eventBus.on(
         GameEvents.SPELL_RESOLVED,
         (data) => {
           store.getState().addBattleLog(
@@ -141,7 +126,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T06: Experience gained ──
     unsubs.push(
-      eventBus.on<ExperienceGainedEvent>(
+      eventBus.on(
         GameEvents.EXPERIENCE_GAINED,
         (data) => {
           store.getState().setCharacter({ experience: data.totalExperience } as any);
@@ -151,7 +136,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T06: Level up ──
     unsubs.push(
-      eventBus.on<LevelUpEvent>(
+      eventBus.on(
         GameEvents.LEVEL_UP,
         (data) => {
           store.getState().setCharacter({ level: data.newLevel } as any);
@@ -162,7 +147,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // Player movement
     unsubs.push(
-      eventBus.on<PlayerMovedEvent>(
+      eventBus.on(
         GameEvents.PLAYER_MOVED,
         (data) => store.getState().setPlayerPosition(data.position)
       )
@@ -170,7 +155,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T08: Node clicked → open code reader ──
     unsubs.push(
-      eventBus.on<NodeClickedEvent>(
+      eventBus.on(
         GameEvents.NODE_CLICKED,
         (data) => {
           const state = store.getState();
@@ -182,7 +167,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T03: Damage dealt (uses DamageDealtEvent contract) ──
     unsubs.push(
-      eventBus.on<DamageDealtEvent>(
+      eventBus.on(
         GameEvents.DAMAGE_DEALT,
         (data) => {
           const crit = data.isCritical ? ' (CRITICAL!)' : '';
@@ -194,7 +179,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── Item used → battle log ──
     unsubs.push(
-      eventBus.on<ItemUsedEvent>(
+      eventBus.on(
         GameEvents.ITEM_USED,
         (data) => {
           store.getState().addBattleLog(`Used item: ${data.itemId}`);
@@ -204,7 +189,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── Collision detected → open code reader (mirrors NODE_CLICKED) ──
     unsubs.push(
-      eventBus.on<CollisionDetectedEvent>(
+      eventBus.on(
         GameEvents.COLLISION_DETECTED,
         (data) => {
           const state = store.getState();
@@ -216,7 +201,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── Encounter triggered → type-aware battle log ──
     unsubs.push(
-      eventBus.on<EncounterTriggeredEvent>(
+      eventBus.on(
         GameEvents.ENCOUNTER_TRIGGERED,
         (data) => {
           let msg: string;
@@ -234,7 +219,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── Status effect applied ──
     unsubs.push(
-      eventBus.on<StatusEffectEvent>(
+      eventBus.on(
         GameEvents.STATUS_EFFECT_APPLIED,
         (data) => {
           store.getState().addStatusEffect({
@@ -252,7 +237,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── Status effect expired ──
     unsubs.push(
-      eventBus.on<StatusEffectEvent>(
+      eventBus.on(
         GameEvents.STATUS_EFFECT_EXPIRED,
         (data) => {
           store.getState().removeStatusEffect(data.effectId);
@@ -263,7 +248,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── Loot dropped ──
     unsubs.push(
-      eventBus.on<LootDroppedEvent>(
+      eventBus.on(
         GameEvents.LOOT_DROPPED,
         (data) => {
           store.getState().addLootDrop({
@@ -280,7 +265,7 @@ export function useEventSubscriptions(eventBus: EventBus) {
 
     // ── T04: Topology loaded (uses TopologyGeneratedEvent contract) ──
     unsubs.push(
-      eventBus.on<TopologyGeneratedEvent>(
+      eventBus.on(
         GameEvents.TOPOLOGY_GENERATED,
         (data) => {
           if (data.tree) store.getState().setTopology(data.tree);
@@ -290,6 +275,11 @@ export function useEventSubscriptions(eventBus: EventBus) {
       )
     );
 
-    return () => unsubs.forEach((fn) => fn());
+    log.debug({ count: unsubs.length }, 'Event subscriptions wired');
+
+    return () => {
+      unsubs.forEach((fn) => fn());
+      log.debug('Event subscriptions cleaned up');
+    };
   }, [eventBus]);
 }

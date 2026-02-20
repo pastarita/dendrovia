@@ -6,7 +6,7 @@
  *   - 2 nearest neighbors → branch load (topology only)
  *   - Rest → evict data, keep hull
  *
- * Never throws — loading failures leave segments in hull state.
+ * Never throws — loading failures move segments to error state (no retry).
  */
 
 import { useSegmentStore, type SegmentState } from '../store/useSegmentStore';
@@ -85,8 +85,8 @@ async function triggerLoad(
   try {
     const result = await loadSegmentData(segmentId, manifest, manifestPath);
     if (!result) {
-      // Loading failed — revert to hull
-      useSegmentStore.getState().setSegmentLoadState(segmentId, 'hull');
+      // Loading failed — mark as error (prevents retry loops)
+      useSegmentStore.getState().setSegmentLoadState(segmentId, 'error');
       consecutiveFailures++;
       if (consecutiveFailures >= CIRCUIT_BREAKER_THRESHOLD) {
         circuitOpen = true;
@@ -106,7 +106,7 @@ async function triggerLoad(
       noise: result.noise,
     });
   } catch {
-    useSegmentStore.getState().setSegmentLoadState(segmentId, 'hull');
+    useSegmentStore.getState().setSegmentLoadState(segmentId, 'error');
   } finally {
     loadingSet.delete(segmentId);
   }

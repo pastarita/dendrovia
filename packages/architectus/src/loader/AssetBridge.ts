@@ -565,11 +565,18 @@ export async function loadSegmentData(
     return null;
   }
 
-  // Load topology, specimens, palette, lsystem, noise in parallel
-  const [topology, specimens, palette, lsystem, noise] = await Promise.all([
-    loadJson<TopologyChunk>(
-      segPaths.topology, manifestPath, loader, PRIORITY.CRITICAL, 'json',
-    ),
+  // Probe: fetch topology first — if it 404s, skip the other 4 fetches.
+  // This converts a 5-request failure into a 1-request failure.
+  const topology = await loadJson<TopologyChunk>(
+    segPaths.topology, manifestPath, loader, PRIORITY.CRITICAL, 'json',
+  );
+  if (!topology) {
+    log.debug({ segmentId }, 'Segment topology not available, skipping remaining files');
+    return null;
+  }
+
+  // Topology exists — load remaining files in parallel
+  const [specimens, palette, lsystem, noise] = await Promise.all([
     segPaths.specimens
       ? loadJson<FungalSpecimen[]>(segPaths.specimens, manifestPath, loader, PRIORITY.VISIBLE, 'json')
       : Promise.resolve(null),

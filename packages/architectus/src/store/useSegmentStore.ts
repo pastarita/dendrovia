@@ -21,7 +21,7 @@ import type {
 } from '@dendrovia/shared';
 
 /** Load state progression for a single segment. */
-export type SegmentLoadState = 'unloaded' | 'loading' | 'hull' | 'branches' | 'full';
+export type SegmentLoadState = 'unloaded' | 'loading' | 'hull' | 'branches' | 'full' | 'error';
 
 /** Per-segment data that arrives from loadSegmentData(). */
 export interface SegmentData {

@@ -4,8 +4,8 @@
  * Each factory captures a store setter and returns NodeAction[].
  */
 
-import type { NodeAction } from '../../../../lib/dendrite/types.js';
-import type { QualityTier, CameraMode } from '../store/useRendererStore.js';
+import type { NodeAction } from '../../../../lib/dendrite/types';
+import type { QualityTier, CameraMode } from '../store/useRendererStore';
 
 const ALL_TIERS: QualityTier[] = ['ultra', 'high', 'medium', 'low', 'potato'];
 

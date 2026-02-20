@@ -10,4 +10,4 @@ export {
   type ResolvedRepo,
   type Registry,
   type RegistryEntry,
-} from './RepoResolver.js';
+} from './RepoResolver';

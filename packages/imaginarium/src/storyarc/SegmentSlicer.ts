@@ -9,7 +9,7 @@
  */
 
 import type { FileTreeNode, CodeTopology, SegmentMetrics } from '@dendrovia/shared';
-import { hashString } from '../utils/hash.js';
+import { hashString } from '../utils/hash';
 
 const MIN_SEGMENT_FILES = 3;
 const MAX_SEGMENTS = 10;

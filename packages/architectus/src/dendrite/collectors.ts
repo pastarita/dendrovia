@@ -5,10 +5,10 @@
  * Each collector maps to a specific node ID in the architectus fixture.
  */
 
-import type { RuntimeNodeState } from '../../../../lib/dendrite/types.js';
-import { deriveHealth } from '../../../../lib/dendrite/health.js';
-import type { QualityTier, CameraMode } from '../store/useRendererStore.js';
-import type { GeneratedAssets } from '../loader/AssetBridge.js';
+import type { RuntimeNodeState } from '../../../../lib/dendrite/types';
+import { deriveHealth } from '../../../../lib/dendrite/health';
+import type { QualityTier, CameraMode } from '../store/useRendererStore';
+import type { GeneratedAssets } from '../loader/AssetBridge';
 
 export type { RuntimeNodeState };
 

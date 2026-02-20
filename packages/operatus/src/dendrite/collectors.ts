@@ -5,14 +5,14 @@
  * Each collector maps to a specific node ID in the operatus fixture.
  */
 
-import type { RuntimeNodeState, RuntimeHealth } from '../../../../lib/dendrite/types.js';
-import type { CacheManager } from '../cache/CacheManager.js';
-import type { AssetLoader } from '../loader/AssetLoader.js';
-import type { CDNLoader } from '../loader/CDNLoader.js';
-import type { AutoSave } from '../persistence/AutoSave.js';
-import type { CrossTabSync } from '../sync/CrossTabSync.js';
-import type { ManifestHealthReport } from '../manifest/ManifestHealth.js';
-import { deriveHealth } from './health.js';
+import type { RuntimeNodeState, RuntimeHealth } from '../../../../lib/dendrite/types';
+import type { CacheManager } from '../cache/CacheManager';
+import type { AssetLoader } from '../loader/AssetLoader';
+import type { CDNLoader } from '../loader/CDNLoader';
+import type { AutoSave } from '../persistence/AutoSave';
+import type { CrossTabSync } from '../sync/CrossTabSync';
+import type { ManifestHealthReport } from '../manifest/ManifestHealth';
+import { deriveHealth } from './health';
 
 // Re-export for convenience
 export type { RuntimeNodeState };

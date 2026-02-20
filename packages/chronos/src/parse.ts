@@ -15,7 +15,7 @@
  */
 
 import { resolve } from 'path';
-import { runPipeline } from './pipeline.js';
+import { runPipeline } from './pipeline';
 import { chronosGenerated } from '@dendrovia/shared/paths';
 import { createLogger } from '@dendrovia/shared/logger';
 

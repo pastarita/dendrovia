@@ -9,8 +9,8 @@ import { Project, type SourceFile } from 'ts-morph';
 import { statSync } from 'fs';
 import { extname } from 'path';
 import type { ParsedFile } from '@dendrovia/shared';
-import { analyzeFileComplexity, type FunctionComplexity, analyzeFunctionComplexities } from '../analyzer/ComplexityAnalyzer.js';
-import { parseGoFile } from './GoParser.js';
+import { analyzeFileComplexity, type FunctionComplexity, analyzeFunctionComplexities } from '../analyzer/ComplexityAnalyzer';
+import { parseGoFile } from './GoParser';
 
 /** Languages we can parse with ts-morph */
 const PARSEABLE_EXTENSIONS = new Set([

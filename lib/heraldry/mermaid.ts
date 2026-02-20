@@ -5,8 +5,8 @@
  * representing PR domain coverage and architecture.
  */
 
-import type { PRCoatOfArms, Domain } from './types.js';
-import { DOMAIN_TINCTURES } from './types.js';
+import type { PRCoatOfArms, Domain } from './types';
+import { DOMAIN_TINCTURES } from './types';
 
 /**
  * Generate a Mermaid flowchart showing the domains touched by a PR.

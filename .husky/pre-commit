@@ -23,6 +23,7 @@ DEP_STATUS=0
 SHEBANG_STATUS=0
 TEST_STATUS=0
 ASSET_STATUS=0
+IMPORT_EXT_STATUS=0
 
 BRANCH_SKIPPED=0
 STASH_SKIPPED=0
@@ -32,6 +33,7 @@ DEP_SKIPPED=0
 SHEBANG_SKIPPED=0
 TEST_SKIPPED=0
 ASSET_SKIPPED=0
+IMPORT_EXT_SKIPPED=0
 
 # ── Staged files ─────────────────────────────────────────────
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
@@ -219,6 +221,28 @@ if [ $EXPEDITION_MODE -eq 0 ]; then
             LINT_STATUS=1
         fi
 
+        # .js import extension check (bundler resolution)
+        JS_IMPORT_MATCHES=""
+        for f in $TS_FILES_STAGED; do
+            if [ -f "$f" ]; then
+                MATCHES=$(grep -nE "from ['\"]\..*\.js['\"]" "$f" 2>/dev/null || true)
+                if [ -n "$MATCHES" ]; then
+                    JS_IMPORT_MATCHES="$JS_IMPORT_MATCHES
+  $f:
+$(echo "$MATCHES" | while read -r line; do echo "    $line"; done)"
+                fi
+            fi
+        done
+        if [ -n "$JS_IMPORT_MATCHES" ]; then
+            echo "  ⚠ .js extensions in TypeScript imports (advisory)"
+            echo "    Bundler resolution does not require .js extensions."
+            echo "    Remove them: from './foo.js' → from './foo'"
+            echo "$JS_IMPORT_MATCHES"
+            IMPORT_EXT_STATUS=1
+        else
+            echo "  ✓ No .js import extensions"
+        fi
+
         echo ""
     else
         echo "▸ WALL 2: Static Analysis..."
@@ -226,10 +250,12 @@ if [ $EXPEDITION_MODE -eq 0 ]; then
         echo ""
         TYPECHECK_SKIPPED=1
         LINT_SKIPPED=1
+        IMPORT_EXT_SKIPPED=1
     fi
 else
     TYPECHECK_SKIPPED=1
     LINT_SKIPPED=1
+    IMPORT_EXT_SKIPPED=1
 fi
 
 # ══════════════════════════════════════════════════════════════
@@ -445,6 +471,14 @@ elif [ $LINT_STATUS -eq 0 ]; then
     echo "WALL 2 (Lint):         ✓ Passed [ADVISORY]"
 else
     echo "WALL 2 (Lint):         ⚠ Warnings [ADVISORY]"
+fi
+
+if [ $IMPORT_EXT_SKIPPED -eq 1 ]; then
+    echo "WALL 2 (ImportExt):    ○ Skipped"
+elif [ $IMPORT_EXT_STATUS -eq 0 ]; then
+    echo "WALL 2 (ImportExt):    ✓ Passed [ADVISORY]"
+else
+    echo "WALL 2 (ImportExt):    ⚠ Warnings [ADVISORY]"
 fi
 
 # Wall 2.5

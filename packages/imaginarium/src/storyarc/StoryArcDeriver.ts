@@ -8,10 +8,10 @@
  */
 
 import type { CodeTopology, StoryArc, StorySegment } from '@dendrovia/shared';
-import { sliceSegments } from './SegmentSlicer.js';
-import { mapMood } from './MoodMapper.js';
-import { assignPhases } from './PhaseAssigner.js';
-import { hashString } from '../utils/hash.js';
+import { sliceSegments } from './SegmentSlicer';
+import { mapMood } from './MoodMapper';
+import { assignPhases } from './PhaseAssigner';
+import { hashString } from '../utils/hash';
 
 export function deriveStoryArc(topology: CodeTopology): StoryArc {
   try {

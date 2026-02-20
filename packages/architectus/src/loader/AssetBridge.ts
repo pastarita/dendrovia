@@ -502,6 +502,20 @@ export async function loadWorldIndex(
     'World index loaded',
   );
 
+  // Probe: verify segment chunk files are actually deployed.
+  // If the manifest promises segments but the files don't exist on disk,
+  // return null so the app falls back to monolithic rendering.
+  const firstSegmentId = Object.keys(manifest.segments)[0];
+  if (firstSegmentId) {
+    const probePaths = manifest.segments[firstSegmentId];
+    const probeUrl = resolveAssetUrl(manifestPath, probePaths.topology);
+    const probeResult = await fetchJson(probeUrl, 2000);
+    if (!probeResult) {
+      log.info('Segment chunk files not deployed — falling back to monolithic rendering');
+      return null;
+    }
+  }
+
   return {
     manifest,
     worldIndex,

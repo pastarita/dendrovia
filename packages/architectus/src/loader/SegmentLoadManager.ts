@@ -15,11 +15,18 @@ import { loadSegmentData } from './AssetBridge';
 /** Set of segment IDs currently being loaded (prevents duplicate fetches). */
 const loadingSet = new Set<string>();
 
+/** Circuit breaker: stop loading after consecutive failures to prevent 404 cascades. */
+let consecutiveFailures = 0;
+const CIRCUIT_BREAKER_THRESHOLD = 3;
+let circuitOpen = false;
+
 /**
  * Evaluate which segments should be loaded/evicted based on current distances.
  * Called by SegmentDistanceUpdater after updating distances.
  */
 export function evaluateSegmentLoading(): void {
+  if (circuitOpen) return;
+
   const state = useSegmentStore.getState();
   if (!state.worldReady || !state.manifest || !state.manifestPath) return;
 
@@ -80,9 +87,17 @@ async function triggerLoad(
     if (!result) {
       // Loading failed — revert to hull
       useSegmentStore.getState().setSegmentLoadState(segmentId, 'hull');
+      consecutiveFailures++;
+      if (consecutiveFailures >= CIRCUIT_BREAKER_THRESHOLD) {
+        circuitOpen = true;
+        console.warn(
+          `[SegmentLoadManager] Circuit breaker open after ${consecutiveFailures} consecutive failures — segment loading disabled`,
+        );
+      }
       return;
     }
 
+    consecutiveFailures = 0;
     useSegmentStore.getState().setSegmentData(segmentId, {
       topology: result.topology,
       specimens: result.specimens,

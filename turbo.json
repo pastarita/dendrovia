@@ -21,22 +21,22 @@
     "clean": {
       "cache": false
     },
-    "chronos#parse": {
+    "@dendrovia/chronos#parse": {
       "outputs": ["generated/**/*.json"],
       "cache": true
     },
-    "imaginarium#distill": {
-      "dependsOn": ["chronos#parse"],
+    "@dendrovia/imaginarium#distill": {
+      "dependsOn": ["@dendrovia/chronos#parse"],
       "outputs": ["generated/**/*.{glsl,wgsl,json}"],
       "cache": true
     },
-    "operatus#manifest": {
-      "dependsOn": ["imaginarium#distill"],
+    "@dendrovia/operatus#manifest": {
+      "dependsOn": ["@dendrovia/imaginarium#distill"],
       "outputs": ["../imaginarium/generated/operatus-manifest.json"],
       "cache": true
     },
-    "architectus#build": {
-      "dependsOn": ["imaginarium#distill", "operatus#manifest"],
+    "@dendrovia/architectus#build": {
+      "dependsOn": ["@dendrovia/imaginarium#distill", "@dendrovia/operatus#manifest"],
       "outputs": ["dist/**"]
     }
   }

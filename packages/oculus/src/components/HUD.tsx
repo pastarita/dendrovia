@@ -10,6 +10,7 @@
 
 import React from 'react';
 import { useOculusStore } from '../store/useOculusStore';
+import { useOculus } from '../OculusProvider';
 import { Panel } from './primitives/Panel';
 import { ProgressBar } from './primitives/ProgressBar';
 import { StatLabel } from './primitives/StatLabel';
@@ -22,6 +23,8 @@ import { LootPanel } from './LootPanel';
 import { FalconModeOverlay } from './FalconModeOverlay';
 import { WorldHeader } from './WorldHeader';
 import { NavigationBar } from './NavigationBar';
+import { PanelWindowManager } from './PanelWindowManager';
+import { LayoutExporter, DevStateInspector } from './dev';
 
 export function HUD() {
   const health = useOculusStore((s) => s.health);
@@ -31,6 +34,7 @@ export function HUD() {
   const level = useOculusStore((s) => s.level);
   const cameraMode = useOculusStore((s) => s.cameraMode);
   const battle = useOculusStore((s) => s.battle);
+  const { config } = useOculus();
 
   return (
     <div className="oculus-hud" role="status" aria-label="Game HUD">
@@ -118,6 +122,14 @@ export function HUD() {
       }}>
         <LootPanel />
       </div>
+
+      {/* ── Panel Window Manager (opt-in) ────────────── */}
+      {config.enablePanelManagement && (
+        <PanelWindowManager>
+          <LayoutExporter />
+          <DevStateInspector />
+        </PanelWindowManager>
+      )}
     </div>
   );
 }

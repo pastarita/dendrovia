@@ -9,7 +9,7 @@
  * defined correctly."
  */
 
-import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action, ProceduralPalette, SDFShader, ParsedFile, MycologyCatalogedEvent } from '../types/index.js';
+import type { FileTreeNode, Hotspot, DeepWikiEnrichment, StoryArc, SegmentAssets, Action, ProceduralPalette, SDFShader, ParsedFile, CodeTopology, MycologyCatalogedEvent } from '../types/index.js';
 
 type EventHandler<T = any> = (data: T) => void | Promise<void>;
 
@@ -222,6 +222,10 @@ export const RuntimeEvents = {
   /** OPERATUS → all: Save completed. */
   SAVE_COMPLETED: 'save:completed',
 
+  // LUDUS → OCULUS (System control)
+  /** LUDUS → OCULUS: System status changed. */
+  SYSTEM_STATUS_CHANGED: 'system:status:changed',
+
   // Lifecycle triggers (all → OPERATUS)
   /** all → OPERATUS: Game session started. */
   GAME_STARTED: 'game:started',
@@ -364,6 +368,12 @@ export interface CombatActionEvent {
   action: Action;
 }
 
+export interface SystemStatusChangedEvent {
+  system: string;
+  enabled: boolean;
+  effectiveStates: Record<string, boolean>;
+}
+
 /** @planned — Not yet emitted by ARCHITECTUS. Will be wired when collision physics are implemented. */
 export interface CollisionDetectedEvent {
   entityId: string;
@@ -403,6 +413,7 @@ export interface LevelLoadedEvent {
 }
 
 export interface TopologyGeneratedEvent {
+  topology: CodeTopology;
   tree: FileTreeNode;
   hotspots: Hotspot[];
   deepwiki?: DeepWikiEnrichment;
@@ -488,6 +499,9 @@ export interface RuntimeEventMap {
   'item:used': ItemUsedEvent;
   'combat:action': CombatActionEvent;
 
+  // LUDUS → OCULUS (System control)
+  'system:status:changed': SystemStatusChangedEvent;
+
   // CHRONOS → all (Topology — dual lifecycle)
   'topology:generated': TopologyGeneratedEvent;
 
@@ -509,6 +523,7 @@ export interface RuntimeEventMap {
  * Used by EventBus typed overloads.
  */
 export interface EventMap extends BuildEventMap, RuntimeEventMap {}
+
 
 // Global singleton (lazy initialization)
 let globalEventBus: EventBus | null = null;

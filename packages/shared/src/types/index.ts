@@ -691,11 +691,7 @@ export interface MycelialNetwork {
   hubNodes: string[];
 }
 
-export interface MycologyCatalogedEvent {
-  specimenCount: number;
-  networkEdgeCount: number;
-  manifestPath: string;
-}
+// MycologyCatalogedEvent is now defined in events/EventBus.ts with the full GameEventPayloadMap
 
 /**
  * STORY ARC TYPES

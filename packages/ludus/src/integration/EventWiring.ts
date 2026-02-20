@@ -174,7 +174,7 @@ export function wireGameEvents(session: GameSession): () => void {
 
 // ─── Event Handlers ─────────────────────────────────────────
 
-function handleNodeClicked(
+export function handleNodeClicked(
   session: GameSession,
   event: NodeClickedEvent,
   bus: EventBus,
@@ -220,7 +220,7 @@ function handleNodeClicked(
   }
 }
 
-function handlePlayerMoved(
+export function handlePlayerMoved(
   session: GameSession,
   event: PlayerMovedEvent,
   _bus: EventBus,
@@ -232,7 +232,7 @@ function handlePlayerMoved(
   };
 }
 
-function handleBranchEntered(
+export function handleBranchEntered(
   session: GameSession,
   event: BranchEnteredEvent,
   bus: EventBus,
@@ -279,7 +279,7 @@ function handleBranchEntered(
   }
 }
 
-function handleSpellCast(
+export function handleSpellCast(
   session: GameSession,
   event: SpellCastEvent,
   bus: EventBus,
@@ -303,7 +303,7 @@ function handleSpellCast(
   checkBattleEnd(session, newBattle, bus);
 }
 
-function handleItemUsed(
+export function handleItemUsed(
   session: GameSession,
   event: ItemUsedEvent,
   bus: EventBus,
@@ -331,7 +331,7 @@ function handleItemUsed(
 
 // ─── Emit Granular Combat Events ────────────────────────────
 
-function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: GameSession): void {
+export function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: GameSession): void {
   // Accumulate into session for structured stats
   if (session) {
     session.currentBattleCombatEvents.push(...battleState.combatEvents);
@@ -390,7 +390,7 @@ function emitCombatEvents(battleState: BattleState, bus: EventBus, session?: Gam
 
 // ─── Battle Resolution ──────────────────────────────────────
 
-function checkBattleEnd(
+export function checkBattleEnd(
   session: GameSession,
   battleState: BattleState,
   bus: EventBus,

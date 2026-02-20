@@ -25,6 +25,19 @@ export type {
   LootDrop,
 } from './store/useOculusStore';
 
+export { usePanelStore } from './store/usePanelStore';
+export type { PanelStore, PanelStoreActions } from './store/usePanelStore';
+export type {
+  PanelConfig,
+  PanelGeometry,
+  PanelMinSize,
+  PanelSnapshot,
+  LayoutSnapshot,
+  PanelStoreState,
+  DisplayMode,
+  PanelCategory,
+} from './store/panel-types';
+
 // ── Components ───────────────────────────────────────
 export { HUD } from './components/HUD';
 export { Minimap } from './components/Minimap';
@@ -44,6 +57,15 @@ export { WelcomeScreen } from './components/WelcomeScreen';
 export type { WelcomeScreenProps } from './components/WelcomeScreen';
 export { OnboardingHints } from './components/OnboardingHints';
 export type { OnboardingHintsProps } from './components/OnboardingHints';
+
+// ── Panel Management Components ─────────────────────
+export { ManagedPanel } from './components/ManagedPanel';
+export type { ManagedPanelProps } from './components/ManagedPanel';
+export { EncounterPanel } from './components/EncounterPanel';
+export type { EncounterPanelProps, EncounterSlots, EncounterType, EncounterLayout } from './components/EncounterPanel';
+export { PanelWindowManager } from './components/PanelWindowManager';
+export { MinimizedDock } from './components/MinimizedDock';
+export { LayoutExporter, DevStateInspector } from './components/dev';
 
 // ── Primitives ───────────────────────────────────────
 export {
@@ -86,3 +108,5 @@ export type {
   OnboardingState,
   UseOnboardingReturn,
 } from './hooks/useOnboarding';
+export { useDragResize } from './hooks/useDragResize';
+export { usePanelRegistration } from './hooks/usePanelRegistration';

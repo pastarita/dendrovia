@@ -61,6 +61,47 @@ function calculateGridPositions(
 }
 
 /**
+ * Calculate grid positions for Ornithicus-focused layout:
+ * Top row: 4 equal columns at 40% height
+ * Bottom row: 1 full-width window at 60% height
+ */
+function calculateOrnithicusGridPositions(
+  screenWidth: number = 1920,
+  screenHeight: number = 1080
+): WindowPosition[] {
+  const margin = 20;
+  const menuBar = 25;
+  const usableWidth = screenWidth - margin * 2;
+  const usableHeight = screenHeight - margin * 2 - menuBar;
+
+  const topHeight = Math.floor(usableHeight * 0.4);
+  const bottomHeight = Math.floor(usableHeight * 0.6);
+  const colWidth = Math.floor((usableWidth / 4) * 0.85);
+
+  const positions: WindowPosition[] = [];
+
+  // Top row: 4 columns
+  for (let col = 0; col < 4; col++) {
+    positions.push({
+      x: margin + col * colWidth,
+      y: margin + menuBar,
+      width: colWidth,
+      height: topHeight,
+    });
+  }
+
+  // Bottom row: full width
+  positions.push({
+    x: margin,
+    y: margin + menuBar + topHeight,
+    width: Math.floor(usableWidth * 0.85),
+    height: bottomHeight,
+  });
+
+  return positions;
+}
+
+/**
  * Generate AppleScript for launching Dendrovia workspace
  */
 export function generateItermAppleScript(
@@ -75,12 +116,16 @@ export function generateItermAppleScript(
     pillars = config.pillars.filter((p) => pillarIds.includes(p.id));
   }
 
-  const positions = calculateGridPositions(pillars.length, config.layout);
+  // Use Ornithicus grid if in orn mode
+  const positions = options.ornMode
+    ? calculateOrnithicusGridPositions()
+    : calculateGridPositions(pillars.length, config.layout);
 
-  // Build the AppleScript - OPERATUS gets 3 panes, all others get 2 panes
+  // Build the AppleScript - OPERATUS and ORNITHICUS (in orn mode) get 3 panes, others get 2
   const windowScripts = pillars.map((pillar, i) => {
     const pos = positions[i] || positions[positions.length - 1];
     const isOperatus = pillar.id === "OPERATUS";
+    const isOrnithicusHero = options.ornMode && pillar.id === "ORNITHICUS";
 
     // Commands for each pane
     // Top pane (Claude Code) opens at pillar checkout root (where CLAUDE.md lives)
@@ -117,6 +162,95 @@ export function generateItermAppleScript(
 
       tell bottomLeftSession
         write text "${cdCommandBottom} && ${titleBottomLeft}${devServerCmd}"
+        delay 0.1
+        set bottomRightSession to (split vertically with profile "${pillar.profile}")
+      end tell
+      delay 0.15
+
+      tell bottomRightSession
+        write text "${cdCommandBottom} && ${titleBottomRight}"
+      end tell
+    end tell
+    delay 0.2
+
+    set bounds of newWindow to {${pos.x}, ${pos.y}, ${pos.x + pos.width}, ${pos.y + pos.height}}
+    delay 0.1
+
+    -- Resize panes: make top pane larger
+    tell application "System Events"
+      tell process "iTerm2"
+        repeat 9 times
+          key code 125 using {command down, control down}
+          delay 0.02
+        end repeat
+      end tell
+    end tell
+    delay 0.3
+
+    -- Decrease font size in both bottom panes (Cmd+- twice each)
+    tell newWindow
+      tell bottomLeftSession
+        select
+      end tell
+    end tell
+    delay 0.1
+    tell application "System Events"
+      tell process "iTerm2"
+        key code 27 using command down
+        delay 0.05
+        key code 27 using command down
+      end tell
+    end tell
+    delay 0.1
+    tell newWindow
+      tell bottomRightSession
+        select
+      end tell
+    end tell
+    delay 0.1
+    tell application "System Events"
+      tell process "iTerm2"
+        key code 27 using command down
+        delay 0.05
+        key code 27 using command down
+      end tell
+    end tell
+    delay 0.1
+    set bounds of newWindow to {${pos.x}, ${pos.y}, ${pos.x + pos.width}, ${pos.y + pos.height}}
+    delay 0.1
+
+    tell newWindow
+      tell first session of current tab
+        select
+      end tell
+    end tell
+    delay 0.3`;
+    }
+
+    if (isOrnithicusHero) {
+      // ORNITHICUS hero: 3-pane layout (top root + bottom-left td:ornithicus + bottom-right shell)
+      const titleBottomLeft = `echo -e '\\\\033]0;${pillar.shortCode} Dev\\\\007'`;
+      const titleBottomRight = `echo -e '\\\\033]0;${pillar.shortCode} Shell\\\\007'`;
+      const tdCommand = `bun run dev:orn`;
+
+      return `
+    -- Window ${i + 1}: ${pillar.name} (3-pane hero: top + bottom-left td + bottom-right shell)
+    set newWindow to (create window with profile "${pillar.profile}")
+    delay 0.5
+
+    tell newWindow
+      tell current session
+        write text "${cdCommandTop} && ${titleTop}"
+      end tell
+      delay 0.15
+
+      tell current session
+        set bottomLeftSession to (split horizontally with profile "${pillar.profile}")
+      end tell
+      delay 0.2
+
+      tell bottomLeftSession
+        write text "${cdCommandBottom} && ${titleBottomLeft} && ${tdCommand}"
         delay 0.1
         set bottomRightSession to (split vertically with profile "${pillar.profile}")
       end tell

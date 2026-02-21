@@ -50,6 +50,10 @@ const { values, positionals } = parseArgs({
       short: "g",
       default: false,
     },
+    orn: {
+      type: "boolean",
+      default: false,
+    },
   },
   allowPositionals: true,
 });
@@ -63,6 +67,7 @@ Launch all 6 pillar checkouts in iTerm2 with proper layout and context.
 
 Usage:
   bun run launch              Launch all pillars (iTerm2)
+  bun run launch --orn        Ornithicus-focused layout (4 pillars + ORN hero)
   bun run launch --ghostty    Launch all pillars (Ghostty)
   bun run launch --dev        Launch with dev servers
   bun run launch --pillars CHRONOS IMAGINARIUM
@@ -73,6 +78,7 @@ Usage:
 Options:
   --pillars, -p <names>   Specific pillars to launch (can repeat)
   --dev, -d               Start dev servers in each window
+  --orn                   Ornithicus-focused mode (5 windows)
   --ghostty, -g           Use Ghostty instead of iTerm2
   --dry-run               Show what would happen without executing
   --list, -l              List available pillars
@@ -85,17 +91,25 @@ Pillars:
   LUDUS         🎮 Game Logic
   OCULUS        👁️ UI/UX Components
   OPERATUS      💾 Infrastructure
+  ORNITHICUS    🐦 Spatial Codebase Editor
 
-Layout:
+Standard Layout (6 pillars, 3×2):
   ┌─────────────┬─────────────┬─────────────┐
   │ CHR         │ IMG         │ ARC         │
   ├─────────────┼─────────────┼─────────────┤
   │ LUD         │ OCU         │ OPR         │
   └─────────────┴─────────────┴─────────────┘
 
-Each window has 3 panes:
-  TOP:    Claude Code (with CLAUDE.md context)
-  BOTTOM: Dev work + General shell
+Ornithicus Layout (--orn):
+  ┌──────────┬──────────┬──────────┬──────────┐
+  │ CHRONOS  │ IMAGINA- │ ARCHITE- │ OCULUS   │
+  │ (2-pane) │ RIUM     │ CTUS     │ (2-pane) │
+  ├──────────┴──────────┴──────────┴──────────┤
+  │ ORNITHICUS (full-width, 3-pane)           │
+  └───────────────────────────────────────────┘
+
+Each standard window: 2 panes (root + dev)
+OPERATUS/ORNITHICUS: 3 panes (root + td runner + shell)
   `);
   process.exit(0);
 }
@@ -119,6 +133,12 @@ const options: LaunchOptions = {
   withDevServers: values.dev as boolean,
   dryRun: values["dry-run"] as boolean,
 };
+
+// Ornithicus-focused mode
+if (values.orn) {
+  options.ornMode = true;
+  options.pillars = ["CHRONOS", "IMAGINARIUM", "ARCHITECTUS", "OCULUS", "ORNITHICUS"];
+}
 
 const useGhostty = values.ghostty as boolean;
 

@@ -15,6 +15,8 @@ export interface LaunchOptions {
   gridLayout?: boolean;
   /** Auto-configure window splits (Ghostty only, default: true) */
   autoSplits?: boolean;
+  /** Ornithicus-focused mode: 4 core pillars + ORNITHICUS hero window */
+  ornMode?: boolean;
 }
 
 export interface LaunchResult {

@@ -17,6 +17,8 @@ export default defineConfig({
         'react/jsx-runtime',
         'zustand',
         '@dendrovia/shared',
+        '@dendrovia/architectus',
+        '@dendrovia/imaginarium',
         '@react-three/drei',
         '@react-three/fiber',
         'three',

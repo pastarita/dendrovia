@@ -1,7 +1,7 @@
 /**
  * Dendrovia Pillar Registry
  *
- * Defines the 6 pillars and their checkout locations.
+ * Defines the 7 pillars and their checkout locations.
  */
 
 import type { Pillar } from "./types";
@@ -17,9 +17,9 @@ export interface DendroviaConfig {
 }
 
 export const DENDROVIA_CONFIG: DendroviaConfig = {
-  name: "Dendrovia Six-Pillar Architecture",
+  name: "Dendrovia Seven-Pillar Architecture",
   layout: {
-    columns: 3,
+    columns: 4,
     rows: 2,
     margin: 20,
   },
@@ -83,6 +83,16 @@ export const DENDROVIA_CONFIG: DendroviaConfig = {
       primaryPackage: "packages/operatus",
       emoji: "💾",
       profile: "Dendrovia-OPERATUS",
+    },
+    {
+      id: "ORNITHICUS",
+      name: "The Spatial Editor",
+      path: "/Users/Patmac/denroot/ORNITHICUS",
+      shortCode: "ORN",
+      description: "Spatial Codebase Editor",
+      primaryPackage: "packages/ornithicus-engine",
+      emoji: "🐦",
+      profile: "Dendrovia-ORNITHICUS",
     },
   ],
 };

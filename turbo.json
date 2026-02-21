@@ -38,6 +38,17 @@
     "@dendrovia/architectus#build": {
       "dependsOn": ["@dendrovia/imaginarium#distill", "@dendrovia/operatus#manifest"],
       "outputs": ["dist/**"]
+    },
+    "@ornithicus/engine#build": {
+      "dependsOn": ["@dendrovia/architectus#build", "@dendrovia/chronos#parse"],
+      "outputs": ["dist/**"]
+    },
+    "@ornithicus/ui#build": {
+      "dependsOn": ["@dendrovia/oculus#build"],
+      "outputs": ["dist/**"]
+    },
+    "@ornithicus/assets#build": {
+      "outputs": ["dist/**"]
     }
   }
 }

@@ -214,6 +214,21 @@ PILLARS = {
             "#97ABC0", "#ABA2C2", "#A7B8C9", "#F3F4F6",  # 12-15
         ],
     },
+    "ORNITHICUS": {
+        "name": "Dendrovia-ORNITHICUS",
+        "guid": "dendrovia-ornithicus",
+        "desc": "ORNITHICUS - Avian amber theme (256-color)",
+        "bg": "#1e1812",
+        "fg": "#ede0d0",
+        "cursor": "#c77b3f",
+        "selection": "#7a5a3a",
+        "base16": [
+            "#5E4D3A", "#C77B3F", "#8BA870", "#E8A84C",  # 0-3
+            "#8B7E6A", "#A6784E", "#9B947E", "#EDE0D0",  # 4-7
+            "#7E6D5A", "#DF9957", "#A5C48A", "#F5C66E",  # 8-11
+            "#A89E8A", "#C89A6E", "#B8B09A", "#FAF0E4",  # 12-15
+        ],
+    },
 }
 
 # ─── iTerm2 plist generation ────────────────────────────────────────────────
@@ -334,7 +349,7 @@ def generate_profile_plist(pillar):
 
 
 def generate_full_plist():
-    """Generate the complete Dendrovia.plist with all 6 pillar profiles."""
+    """Generate the complete Dendrovia.plist with all 7 pillar profiles."""
     header = f"""<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
@@ -361,7 +376,7 @@ def generate_full_plist():
 """
 
     profiles = []
-    for pillar in ["CHRONOS", "IMAGINARIUM", "ARCHITECTUS", "LUDUS", "OCULUS", "OPERATUS"]:
+    for pillar in ["CHRONOS", "IMAGINARIUM", "ARCHITECTUS", "LUDUS", "OCULUS", "OPERATUS", "ORNITHICUS"]:
         profiles.append(generate_profile_plist(pillar))
 
     return header + '\n\n'.join(profiles) + footer

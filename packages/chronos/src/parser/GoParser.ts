@@ -9,9 +9,9 @@
 import { readFileSync, statSync } from 'fs';
 import { extname } from 'path';
 import type { ParsedFile } from '@dendrovia/shared';
-import type { ASTParseResult } from './ASTParser.js';
-import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer.js';
-import { toDifficulty } from '../analyzer/ComplexityAnalyzer.js';
+import type { ASTParseResult } from './ASTParser';
+import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer';
+import { toDifficulty } from '../analyzer/ComplexityAnalyzer';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 

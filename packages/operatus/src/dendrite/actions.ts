@@ -4,9 +4,9 @@
  * Each factory captures a subsystem reference and returns NodeAction[].
  */
 
-import type { NodeAction } from '../../../../lib/dendrite/types.js';
-import type { CacheManager } from '../cache/CacheManager.js';
-import type { AutoSave } from '../persistence/AutoSave.js';
+import type { NodeAction } from '../../../../lib/dendrite/types';
+import type { CacheManager } from '../cache/CacheManager';
+import type { AutoSave } from '../persistence/AutoSave';
 
 export function cacheManagerActions(cache: CacheManager): NodeAction[] {
   return [

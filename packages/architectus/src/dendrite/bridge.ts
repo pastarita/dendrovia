@@ -14,9 +14,9 @@
  */
 
 import type { StoreApi } from 'zustand';
-import type { RuntimeStoreState } from '../../../../lib/dendrite/store/runtime-store.js';
-import type { RuntimeNodeState } from '../../../../lib/dendrite/types.js';
-import { useRendererStore } from '../store/useRendererStore.js';
+import type { RuntimeStoreState } from '../../../../lib/dendrite/store/runtime-store';
+import type { RuntimeNodeState } from '../../../../lib/dendrite/types';
+import { useRendererStore } from '../store/useRendererStore';
 import {
   collectAssetBridge,
   collectDendriteWorld,
@@ -27,9 +27,9 @@ import {
   collectLighting,
   collectInstances,
   collectSystems,
-} from './collectors.js';
-import type { RendererSnapshot } from './collectors.js';
-import { qualityActions, cameraActions } from './actions.js';
+} from './collectors';
+import type { RendererSnapshot } from './collectors';
+import { qualityActions, cameraActions } from './actions';
 
 export interface ArchitectusBridgeConfig {
   pollIntervalMs?: number;

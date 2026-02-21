@@ -20,8 +20,8 @@ import {
   MAGNITUDE_SYMBOLS,
   getDivisionForDomainCount,
   computeMagnitude,
-} from './types.js';
-import { selectMotto } from './emoji.js';
+} from './types';
+import { selectMotto } from './emoji';
 
 // Conventional commit regex
 const CONVENTIONAL_RE = /^(\w+)(?:\([^)]+\))?!?:\s*/;

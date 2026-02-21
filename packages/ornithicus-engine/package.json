@@ -1,0 +1,36 @@
+{
+  "name": "@ornithicus/engine",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Ornithicus spatial engine - diff materials, perspective transforms, skybox, replay animation",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./temporal": "./src/temporal/DiffMaterialEngine.ts",
+    "./rasterization": "./src/rasterization/ScaleFrameShift.ts",
+    "./skybox": "./src/skybox/FrustumController.ts",
+    "./growth": "./src/growth/ReplayAnimator.ts"
+  },
+  "scripts": {
+    "dev": "tsc --watch --noEmit",
+    "build": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@dendrovia/shared": "workspace:*",
+    "@dendrovia/architectus": "workspace:*",
+    "@dendrovia/chronos": "workspace:*",
+    "@dendrovia/imaginarium": "workspace:*",
+    "three": "^0.171.0",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/drei": "^10.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/three": "^0.171.0",
+    "typescript": "^5.7.2"
+  }
+}

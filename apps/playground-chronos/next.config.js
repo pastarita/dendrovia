@@ -19,9 +19,6 @@ const nextConfig = {
     '@dendrovia/oculus',
   ],
   webpack: (config, { isServer, webpack }) => {
-    config.resolve.extensionAlias = {
-      '.js': ['.ts', '.tsx', '.js'],
-    };
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,

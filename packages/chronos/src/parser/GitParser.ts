@@ -6,7 +6,7 @@
  */
 
 import type { ParsedCommit, RepositoryMetadata } from '@dendrovia/shared';
-import { classifyCommit } from '../classifier/CommitClassifier.js';
+import { classifyCommit } from '../classifier/CommitClassifier';
 import { basename } from 'path';
 
 // Sentinel separating fields within a single commit record

@@ -1,0 +1,41 @@
+{
+  "name": "ornithic-editor",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Ornithicus - Spatial Codebase Editor",
+  "scripts": {
+    "dev": "next dev --port 3009 --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@ornithicus/engine": "workspace:*",
+    "@ornithicus/ui": "workspace:*",
+    "@ornithicus/assets": "workspace:*",
+    "@dendrovia/shared": "workspace:*",
+    "@dendrovia/architectus": "workspace:*",
+    "@dendrovia/chronos": "workspace:*",
+    "@dendrovia/imaginarium": "workspace:*",
+    "@dendrovia/oculus": "workspace:*",
+    "@dendrovia/operatus": "workspace:*",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/drei": "^10.0.0",
+    "@react-three/postprocessing": "^2.16.4",
+    "three": "^0.171.0",
+    "next": "16.1.5",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.171.0",
+    "eslint": "^9.39.1",
+    "typescript": "^5.7.2"
+  }
+}

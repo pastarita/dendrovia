@@ -16,7 +16,7 @@ export {
   extractRepositoryMetadata,
   type GitParserOptions,
   type RawCommit,
-} from './parser/GitParser.js';
+} from './parser/GitParser';
 
 export {
   parseFiles,
@@ -26,16 +26,16 @@ export {
   detectLanguage,
   canParse,
   type ASTParseResult,
-} from './parser/ASTParser.js';
+} from './parser/ASTParser';
 
-export { parseGoFile } from './parser/GoParser.js';
+export { parseGoFile } from './parser/GoParser';
 
 // Classifiers
 export {
   classifyCommit,
   type CommitType,
   type ClassifiedCommit,
-} from './classifier/CommitClassifier.js';
+} from './classifier/CommitClassifier';
 
 // Analyzers
 export {
@@ -44,20 +44,20 @@ export {
   type ComplexityResult,
   type DifficultyTier,
   type FunctionComplexity,
-} from './analyzer/ComplexityAnalyzer.js';
+} from './analyzer/ComplexityAnalyzer';
 
 export {
   detectHotspots,
   type HotspotAnalysis,
   type TemporalCoupling,
-} from './analyzer/HotspotDetector.js';
+} from './analyzer/HotspotDetector';
 
 // Builders
 export {
   buildFileTree,
   countFiles,
   countDirectories,
-} from './builder/TreeBuilder.js';
+} from './builder/TreeBuilder';
 
 export {
   buildTopology,
@@ -66,9 +66,9 @@ export {
   buildContributorSummary,
   type TopologyInput,
   type TopologyOutput,
-} from './builder/TopologyBuilder.js';
+} from './builder/TopologyBuilder';
 
-export { profileContributors } from './builder/ContributorProfiler.js';
+export { profileContributors } from './builder/ContributorProfiler';
 export type { ContributorProfile, ContributorFacets, Archetype, TimeArchetype } from '@dendrovia/shared';
 
 // Pipeline (reusable entry point)
@@ -76,7 +76,7 @@ export {
   runPipeline,
   type PipelineOptions,
   type PipelineResult,
-} from './pipeline.js';
+} from './pipeline';
 
 // Resolver (GitHub URL → local clone)
 export {
@@ -91,8 +91,8 @@ export {
   type ResolvedRepo,
   type Registry,
   type RegistryEntry,
-} from './resolver/index.js';
+} from './resolver/index';
 
 // Enrichment (optional DeepWiki layer — additive, never required)
-export { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher.js';
-export { enrichTopology } from './enrichment/TopologyEnricher.js';
+export { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher';
+export { enrichTopology } from './enrichment/TopologyEnricher';

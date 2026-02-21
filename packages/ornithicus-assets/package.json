@@ -1,0 +1,24 @@
+{
+  "name": "@ornithicus/assets",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Ornithicus static assets - cursors, skeuomorphs, bird avatars",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./cursors": "./src/cursors/index.ts",
+    "./skeuomorphs": "./src/skeuomorphs/index.ts",
+    "./avatars": "./src/avatars/index.ts"
+  },
+  "scripts": {
+    "dev": "tsc --watch --noEmit",
+    "build": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@dendrovia/imaginarium": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

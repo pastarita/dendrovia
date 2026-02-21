@@ -28,6 +28,7 @@ const PILLAR_THEMES: Record<string, string> = {
   LUDUS: "dendrovia-ludus",              // Tactical green
   OCULUS: "dendrovia-oculus",            // Observational amber
   OPERATUS: "dendrovia-operatus",        // Industrial grey
+  ORNITHICUS: "dendrovia-ornithicus",    // Avian amber
 };
 
 /**

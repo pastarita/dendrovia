@@ -26,7 +26,7 @@ export {
   SUPPORTER_LABELS,
   getDivisionForDomainCount,
   computeMagnitude,
-} from './types.js';
+} from './types';
 
 // Analysis
 export {
@@ -35,18 +35,18 @@ export {
   detectDomains,
   countCharges,
   runSupporter,
-} from './analyzer.js';
+} from './analyzer';
 
 // Symbols and mottos
 export {
   selectMotto,
   PILLAR_SYMBOLS,
   PILLAR_NAMES,
-} from './emoji.js';
+} from './emoji';
 
 // Mermaid diagram generation
 export {
   generateDomainDiagram,
   generatePipelineDiagram,
   generateHeraldryDiagram,
-} from './mermaid.js';
+} from './mermaid';

@@ -12,13 +12,13 @@
  */
 
 import { resolve, basename, join } from 'path';
-import { resolveRepo, upsertRegistryEntry, getOutputDirForRepo } from './resolver/index.js';
-import { runPipeline } from './pipeline.js';
-import { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher.js';
-import { enrichTopology } from './enrichment/TopologyEnricher.js';
-import { writeOutputFiles } from './builder/TopologyBuilder.js';
+import { resolveRepo, upsertRegistryEntry, getOutputDirForRepo } from './resolver/index';
+import { runPipeline } from './pipeline';
+import { fetchDeepWikiEnrichment } from './enrichment/DeepWikiFetcher';
+import { enrichTopology } from './enrichment/TopologyEnricher';
+import { writeOutputFiles } from './builder/TopologyBuilder';
 import { createLogger } from '@dendrovia/shared/logger';
-import type { RegistryEntry } from './resolver/index.js';
+import type { RegistryEntry } from './resolver/index';
 
 const log = createLogger('CHRONOS', 'analyze');
 

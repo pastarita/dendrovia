@@ -7,17 +7,17 @@
 
 import { join, basename } from 'path';
 import { mkdirSync, existsSync, readFileSync } from 'fs';
-import { parseGitHistory, listFilesAtHead, getHeadHash, getFileAuthors, extractRepositoryMetadata } from './parser/GitParser.js';
-import { parseFiles, buildStubFile, canParse } from './parser/ASTParser.js';
-import { detectHotspots } from './analyzer/HotspotDetector.js';
-import { profileContributors } from './builder/ContributorProfiler.js';
-import { buildFileTree, countFiles, countDirectories } from './builder/TreeBuilder.js';
-import { buildTopology, writeOutputFiles } from './builder/TopologyBuilder.js';
+import { parseGitHistory, listFilesAtHead, getHeadHash, getFileAuthors, extractRepositoryMetadata } from './parser/GitParser';
+import { parseFiles, buildStubFile, canParse } from './parser/ASTParser';
+import { detectHotspots } from './analyzer/HotspotDetector';
+import { profileContributors } from './builder/ContributorProfiler';
+import { buildFileTree, countFiles, countDirectories } from './builder/TreeBuilder';
+import { buildTopology, writeOutputFiles } from './builder/TopologyBuilder';
 import { getEventBus, GameEvents } from '@dendrovia/shared';
 import { createLogger } from '@dendrovia/shared/logger';
 import type { ParsedFile } from '@dendrovia/shared';
-import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer.js';
-import type { TopologyOutput, WriteOptions } from './builder/TopologyBuilder.js';
+import type { FunctionComplexity } from './analyzer/ComplexityAnalyzer';
+import type { TopologyOutput, WriteOptions } from './builder/TopologyBuilder';
 
 // ── Default ignore patterns ─────────────────────────────────────────────────
 

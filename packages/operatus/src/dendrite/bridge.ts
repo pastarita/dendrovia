@@ -12,12 +12,12 @@
  */
 
 import type { StoreApi } from 'zustand';
-import type { RuntimeStoreState } from '../../../../lib/dendrite/store/runtime-store.js';
-import type { CacheManager } from '../cache/CacheManager.js';
-import type { AssetLoader } from '../loader/AssetLoader.js';
-import type { CDNLoader } from '../loader/CDNLoader.js';
-import type { AutoSave } from '../persistence/AutoSave.js';
-import type { CrossTabSync } from '../sync/CrossTabSync.js';
+import type { RuntimeStoreState } from '../../../../lib/dendrite/store/runtime-store';
+import type { CacheManager } from '../cache/CacheManager';
+import type { AssetLoader } from '../loader/AssetLoader';
+import type { CDNLoader } from '../loader/CDNLoader';
+import type { AutoSave } from '../persistence/AutoSave';
+import type { CrossTabSync } from '../sync/CrossTabSync';
 import {
   collectCacheManager,
   collectOPFS,
@@ -34,13 +34,13 @@ import {
   collectServiceWorker,
   collectGenerate,
   aggregatePhaseHealth,
-} from './collectors.js';
+} from './collectors';
 import {
   cacheManagerActions,
   autoSaveActions,
   saveStateStoreActions,
   perfMonitorActions,
-} from './actions.js';
+} from './actions';
 
 export interface BridgeConfig {
   pollIntervalMs?: number;

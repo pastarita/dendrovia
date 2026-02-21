@@ -26,7 +26,7 @@ import type {
   ContributorSummary,
   TemporalCoupling,
 } from '@dendrovia/shared';
-import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer.js';
+import type { FunctionComplexity } from '../analyzer/ComplexityAnalyzer';
 import type { ContributorProfile } from '@dendrovia/shared';
 
 export interface TopologyInput {

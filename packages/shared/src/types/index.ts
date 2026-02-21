@@ -691,7 +691,12 @@ export interface MycelialNetwork {
   hubNodes: string[];
 }
 
-// MycologyCatalogedEvent is now defined in events/EventBus.ts with the full GameEventPayloadMap
+/** Payload emitted when mycology catalogization completes. */
+export interface MycologyCatalogedEvent {
+  specimenCount: number;
+  networkEdgeCount: number;
+  manifestPath: string;
+}
 
 /**
  * STORY ARC TYPES
